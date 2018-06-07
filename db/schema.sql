@@ -17,9 +17,11 @@ drop table if exists packets;
 create table packets (
 	id integer unsigned auto_increment primary key,
 	time datetime not null,
-	internal varchar(15) not null, --ip address of local host
-	external varchar(15) not null, --ip address of remote host
+	src varchar(15) not null, --ip address of sending host
+	dst varchar(15) not null, --ip address of receiving host
+	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
+	proto varchar(10) not null, --protocol if known, otherwise port number
 	burst integer references bursts, --optional, 
 	company integer references companies --optional, assumes table of companies (stolen from refine)
 );
