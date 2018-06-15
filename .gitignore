@@ -1,3 +1,5 @@
 .vscode/
-db/test*
+db/testData/*
+db/testPredictEcho.py
+!db/testData/AlexaTime1
 db/__pycache__/
