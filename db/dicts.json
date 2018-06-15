@@ -1,0 +1,20 @@
+{
+    "manDev": {
+        "Amazon Technologies Inc.": "Echo"
+    },
+
+    "burstTimeIntervals": {
+        "Echo": 1,
+        "Hue": 1, 
+        "Unknown": 1
+    },
+
+    "burstNumberCutoffs": {
+        "Echo": 20,
+        "Hue": 4, 
+        "Unknown": 10
+    },
+
+    "EchoFlowNumberCutoff" : 10
+
+}

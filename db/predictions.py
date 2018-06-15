@@ -1,15 +1,19 @@
 """
 Contains methods for each device that we have models for that predict category names from these models
 """
-import os
+import os, json, pickle
 import pandas as pd
 import numpy as np
 
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+#FEATURES_FILE = os.path.join(FILE_PATH, "data", "FlowFeatures.csv")
+
 NUMBER_COLUMNS = 56     # Columns used in feature vectors for NN prediction
-FLOW_NUMBER_CUTOFF = 10 # Number of packets required for a valid flow
+with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+    FLOW_NUMBER_CUTOFF = json.load(f)["EchoFlowNumberCutoff"] # Number of packets required for a valid flow
 HOME_IP = "192.168"
 
-FEATURES_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "FlowFeatures.csv")
+
 
 def normaliseColumn(array, colNo):
     """
@@ -124,27 +128,34 @@ def getCategoryFromModel(flowStatistics):
     """
     This needs significant re-working depending on what models we use
     """
-
-    
     data = np.array(flowStatistics, dtype='float32')
 
-    for x in range(NUMBER_COLUMNS-2):
-        data = normaliseColumn(data, x)
+    weights1 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights1.npy"))
+    weights2 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights2.npy"))
 
-    all_X = addBiases(data)
+    pca = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "echoPCA.p"), "rb" ) )
+    preScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "preScaler.p"), "rb" ) )
+    postScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "postScaler.p"), "rb" ) )
 
-    weights1 = np.load("weights1.npy")
-    weights2 = np.load("weights2.npy")
+    normalized = preScaler.transform(data)
+    principal = pca.transform(normalized)
+    principalNormalized = postScaler.transform(principal)
+
+    all_X = addBiases(principalNormalized)
 
     hiddenPre = np.matmul(all_X, weights1)
     hiddenPost = np.maximum(hiddenPre, 0)   # pylint: disable=maybe-no-member
     output = np.matmul(hiddenPost, weights2)
+    #print(output)
 
     category = np.argmax(output)
 
-    categoryNames = {1: "Time", 2: "Weather", 3: "Joke", 4: "Song Author", 5: "Conversion", 6: "Day of week", 7: "Timer", 8: "Shopping"}
-    
-    return categoryNames[category]
+    categoryNames = {1: "Time", 2: "Weather", 3: "Joke", 4: "Song Author", 5: "Conversion", 6: "Day of week", 7: "Timer", 8: "Shopping", 9: "Lights", 10: "Alarms"}
+    try:
+        result = categoryNames[category]
+        return result
+    except KeyError:
+        return "Unknown"
     
 def predictEcho(rows):
     """ Given rows of data from a burst from packets table, predict an Echo category"""
@@ -156,7 +167,7 @@ def predictEcho(rows):
     flowLengths = getFlowDict(srcdest, rows)
 
     # Get statistics for each flow
-    flowStatistics = getStatisticsFromDict(flowLengths, srcdest )
+    flowStatistics = getStatisticsFromDict(srcdest, flowLengths )
 
     # Predict the category
     category = getCategoryFromModel(flowStatistics)

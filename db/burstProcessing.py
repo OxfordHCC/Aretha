@@ -1,12 +1,10 @@
 """
 Main methods for binning packets into bursts and categorising packets
 """
-import requests, os, pickle
+import requests, os, pickle, json
 
 import databaseBursts, predictions
 
-BURST_TIME_INTERVAL = 1 # Assuming timestamps are in seconds
-BURST_NUMBER_CUTOFF = 20 # This should probably change based on MAC address
 
 def packetBurstification():
     """ Get all packets not in bursts and assign them to a new burst """
@@ -22,6 +20,14 @@ def packetBurstification():
     for counter, row in enumerate(unBinned):
         id = row[0]
         mac = row[4]
+
+        dev = getDeviceFromMac(mac)
+
+        with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+            config = json.load(f)
+
+            burstTimeInterval = int( config["burstTimeIntervals"]["dev"] )
+            burstNumberCutoff = int ( config["burstNumberCutoffs"]["dev"] )
         
         if id not in allIds:
             
@@ -32,15 +38,15 @@ def packetBurstification():
                 for otherRow in unBinned[counter+1:]:
                     if otherRow[0] not in allIds:
 
-                        if otherRow[4] == mac and float(row[1]) + BURST_TIME_INTERVAL > float(otherRow[1]):
+                        if otherRow[4] == mac and float(row[1]) + burstTimeInterval > float(otherRow[1]):
                             # If less than TIME_INTERVAL away, add to this burst
                             nextBurst.append(otherRow[0])
                             # Don't need to look at this one again, it's in this potential burst
                             allIds.add(otherRow[0])
 
-                        elif otherRow[4] == mac and float(row[1]) + BURST_TIME_INTERVAL < float(otherRow[1]):
+                        elif otherRow[4] == mac and float(row[1]) + burstTimeInterval < float(otherRow[1]):
                             # If the ids so far are long enough add it as a valid burst
-                            if len(nextBurst) > BURST_NUMBER_CUTOFF:
+                            if len(nextBurst) > burstNumberCutoff:
                                 allBursts.append(nextBurst)
                             # If same device, but too far away, we can stop, there won't be another burst here
                             break
@@ -81,7 +87,10 @@ def packetBurstification():
             databaseBursts.updatePacketBurst(packetRowId, newBurstId)
             
 def getManufactFromMac(mac):
-    """ Gets a device manufacturer from a mac """
+    """ 
+    Gets a device manufacturer from a mac
+    Uses a pickled dict to relate mac addresses to manufacturers from the api
+    """
     try:
         with open("manDict.p", "rb") as f:
             manDict = pickle.load(f)
@@ -89,9 +98,13 @@ def getManufactFromMac(mac):
         manDict = {}
 
     if mac in manDict.keys:
+        with open("manDict.p", "rb") as f:
+            pickle.dump(manDict, f)
+
         return manDict[mac]
+
     else:
-        r = requests.get("http:https://api.macvendors.com/" + mac)
+        r = requests.get("https://api.macvendors.com/" + mac)
         manufacturer = r.text
 
         manDict[mac] = manufacturer
@@ -100,13 +113,21 @@ def getManufactFromMac(mac):
             pickle.dump(manDict, f)
 
         return manufacturer
+    
 
 def getDeviceFromMac(mac):
-    """ TODO: Gets a device name from a mac """
+    """ 
+    Gets a device name from a mac 
+    Relates manufacturer names to devices via a json dictionary
+    """
     
     manufact = getManufactFromMac(mac)
 
-    manDev = {"Amazon Technologies Inc.": "Echo"}
+    if manufact == """ {"errors":{"detail":"Page not found"}} """:
+        return "Unknown"
+
+    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+        manDev = json.load(f)["manDev"]
 
     return manDev[manufact]
 
