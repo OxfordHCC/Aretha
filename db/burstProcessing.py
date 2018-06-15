@@ -28,27 +28,33 @@ def packetBurstification():
             config = json.load(f)
 
             burstTimeInterval = int( config["burstTimeIntervals"][dev] )
-            burstNumberCutoff = int ( config["burstNumberCutoffs"][dev] )
         
         if id not in allIds:
             
             nextBurst = [id]
             allIds.add(id)
 
+            currentTime = row[1]
+
+            #print(id)
+            #print(type(id))
+
             try:
                 for otherRow in unBinned[counter+1:]:
                     if otherRow[0] not in allIds:
 
-                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - row[1]).total_seconds():
+                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - currentTime).total_seconds():
+                            
                             # If less than TIME_INTERVAL away, add to this burst
                             nextBurst.append(otherRow[0])
                             # Don't need to look at this one again, it's in this potential burst
                             allIds.add(otherRow[0])
 
-                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - row[1]).total_seconds():
-                            # If the ids so far are long enough add it as a valid burst
-                            if len(nextBurst) > burstNumberCutoff:
-                                allBursts.append(nextBurst)
+                            currentTime = otherRow[1]
+
+                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - currentTime).total_seconds():
+                            
+                            allBursts.append(nextBurst)
                             # If same device, but too far away, we can stop, there won't be another burst here
                             break
                             # Can't add to considered, might be the start of the next burst
@@ -57,29 +63,15 @@ def packetBurstification():
                             continue
                             # If it's a different device, we can't say anything at this point
             except IndexError:
-                continue                
+                continue     
+
         else:
             # If we've considered it we know it was within interval of another packet and so
             # it's either a valid burst or part of one that is too short
             continue
 
-        """
-        try:
-            nextRow = unBinned[counter+1]
-        except:
-            if len(nextBurst) > BURST_NUMBER_CUTOFF:
-                allBursts.append(nextBurst)
-            break
-        nextBurst.append(id)
+    allBursts.append(nextBurst)
 
-        # If the next row is less than the interval away, just keep going
-        if float(row[1]) + BURST_TIME_INTERVAL > float(nextRow[1]): #row[1] is time
-            continue
-        else:
-            if len(nextBurst) > BURST_NUMBER_CUTOFF:
-                allBursts.append(nextBurst)
-            nextBurst = []
-        """
     # Add each new burst, and add all the packet rows to it
     for burst in allBursts:
         newBurstId = databaseBursts.insertNewBurst()
@@ -138,15 +130,19 @@ def burstPrediction():
     """
     unCat = databaseBursts.getNoCat()
 
+    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+        config = json.load(f)
+        cutoffs = config["burstNumberCutoffs"]
+
     for burst in unCat:
         
         rows = databaseBursts.getRowsWithBurst(burst[0])
 
         device = getDeviceFromMac(rows[0][4])
 
-        if device == "Echo":
+        if device == "Echo" and len(rows) > cutoffs[device]:
             category = predictions.predictEcho(rows)
-        elif device == "Hue":
+        elif device == "Hue" and len(rows) > cutoffs[device]:
             category = predictions.predictHue(rows)
         else:
             category = "Unknown"
@@ -156,8 +152,7 @@ def burstPrediction():
         newCategoryId = databaseBursts.addOrGetCategoryNumber(category)
 
         # Update the burst with the name of the new category, packets already have a reference to the burst
-        if category != "Unknown":
-            databaseBursts.updateBurstCategory(burst[0], newCategoryId)
+        databaseBursts.updateBurstCategory(burst[0], newCategoryId)
 
 
 
