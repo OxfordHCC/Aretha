@@ -1,4 +1,3 @@
 .vscode/
-db/testData/
-db/testPredictEcho.py
+db/test*
 db/__pycache__/

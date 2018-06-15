@@ -5,6 +5,7 @@ import requests, os, pickle, json
 
 import databaseBursts, predictions
 
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def packetBurstification():
     """ Get all packets not in bursts and assign them to a new burst """
@@ -26,8 +27,8 @@ def packetBurstification():
         with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
             config = json.load(f)
 
-            burstTimeInterval = int( config["burstTimeIntervals"]["dev"] )
-            burstNumberCutoff = int ( config["burstNumberCutoffs"]["dev"] )
+            burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+            burstNumberCutoff = int ( config["burstNumberCutoffs"][dev] )
         
         if id not in allIds:
             
@@ -38,13 +39,13 @@ def packetBurstification():
                 for otherRow in unBinned[counter+1:]:
                     if otherRow[0] not in allIds:
 
-                        if otherRow[4] == mac and float(row[1]) + burstTimeInterval > float(otherRow[1]):
+                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - row[1]).total_seconds():
                             # If less than TIME_INTERVAL away, add to this burst
                             nextBurst.append(otherRow[0])
                             # Don't need to look at this one again, it's in this potential burst
                             allIds.add(otherRow[0])
 
-                        elif otherRow[4] == mac and float(row[1]) + burstTimeInterval < float(otherRow[1]):
+                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - row[1]).total_seconds():
                             # If the ids so far are long enough add it as a valid burst
                             if len(nextBurst) > burstNumberCutoff:
                                 allBursts.append(nextBurst)
@@ -91,14 +92,14 @@ def getManufactFromMac(mac):
     Gets a device manufacturer from a mac
     Uses a pickled dict to relate mac addresses to manufacturers from the api
     """
-    try:
-        with open("manDict.p", "rb") as f:
+    if os.path.isfile(os.path.join(FILE_PATH, "manDict.p")):
+        with open(os.path.join(FILE_PATH, "manDict.p"), "rb") as f:
             manDict = pickle.load(f)
-    except IOError:
+    else:
         manDict = {}
 
-    if mac in manDict.keys:
-        with open("manDict.p", "rb") as f:
+    if mac in manDict.keys():
+        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
             pickle.dump(manDict, f)
 
         return manDict[mac]
@@ -109,7 +110,7 @@ def getManufactFromMac(mac):
 
         manDict[mac] = manufacturer
 
-        with open("manDict.p", "rb") as f:
+        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
             pickle.dump(manDict, f)
 
         return manufacturer

@@ -9,7 +9,7 @@ def execute(query, data, all=True):
     If `all` is False then only gets one entry matching the query
     """
     try:
-        connection = psycopg2.connect("dbname=test")
+        connection = psycopg2.connect("dbname=testdb user=postgres password=password")
     except:
         print("Connection error")
     else:
@@ -32,26 +32,26 @@ def execute(query, data, all=True):
 
 def getNoBurst():
     """ Get rows of packets where burst is NULL """
-    query = "SELECT * FROM packets WHERE burst == NULL"
+    query = "SELECT * FROM packets WHERE burst IS NULL ORDER BY id"
     result = execute(query, "", all=True)
     return result
 
 def getNoCat():
     """ Get rows of bursts where category is NULL """
-    query = "SELECT * FROM bursts WHERE category == NULL"
+    query = "SELECT * FROM bursts WHERE category IS NULL ORDER BY id"
     result = execute(query, "", all=True)
     return result
 
 def getRowsWithBurst(burst):
     """ Get rows of packets where burst is the value specified """
-    getRows = "SELECT * FROM packets WHERE burst == %s" % burst
+    getRows = "SELECT * FROM packets WHERE burst = %s ORDER BY id" % burst
     result = execute(getRows, "", all=True)
     return result
 
 def insertNewBurst():
     """ Insert a new burst with no category and return the ID"""
-    sql = """INSERT INTO bursts(category) VALUES(%s) RETURNING id;"""
-    resultId = execute(sql, "NULL", all=False)[0]
+    sql = """INSERT INTO bursts(category) VALUES(NULL) RETURNING id;"""
+    resultId = execute(sql, "", all=False)[0]
     return resultId
 
 def updatePacketBurst(packet_id, burst_id):
@@ -62,12 +62,12 @@ def updatePacketBurst(packet_id, burst_id):
 def addOrGetCategoryNumber(category):
     """ Adds a new category with the string category, and returns its id """
     check = """SELECT * FROM categories WHERE name = %s """
-    result = execute(check, category, all=False)
+    result = execute(check, (category, ), all=False)
     if result is not None:
         return result[0]
     else:
         sql = """INSERT INTO categories(name) VALUES(%s) RETURNING id;"""
-        resultId = execute(sql, category, all=False)[0]
+        resultId = execute(sql, (category, ), all=False)[0]
         return resultId
 
 def updateBurstCategory(burst_id, category_id):
