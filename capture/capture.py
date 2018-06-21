@@ -4,6 +4,10 @@ import pyshark
 import datetime
 import psycopg2
 
+#constants
+COMMIT_INTERVAL = 5
+LOCAL_IP_MASK = "192"
+
 #initialise vars
 timestamp = 0 
 queue = []
@@ -15,9 +19,35 @@ def DatabaseInsert(packets):
 	conn = psycopg2.connect("dbname=testdb user=postgres password=password")
 	cur = conn.cursor()
 	
-	#insert packets into table
 	for packet in packets:
-		cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto) VALUES (%s, %s, %s, %s, %s, %s)", (timestamp + datetime.timedelta(seconds=float(packet.time)), packet.source, packet.destination, 'aa:aa:aa:aa:aa:aa', packet.length, packet.protocol))
+		#clean up packet info before entry
+		mac = ''
+		src = ''
+		dst = ''
+		proto = ''
+
+		try:
+			if LOCAL_IP_MASK in packet['ip'].dst and LOCAL_IP_MASK not in packet['ip'].src:
+				mac = packet['eth'].dst
+			else:
+				mac = packet['eth'].src
+		except KeyError:
+			mac = packet['eth'].src
+
+		try:
+			src = packet['ip'].src
+			dst = packet['ip'].dst
+		except KeyError:
+			src = 0
+			dst = 0
+
+		if len(packet.highest_layer) > 10:
+			proto = packet.highest_layer[:10]
+		else:
+			proto = packet.highest_layer
+
+		#insert packets into table
+		cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto) VALUES (%s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto))
 		
 	#commit the new records and close db connection
 	conn.commit()
@@ -25,8 +55,7 @@ def DatabaseInsert(packets):
 	conn.close()
 
 def QueuedCommit(packet):
-	#commit packets to the database in 5 sec intervals
-	#in an attempt to avoid db dying during high use periods
+	#commit packets to the database in COMMIT_INTERVAL second intervals
 
 	now = datetime.datetime.now()
 	global timestamp
@@ -39,13 +68,13 @@ def QueuedCommit(packet):
 	queue.append(packet)
 	
 	#time to commit to db
-	if (now - timestamp).total_seconds() > 5:
+	if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
 		DatabaseInsert(queue)
 		queue = []
 		timestamp = 0
-	
+
 #configure capture object
-capture = pyshark.LiveCapture(interface='wlp58s0', only_summaries=True)
+capture = pyshark.LiveCapture(interface='wlp58s0')#, only_summaries=True)
 capture.set_debug()
 
 #start capturing
