@@ -1,7 +1,8 @@
-import categorisationMain, databaseBursts, psycopg2
+import databaseBursts, psycopg2
+from burstProcessing import packetBurstification, burstPrediction
 
-
-categorisationMain.main()
+packetBurstification()
+burstPrediction()
 
 getAll = """ SELECT * FROM bursts ORDER BY id"""
 print ( databaseBursts.execute(getAll, ""))
