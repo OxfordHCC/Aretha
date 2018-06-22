@@ -1,9 +1,11 @@
 """
 Main methods for binning packets into bursts and categorising packets
 """
-import requests, os, pickle, json
+import requests, os, pickle, json, sys
 
-import databaseBursts, predictions
+import predictions
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+import databaseBursts # pylint: disable=C0413, E0401
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 

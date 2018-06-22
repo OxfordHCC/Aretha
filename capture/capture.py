@@ -4,9 +4,10 @@ import pyshark
 import datetime
 import psycopg2
 import threading
-import sys
-sys.path.append('../db/')
-from burstProcessing import packetBurstification, burstPrediction
+import sys, os
+
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
+from burstProcessing import packetBurstification, burstPrediction # pylint: disable=C0413, E0401
 
 #constants
 COMMIT_INTERVAL = 5

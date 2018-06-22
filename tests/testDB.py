@@ -1,11 +1,13 @@
-import psycopg2, os, time, datetime
-from scapy.all import rdpcap, IP, TCP
-import databaseBursts
+import psycopg2, os, time, datetime, sys
+from scapy.all import rdpcap, IP, TCP # pylint: disable=C0413, E0611
+
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+import databaseBursts # pylint: disable=C0413, E0401
 
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-databaseBursts.execute(open(os.path.join(FILE_PATH, "schema.sql"), "rb").read(), "")
+databaseBursts.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
 
 first = True
 
