@@ -3,10 +3,15 @@
 import pyshark
 import datetime
 import psycopg2
+import threading
+import sys
+sys.path.append('../db/')
+from burstProcessing import packetBurstification, burstPrediction
 
 #constants
 COMMIT_INTERVAL = 5
-LOCAL_IP_MASK = "192"
+LOCAL_IP_MASK_16 = "192.168."
+LOCAL_IP_MASK_24 = "10."
 
 #initialise vars
 timestamp = 0 
@@ -27,19 +32,23 @@ def DatabaseInsert(packets):
 		proto = ''
 
 		try:
-			if LOCAL_IP_MASK in packet['ip'].dst and LOCAL_IP_MASK not in packet['ip'].src:
-				mac = packet['eth'].dst
-			else:
-				mac = packet['eth'].src
-		except KeyError:
-			mac = packet['eth'].src
-
-		try:
 			src = packet['ip'].src
 			dst = packet['ip'].dst
 		except KeyError:
 			src = 0
 			dst = 0
+
+		try:
+			srcLocal = LOCAL_IP_MASK_16 in src or LOCAL_IP_MASK_24 in src
+			dstLocal = LOCAL_IP_MASK_16 in dst or LOCAL_IP_MASK_24 in dst
+		except:
+			srcLocal = False
+			dstLocal = False
+
+		if dstLocal and not srcLocal:
+			mac = packet['eth'].dst
+		else:
+			mac = packet['eth'].src
 
 		if len(packet.highest_layer) > 10:
 			proto = packet.highest_layer[:10]
@@ -53,6 +62,10 @@ def DatabaseInsert(packets):
 	conn.commit()
 	cur.close()
 	conn.close()
+
+def Categorise():
+	packetBurstification()
+	burstPrediction()
 
 def QueuedCommit(packet):
 	#commit packets to the database in COMMIT_INTERVAL second intervals
@@ -70,6 +83,8 @@ def QueuedCommit(packet):
 	#time to commit to db
 	if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
 		DatabaseInsert(queue)
+		t = threading.Thread(target=Categorise)
+		t.start()
 		queue = []
 		timestamp = 0
 
