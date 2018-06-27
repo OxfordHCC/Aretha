@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
-import { ActivityLogService } from "app/activity-log.service";
 
 interface AppImpactGeo {
   appid: string;
@@ -58,8 +57,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService,
-    private actlog: ActivityLogService) {
+    private hover: HoverService) {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -323,12 +321,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    this.actlog.log('mouseenter', 'geobar');
+    //this.actlog.log('mouseenter', 'geobar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    this.actlog.log('mouseleave', 'geobar');
+    //this.actlog.log('mouseleave', 'geobar');
   }  
 
 }

@@ -6,7 +6,8 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
-import { ActivityLogService } from "app/activity-log.service";
+
+
 
 interface AppImpact {
   appid: string;
@@ -45,7 +46,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
-  @Input() showTypesLegend = true;
+  @Input() showTypesLegend = false;
   @Input() showXAxis = true;
 
   @Input() scale = false;
@@ -61,8 +62,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService,
-    private actlog: ActivityLogService) {
+    private hover: HoverService) {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -88,9 +88,11 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
         delete this.apps;
       }
-      this.usage = this.usage_in;
+      this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
       this.compileImpacts(this.usage).then(impacts => {
         this.impacts = impacts;
+        this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
+        {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
         this.render();
       });
     });
@@ -137,7 +139,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.lastMax = 0;
     this._byTime = val;
     this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      this.impacts = impacts;
+      this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
+      this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
+      {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
+        
       this.render();
     }));
   }
@@ -162,12 +167,12 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   @HostListener('mouseenter')
   mouseEnter() {
-    this.actlog.log('mouseenter', 'refinebar');
+    //this.actlog.log('mouseenter', 'refinebar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    this.actlog.log('mouseleave', 'refinebar');
+    //this.actlog.log('mouseleave', 'refinebar');
   }  
 
   // 
@@ -257,14 +262,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     g.selectAll('rect.back')
       .data(companies)
       .enter().append('rect')
-      .attr('class', (company) => 'back ' + this.companyid2info.get(company).typetag)
+      .attr('class', (company) => 'back ' + company) // + this.companyid2info.get(company).typetag)
       .attr('x', (company) => x(company))
       .attr('y', 0)
       .attr('height', height)
       .attr('width', x.bandwidth())
-      .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)))
-      .on('mouseenter', (d) => this._companyHover(this.companyid2info.get(d), true))
-      .on("mouseleave", (d) => this._companyHover(this.companyid2info.get(d), false));
+      .on('click', (d) => this.focus.focusChanged(d)) // this.focus.focusChanged(this.companyid2info.get(d)))
+      .on('mouseenter', (d) => this._companyHover(d, true)) // this._companyHover(this.companyid2info.get(d), true))
+      .on("mouseleave", (d) => this._companyHover(d, false)); // this._companyHover(this.companyid2info.get(d), false));
 
     // main rects
     const f = (selection, first, last) => {
@@ -322,8 +327,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     } else {
       svg.selectAll('g.axis.x g.tick')
         .filter(function (d) { return d; })
-        .attr('class', (d) => this.companyid2info.get(d).typetag)
-        .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)));
+        .attr('class', (d) => d.typetag)
+        .on('click', (d) => this.focus.focusChanged(d));
     }
 
     g.append('g')

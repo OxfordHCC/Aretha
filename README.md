@@ -15,7 +15,13 @@ Then run `node google-serv.js` in /crunchbaseSupport
 
 Then run `ng serve` in \ui and head to `localhost:4200`
 
+Stripped away a lot of the components from other views that we don't want/need for IoT-refine
+
+Found what needs to be changed to get refinebar running with IoT stuff, next step is to hook this up to an API for our database
+
 ## UI scratch
+
+A misguided attempt to build the UI from scratch, hacking refine will be far uglier code but will have far more features if it works 
 
 Pip install dnspython and ipwhois, run `dbTocsv.py` to convert postgres data to csv, visualise with stacked bars in `test.html`
 

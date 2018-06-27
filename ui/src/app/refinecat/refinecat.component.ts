@@ -6,7 +6,6 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
-import { ActivityLogService } from "app/activity-log.service";
 
 interface AppImpactCat {
   appid: string;
@@ -56,8 +55,7 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService,
-    private actlog: ActivityLogService) {
+    private hover: HoverService) {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -94,7 +92,7 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
 
         impacts = _.flatten(_.map(red_impacts, (catimpacts, appid) => _.map(catimpacts, (impact, cat) => ({ appid: appid, category: cat, impact: impact } as AppImpactCat))));
         // console.log('cat red_impacts ', red_impacts, impacts);
-        this.impacts = impacts;
+        //this.impacts = impacts;
 
         this.render();
       })
@@ -135,8 +133,7 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
     this.lastMax = 0;
     this._byTime = val;
     this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      this.impacts = impacts;
-      console.log(this.impacts);
+      //this.impacts = impacts;
       this.render();
     }));
   }
@@ -349,12 +346,12 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
 
   @HostListener('mouseenter')
   mouseEnter() {
-    this.actlog.log('mouseenter', 'refinecat');
+    //this.actlog.log('mouseenter', 'refinecat');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    this.actlog.log('mouseleave', 'refinecat');
+    //this.actlog.log('mouseleave', 'refinecat');
   }  
 
   @HostListener('window:resize')

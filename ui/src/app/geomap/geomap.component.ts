@@ -9,7 +9,6 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import * as colorbrewer from 'colorbrewer';
-import { ActivityLogService } from "app/activity-log.service";
 
 
 interface AppImpactGeo {
@@ -60,8 +59,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService,
-    private actlog: ActivityLogService) {
+    private hover: HoverService) {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -273,12 +271,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    this.actlog.log('mouseenter', 'geomap');
+    //this.actlog.log('mouseenter', 'geomap');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    this.actlog.log('mouseleave', 'geomap');
+    //this.actlog.log('mouseleave', 'geomap');
   }
 
 }

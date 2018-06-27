@@ -36,8 +36,12 @@ with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"packetData.cs
 
     titles = ["ipdest"]
 
+    TOREFINE = []
+    REFINEUSAGE = []
+
     for mac in allMacs:
         dev = getDeviceFromMac(mac)
+        REFINEUSAGE.append({"appid":dev, "mins":15})
         titles.append(dev)
 
     writer.writerow(titles)
@@ -72,7 +76,12 @@ with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"packetData.cs
         for mac in allMacs:
             try:
                 newRow.append(lengthsPerIpPerMac[dest+mac])
+                if(lengthsPerIpPerMac[dest+mac] !=0):
+                    TOREFINE.append({"appid":getDeviceFromMac(mac), "companyid":newRow[0],"impact":lengthsPerIpPerMac[dest+mac]})
             except:
                 newRow.append("0")
 
         writer.writerow(newRow)
+
+print(TOREFINE)
+print(REFINEUSAGE)

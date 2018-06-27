@@ -448,7 +448,7 @@ export class LoaderService {
       } else {
         console.warn('null appinfo');
       }
-      console.log(appinfo);
+      //console.log(appinfo);
       return appinfo;
     });
   }

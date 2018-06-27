@@ -36,26 +36,11 @@ import { UserStudySetupComponent } from './user-study-setup/user-study-setup.com
 
 
 
-const appRoutes: Routes = [
+const appRoutes: Routes = [ 
   {
-    path: 'alternatives/:app',
-    component: CompareContainerComponent
-  },  
-  {
-    path: 'grid',
+    path: '',
     component: TiledAllComponent,
-  },    
-  {
-    path: 'scroll',
-    component: TiledDisplayComponent,
-  },  
-  {
-    path: 'add',
-    component: UsagetableComponent,
-  },  
-  { path: 'setup', component: UserStudySetupComponent },
-  { path: '', redirectTo: '/add', pathMatch: 'full' },
-  { path: '**', component: ErrorComponent, data: { message: 'page not found' } }
+  }
 ];
 
 
