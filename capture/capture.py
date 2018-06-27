@@ -90,7 +90,7 @@ def QueuedCommit(packet):
 		timestamp = 0
 
 #configure capture object
-capture = pyshark.LiveCapture(interface='wlp58s0')#, only_summaries=True)
+capture = pyshark.LiveCapture(interface='2')#, only_summaries=True)
 capture.set_debug()
 
 #start capturing

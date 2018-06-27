@@ -124,7 +124,13 @@ def getDeviceFromMac(mac):
     with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
         manDev = json.load(f)["manDev"]
 
-    return manDev[manufact]
+    try:
+        dev = manDev[manufact]
+    except:
+        dev = "Unknown"
+        print("Unknown device for: " + manufact)
+
+    return dev
 
 def burstPrediction():
     """

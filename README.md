@@ -7,6 +7,18 @@ Refine for the smart home
 * (front end)
 * init
 
+## UI
+
+To get the xray UI running do `npm install` in /ui and /crunchbaseSupport, also do `npm install @angular/cli@1.1.3` in /ui
+
+Then run `node google-serv.js` in /crunchbaseSupport
+
+Then run `ng serve` in \ui and head to `localhost:4200`
+
+## UI scratch
+
+Pip install dnspython and ipwhois, run `dbTocsv.py` to convert postgres data to csv, visualise with stacked bars in `test.html`
+
 ## Db
 
 Written for Postgres
