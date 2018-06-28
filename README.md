@@ -17,7 +17,7 @@ Then run `ng serve` in \ui and head to `localhost:4200`
 
 Stripped away a lot of the components from other views that we don't want/need for IoT-refine
 
-Found what needs to be changed to get refinebar running with IoT stuff, next step is to hook this up to an API for our database
+Not using an API for the db instead outputting to json
 
 ## UI scratch
 

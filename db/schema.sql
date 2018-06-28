@@ -22,6 +22,6 @@ create table packets (
 	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
 	proto varchar(10) not null, --protocol if known, otherwise port number
-	burst integer references bursts --optional, 
+	burst integer references bursts --optional,
 	--company integer references companies --optional, assumes table of companies (stolen from refine)
 );

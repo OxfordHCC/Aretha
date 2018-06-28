@@ -7,6 +7,9 @@ import predictions
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts # pylint: disable=C0413, E0401
 
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "macHelpers"))
+import macHelpMethods # pylint: disable=C0413, E0401
+
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def packetBurstification():
@@ -24,7 +27,7 @@ def packetBurstification():
         id = row[0]
         mac = row[4]
 
-        dev = getDeviceFromMac(mac)
+        dev = macHelpMethods.getDeviceFromMac(mac)
 
         with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
             config = json.load(f)
@@ -81,56 +84,7 @@ def packetBurstification():
         for packetRowId in burst:
             databaseBursts.updatePacketBurst(packetRowId, newBurstId)
             
-def getManufactFromMac(mac):
-    """ 
-    Gets a device manufacturer from a mac
-    Uses a pickled dict to relate mac addresses to manufacturers from the api
-    """
-    if os.path.isfile(os.path.join(FILE_PATH, "manDict.p")):
-        with open(os.path.join(FILE_PATH, "manDict.p"), "rb") as f:
-            manDict = pickle.load(f)
-    else:
-        manDict = {}
 
-    if mac in manDict.keys():
-        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
-            pickle.dump(manDict, f)
-
-        return manDict[mac]
-
-    else:
-        r = requests.get("https://api.macvendors.com/" + mac)
-        manufacturer = r.text
-
-        manDict[mac] = manufacturer
-
-        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
-            pickle.dump(manDict, f)
-
-        return manufacturer
-    
-
-def getDeviceFromMac(mac):
-    """ 
-    Gets a device name from a mac 
-    Relates manufacturer names to devices via a json dictionary
-    """
-    
-    manufact = getManufactFromMac(mac)
-
-    if manufact == """ {"errors":{"detail":"Page not found"}} """:
-        return "Unknown"
-
-    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-        manDev = json.load(f)["manDev"]
-
-    try:
-        dev = manDev[manufact]
-    except:
-        dev = "Unknown"
-        print("Unknown device for: " + manufact)
-
-    return dev
 
 def burstPrediction():
     """
@@ -146,7 +100,7 @@ def burstPrediction():
         
         rows = databaseBursts.getRowsWithBurst(burst[0])
 
-        device = getDeviceFromMac(rows[0][4])
+        device = macHelpMethods.getDeviceFromMac(rows[0][4])
 
         if device == "Echo" and len(rows) > cutoffs[device]:
             category = predictions.predictEcho(rows)

@@ -1,0 +1,140 @@
+{
+    "dbreset": false,
+    "idSoFar": 1402,
+    "impacts": [
+        {
+            "appid": "Laptop2",
+            "companyid": "52.25.249.59",
+            "impact": 30
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "151.101.17.108",
+            "impact": 10
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "31.13.90.38",
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "239.255.255.250",
+            "impact": 4
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "8.40.222.94",
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "8.40.222.57",
+            "impact": 12
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "31.13.90.2",
+            "impact": 20
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "65.55.44.109",
+            "impact": 206
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "155.133.248.50",
+            "impact": 32
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "34.251.35.119",
+            "impact": 34
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "163.1.88.56",
+            "impact": 1052
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "98.158.146.7",
+            "impact": 48
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "173.194.76.189",
+            "impact": 88
+        },
+        {
+            "appid": "Samsung Phone",
+            "companyid": "0",
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "0",
+            "impact": 4
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "204.79.197.213",
+            "impact": 102
+        },
+        {
+            "appid": "Echo",
+            "companyid": "52.94.221.173",
+            "impact": 874
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "52.25.249.59",
+            "impact": 60
+        },
+        {
+            "appid": "Laptop2",
+            "companyid": "52.138.216.83",
+            "impact": 42
+        },
+        {
+            "appid": "Echo",
+            "companyid": "34.194.105.124",
+            "impact": 6
+        }
+    ],
+    "macMan": {
+        "24:a7:dc:02:1d:79": "BSkyB Ltd",
+        "30:52:cb:e7:8e:05": "Liteon Technology Corporation",
+        "48:45:20:d5:ff:84": "Intel Corporate",
+        "60:38:e0:d4:db:98": "Belkin International Inc.",
+        "70:8b:cd:8a:85:7e": "ASUSTek COMPUTER INC.",
+        "88:71:e5:e9:9e:6c": "Amazon Technologies Inc.",
+        "8c:f5:a3:08:83:a9": "SAMSUNG ELECTRO-MECHANICS(THAILAND)",
+        "c4:e9:84:a0:a8:06": "TP-LINK TECHNOLOGIES CO.,LTD.",
+        "ec:08:6b:79:bd:75": "TP-LINK TECHNOLOGIES CO.,LTD."
+    },
+    "manDev": {
+        "ASUSTek COMPUTER INC.": "Laptop",
+        "Amazon Technologies Inc.": "Echo",
+        "BSkyB Ltd": "LondonRouter",
+        "Belkin International Inc.": "Unknown",
+        "Intel Corporate": "Laptop2",
+        "SAMSUNG ELECTRO-MECHANICS(THAILAND)": "Samsung Phone",
+        "TP-LINK TECHNOLOGIES CO.,LTD.": "Router"
+    },
+    "usage": [
+        {
+            "appid": "Samsung Phone",
+            "mins": 15
+        },
+        {
+            "appid": "Echo",
+            "mins": 15
+        },
+        {
+            "appid": "Laptop2",
+            "mins": 15
+        }
+    ]
+}

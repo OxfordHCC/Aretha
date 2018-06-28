@@ -1,11 +1,5 @@
 {
-    "manDev": {
-        "Amazon Technologies Inc.": "Echo",
-        "TP-LINK TECHNOLOGIES CO.,LTD.":"Router",
-        "ASUSTek COMPUTER INC.":"Laptop",
-        "SAMSUNG ELECTRO-MECHANICS(THAILAND)":"Samsung Phone"
-    },
-
+    
     "burstTimeIntervals": {
         "Echo": 1,
         "Hue": 1, 

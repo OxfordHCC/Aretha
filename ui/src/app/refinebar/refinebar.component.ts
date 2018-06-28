@@ -6,8 +6,10 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
+import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 
-
+const LOCAL_IP_MASK_16 = "192.168.";
+const LOCAL_IP_MASK_24 = "10.";
 
 interface AppImpact {
   appid: string;
@@ -58,7 +60,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   _companyHovering: CompanyInfo;
   _hoveringApp: APIAppInfo;
 
-  constructor(private el: ElementRef,
+  constructor(private httpM: HttpModule, 
+    private http: Http, 
+    private el: ElementRef,
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
@@ -66,6 +70,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
+
+    this.getIoTData();
+    //this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 15}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
+    //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
+    //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
+    console.log(this.usage) 
+
     hover.HoverChanged$.subscribe((target) => {
       // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
@@ -80,6 +91,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
 
+  getIoTData(): void {
+    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+      this.usage = response2.json()["usage"];
+      this.impacts = response2.json()["impacts"];
+      this.render()
+    });
+  }
+
 
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
@@ -88,11 +107,11 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
         delete this.apps;
       }
-      this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
+      //this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
       this.compileImpacts(this.usage).then(impacts => {
-        this.impacts = impacts;
-        this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
-        {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
+        //this.impacts = impacts;
+        //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
+        //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
         this.render();
       });
     });
@@ -139,9 +158,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.lastMax = 0;
     this._byTime = val;
     this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
-      this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
-      {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
+      //this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
+      //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
+      //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
         
       this.render();
     }));
@@ -182,7 +201,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
 
-    console.log(this.impacts);
+    //console.log(this.impacts);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
@@ -220,6 +239,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     if (this.apps === undefined) {
       // sort apps
       apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+      console.log(apps)
       this.apps = apps;
     } else {
       apps = this.apps;
