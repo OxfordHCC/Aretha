@@ -136,14 +136,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     const timebased = this.byTime === 'yes',
       total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
       impacts = usage.map((u) => ({ ...u, impact: 
-        this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)))
+		  this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total / 1000000 : 1.0)))
       }));
 
     return Promise.all(impacts.map((usg): Promise<AppImpact[]> => {
 
       return this._getApp(usg.appid).then(app => {
         const hosts = app && app.hosts;
-        if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
+		if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
 
         return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
           .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))

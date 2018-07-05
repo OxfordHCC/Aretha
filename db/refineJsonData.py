@@ -100,6 +100,7 @@ def compileUsageImpacts():
         ## Get every external destination, and count them for that mac 
 
         for row in result:
+            print(row)
             if (LOCAL_IP_MASK_16 in row[2] or LOCAL_IP_MASK_24 in row[2]) and \
             (LOCAL_IP_MASK_16 in row[3] or LOCAL_IP_MASK_24 in row[3]):
                 # internal comms so ignore
@@ -111,7 +112,8 @@ def compileUsageImpacts():
 
             allDests.add(destination)
             
-            lengthsPerIpPerMac[destination+row[4]] += 1 
+            #count data transfered in mbytes
+            lengthsPerIpPerMac[destination+row[4]] += row[5]
 
         ## For each destination we have to add a row to the json
         ## Want to add the device, destination and number to make stacked bars
