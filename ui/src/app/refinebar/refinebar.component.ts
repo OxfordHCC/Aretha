@@ -355,10 +355,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .attr('class', 'axis y')
       .call(d3.axisLeft(y).ticks(null, 's'))
       .append('text')
-      .attr('x', 2)
+      .attr('x', 20)
       .attr('y', y(y.ticks().pop()) - 8)
-      .attr('dy', '0.32em')
-      .text('Impact');
+      .attr('dy', '0.22em')
+      .text('Impact (mB)');
 
     // legend
     const leading = 26;

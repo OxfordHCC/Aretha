@@ -8,6 +8,7 @@ import * as topojson from 'topojson';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
+import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import * as colorbrewer from 'colorbrewer';
 
 
@@ -55,7 +56,9 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   _companyHovering: CompanyInfo;
   _hoveringApp: APIAppInfo;
 
-  constructor(private el: ElementRef,
+  constructor(private httpM: HttpModule, 
+    private http: Http, 
+    private el: ElementRef,
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
@@ -63,14 +66,17 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
-    hover.HoverChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as APIAppInfo : undefined;
-        this.render();
-      }
-    });
+
+    this.getIoTData();
+    
     (<any>window)._rb = this;
+  }
+  getIoTData(): void {
+    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+      this.usage = response2.json()["usage"];
+      this.impacts = response2.json()["geos"];
+      this.render()
+    });
   }
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
@@ -83,21 +89,8 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
         delete this.apps;
       }
-      this.usage = this.usage_in;
+      //this.usage = this.usage_in;
       this.compileImpacts(this.usage_in).then(impacts => {
-        let red_impacts = impacts.reduce((perapp, impact) => {
-          let appcity = (perapp[impact.appid] || {});
-          appcity[impact.geo.city] = (appcity[impact.geo.city] || 0) + impact.impact;
-          perapp[impact.appid] = appcity;
-          return perapp;
-        }, {}),
-          geobycity = impacts.reduce((obj, impact) => {
-            obj[impact.geo.city] = obj[impact.geo.city] || impact.geo;
-            return obj;
-          }, {});
-
-        impacts = _.flatten(_.map(red_impacts, (cityobj, appid) => _.map(cityobj, (impact, city) => ({ appid: appid, geo: geobycity[city], impact: impact } as AppImpactGeo))));
-        this.impacts = impacts.filter(i => i && i.appid && i.geo && i.geo.latitude && i.geo.longitude);
         this.render();
       });
     });
@@ -168,6 +161,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     const usage = this.usage,
       impacts = this.impacts;
+      console.log(impacts);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     if (this.apps === undefined) {

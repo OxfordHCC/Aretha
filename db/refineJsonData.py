@@ -1,6 +1,7 @@
 import psycopg2, os, sys, json, csv
 from collections import defaultdict
 from ipwhois import IPWhois
+from ipdata import ipdata
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts # pylint: disable=C0413, E0401
@@ -25,6 +26,16 @@ def updateImpact(impacts, device, destination, number):
     impacts.append({"appid":device, "companyid":destination, "impact":number})
     return impacts
     
+def getGeoFromIp(ip):
+    _ip = ipdata.ipdata(apikey="a1d902ad33fcd325dc6f5c94e93bb3d3c8337194a9738855b682b7f4")
+    data = _ip.lookup(ip)
+    if data['status']==200:
+        data["response"].pop("emoji_flag", None)
+        data["response"].pop("emoji_unicode", None)
+        data["response"].pop("currency", None)
+        return data['response']
+    else:
+        return data['response']
 
 def compileUsageImpacts():
     
@@ -130,12 +141,10 @@ def compileUsageImpacts():
 
                 except KeyError:
                     print("Key error, but not sure why")
+
+    
+    ## Add everything to the dictinoary of data that is stored in assets
                 
-
-
-    #print(impacts)
-    #print(usage)
-
 
     if len(result) > 0:
         bigDictionary = {"usage": usage, "impacts": impacts, "idSoFar":result[-1][0]}
@@ -152,3 +161,64 @@ def compileUsageImpacts():
 
         with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
+
+    ## Now get the geo data and store that also 
+
+    #print(data["impacts"])
+    #print(data["geos"][0])
+
+    ## Get all the IP addresses that need looking up 
+
+    try:
+        ipsToIgnore = data["ipsToIgnore"]
+    except KeyError:
+        ipsToIgnore = []
+
+    impactsToDo = []
+
+    for impact in data["impacts"]:
+        try:
+            miss = False
+            ip = impact["companyid"]
+            for geo in data["geos"]:
+                #print(geo)
+                if geo["geo"] == """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
+                    miss = True
+                elif ip == geo["geo"]["ip"]:
+                    miss = True
+            
+            for difIP in ipsToIgnore:
+                if ip == difIP:
+                    miss = True
+            
+            if not miss:
+                impactsToDo.append(impact)
+        except KeyError:
+            impactsToDo.append(impact)
+
+    print(impactsToDo)
+
+    ## Get geo for each impact and add it 
+
+    try:
+        newGeos = data["geos"]
+    except KeyError:
+        newGeos = []
+
+    for impact in impactsToDo:
+        geo = getGeoFromIp(impact["companyid"])
+        print("Calling")
+        if geo != """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
+            newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
+        else:
+            # store duff IPs so that they aren't called again
+            ipsToIgnore.append(impact["companyid"])
+
+    data["geos"] = newGeos
+    data["ipsToIgnore"] = ipsToIgnore
+
+    with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
+            json.dump(data, fp, sort_keys=True, indent=4)
+
+
+    ## TODO: Now using this data just gained, give names for each organisation on impacts
