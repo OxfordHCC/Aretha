@@ -14,47 +14,48 @@ dataPath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 
 LOCAL_IP_MASK_16 = "192.168."
 LOCAL_IP_MASK_24 = "10."
-FAKE_GEO = {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
-                "is_eu": False,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": False,
-                    "is_bogon": False,
-                    "is_known_abuser": False,
-                    "is_known_attacker": False,
-                    "is_proxy": False,
-                    "is_threat": False,
-                    "is_tor": False
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": True,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
+FAKE_GEO = {"asn": "X",
+            "calling_code": "1",
+            "city": "Unknown",
+            "continent_code": "Unknown",
+            "continent_name": "Unknown",
+            "count": "1",
+            "country_code": "Unknown",
+            "country_name": "Unknown",
+            "flag": "Unknown",
+            "ip": "0",
+            "is_eu": False,
+            "languages": [
+                {
+                    "name": "English",
+                    "native": "English"
                 }
-}
+            ],
+            "latitude": 1,
+            "longitude": 1,
+            "organisation": "Unknown",
+            "postal": "Unknown",
+            "region": "Unknown",
+            "region_code": "Unknown",
+            "threat": {
+                "is_anonymous": False,
+                "is_bogon": False,
+                "is_known_abuser": False,
+                "is_known_attacker": False,
+                "is_proxy": False,
+                "is_threat": False,
+                "is_tor": False
+            },
+            "time_zone": {
+                "abbr": "PDT",
+                "current_time": "2018-07-09T08:27:30.360976-07:00",
+                "is_dst": True,
+                "name": "America/Los_Angeles",
+                "offset": "-0700"
+            }
+           }
+
+#print(FAKE_GEO)
 
 def getFake(ip):
     """ 
@@ -62,6 +63,7 @@ def getFake(ip):
     """
     res = FAKE_GEO
     res["ip"] = ip
+    #print(ip)
     return res
 
 def updateImpact(impacts, device, destination, number):
@@ -249,6 +251,7 @@ def processGeoData(resetted, data):
                 #print(geo)
                 if geo["geo"] == """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
                     miss = True
+                    duffImpacts.append(impact)
                 elif ip == geo["geo"]["ip"]:
                     miss = True
             
@@ -278,8 +281,12 @@ def processGeoData(resetted, data):
         geo = getGeoFromIp(impact["companyid"])
         #print("Calling")
         if geo != """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
+            if geo["organisation"] == "":
+                geo = getFake(impact["companyid"])
             newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
+            
         else:
+            
             # store duff IPs so that they aren't called again
             ipsToIgnore.append(impact["companyid"])
 

@@ -31,8 +31,10 @@ def packetBurstification():
 
         with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
             config = json.load(f)
-
-            burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+            try:
+                burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+            except KeyError:
+                burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
         
         if id not in allIds:
             

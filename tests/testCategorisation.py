@@ -14,7 +14,7 @@ print ( databaseBursts.execute(getAll, ""))
 getAll = """ SELECT * FROM categories ORDER BY id"""
 print ( databaseBursts.execute(getAll, ""))
 
-getALL = """ SELECT * FROM packets WHERE burst = 7 ORDER BY id """
+getALL = """ SELECT MIN(time), MIN(mac), burst FROM packets GROUP BY burst ORDER BY burst  """
 result = databaseBursts.execute(getALL, "")
 
 for row in result:
