@@ -74,7 +74,16 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   getIoTData(): void {
     this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
-      this.impacts = response2.json()["geos"];
+      var impacts = response2.json()["geos"];
+
+      var minMax = impacts.reduce((acc, val) => {
+        acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
+        acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
+        return acc;
+      }, []);
+
+      this.impacts = impacts.map(impact => ({impact: impact.impact/minMax[1], geo: impact.geo, appid: impact.appid }))
+
       this.render()
     });
   }

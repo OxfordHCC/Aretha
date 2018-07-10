@@ -15,6 +15,8 @@ Then run `node google-serv.js` in /crunchbaseSupport
 
 Then run `ng serve` in \ui and head to `localhost:4200`
 
+Run`capture.py` to capture data and it should display in this browser 
+
 Stripped away a lot of the components from other views that we don't want/need for IoT-refine
 
 Not using an API for the db instead outputting to json
@@ -32,6 +34,10 @@ Written for Postgres
 Nice things:
 * When looking for packets to bin into bursts, can just look for packets where (burst == NULL)
 * Ditto for bursts to categories
+
+To reset the capture data and db:
+run `resetDb.py` and `runRefine.py`
+
 
 ## Testing
 

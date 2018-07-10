@@ -215,6 +215,10 @@ def compileUsageImpacts():
 
     ## Get all the IP addresses that need looking up 
 
+    if resetted:
+        data["geos"] = []
+        data["ipsToIgnore"] = []
+
     try:
         ipsToIgnore = data["ipsToIgnore"]
     except KeyError:
@@ -276,7 +280,7 @@ def compileUsageImpacts():
             json.dump(data, fp, sort_keys=True, indent=4)
 
 
-    ## TODO: Now using this data just gained, give names for each organisation on impacts
+    ## Now using this data just gained, give names for each organisation on impacts
     newImpacts = data["impacts"]
     for impact in data["impacts"]:
         
