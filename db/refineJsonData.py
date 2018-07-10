@@ -9,6 +9,7 @@ import databaseBursts # pylint: disable=C0413, E0401
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "macHelpers"))
 from macHelpMethods import getDeviceFromMac # pylint: disable=C0413, E0401
 
+# This is where all the data for IoT-refine will be stored after processing
 dataPath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 
 LOCAL_IP_MASK_16 = "192.168."
@@ -31,8 +32,8 @@ FAKE_GEO = {
                         "native": "English"
                     }
                 ],
-                "latitude": 0,
-                "longitude": 0,
+                "latitude": 1,
+                "longitude": 1,
                 "organisation": "Unknown",
                 "postal": "Unknown",
                 "region": "Unknown",
@@ -56,13 +57,17 @@ FAKE_GEO = {
 }
 
 def getFake(ip):
+    """ 
+    Get fake geo data with given ip
+    """
     res = FAKE_GEO
     res["ip"] = ip
     return res
 
 def updateImpact(impacts, device, destination, number):
     """
-    For an impact that is already, update the value to number
+    For an impact that is already there, update the impact value to number given as parameter
+    Pass all existing impacts so this can be removed, in addition to the device name and ip dest
     """
     for impact in impacts:
         if impact["appid"] == device:
@@ -73,6 +78,11 @@ def updateImpact(impacts, device, destination, number):
     return impacts
     
 def getGeoFromIp(ip):
+    """ 
+    Get geo location data from the API from an ip
+    This is limited to 1500 per day, but that shouldn't actually be too few for IoT devices
+    """
+
     _ip = ipdata.ipdata(apikey="a1d902ad33fcd325dc6f5c94e93bb3d3c8337194a9738855b682b7f4")
     data = _ip.lookup(ip)
     if data['status']==200:
@@ -83,12 +93,13 @@ def getGeoFromIp(ip):
     else:
         return data['response']
 
-def compileUsageImpacts():
+def processImpactsUsage(data, manualReset):
+    """
+    Create fake usage and generate impacts out of the data given 
+    Get data from database only that hasn't been processed before 
+    Returns a bool representing if the data was resetted manually or not
+    """
     
-    ## Get any impacts and usage if we already have some 
-
-    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
-        data = json.load(fp)
     try:
         impacts = data["impacts"]
     except:
@@ -101,7 +112,7 @@ def compileUsageImpacts():
     ## If the data was reset by script, start over
 
     resetted = False
-    if data["dbreset"]:
+    if data["dbreset"] or manualReset:
         getALL = """ SELECT * FROM packets ORDER BY id """
         usage = []
         impacts = []
@@ -114,9 +125,6 @@ def compileUsageImpacts():
     macs = """ SELECT DISTINCT mac FROM packets """
     macRes = databaseBursts.execute(macs, "")
 
-    #print(result)
-    #print(macRes)
-
     ## Get all the mac address 
 
     allMacs = []
@@ -125,7 +133,8 @@ def compileUsageImpacts():
         allMacs.append(tuple[0])
 
     ## For each mac address put a fake usage in, so that it displays
-    
+    counter = len(usage) + 1 
+     
     for mac in allMacs:
         dev = getDeviceFromMac(mac)
         miss = False
@@ -133,7 +142,8 @@ def compileUsageImpacts():
             if dev == thisUsage["appid"]:
                 miss = True
         if not miss:
-            usage.append({"appid":dev, "mins":15})
+            usage.append({"appid":dev, "mins":counter})
+            counter += 1
 
     ## Check to see if we already have impacts for any new mac and destination
     ## If we have an impact for the mac, store mac and dest, and that value 
@@ -149,15 +159,13 @@ def compileUsageImpacts():
                 alreadyHaveEntry.append((impact["companyid"],dev))
                 lengthsPerIpPerMac[impact["companyid"] + mac] = impact["impact"]
         
-
-
     allDests = set()
     if len(result) > 0:
         
         ## Get every external destination, and count them for that mac 
 
         for row in result:
-            print(row)
+            #print(row)
             if (LOCAL_IP_MASK_16 in row[2] or LOCAL_IP_MASK_24 in row[2]) and \
             (LOCAL_IP_MASK_16 in row[3] or LOCAL_IP_MASK_24 in row[3]):
                 # internal comms so ignore
@@ -190,7 +198,7 @@ def compileUsageImpacts():
 
     
     ## Add everything to the dictinoary of data that is stored in assets
-                
+    #print(usage)
 
     if len(result) > 0:
         bigDictionary = {"usage": usage, "impacts": impacts, "idSoFar":result[-1][0]}
@@ -201,31 +209,37 @@ def compileUsageImpacts():
         if resetted:
             data["dbreset"] = False
 
+        #print(data)
+
         data["usage"] = bigDictionary["usage"]
         data["impacts"] = bigDictionary["impacts"]
         data["idSoFar"] = bigDictionary["idSoFar"]
 
         with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
+    
+    return resetted
 
-    ## Now get the geo data and store that also 
-
-    #print(data["impacts"])
-    #print(data["geos"][0])
-
-    ## Get all the IP addresses that need looking up 
-
-    if resetted:
-        data["geos"] = []
-        data["ipsToIgnore"] = []
+def processGeoData(resetted, data):
+    """
+    Gets geo data for any impacts that don't already have it
+    If none is available creates fake data for consistency 
+    If data was resetted manually clear old geo and recreate as new 
+    """
 
     try:
         ipsToIgnore = data["ipsToIgnore"]
     except KeyError:
         ipsToIgnore = []
 
+    if resetted:
+        data["geos"] = []
+        data["ipsToIgnore"] = []
+
     impactsToDo = []
     duffImpacts = [] # those with IPs that don't work 
+
+    ## Get all the IP addresses that need looking up 
 
     for impact in data["impacts"]:
         try:
@@ -251,7 +265,7 @@ def compileUsageImpacts():
         except KeyError:
             impactsToDo.append(impact)
 
-    print(impactsToDo)
+    #print(impactsToDo)
 
     ## Get geo for each impact and add it 
 
@@ -262,7 +276,7 @@ def compileUsageImpacts():
 
     for impact in impactsToDo:
         geo = getGeoFromIp(impact["companyid"])
-        print("Calling")
+        #print("Calling")
         if geo != """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
             newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
         else:
@@ -279,19 +293,15 @@ def compileUsageImpacts():
     with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
 
+def updateOrgNames(data):
+    """
+    Using geo data get all organisation names and add to impacts 
+    """
 
-    ## Now using this data just gained, give names for each organisation on impacts
-    newImpacts = data["impacts"]
     for impact in data["impacts"]:
-        
         for geo in data["geos"]:
-            
             if impact["companyid"] == geo["geo"]["ip"]:
-                
-                newImpact = impact
-                newImpact["companyName"] = geo["geo"]["organisation"]
-                newImpacts.remove(impact)
-                newImpacts.append(newImpact)
+                impact["companyName"] = geo["geo"]["organisation"]
                 break
     
     for impact in data["impacts"]:
@@ -300,7 +310,33 @@ def compileUsageImpacts():
         except KeyError:
             impact["companyName"] = "Unknown"
 
-    data["impacts"] = newImpacts
     with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
+
+def compileUsageImpacts(manualReset=False):
+    """
+    The big one, compile all the data we need to run IoT refine 
+    Output it all to the json file in assets 
+    """
+    
+    ## Get any impacts and usage if we already have some 
+
+    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
+        data = json.load(fp)
+
+    resetted = processImpactsUsage(data, manualReset)
+
+    ## Now get the geo data and store that also 
+
+    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
+        data = json.load(fp)
+
+    processGeoData(resetted, data)
+
+    ## Now using this data just gained, give names for each organisation on impacts
+
+    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
+        data = json.load(fp)
+    
+    updateOrgNames(data)
         
