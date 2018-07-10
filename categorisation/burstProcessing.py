@@ -102,6 +102,9 @@ def burstPrediction():
         
         rows = databaseBursts.getRowsWithBurst(burst[0])
 
+        if len(rows) == 0:
+            return
+
         device = macHelpMethods.getDeviceFromMac(rows[0][4])
 
         if device == "Echo" and len(rows) > cutoffs[device]:
