@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
+import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 
 interface AppImpactGeo {
   appid: string;
@@ -53,7 +54,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   _companyHovering: CompanyInfo;
   _hoveringApp: APIAppInfo;
 
-  constructor(private el: ElementRef,
+  constructor(private httpM: HttpModule, 
+    private http: Http, 
+    private el: ElementRef,
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
@@ -68,7 +71,17 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         this.render();
       }
     });
+    this.getIoTData();
     (<any>window)._rb = this;
+  }
+  getIoTData(): void {
+    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+      this.usage = response2.json()["usage"];
+      var impacts = response2.json()["geos"];
+      this.impacts = impacts.map(impact => ({ appid: impact.appid, country: impact.geo.country_name !== '' ? impact.geo.country_name : 'Unknown', country_code: impact.geo.country_code, impact: impact.impact }))
+      console.log(this.impacts)
+      this.render()
+    });
   }
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
@@ -82,7 +95,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         delete this.apps;
       }
       this.compileImpacts(this.usage_in).then(impacts => {
-        this.usage = this.usage_in;
+        /* this.usage = this.usage_in;
         let red_impacts = impacts.reduce((perapp, impact) => {
           let appcat = (perapp[impact.appid] || {});
           appcat[impact.country] = (appcat[impact.country] || 0) + impact.impact;
@@ -90,7 +103,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
           return perapp;
         }, {});
         this.impacts = _.flatten(_.map(red_impacts, (country, appid) => _.map(country, (impact, cat) => ({ appid: appid, country: cat, impact: impact } as AppImpactGeo))));
-        // console.log('country geo impacts after comp > ', impacts);      
+        // console.log('country geo impacts after comp > ', impacts);  */     
         this.render();
       });
     });

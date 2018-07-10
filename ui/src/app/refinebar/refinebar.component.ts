@@ -15,6 +15,7 @@ interface AppImpact {
   appid: string;
   companyid: string;
   impact: number;
+  companyName: string;
 };
 
 @Component({
@@ -95,6 +96,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
       this.impacts = response2.json()["impacts"];
+      console.log(this.impacts)
       this.render()
     });
   }
@@ -225,16 +227,19 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     let usage = this.usage,
       impacts = this.impacts,
       apps = _.uniq(impacts.map((x) => x.appid)),
-      companies = _.uniq(impacts.map((x) => x.companyid)),
+      companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
-        const t = impacts.filter((imp) => imp.companyid === cid && imp.appid === aid)[0];
-        return t !== undefined ? t.impact : 0;
+        const t = impacts.filter((imp) => imp.companyName === cid && imp.appid === aid);
+        console.log(t);
+        const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+        return t !== undefined ? t.reduce(reducer, 0) : 0;
       },
       by_company = companies.map((c) => ({
         company: c,
         total: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
         ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
       }));
+      console.log(by_company);
 
     if (this.apps === undefined) {
       // sort apps

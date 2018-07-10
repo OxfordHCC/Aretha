@@ -825,109 +825,219 @@
                 }
             },
             "impact": 6
+        },
+        {
+            "appid": "Samsung Phone",
+            "geo": {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 0,
+                "longitude": 0,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 0,
+                "longitude": 0,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 4
         }
     ],
     "idSoFar": 1402,
     "impacts": [
         {
             "appid": "Laptop2",
-            "companyid": "52.25.249.59",
-            "impact": 30
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "151.101.17.108",
-            "impact": 10
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "31.13.90.38",
-            "impact": 6
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "239.255.255.250",
+            "companyName": "Unknown",
+            "companyid": "0",
             "impact": 4
         },
         {
             "appid": "Laptop2",
-            "companyid": "8.40.222.94",
-            "impact": 6
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "8.40.222.57",
-            "impact": 12
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "31.13.90.2",
-            "impact": 20
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "65.55.44.109",
-            "impact": 206
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "155.133.248.50",
-            "impact": 32
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "34.251.35.119",
-            "impact": 34
-        },
-        {
-            "appid": "Laptop2",
-            "companyid": "163.1.88.56",
-            "impact": 1052
-        },
-        {
-            "appid": "Laptop2",
+            "companyName": "U.S. COLO, LLC",
             "companyid": "98.158.146.7",
             "impact": 48
         },
         {
             "appid": "Laptop2",
-            "companyid": "173.194.76.189",
-            "impact": 88
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "34.251.35.119",
+            "impact": 34
         },
         {
-            "appid": "Samsung Phone",
-            "companyid": "0",
+            "appid": "Laptop2",
+            "companyName": "ZOHO",
+            "companyid": "8.40.222.94",
             "impact": 6
         },
         {
             "appid": "Laptop2",
-            "companyid": "0",
-            "impact": 4
+            "companyName": "Microsoft Corporation",
+            "companyid": "52.138.216.83",
+            "impact": 42
         },
         {
             "appid": "Laptop2",
-            "companyid": "204.79.197.213",
-            "impact": 102
-        },
-        {
-            "appid": "Echo",
-            "companyid": "52.94.221.173",
-            "impact": 874
-        },
-        {
-            "appid": "Laptop2",
+            "companyName": "Amazon.com, Inc.",
             "companyid": "52.25.249.59",
             "impact": 60
         },
         {
             "appid": "Laptop2",
-            "companyid": "52.138.216.83",
-            "impact": 42
+            "companyName": "Facebook, Inc.",
+            "companyid": "31.13.90.38",
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Fastly",
+            "companyid": "151.101.17.108",
+            "impact": 10
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "65.55.44.109",
+            "impact": 206
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "204.79.197.213",
+            "impact": 102
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Google LLC",
+            "companyid": "173.194.76.189",
+            "impact": 88
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Valve Corporation",
+            "companyid": "155.133.248.50",
+            "impact": 32
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.25.249.59",
+            "impact": 30
         },
         {
             "appid": "Echo",
+            "companyName": "Amazon.com, Inc.",
             "companyid": "34.194.105.124",
             "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Jisc Services Limited",
+            "companyid": "163.1.88.56",
+            "impact": 1052
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "ZOHO",
+            "companyid": "8.40.222.57",
+            "impact": 12
+        },
+        {
+            "appid": "Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.94.221.173",
+            "impact": 874
+        },
+        {
+            "appid": "Samsung Phone",
+            "companyName": "Unknown",
+            "companyid": "0",
+            "impact": 6
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Facebook, Inc.",
+            "companyid": "31.13.90.2",
+            "impact": 20
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "",
+            "companyid": "239.255.255.250",
+            "impact": 4
         }
     ],
     "ipsToIgnore": [

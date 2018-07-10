@@ -13,6 +13,52 @@ dataPath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 
 LOCAL_IP_MASK_16 = "192.168."
 LOCAL_IP_MASK_24 = "10."
+FAKE_GEO = {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
+                "is_eu": False,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 0,
+                "longitude": 0,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": False,
+                    "is_bogon": False,
+                    "is_known_abuser": False,
+                    "is_known_attacker": False,
+                    "is_proxy": False,
+                    "is_threat": False,
+                    "is_tor": False
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": True,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+}
+
+def getFake(ip):
+    res = FAKE_GEO
+    res["ip"] = ip
+    return res
 
 def updateImpact(impacts, device, destination, number):
     """
@@ -175,6 +221,7 @@ def compileUsageImpacts():
         ipsToIgnore = []
 
     impactsToDo = []
+    duffImpacts = [] # those with IPs that don't work 
 
     for impact in data["impacts"]:
         try:
@@ -189,7 +236,11 @@ def compileUsageImpacts():
             
             for difIP in ipsToIgnore:
                 if ip == difIP:
+                    # Only add a fake geo if we don't already have it 
+                    if not miss:
+                        duffImpacts.append(impact)
                     miss = True
+                    
             
             if not miss:
                 impactsToDo.append(impact)
@@ -214,6 +265,10 @@ def compileUsageImpacts():
             # store duff IPs so that they aren't called again
             ipsToIgnore.append(impact["companyid"])
 
+    for impact in duffImpacts:
+        geo = getFake(impact["companyid"])
+        newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
+
     data["geos"] = newGeos
     data["ipsToIgnore"] = ipsToIgnore
 
@@ -222,3 +277,26 @@ def compileUsageImpacts():
 
 
     ## TODO: Now using this data just gained, give names for each organisation on impacts
+    newImpacts = data["impacts"]
+    for impact in data["impacts"]:
+        
+        for geo in data["geos"]:
+            
+            if impact["companyid"] == geo["geo"]["ip"]:
+                
+                newImpact = impact
+                newImpact["companyName"] = geo["geo"]["organisation"]
+                newImpacts.remove(impact)
+                newImpacts.append(newImpact)
+                break
+    
+    for impact in data["impacts"]:
+        try:
+            org = impact["companyName"]
+        except KeyError:
+            impact["companyName"] = "Unknown"
+
+    data["impacts"] = newImpacts
+    with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
+            json.dump(data, fp, sort_keys=True, indent=4)
+        
