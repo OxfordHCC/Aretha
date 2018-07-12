@@ -59,7 +59,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   _hoveringType: string;
   _companyHovering: CompanyInfo;
-  _hoveringApp: APIAppInfo;
+  _hoveringApp: string;
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -76,15 +76,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     //this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 15}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
     //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
     //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
-    console.log(this.usage) 
-
+    console.log(this.usage); 
+    /*
     hover.HoverChanged$.subscribe((target) => {
       // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as APIAppInfo : undefined;
+        this._hoveringApp = target ? target as string : undefined;
         this.render();
       }
     });
+    */
     (<any>window)._rb = this;
   }
   getSVGElement() {
@@ -197,6 +198,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     //this.actlog.log('mouseleave', 'refinebar');
   }  
 
+  setHoveringApp(s: string) {
+    if (this._hoveringApp != s) {
+      this._hoveringApp = s;
+      this.render();
+    }
+  }
+
   // 
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
@@ -258,7 +266,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     const stack = d3.stack(),
       out = stack.keys(apps)(by_company),
-      margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
+      margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
       height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom,
 
@@ -285,6 +293,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       z = d3.scaleOrdinal(d3.schemeCategory20)
         .domain(apps);
 
+    var self = this;
+
     g.selectAll('rect.back')
       .data(companies)
       .enter().append('rect')
@@ -294,10 +304,11 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .attr('height', height)
       .attr('width', x.bandwidth())
       .on('click', (d) => this.focus.focusChanged(d)) // this.focus.focusChanged(this.companyid2info.get(d)))
-      .on('mouseenter', (d) => this._companyHover(d, true)) // this._companyHover(this.companyid2info.get(d), true))
-      .on("mouseleave", (d) => this._companyHover(d, false)); // this._companyHover(this.companyid2info.get(d), false));
+      .on('mouseenter', (d) => self.setHoveringApp(undefined)) // this._companyHover(this.companyid2info.get(d), true))
+      .on("mouseleave", (d) => {return}); // this._companyHover(this.companyid2info.get(d), false));
 
     // main rects
+    
     const f = (selection, first, last) => {
       return selection.selectAll('rect')
         .data((d) => d)
@@ -309,16 +320,21 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('width', x.bandwidth())
         // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
         .on('click', function (d) {
-          this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+          console.log("Clicked" + d)
+          //this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+        })
+        .on('mouseleave', function (d) {
+          console.log("Leave" + d );
+          self.setHoveringApp(undefined)
         })
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
             // unsure why this is dying
             console.log("Enter" + this.parentElement.__data__.key );
-            this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+            self.setHoveringApp(this.parentElement.__data__.key);
+            //this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
           } 
-        })
-        .on('mouseleave', (d) => this_.hover.hoverChanged(undefined));
+        });
     };
 
     g.append('g')
@@ -330,7 +346,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         // _apphover comes in from hovering service, namely usagetable hover
         let highApp = this.highlightApp || this._hoveringApp;
         if (highApp) {
-          return d.key === highApp.app ? z(d.key) : 'rgba(200,200,200,0.2)';
+          return d.key === highApp ? z(d.key) : 'rgba(200,200,200,0.2)';
         }
         return z(d.key);
       })
@@ -363,13 +379,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .call(d3.axisLeft(y).ticks(null, 's'))
       .append('text')
       .attr('x', 20)
-      .attr('y', y(y.ticks().pop()) - 8)
+      .attr('y', y(y.ticks().pop()) - 12)
       .attr('dy', '0.22em')
       .text('Impact (mB)');
 
     // legend
     const leading = 26;
-
+    /*
     if (this.showTypesLegend) {
       const ctypes = ['advertising', 'analytics', 'app', 'other'],
         ctypeslegend = g.append('g')
@@ -393,7 +409,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text((d) => d);
-    }
+    } */
     if (this.showLegend) {
       const legend = g.append('g')
         .attr('class', 'legend')
@@ -415,7 +431,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
-            return d === highApp.app ? 1.0: 0.2; 
+            return d === highApp ? 1.0: 0.2; 
           }
           return 1.0;
         });
@@ -428,7 +444,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
-            return d === highApp.app ? 1.0: 0.2; 
+            return d === highApp ? 1.0: 0.2; 
           }
           return 1.0;
         });

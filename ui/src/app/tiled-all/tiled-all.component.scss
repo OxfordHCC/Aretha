@@ -21,7 +21,7 @@
     }
     width: 100%;
     height: 90vh;
-    padding: 20px 20px 20px 150px; // big left to accommodate infobox
+    padding: 20px 20px 20px 20px; // big left to accommodate infobox - no infobox anymore, so small
     app-focus-infobox {
         position: absolute;
         left: 20px;
