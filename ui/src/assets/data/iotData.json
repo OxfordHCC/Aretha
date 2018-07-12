@@ -3,82 +3,82 @@
         {
             "category": "Time",
             "device": "Amazon Echo",
-            "value": 1526466389868.412
+            "value": 1526466389868
         },
         {
             "category": "Unknown",
             "device": "Amazon Echo",
-            "value": 1526466394738.737
+            "value": 1526466394738
         },
         {
             "category": "Unknown",
             "device": "Amazon Echo",
-            "value": 1526466410775.691
+            "value": 1526466410775
         },
         {
             "category": "Unknown",
             "device": "Amazon Echo",
-            "value": 1526466424776.477
+            "value": 1526466424776
         },
         {
             "category": "Time",
             "device": "Amazon Echo",
-            "value": 1526466429629.658
+            "value": 1526466429629
         },
         {
             "category": "Unknown",
             "device": "Amazon Echo",
-            "value": 1526466434256.56
+            "value": 1526466434256
         },
         {
             "category": "Unknown",
             "device": "Amazon Echo",
-            "value": 1526466443936.543
+            "value": 1526466443936
         },
         {
             "category": "Time",
             "device": "Amazon Echo",
-            "value": 1526466462295.785
+            "value": 1526466462295
         },
         {
             "category": "Unknown",
             "device": "Laptop",
-            "value": 1531219862402.453
+            "value": 1531219862402
         },
         {
             "category": "Unknown",
             "device": "Router",
-            "value": 1531219868015.1938
+            "value": 1531219868015
         },
         {
             "category": "Unknown",
             "device": "Laptop",
-            "value": 1531219872405.7332
+            "value": 1531219872405
         },
         {
             "category": "Unknown",
             "device": "Laptop",
-            "value": 1531219874403.559
+            "value": 1531219874403
         },
         {
             "category": "Unknown",
             "device": "Unknown",
-            "value": 1531219870896.624
+            "value": 1531219870896
         },
         {
             "category": "Unknown",
             "device": "Sony Device",
-            "value": 1531219870804.2632
+            "value": 1531219870804
         },
         {
             "category": "Unknown",
             "device": "Router",
-            "value": 1531219870578.8628
+            "value": 1531219870578
         },
         {
             "category": "Unknown",
             "device": "Samsung Phone",
-            "value": 1531219868115.278
+            "value": 1531219868115
         }
     ],
     "dbreset": false,

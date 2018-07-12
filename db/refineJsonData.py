@@ -329,7 +329,7 @@ def extractBurstsFromDb():
     for row in result: 
         epoch = datetime.datetime.utcfromtimestamp(0)
 
-        unixTime = (row[0] - epoch).total_seconds() * 1000.0
+        unixTime = int( (row[0] - epoch).total_seconds() * 1000.0)
 
         device = getDeviceFromMac(row[1])
 

@@ -7,6 +7,7 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import * as moment from 'moment';
+import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 
 interface AppImpactCat {
   appid: string;
@@ -14,6 +15,12 @@ interface AppImpactCat {
   impact: number;
   category?: string;
 };
+
+interface BurstData {
+    value: number;
+    device: string;
+    category: string;
+}
 
 @Component({
   selector: 'app-refinecat',
@@ -27,7 +34,7 @@ export class RefinecatComponent {
   // still in use!
   companyid2info: CompanyDB;
 
-  private usage: AppUsage[];
+  private data: BurstData[];
   private init: Promise<any>;
   lastMax = 0;
   _byTime = 'yes';
@@ -51,8 +58,11 @@ export class RefinecatComponent {
 
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
+  lastHovering: string;
 
-  constructor(private el: ElementRef,
+  constructor(private httpM: HttpModule, 
+    private http: Http, 
+    private el: ElementRef,
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
@@ -64,6 +74,7 @@ export class RefinecatComponent {
         // console.log('hover changed > ', target);
         if (target !== this._hoveringApp) {
           this._hoveringApp = target ? target as string : undefined;
+          if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
           //console.log("Here and " + this._hoveringApp);
           this.getDataAndRender()
         }
@@ -74,10 +85,19 @@ export class RefinecatComponent {
     
   }
 
+getIoTData(): void {
+    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.data = response2.json()["bursts"];
+    //console.log(this.data);
+    });
+}
+
+
 getDataAndRender() {
     var data = [{'value': 1380854103662, 'col': true},{'value': 1363641921283, col: false}];
+    this.getIoTData();
     var brushEnabled = false;
-    this.render('', 'timeseries'.toString(), data, brushEnabled);
+    this.render('', 'timeseries'.toString(), this.data, brushEnabled);
 }
 
 getSVGElement() {
@@ -151,7 +171,17 @@ getDatePadding(minDate, maxDate) {
         return 'seconds';
 };
 
-  render(classd, spaced, data, enableBrush) {
+  render(classd, spaced, inputData: BurstData[], enableBrush) {
+
+    if (inputData == undefined) {return;}
+
+    //console.log(this._hoveringApp);
+
+    //console.log(inputData)
+
+    var data = inputData.filter( d => {if (d.device == this.lastHovering) {return d;}});
+
+    console.log(data);
         
     var padding = this.timeRangePad(data.map(val => val.value));
 
@@ -234,7 +264,7 @@ getDatePadding(minDate, maxDate) {
         .enter().append("circle")
         .attr("class", "circ")
         .style("fill", d => {
-            return d.col ? "white" : "black"
+            return "white"
         })
         .attr("cx", d => {
             var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
@@ -248,7 +278,7 @@ getDatePadding(minDate, maxDate) {
             console.log(new Date(d.value));
         })
         .append("svg:title")
-        .text(function(d) { return d.col; });
+        .text(function(d) { return d.category; });
 
     
     // ----------------------------------------- Legend ---------------------------------------------
