@@ -52,7 +52,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   highlightColour = '#FF066A';
 
   _companyHovering: CompanyInfo;
-  _hoveringApp: APIAppInfo;
+  _hoveringApp: string;
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -67,7 +67,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     hover.HoverChanged$.subscribe((target) => {
       // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as APIAppInfo : undefined;
+        this._hoveringApp = target ? target as string : undefined;
         this.render();
       }
     });
@@ -238,7 +238,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         })
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
-            this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+            this_.hover.hoverChanged(this.parentElement.__data__.key);
           }
         })
         .on('mouseleave', (d) => this_.hover.hoverChanged(undefined));
@@ -257,7 +257,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         let highApp = this.highlightApp || this._hoveringApp;
         // console.log('geo zkey ', d.key, z(d.key));
         if (highApp) {
-          return d.key === highApp.app ? z(d.key) : 'rgba(200,200,200,0.2)';
+          return d.key === highApp ? z(d.key) : 'rgba(200,200,200,0.2)';
         }
         return z(d.key);
       })
@@ -305,7 +305,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
-        .on('mouseenter', (d) => this.hover.hoverChanged(this.loader.getCachedAppInfo(d)))
+        .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
         .on('click', (d) => {
           this.focus.focusChanged(this.loader.getCachedAppInfo(d));

@@ -101,7 +101,7 @@ export class UsagetableComponent implements OnInit {
 
   _onHover(appid :string) {
     if (appid) { 
-      return this.hover.hoverChanged(this.loader.getCachedAppInfo(appid));
+      return this.hover.hoverChanged(undefined);
     } 
     this.hover.hoverChanged(undefined);    
   }

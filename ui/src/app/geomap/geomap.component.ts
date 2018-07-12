@@ -54,7 +54,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   highlightColour = '#FF066A';
 
   _companyHovering: CompanyInfo;
-  _hoveringApp: APIAppInfo;
+  _hoveringApp: string ;
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -66,7 +66,13 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
-
+    hover.HoverChanged$.subscribe((target) => {
+      // console.log('hover changed > ', target);
+      if (target !== this._hoveringApp) {
+        this._hoveringApp = target ? target as string : undefined;
+        this.render()
+      }
+  });
     this.getIoTData();
     
     (<any>window)._rb = this;
@@ -213,18 +219,18 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       .attr('opacity', (d) => {
         let highApp = this.highlightApp || this._hoveringApp;
         if (highApp) {
-          return d.appid === highApp.app ? 0.75 : 0.01;
+          return d.appid === highApp ? 0.75 : 0.01;
         }
         return 0.8;
       }).attr("r", (d) => Math.max(4, Math.floor(d.impact / 100)))
       .attr("fill", (d) => z(d.appid))
-      .on('mouseenter', (d) => this.hover.hoverChanged(this.loader.getCachedAppInfo(d.appid)))
+      .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
       .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
 
     datas.enter().append('text')
       .attr('x', (d) => projection([d.geo.longitude, d.geo.latitude])[0] + 5)
       .attr('y', (d) => projection([d.geo.longitude, d.geo.latitude])[1] + 5)
-      .attr('opacity', d => this._hoveringApp && d.appid === this._hoveringApp.app ? 1 : 0)
+      .attr('opacity', d => this._hoveringApp && d.appid === this._hoveringApp ? 1 : 0)
       .text((d) => d.geo.region_name || d.geo.country);
 
     const leading = 26;
@@ -239,14 +245,14 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
-        .on('mouseenter', (d) => this.hover.hoverChanged(this.loader.getCachedAppInfo(d)))
+        .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
         .on('click', (d) => {
           this.focus.focusChanged(this.loader.getCachedAppInfo(d));
         }).attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
-            return d === highApp.app ? 1.0 : 0.2;
+            return d === highApp ? 1.0 : 0.2;
           }
           return 1.0;
         });

@@ -50,7 +50,7 @@ export class RefinecatComponent {
   highlightColour = '#FF066A';
 
   _companyHovering: CompanyInfo;
-  _hoveringApp: APIAppInfo;
+  _hoveringApp: string;
 
   constructor(private el: ElementRef,
     private loader: LoaderService,
@@ -63,7 +63,8 @@ export class RefinecatComponent {
     hover.HoverChanged$.subscribe((target) => {
         // console.log('hover changed > ', target);
         if (target !== this._hoveringApp) {
-          this._hoveringApp = target ? target as APIAppInfo : undefined;
+          this._hoveringApp = target ? target as string : undefined;
+          //console.log("Here and " + this._hoveringApp);
           this.getDataAndRender()
         }
     });
@@ -161,7 +162,7 @@ getDatePadding(minDate, maxDate) {
         left: 30
     }
     var svgel = this.getSVGElement();
-    console.log(svgel);
+    //console.log(svgel);
     if (!svgel) { return; }
 
     var rect = svgel.getBoundingClientRect(),
@@ -175,8 +176,8 @@ getDatePadding(minDate, maxDate) {
     
     var height = (this.lessThanDay(padding.pad)) ? (height_svgel - margin.top - margin.bottom) : (height_svgel - margin.top - margin.bottom);
 
-    console.log(width);
-    console.log(height);
+    //console.log(width);
+    //console.log(height);
 
     var x = d3.scaleLinear().range([0 + margin.right, width - margin.left]),
         y = d3.scaleLinear().range([margin.top, height - margin.bottom - margin.top]);

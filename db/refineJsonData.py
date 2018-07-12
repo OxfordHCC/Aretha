@@ -1,4 +1,4 @@
-import psycopg2, os, sys, json, csv
+import psycopg2, os, sys, json, csv, datetime 
 from collections import defaultdict
 from ipwhois import IPWhois
 from ipdata import ipdata
@@ -320,6 +320,33 @@ def updateOrgNames(data):
     with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
             json.dump(data, fp, sort_keys=True, indent=4)
 
+def extractBurstsFromDb():
+    getALL = """ SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category GROUP BY burst ORDER BY burst"""
+    result = databaseBursts.execute(getALL, "")
+    
+    iotBurstData = []
+
+    for row in result: 
+        epoch = datetime.datetime.utcfromtimestamp(0)
+
+        unixTime = (row[0] - epoch).total_seconds() * 1000.0
+
+        device = getDeviceFromMac(row[1])
+
+        category = row[3]
+
+        iotBurstData.append({"value": unixTime, "category": category, "device": device })
+
+    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
+        data = json.load(fp)
+
+    data["bursts"] = iotBurstData
+
+    with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
+        json.dump(data, fp, sort_keys=True, indent=4)
+
+
+
 def compileUsageImpacts(manualReset=False):
     """
     The big one, compile all the data we need to run IoT refine 
@@ -346,4 +373,8 @@ def compileUsageImpacts(manualReset=False):
         data = json.load(fp)
     
     updateOrgNames(data)
+
+    ## Get all the bursts data for timeseries on the side 
+
+    extractBurstsFromDb()
         

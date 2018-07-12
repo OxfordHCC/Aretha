@@ -1,4 +1,86 @@
 {
+    "bursts": [
+        {
+            "category": "Time",
+            "device": "Amazon Echo",
+            "value": 1526466389868.412
+        },
+        {
+            "category": "Unknown",
+            "device": "Amazon Echo",
+            "value": 1526466394738.737
+        },
+        {
+            "category": "Unknown",
+            "device": "Amazon Echo",
+            "value": 1526466410775.691
+        },
+        {
+            "category": "Unknown",
+            "device": "Amazon Echo",
+            "value": 1526466424776.477
+        },
+        {
+            "category": "Time",
+            "device": "Amazon Echo",
+            "value": 1526466429629.658
+        },
+        {
+            "category": "Unknown",
+            "device": "Amazon Echo",
+            "value": 1526466434256.56
+        },
+        {
+            "category": "Unknown",
+            "device": "Amazon Echo",
+            "value": 1526466443936.543
+        },
+        {
+            "category": "Time",
+            "device": "Amazon Echo",
+            "value": 1526466462295.785
+        },
+        {
+            "category": "Unknown",
+            "device": "Laptop",
+            "value": 1531219862402.453
+        },
+        {
+            "category": "Unknown",
+            "device": "Router",
+            "value": 1531219868015.1938
+        },
+        {
+            "category": "Unknown",
+            "device": "Laptop",
+            "value": 1531219872405.7332
+        },
+        {
+            "category": "Unknown",
+            "device": "Laptop",
+            "value": 1531219874403.559
+        },
+        {
+            "category": "Unknown",
+            "device": "Unknown",
+            "value": 1531219870896.624
+        },
+        {
+            "category": "Unknown",
+            "device": "Sony Device",
+            "value": 1531219870804.2632
+        },
+        {
+            "category": "Unknown",
+            "device": "Router",
+            "value": 1531219870578.8628
+        },
+        {
+            "category": "Unknown",
+            "device": "Samsung Phone",
+            "value": 1531219868115.278
+        }
+    ],
     "dbreset": false,
     "geos": [
         {

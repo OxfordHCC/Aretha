@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ActivityLogService } from "app/activity-log.service";
 
-export type HoverTarget = APIAppInfo;
+export type HoverTarget = string;
 
 @Injectable()
 export class HoverService {
@@ -15,7 +15,7 @@ export class HoverService {
   }
 
   hoverChanged(target: HoverTarget) {
-    this.actlog.log('hover-app', target && target.app || 'unhover');    
+    //this.actlog.log('hover-app', target && target.app || 'unhover');    
     this.HoverChangedSource.next(target);
   }
   clearState() {

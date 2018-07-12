@@ -77,15 +77,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
     //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
     console.log(this.usage); 
-    /*
+    
     hover.HoverChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
+      //console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
         this._hoveringApp = target ? target as string : undefined;
         this.render();
       }
     });
-    */
+    
     (<any>window)._rb = this;
   }
   getSVGElement() {
@@ -324,15 +324,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           //this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
         })
         .on('mouseleave', function (d) {
-          console.log("Leave" + d );
-          self.setHoveringApp(undefined)
+          //console.log("Leave" + d );
+          //self.setHoveringApp(undefined)
+          this_.hover.hoverChanged(undefined);
         })
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
             // unsure why this is dying
-            console.log("Enter" + this.parentElement.__data__.key );
-            self.setHoveringApp(this.parentElement.__data__.key);
-            //this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+            //console.log("Enter" + this.parentElement.__data__.key );
+            //self.setHoveringApp(this.parentElement.__data__.key);
+            this_.hover.hoverChanged(this.parentElement.__data__.key);
           } 
         });
     };
@@ -419,7 +420,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
-        .on('mouseenter', (d) => this.hover.hoverChanged(this.loader.getCachedAppInfo(d)))
+        .on('mouseenter', (d) => {
+          //console.log(d);
+          this.hover.hoverChanged(d)
+        })
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
         .on('click', (d) => this.focus.focusChanged(this.loader.getCachedAppInfo(d)));
 
