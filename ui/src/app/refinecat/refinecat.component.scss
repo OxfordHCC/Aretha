@@ -8,6 +8,7 @@ div.main {
     }
 }
 
+
 g.axis text {
     fill: #000;
     font-weight: 100;
@@ -100,4 +101,29 @@ g.ctypelegend .selected {
 
 rect.bar {
     stroke-width: 0.1px;
+}
+// Added to make timeseries pretty
+
+g
+.circ {
+    fill: #D35400;
+    opacity: 0.6;
+    stroke: rgba(211, 84, 0, 0.7);
+    stroke-width: 5px;
+}
+
+.domain {
+    display: none;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.axis text {
+    font-size: 12px;
+}
+.tick line {
+    stroke: #d5d5d5;
+    opacity: 0.7;
 }

@@ -110,12 +110,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         delete this.apps;
       }
       //this.usage = [{'appid': 'Router', 'mins': 15}, {'appid': 'Samsung Phone', 'mins': 50}, {'appid': 'Echo', 'mins': 15}, {'appid': 'Laptop', 'mins': 15}];
-      this.compileImpacts(this.usage).then(impacts => {
+      //this.compileImpacts(this.usage).then(impacts => {
         //this.impacts = impacts;
         //this.impacts =[{'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 3}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 12}, {'companyid': 'Twitter Inc.', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Echo', 'impact': 437}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Level 3 Parent, LLC', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 7}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 8}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'Valve Corporation', 'appid': 'Laptop', 'impact': 13}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 3}, {'companyid': 'Akamai Technologies', 'appid': 'Laptop', 'impact': 49}, {'companyid': 'CloudFront DUB6', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Microsoft Corporation', 'appid': 'Laptop', 'impact': 6}, {'companyid': 'Linode', 'appid': 'Laptop', 'impact': 16}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 22},
         //{'companyid': 'Akamai International, BV', 'appid': 'Laptop', 'impact': 17}, {'companyid': 'ZOHO', 'appid': 'Laptop', 'impact': 3}, {'companyid': '0', 'appid': 'Router', 'impact': 2}, {'companyid': '0', 'appid': 'Samsung Phone', 'impact': 1}, {'companyid': '0', 'appid': 'Laptop', 'impact': 2}, {'companyid': 'Amazon Technologies Inc.', 'appid': 'Laptop', 'impact': 33}, {'companyid': 'U.S. COLO, LLC', 'appid': 'Laptop', 'impact': 21}, {'companyid': 'Automattic, Inc', 'appid': 'Laptop', 'impact': 6}, {'companyid': '239.255.255.250', 'appid': 'Laptop', 'impact': 4}, {'companyid': 'Google LLC', 'appid': 'Laptop', 'impact': 38}];
-        this.render();
-      });
+      //  this.render();
+      //});
+      this.render();
     });
   }
 
@@ -230,7 +231,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
         const t = impacts.filter((imp) => imp.companyName === cid && imp.appid === aid);
-        console.log(t);
+        //console.log(t);
         const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
         return t !== undefined ? t.reduce(reducer, 0) : 0;
       },
@@ -239,7 +240,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         total: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
         ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
       }));
-      console.log(by_company);
+      //console.log(by_company);
 
     if (this.apps === undefined) {
       // sort apps
@@ -313,6 +314,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
             // unsure why this is dying
+            console.log("Enter" + this.parentElement.__data__.key );
             this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
           } 
         })
@@ -432,8 +434,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         });
 
     }
-
-
 
     if (this._hoveringType) {
       this.setHoveringTypeHighlight(this._hoveringType)

@@ -170,7 +170,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     const usage = this.usage,
       impacts = this.impacts;
-      console.log(impacts);
+      //console.log(impacts);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     if (this.apps === undefined) {

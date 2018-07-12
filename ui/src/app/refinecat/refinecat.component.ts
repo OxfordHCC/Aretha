@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
+import * as moment from 'moment';
 
 interface AppImpactCat {
   appid: string;
@@ -20,7 +21,7 @@ interface AppImpactCat {
   styleUrls: ['./refinecat.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class RefinecatComponent implements AfterViewInit, OnChanges {
+export class RefinecatComponent {
   impacts: AppImpactCat[];
 
   // still in use!
@@ -60,303 +61,227 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
     hover.HoverChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as APIAppInfo : undefined;
-        this.render();
-      }
+        // console.log('hover changed > ', target);
+        if (target !== this._hoveringApp) {
+          this._hoveringApp = target ? target as APIAppInfo : undefined;
+          this.getDataAndRender()
+        }
     });
     (<any>window)._rb = this;
+    
+    this.getDataAndRender()
+    
   }
-  getSVGElement() {
+
+getDataAndRender() {
+    var data = [{'value': 1380854103662, 'col': true},{'value': 1363641921283, col: false}];
+    var brushEnabled = false;
+    this.render('', 'timeseries'.toString(), data, brushEnabled);
+}
+
+getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
     return Array.from(nE.getElementsByTagName('svg'))[0];
-  }
-  // this gets called when this.usage_in changes
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage_in) { return; }
-    this.init.then(() => {
-      if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-        delete this.apps;
-      }
-      this.usage = this.usage_in;
-      this.compileImpacts(this.usage).then(impacts => {
+}
+  
+lessThanDay(d) {
+    return (d === "hours" || d === "minutes" || d === "seconds") ? true : false;
+};
+
+ngAfterViewInit(): void { this.init.then(() => {
+    this.getDataAndRender()
+}) ; }
+
+ngOnChanges(changes: SimpleChanges): void {
+    this.getDataAndRender()
+}
+
+getDate(d) {
+    var date = moment(d);
+    date.hour(1);
+    date.minute(0);
+    date.second(0);
+    return date.valueOf();
+};
+
+getTime(d) {
+    var date = moment(d);
+    date.date(1);
+    date.month(0);
+    date.year(2012);
+    return date.valueOf();
+};
+
+/* 
+  Given a list of time stamps, compute the minimum and maxium dates. Return a padded
+  version of the min and max dates based on the temporal distance between them.
+*/
+timeRangePad(dates) {
+    var minDate, maxDate, pad;
+    if (dates.length > 1) {
+        minDate = moment(_.min(dates));
+        maxDate = moment(_.max(dates));
+        pad = this.getDatePadding(minDate, maxDate);
+        minDate.subtract(1, pad);
+        maxDate.add(1, pad);
+    } else {
+        minDate = moment(dates[0]).subtract(1, 'hour');
+        maxDate = moment(dates[0]).add(1, 'hour');
+    }
+    return {
+        'minDate': minDate,
+        'maxDate': maxDate,
+        'pad': pad
+    };
+};
+
+getDatePadding(minDate, maxDate) {
+    if (maxDate.diff(minDate, 'years') > 0)
+        return 'months';
+    else if (maxDate.diff(minDate, 'months') > 0)
+        return 'days';
+    else if (maxDate.diff(minDate, 'days') > 0)
+        return 'days';
+    else if (maxDate.diff(minDate, 'hours') > 0)
+        return 'hours';
+    else if (maxDate.diff(minDate, 'minutes') > 0)
+        return 'minutes';
+    else
+        return 'seconds';
+};
+
+  render(classd, spaced, data, enableBrush) {
         
-        // console.log('cat impacts > ', impacts);
-        let red_impacts = impacts.reduce((perapp, impact) => {
-          let appcat = (perapp[impact.appid] || {});
-          appcat[impact.category] = (appcat[impact.category] || 0) + impact.impact;
-          perapp[impact.appid] = appcat;
-          return perapp;
-        }, {});
+    var padding = this.timeRangePad(data.map(val => val.value));
 
-        impacts = _.flatten(_.map(red_impacts, (catimpacts, appid) => _.map(catimpacts, (impact, cat) => ({ appid: appid, category: cat, impact: impact } as AppImpactCat))));
-        // console.log('cat red_impacts ', red_impacts, impacts);
-        //this.impacts = impacts;
+    var margin = {
+        top: 10,
+        right: 25,
+        bottom: 15,
+        left: 30
+    }
+    var svgel = this.getSVGElement();
+    console.log(svgel);
+    if (!svgel) { return; }
 
-        this.render();
-      })
-    });
-  }
-
-  ngAfterViewInit(): void { this.init.then(() => this.render()); }
-
-  private _getApp(appid: string): Promise<APIAppInfo> {
-    return this.loader.getCachedAppInfo(appid) && Promise.resolve(this.loader.getCachedAppInfo(appid))
-      || this.loader.getFullAppInfo(appid);
-  }
-
-  compileImpacts(usage: AppUsage[]): Promise<AppImpactCat[]> {
-    // folds privacy impact in simply by doing a weighted sum over hosts
-    // usage has to be in a standard unit: days, minutes
-    // first, normalise usage
-
-    const timebased = this.byTime === 'yes',
-      total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-      impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
-
-    return Promise.all(impacts.map((usg): Promise<AppImpactCat[]> => {
-      return this._getApp(usg.appid).then(app => {
-        const hosts = app && app.hosts;
-        if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
-
-        return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
-          .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))
-          .then((companies: CompanyInfo[]) => companies.map((company) => ({ appid: usg.appid, companyid: company.id, category: company.typetag, impact: usg.impact })));
-      });
-    })).then((nested_impacts: AppImpactCat[][]): AppImpactCat[] => _.flatten(nested_impacts));
-  }
-
-
-  // accessors for .byTime 
-  set byTime(val) {
-    this.lastMax = 0;
-    this._byTime = val;
-    this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      //this.impacts = impacts;
-      this.render();
-    }));
-  }
-  get byTime() { return this._byTime; }
-
-
-  // this is for displaying what company you're hovering on based 
-  // on back rects
-  _companyHover(company: CompanyInfo, hovering: boolean) {
-    this._companyHovering = hovering ? company : undefined;
-  }
-
-  // 
-  render() {
-    // console.log(':: render usage:', this.usage && this.usage.length);
-    const svgel = this.getSVGElement();
-    if (!svgel || !this.usage || !this.impacts) { return; }
-    // console.log('refinebar render! getSVGElement > ', svgel);
-
-    let rect = svgel.getBoundingClientRect(),
+    var rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
       height_svgel = Math.round(rect.height - 5),
-      svg = d3.select(svgel);
-
-    if (!this.scale) {
-      svg.attr('width', width_svgel)
-        .attr('height', height_svgel);
-    } else {
-      svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
-        .attr('virtualWidth', this.vbox.width)
-        .attr('virtualHeight', this.vbox.height)
-        .attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
-      width_svgel = this.vbox.width;
-      height_svgel = this.vbox.height;
-    }
+      svg = d3.select(svgel)
 
     svg.selectAll('*').remove();
-
-    const usage = this.usage,
-      impacts = this.impacts;
-
-    let apps = _.uniq(impacts.map((x) => x.appid)),
-      categories = _.uniq(impacts.map((x) => x.category)),
-      get_impact = (cid, aid) => {
-        const t = impacts.filter((imp) => imp.category === cid && imp.appid === aid)[0];
-        return t !== undefined ? t.impact : 0;
-      },
-      by_category = categories.map((catname) => ({
-        category: catname,
-        total: apps.reduce((total, appid) => total += get_impact(catname, appid), 0),
-        ..._.fromPairs(apps.map((appid) => [appid, get_impact(catname, appid)]))
-      }));
-
-    if (this.apps === undefined) {
-      // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-      this.apps = apps;
-    } else {
-      apps = this.apps;
-    }
-
-    const satBand = (name, domain, h, l, slow, shigh) => {
-      return (appkey) => {
-        let ki = domain.indexOf(appkey),
-          bandwidth = (shigh - slow) / domain.length,
-          starget = slow + ki * bandwidth,
-          targetc = d3.hsl(h, starget, starget);
-        // console.log(`satBand [${name}]:${appkey} - ki:${ki}, bw:${bandwidth}, slow:${slow}, shigh:${shigh}, ${starget}`, targetc);
-        return targetc;
-      };
-    };
-
-    (<any>window).d3 = d3;
-
-    by_category.sort((c1, c2) => c2.total - c1.total); // apps.reduce((total, app) => total += c2[app], 0) - apps.reduce((total, app) => total += c1[app], 0));
-
-    // re-order companies
-    categories = by_category.map((bc) => bc.category);
-
-    let stack = d3.stack(),
-      out = stack.keys(apps)(by_category),
-      margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
-      width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
-      height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom;
-
-    if (width <= 50 || height <= 50) { return; }
     
-    let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
-      x = d3.scaleBand()
-        .rangeRound([0, width]).paddingInner(0.05).align(0.1)
-        .domain(categories),
-      d3maxx = d3.max(by_category, function (d) { return d.total; }) || 0,
-      ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
-      this_ = this;
+    var width = width_svgel - 50;
+    
+    var height = (this.lessThanDay(padding.pad)) ? (height_svgel - margin.top - margin.bottom) : (height_svgel - margin.top - margin.bottom);
 
-    if (d3maxx < 0.7 * ymaxx) {
-      ymaxx = 1.1 * d3maxx;
-    }
+    console.log(width);
+    console.log(height);
 
-    let y = d3.scaleLinear()
-      .rangeRound([height, 0])
-      .domain([0, ymaxx]).nice(),
-      z = d3.scaleOrdinal(d3.schemeCategory20).domain(apps);
+    var x = d3.scaleLinear().range([0 + margin.right, width - margin.left]),
+        y = d3.scaleLinear().range([margin.top, height - margin.bottom - margin.top]);
 
-    // main rects
-    const f = (selection, first, last) => {
-      return selection.selectAll('rect')
-        .data((d) => d)
-        .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('x', (d) => x(d.data.category))
-        .attr('y', (d) => y(d[1]))
-        .attr('height', function (d) { return y(d[0]) - y(d[1]); })
-        .attr('width', x.bandwidth())
-        .on('click', function (d) {
-          if (this.parentElement) {
-            this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
-          }
-        })
-        .on('mouseenter', function (d) {
-          if (this.parentElement) {
-            this_.hover.hoverChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
-          }
-        })
-        .on('mouseleave', (d) => this_.hover.hoverChanged(undefined));
-      // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
-      // .on('mouseenter', (d) => this._companyHover(this.companyid2info.get(d.data.company), true))
-      // .on("mouseleave", (d) => this._companyHover(this.companyid2info.get(d.data.company), false));
-    };
+    var ticks = width > 800 ? 8 : 4;
 
-    g.append('g')
-      .selectAll('g')
-      .data(d3.stack().keys(apps)(by_category))
-      .enter().append('g')
-      .attr('fill', (d) => {
-        // highlightApp comes in from @Input() attribute, set using compare
-        // _apphover comes in from hovering service, namely usagetable hover
-        let highApp = this.highlightApp || this._hoveringApp;
-        if (highApp) {
-          return d.key === highApp.app ? z(d.key) : 'rgba(200,200,200,0.2)';
-        }
-        return z(d.key);
-      })
-      .call(f);
+    x.domain(d3.extent([padding.minDate, padding.maxDate]));
 
-    // x axis
-    g.append('g')
-      .attr('class', 'axis x')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
-      .selectAll('text')
-      .style('text-anchor', 'end')
-      .attr('y', 1)
-      .attr('dx', '-.8em')
-      .attr('dy', '.15em')
-      .attr('transform', 'rotate(-90)');
-
-    if (!this.showXAxis) {
-      svg.selectAll('g.axis.x text').text('');
-      svg.selectAll('g.axis.x g.tick').remove();
+    var xFormat, yFormat;
+    if (this.lessThanDay(padding.pad)) {
+        xFormat = "%H:%M";
+        yFormat = "%m/%d/%y";
+        y.domain(d3.extent([padding.minDate]));
     } else {
-      svg.selectAll('g.axis.x g.tick')
-        .filter(function (d) { return d; })
-        .attr('class', (d) => d.category)
-        .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)));
+        xFormat = "%m/%d/%y";
+        yFormat = "%H:%M";
+        var start = new Date(2012, 0, 1, 0, 0, 0, 0).getTime();
+        var stop = new Date(2012, 0, 1, 23, 59, 59, 59).getTime();
+        y.domain(d3.extent([start, stop]));
     }
 
-    g.append('g')
-      .attr('class', 'axis y')
-      .call(d3.axisLeft(y).ticks(null, 's'))
-      .append('text')
-      .attr('x', 2)
-      .attr('y', y(y.ticks().pop()) - 8)
-      .attr('dy', '0.32em')
-      .text('Impact');
+    var xAxis = d3.axisBottom().scale(x)
+        .ticks(ticks)
+        .tickSize(-height, 0)
+        .tickFormat(d3.timeFormat(xFormat));
 
-    // legend
+    var yAxis = d3.axisLeft().scale(y)
+        .ticks(6)
+        .tickSize(-width + margin.right, 0)
+        .tickFormat(d3.timeFormat(yFormat));
+
+    svg.attr("width", width + margin.left + margin.right)
+       .attr("height", height + margin.top + margin.bottom);
+
+    var context = svg.append("g")
+        .attr("class", "context")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    context.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(" + margin.left + "," + (margin.top + (height - margin.bottom)) + ")")
+        .call(xAxis);
+
+    context.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(yAxis);
+
+    var circles = context.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+    circles.selectAll(".circ")
+        .data(data)
+        .enter().append("circle")
+        .attr("class", "circ")
+        .style("fill", d => {
+            return d.col ? "white" : "black"
+        })
+        .attr("cx", d => {
+            var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
+            return res;
+        })
+        .attr("cy",(d, i) => {
+            return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) : y(this.getTime(d.value));
+        })
+        .attr("r", 9)
+        .on("click", function(d) {
+            console.log(new Date(d.value));
+        })
+        .append("svg:title")
+        .text(function(d) { return d.col; });
+
+    
+    // ----------------------------------------- Legend ---------------------------------------------
+    /*
     const leading = 26;
-    if (this.showLegend) {
-      const legend = g.append('g')
+    const legend = svg.append('g')
         .attr('class', 'legend')
         .attr('transform', 'translate(0,10)')
         .selectAll('g')
-        .data(apps.slice().reverse())
+        .data(["White", "Black"])
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(this.loader.getCachedAppInfo(d)))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        .on('click', (d) => {
-          console.log('click! ', d);
-          this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        });
+        .on('click', (d) => this.focus.focusChanged(this.loader.getCachedAppInfo(d)));
 
       legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
         .attr('width', 19)
         .attr('height', 19)
-        .attr('fill', z);
+        
 
       legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d);
+        .text((d) => {return d})
 
+     */
     }
-
-  }
-
-  @HostListener('mouseenter')
-  mouseEnter() {
-    //this.actlog.log('mouseenter', 'refinecat');
-  }
-
-  @HostListener('mouseleave')
-  mouseLv() {
-    //this.actlog.log('mouseleave', 'refinecat');
-  }  
-
-  @HostListener('window:resize')
-  onResize() {
+    @HostListener('window:resize')
+    onResize() {
     // call our matchHeight function here
-    this.render();
+    this.getDataAndRender()
   }
 }
