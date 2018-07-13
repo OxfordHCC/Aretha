@@ -6,17 +6,17 @@
             "value": 1526466389868
         },
         {
-            "category": "Unknown",
+            "category": "Mostly: 52.94.221.173",
             "device": "Amazon Echo",
             "value": 1526466394738
         },
         {
-            "category": "Unknown",
+            "category": "Mostly: 34.194.105.124",
             "device": "Amazon Echo",
             "value": 1526466410775
         },
         {
-            "category": "Unknown",
+            "category": "Mostly: 52.94.221.173",
             "device": "Amazon Echo",
             "value": 1526466424776
         },
@@ -26,12 +26,12 @@
             "value": 1526466429629
         },
         {
-            "category": "Unknown",
+            "category": "Mostly: 52.94.221.173",
             "device": "Amazon Echo",
             "value": 1526466434256
         },
         {
-            "category": "Unknown",
+            "category": "Mostly: 52.94.221.173",
             "device": "Amazon Echo",
             "value": 1526466443936
         },
@@ -41,93 +41,68 @@
             "value": 1526466462295
         },
         {
-            "category": "Unknown",
-            "device": "Laptop",
-            "value": 1531219862402
+            "category": "Mostly: 239.255.255.250",
+            "device": "LondonRouter",
+            "value": 1531499184684
+        },
+        {
+            "category": "Mostly: 0",
+            "device": "LondonRouter",
+            "value": 1531499185176
+        },
+        {
+            "category": "Mostly: 0",
+            "device": "LondonRouter",
+            "value": 1531499188189
         },
         {
             "category": "Unknown",
-            "device": "Router",
-            "value": 1531219868015
+            "device": "Laptop2",
+            "value": 1531499182794
+        },
+        {
+            "category": "Mostly: 0",
+            "device": "LondonRouter",
+            "value": 1531499188915
+        },
+        {
+            "category": "Mostly: 0",
+            "device": "LondonRouter",
+            "value": 1531499190909
         },
         {
             "category": "Unknown",
-            "device": "Laptop",
-            "value": 1531219872405
+            "device": "Laptop2",
+            "value": 1531499188201
+        },
+        {
+            "category": "Mostly: 239.255.255.250",
+            "device": "LondonRouter",
+            "value": 1531499186447
+        },
+        {
+            "category": "Mostly: 163.1.88.56",
+            "device": "Laptop2",
+            "value": 1531499190430
+        },
+        {
+            "category": "Mostly: 163.1.88.56",
+            "device": "Laptop2",
+            "value": 1531499190728
         },
         {
             "category": "Unknown",
-            "device": "Laptop",
-            "value": 1531219874403
+            "device": "Laptop2",
+            "value": 1531499190862
         },
         {
-            "category": "Unknown",
-            "device": "Unknown",
-            "value": 1531219870896
-        },
-        {
-            "category": "Unknown",
-            "device": "Sony Device",
-            "value": 1531219870804
-        },
-        {
-            "category": "Unknown",
-            "device": "Router",
-            "value": 1531219870578
-        },
-        {
-            "category": "Unknown",
-            "device": "Samsung Phone",
-            "value": 1531219868115
+            "category": "Mostly: 163.1.88.56",
+            "device": "Laptop2",
+            "value": 1531499191857
         }
     ],
     "dbreset": false,
     "geos": [
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "720",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "34.194.105.124",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-10T10:01:49.325507-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 262
-        },
         {
             "appid": "Amazon Echo",
             "geo": {
@@ -136,7 +111,7 @@
                 "city": "Dublin",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "720",
+                "count": "2",
                 "country_code": "IE",
                 "country_name": "Ireland",
                 "flag": "https://ipdata.co/flags/ie.png",
@@ -169,7 +144,7 @@
                 },
                 "time_zone": {
                     "abbr": "IST",
-                    "current_time": "2018-07-10T15:01:49.389109+01:00",
+                    "current_time": "2018-07-13T16:25:34.855912+01:00",
                     "is_dst": true,
                     "name": "Europe/Dublin",
                     "offset": "+0100"
@@ -178,31 +153,31 @@
             "impact": 166184
         },
         {
-            "appid": "Laptop",
+            "appid": "Amazon Echo",
             "geo": {
-                "asn": "AS786",
-                "calling_code": "44",
-                "city": "Oxford",
-                "continent_code": "EU",
-                "continent_name": "Europe",
-                "count": "720",
-                "country_code": "GB",
-                "country_name": "United Kingdom",
-                "flag": "https://ipdata.co/flags/gb.png",
-                "ip": "163.1.88.56",
-                "is_eu": true,
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "2",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "34.194.105.124",
+                "is_eu": false,
                 "languages": [
                     {
                         "name": "English",
                         "native": "English"
                     }
                 ],
-                "latitude": 51.75,
-                "longitude": -1.25,
-                "organisation": "Jisc Services Limited",
-                "postal": "OX1",
-                "region": "England",
-                "region_code": "ENG",
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -213,28 +188,253 @@
                     "is_tor": false
                 },
                 "time_zone": {
-                    "abbr": "BST",
-                    "current_time": "2018-07-10T15:01:49.447667+01:00",
+                    "abbr": "EDT",
+                    "current_time": "2018-07-13T11:25:35.007982-04:00",
                     "is_dst": true,
-                    "name": "Europe/London",
-                    "offset": "+0100"
+                    "name": "America/New_York",
+                    "offset": "-0400"
                 }
             },
-            "impact": 235542
+            "impact": 262
         },
         {
-            "appid": "Laptop",
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS2639",
+                "calling_code": "1",
+                "city": "",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "2",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "8.39.54.94",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.751,
+                "longitude": -97.822,
+                "organisation": "ZOHO",
+                "postal": "",
+                "region": "",
+                "region_code": "",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "",
+                    "current_time": "",
+                    "is_dst": "",
+                    "name": "",
+                    "offset": ""
+                }
+            },
+            "impact": 268
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS8075",
+                "calling_code": "31",
+                "city": "Amsterdam",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "2",
+                "country_code": "NL",
+                "country_name": "Netherlands",
+                "flag": "https://ipdata.co/flags/nl.png",
+                "ip": "52.114.74.43",
+                "is_eu": true,
+                "languages": [
+                    {
+                        "name": "Dutch",
+                        "native": "Nederlands"
+                    }
+                ],
+                "latitude": 52.3556,
+                "longitude": 4.9135,
+                "organisation": "Microsoft Corporation",
+                "postal": "1091",
+                "region": "North Holland",
+                "region_code": "NH",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "CEST",
+                    "current_time": "2018-07-13T17:26:28.669902+02:00",
+                    "is_dst": true,
+                    "name": "Europe/Amsterdam",
+                    "offset": "+0200"
+                }
+            },
+            "impact": 3260
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Boardman",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "2",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.27.140.115",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 45.8696,
+                "longitude": -119.688,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "97818",
+                "region": "Oregon",
+                "region_code": "OR",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-13T08:26:28.822043-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 236
+        },
+        {
+            "appid": "LondonRouter",
+            "geo": {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 1,
+                "longitude": 1,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 8506
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS8075",
+                "calling_code": "1",
+                "city": "Boydton",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "2",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "65.55.44.109",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 36.6648,
+                "longitude": -78.3715,
+                "organisation": "Microsoft Corporation",
+                "postal": "23917",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-13T11:26:29.158179-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 6338
+        },
+        {
+            "appid": "Laptop2",
             "geo": {
                 "asn": "AS16509",
                 "calling_code": "353",
                 "city": "Dublin",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "720",
+                "count": "2",
                 "country_code": "IE",
                 "country_name": "Ireland",
                 "flag": "https://ipdata.co/flags/ie.png",
-                "ip": "54.73.2.221",
+                "ip": "54.76.234.141",
                 "is_eu": true,
                 "languages": [
                     {
@@ -263,7 +463,7 @@
                 },
                 "time_zone": {
                     "abbr": "IST",
-                    "current_time": "2018-07-10T15:01:49.507943+01:00",
+                    "current_time": "2018-07-13T16:26:29.317470+01:00",
                     "is_dst": true,
                     "name": "Europe/Dublin",
                     "offset": "+0100"
@@ -272,256 +472,31 @@
             "impact": 288
         },
         {
-            "appid": "Laptop",
-            "geo": {
-                "asn": "AS8075",
-                "calling_code": "1",
-                "city": "Washington",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "720",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.170.194.77",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 38.7163,
-                "longitude": -78.1704,
-                "organisation": "Microsoft Corporation",
-                "postal": "22747",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-10T10:01:49.567152-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 1384
-        },
-        {
-            "appid": "Sony Device",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Unknown",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Laptop",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 70
-        },
-        {
-            "appid": "Laptop",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Boardman",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "720",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.25.249.59",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 45.8696,
-                "longitude": -119.688,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "97818",
-                "region": "Oregon",
-                "region_code": "OR",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-10T07:01:49.826691-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 472
-        },
-        {
-            "appid": "Laptop",
+            "appid": "Laptop2",
             "geo": {
                 "asn": "AS32590",
-                "calling_code": "1",
-                "city": "Chicago",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "720",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "162.254.193.7",
-                "is_eu": false,
+                "calling_code": "31",
+                "city": "Amsterdam",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "2",
+                "country_code": "NL",
+                "country_name": "Netherlands",
+                "flag": "https://ipdata.co/flags/nl.png",
+                "ip": "155.133.248.52",
+                "is_eu": true,
                 "languages": [
                     {
-                        "name": "English",
-                        "native": "English"
+                        "name": "Dutch",
+                        "native": "Nederlands"
                     }
                 ],
-                "latitude": 41.8483,
-                "longitude": -87.6517,
+                "latitude": 52.3556,
+                "longitude": 4.9135,
                 "organisation": "Valve Corporation",
-                "postal": "60602",
-                "region": "Illinois",
-                "region_code": "IL",
+                "postal": "1091",
+                "region": "North Holland",
+                "region_code": "NH",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -532,28 +507,28 @@
                     "is_tor": false
                 },
                 "time_zone": {
-                    "abbr": "CDT",
-                    "current_time": "2018-07-10T09:01:49.892365-05:00",
+                    "abbr": "CEST",
+                    "current_time": "2018-07-13T17:26:29.568002+02:00",
                     "is_dst": true,
-                    "name": "America/Chicago",
-                    "offset": "-0500"
+                    "name": "Europe/Amsterdam",
+                    "offset": "+0200"
                 }
             },
-            "impact": 172
+            "impact": 1414
         },
         {
-            "appid": "Laptop",
+            "appid": "LondonRouter",
             "geo": {
-                "asn": "AS2639",
+                "asn": "X",
                 "calling_code": "1",
-                "city": "Englewood",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "720",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "204.141.42.94",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
                 "is_eu": false,
                 "languages": [
                     {
@@ -561,12 +536,12 @@
                         "native": "English"
                     }
                 ],
-                "latitude": 39.6237,
-                "longitude": -104.8738,
-                "organisation": "ZOHO",
-                "postal": "80111",
-                "region": "Colorado",
-                "region_code": "CO",
+                "latitude": 1,
+                "longitude": 1,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -577,24 +552,159 @@
                     "is_tor": false
                 },
                 "time_zone": {
-                    "abbr": "MDT",
-                    "current_time": "2018-07-10T08:01:49.960854-06:00",
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
                     "is_dst": true,
-                    "name": "America/Denver",
-                    "offset": "-0600"
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
                 }
             },
-            "impact": 268
+            "impact": 3490
         },
         {
-            "appid": "Laptop",
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "0",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 1,
+                "longitude": 1,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 1397
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "X",
+                "calling_code": "1",
+                "city": "Unknown",
+                "continent_code": "Unknown",
+                "continent_name": "Unknown",
+                "count": "1",
+                "country_code": "Unknown",
+                "country_name": "Unknown",
+                "flag": "Unknown",
+                "ip": "239.255.255.250",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 1,
+                "longitude": 1,
+                "organisation": "Unknown",
+                "postal": "Unknown",
+                "region": "Unknown",
+                "region_code": "Unknown",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 630
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS786",
+                "calling_code": "44",
+                "city": "Oxford",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "4",
+                "country_code": "GB",
+                "country_name": "United Kingdom",
+                "flag": "https://ipdata.co/flags/gb.png",
+                "ip": "163.1.88.56",
+                "is_eu": true,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 51.75,
+                "longitude": -1.25,
+                "organisation": "Jisc Services Limited",
+                "postal": "OX1",
+                "region": "England",
+                "region_code": "ENG",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "BST",
+                    "current_time": "2018-07-13T16:26:36.634933+01:00",
+                    "is_dst": true,
+                    "name": "Europe/London",
+                    "offset": "+0100"
+                }
+            },
+            "impact": 449496
+        },
+        {
+            "appid": "Laptop2",
             "geo": {
                 "asn": "AS8068",
                 "calling_code": "1",
                 "city": "Redmond",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "720",
+                "count": "4",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
@@ -623,23 +733,248 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-10T07:01:50.024852-07:00",
+                    "current_time": "2018-07-13T08:26:36.788288-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
                 }
             },
-            "impact": 30776
+            "impact": 17922
         },
         {
-            "appid": "Laptop",
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "44",
+                "city": "London",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "4",
+                "country_code": "GB",
+                "country_name": "United Kingdom",
+                "flag": "https://ipdata.co/flags/gb.png",
+                "ip": "35.178.53.67",
+                "is_eu": true,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 51.5142,
+                "longitude": -0.0931,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "EC2V",
+                "region": "England",
+                "region_code": "ENG",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "BST",
+                    "current_time": "2018-07-13T16:26:36.938919+01:00",
+                    "is_dst": true,
+                    "name": "Europe/London",
+                    "offset": "+0100"
+                }
+            },
+            "impact": 59257
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS8075",
+                "calling_code": "1",
+                "city": "Washington",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "4",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "13.92.209.232",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 38.7163,
+                "longitude": -78.1704,
+                "organisation": "Microsoft Corporation",
+                "postal": "22747",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-13T11:26:37.105367-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 385
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS32743",
+                "calling_code": "1",
+                "city": "Denver",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "16",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "208.74.76.162",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.7525,
+                "longitude": -104.9995,
+                "organisation": "U.S. COLO, LLC",
+                "postal": "80202",
+                "region": "Colorado",
+                "region_code": "CO",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "MDT",
+                    "current_time": "2018-07-13T09:28:53.761854-06:00",
+                    "is_dst": true,
+                    "name": "America/Denver",
+                    "offset": "-0600"
+                }
+            },
+            "impact": 3234
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS2639",
+                "calling_code": "1",
+                "city": "",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "16",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "8.39.55.197",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.751,
+                "longitude": -97.822,
+                "organisation": "ZOHO",
+                "postal": "",
+                "region": "",
+                "region_code": "",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "",
+                    "current_time": "",
+                    "is_dst": "",
+                    "name": "",
+                    "offset": ""
+                }
+            },
+            "impact": 693
+        },
+        {
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "44",
+                "city": "London",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "16",
+                "country_code": "GB",
+                "country_name": "United Kingdom",
+                "flag": "https://ipdata.co/flags/gb.png",
+                "ip": "35.177.85.205",
+                "is_eu": true,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 51.5142,
+                "longitude": -0.0931,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "EC2V",
+                "region": "England",
+                "region_code": "ENG",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "BST",
+                    "current_time": "2018-07-13T16:28:54.133496+01:00",
+                    "is_dst": true,
+                    "name": "Europe/London",
+                    "offset": "+0100"
+                }
+            },
+            "impact": 5082
+        },
+        {
+            "appid": "Laptop2",
             "geo": {
                 "asn": "AS36459",
                 "calling_code": "1",
                 "city": "San Francisco",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "720",
+                "count": "16",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
@@ -668,27 +1003,27 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-10T07:01:50.104497-07:00",
+                    "current_time": "2018-07-13T08:28:54.310761-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
                 }
             },
-            "impact": 234
+            "impact": 492
         },
         {
-            "appid": "Router",
+            "appid": "Laptop2",
             "geo": {
-                "asn": "X",
+                "asn": "AS36459",
                 "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
+                "city": "San Francisco",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "16",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "192.30.253.125",
                 "is_eu": false,
                 "languages": [
                     {
@@ -696,12 +1031,12 @@
                         "native": "English"
                     }
                 ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
+                "latitude": 37.7697,
+                "longitude": -122.3933,
+                "organisation": "GitHub, Inc.",
+                "postal": "94107",
+                "region": "California",
+                "region_code": "CA",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -713,23 +1048,68 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
+                    "current_time": "2018-07-13T08:28:54.520324-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
                 }
             },
-            "impact": 60
+            "impact": 246
         },
         {
-            "appid": "Laptop",
+            "appid": "Laptop2",
+            "geo": {
+                "asn": "AS16625",
+                "calling_code": "31",
+                "city": "Amsterdam",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "16",
+                "country_code": "NL",
+                "country_name": "Netherlands",
+                "flag": "https://ipdata.co/flags/nl.png",
+                "ip": "104.82.133.96",
+                "is_eu": true,
+                "languages": [
+                    {
+                        "name": "Dutch",
+                        "native": "Nederlands"
+                    }
+                ],
+                "latitude": 52.3556,
+                "longitude": 4.9135,
+                "organisation": "Akamai Technologies, Inc.",
+                "postal": "1091",
+                "region": "North Holland",
+                "region_code": "NH",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "CEST",
+                    "current_time": "2018-07-13T17:28:55.215924+02:00",
+                    "is_dst": true,
+                    "name": "Europe/Amsterdam",
+                    "offset": "+0200"
+                }
+            },
+            "impact": 5601
+        },
+        {
+            "appid": "Laptop2",
             "geo": {
                 "asn": "AS16509",
                 "calling_code": "44",
                 "city": "London",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "720",
+                "count": "16",
                 "country_code": "GB",
                 "country_name": "United Kingdom",
                 "flag": "https://ipdata.co/flags/gb.png",
@@ -758,383 +1138,17 @@
                 },
                 "time_zone": {
                     "abbr": "BST",
-                    "current_time": "2018-07-10T15:01:50.234776+01:00",
+                    "current_time": "2018-07-13T16:29:03.634643+01:00",
                     "is_dst": true,
                     "name": "Europe/London",
                     "offset": "+0100"
                 }
             },
-            "impact": 42647
-        },
-        {
-            "appid": "Samsung Phone",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "0",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Sony Device",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.1",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Unknown",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.1",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Laptop",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.1",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 70
-        },
-        {
-            "appid": "Router",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.1",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Sony Device",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.22",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Unknown",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.22",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 60
-        },
-        {
-            "appid": "Laptop",
-            "geo": {
-                "asn": "X",
-                "calling_code": "1",
-                "city": "Unknown",
-                "continent_code": "Unknown",
-                "continent_name": "Unknown",
-                "count": "1",
-                "country_code": "Unknown",
-                "country_name": "Unknown",
-                "flag": "Unknown",
-                "ip": "224.0.0.22",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 1,
-                "longitude": 1,
-                "organisation": "Unknown",
-                "postal": "Unknown",
-                "region": "Unknown",
-                "region_code": "Unknown",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-09T08:27:30.360976-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 70
+            "impact": 51775
         }
     ],
-    "idSoFar": 817,
+    "idSoFar": 2754,
     "impacts": [
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "34.194.105.124",
-            "impact": 262
-        },
         {
             "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
@@ -1142,88 +1156,160 @@
             "impact": 166184
         },
         {
-            "appid": "Laptop",
-            "companyName": "Jisc Services Limited",
-            "companyid": "163.1.88.56",
-            "impact": 235542
-        },
-        {
-            "appid": "Laptop",
+            "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "54.73.2.221",
-            "impact": 288
+            "companyid": "34.194.105.124",
+            "impact": 262
         },
         {
-            "appid": "Laptop",
-            "companyName": "Microsoft Corporation",
-            "companyid": "52.170.194.77",
-            "impact": 1384
-        },
-        {
-            "appid": "Sony Device",
-            "companyName": "Unknown",
-            "companyid": "224.0.0.22",
-            "impact": 60
-        },
-        {
-            "appid": "Unknown",
-            "companyName": "Unknown",
-            "companyid": "224.0.0.22",
-            "impact": 60
-        },
-        {
-            "appid": "Laptop",
-            "companyName": "Unknown",
-            "companyid": "224.0.0.22",
-            "impact": 70
-        },
-        {
-            "appid": "Laptop",
+            "appid": "Laptop2",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "52.25.249.59",
-            "impact": 472
+            "companyid": "35.177.85.205",
+            "impact": 5082
         },
         {
-            "appid": "Laptop",
-            "companyName": "Valve Corporation",
-            "companyid": "162.254.193.7",
-            "impact": 172
-        },
-        {
-            "appid": "Laptop",
-            "companyName": "ZOHO",
-            "companyid": "204.141.42.94",
-            "impact": 268
-        },
-        {
-            "appid": "Laptop",
-            "companyName": "Microsoft Corporation",
-            "companyid": "204.79.197.213",
-            "impact": 30776
-        },
-        {
-            "appid": "Laptop",
+            "appid": "Laptop2",
             "companyName": "GitHub, Inc.",
             "companyid": "192.30.253.124",
-            "impact": 234
+            "impact": 492
         },
         {
-            "appid": "Router",
-            "companyName": "Unknown",
-            "companyid": "224.0.0.1",
-            "impact": 60
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "204.79.197.213",
+            "impact": 17976
         },
         {
-            "appid": "Samsung Phone",
+            "appid": "Laptop2",
+            "companyName": "GitHub, Inc.",
+            "companyid": "192.30.253.125",
+            "impact": 246
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Akamai Technologies, Inc.",
+            "companyid": "104.82.133.96",
+            "impact": 5601
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Valve Corporation",
+            "companyid": "155.133.248.52",
+            "impact": 5984
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "65.55.44.109",
+            "impact": 12534
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Jisc Services Limited",
+            "companyid": "163.1.88.56",
+            "impact": 949954
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "ZOHO",
+            "companyid": "8.39.54.94",
+            "impact": 536
+        },
+        {
+            "appid": "LondonRouter",
             "companyName": "Unknown",
             "companyid": "0",
-            "impact": 60
+            "impact": 18397
         },
         {
-            "appid": "Laptop",
+            "appid": "LondonRouter",
+            "companyName": "Unknown",
+            "companyid": "0",
+            "impact": 19733
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Unknown",
+            "companyid": "0",
+            "impact": 29345
+        },
+        {
+            "appid": "LondonRouter",
+            "companyName": "Unknown",
+            "companyid": "239.255.255.250",
+            "impact": 11344
+        },
+        {
+            "appid": "LondonRouter",
+            "companyName": "Unknown",
+            "companyid": "239.255.255.250",
+            "impact": 2838
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Unknown",
+            "companyid": "239.255.255.250",
+            "impact": 11452
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "52.114.74.43",
+            "impact": 54
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "54.76.234.141",
+            "impact": 2592
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "GitHub, Inc.",
+            "companyid": "192.30.253.124",
+            "impact": 738
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.27.140.115",
+            "impact": 4628
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "204.79.197.213",
+            "impact": 74735
+        },
+        {
+            "appid": "Laptop2",
             "companyName": "Amazon.com, Inc.",
             "companyid": "35.178.69.66",
-            "impact": 42647
+            "impact": 51775
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Valve Corporation",
+            "companyid": "155.133.248.52",
+            "impact": 6614
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Microsoft Corporation",
+            "companyid": "65.55.44.109",
+            "impact": 19894
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "Jisc Services Limited",
+            "companyid": "163.1.88.56",
+            "impact": 1189812
+        },
+        {
+            "appid": "Laptop2",
+            "companyName": "ZOHO",
+            "companyid": "8.39.54.94",
+            "impact": 977
         }
     ],
     "ipsToIgnore": [
@@ -1237,6 +1323,7 @@
         "48:45:20:d5:ff:84": "Intel Corporate",
         "60:38:e0:d4:db:98": "Belkin International Inc.",
         "70:8b:cd:8a:85:7e": "ASUSTek COMPUTER INC.",
+        "78:3e:53:4c:94:77": "BSkyB Ltd",
         "88:71:e5:e9:9e:6c": "Amazon Technologies Inc.",
         "8c:f5:a3:08:83:a9": "SAMSUNG ELECTRO-MECHANICS(THAILAND)",
         "b8:27:eb:b0:75:cc": "Unknown",
@@ -1256,28 +1343,16 @@
     },
     "usage": [
         {
-            "appid": "Sony Device",
+            "appid": "LondonRouter",
             "mins": 1
         },
         {
-            "appid": "Router",
+            "appid": "Amazon Echo",
             "mins": 2
         },
         {
-            "appid": "Unknown",
+            "appid": "Laptop2",
             "mins": 3
-        },
-        {
-            "appid": "Samsung Phone",
-            "mins": 4
-        },
-        {
-            "appid": "Amazon Echo",
-            "mins": 5
-        },
-        {
-            "appid": "Laptop",
-            "mins": 6
         }
     ]
 }

@@ -70,6 +70,7 @@ def DatabaseInsert(packets):
 def Categorise():
 	packetBurstification()
 	burstPrediction()
+	RefineData()
 
 def RefineData():
 	refineJsonData.compileUsageImpacts()
@@ -91,13 +92,12 @@ def QueuedCommit(packet):
 	if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
 		DatabaseInsert(queue)
 		t = threading.Thread(target=Categorise)
-		t = threading.Thread(target=RefineData)
 		t.start()
 		queue = []
 		timestamp = 0
 
 #configure capture object
-capture = pyshark.LiveCapture(interface='2')#, only_summaries=True)
+capture = pyshark.LiveCapture(interface='1')#, only_summaries=True)
 capture.set_debug()
 
 #start capturing

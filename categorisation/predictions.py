@@ -4,6 +4,7 @@ Contains methods for each device that we have models for that predict category n
 import os, json, pickle
 import pandas as pd
 import numpy as np
+from collections import defaultdict
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 #FEATURES_FILE = os.path.join(FILE_PATH, "data", "FlowFeatures.csv")
@@ -11,6 +12,7 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 NUMBER_COLUMNS = 56     # Columns used in feature vectors for NN prediction
 with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
     FLOW_NUMBER_CUTOFF = json.load(f)["EchoFlowNumberCutoff"] # Number of packets required for a valid flow
+
 HOME_IP = "192.168"
 
 
@@ -29,7 +31,7 @@ def normaliseColumn(array, colNo):
     return array
 
 def getIps(rows):
-    """ Get a list of IPs out of a burst """
+    """ Get a list of IP src/dest pairs out of a burst """
     srcdest = set()
 
     for row in rows:
@@ -39,6 +41,21 @@ def getIps(rows):
         
     srcdest = list(srcdest)
     return srcdest
+    
+
+def getExtIpsCount(rows):
+    """ Get a dictionary of external IPs out of a burst with their frequency"""
+    ips = defaultdict(int)
+
+    for row in rows:
+        source = row[2]
+        destination = row[3]
+        if HOME_IP not in source:
+            ips[source] += 1
+        if HOME_IP not in destination:
+            ips[destination] += 1
+    
+    return ips
 
 def getFlowDict(sourcedest, burst):
     """
@@ -178,3 +195,19 @@ def predictHue(rows):
     """ TODO: Given rows of data from a burst from packets table, predict a Hue category"""
 
     return "Unknown"
+
+def predictOther(rows):
+    """ Given rows from a burst with no model, display category as majority destination"""
+
+    percentCutoff = 0.8
+
+    ext = getExtIpsCount(rows)
+
+    total = sum(ext.values())
+
+    for key in ext.keys():
+        if ext[key]*1.0 / total*1.0 > percentCutoff:
+            return "Mostly: " + key
+
+    return "Unknown"
+

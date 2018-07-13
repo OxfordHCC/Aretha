@@ -107,12 +107,12 @@ def burstPrediction():
 
         device = macHelpMethods.getDeviceFromMac(rows[0][4])
 
-        if device == "Echo" and len(rows) > cutoffs[device]:
+        if "Echo" in device and len(rows) > cutoffs["Echo"]:
             category = predictions.predictEcho(rows)
         elif device == "Hue" and len(rows) > cutoffs[device]:
             category = predictions.predictHue(rows)
         else:
-            category = "Unknown"
+            category = predictions.predictOther(rows)
 
 
         # Get the id of this category, and add if necessary
