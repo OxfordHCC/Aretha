@@ -179,14 +179,16 @@ getDatePadding(minDate, maxDate) {
 
     //console.log(inputData)
 
-    var data = inputData.filter( d => {if (d.device == this.lastHovering) {return d;}});
+    var data = inputData.filter( d => {if (d.device == this.lastHovering || this.lastHovering == undefined) {return d;}});
 
-    console.log(data);
+    //console.log(data);
         
     var padding = this.timeRangePad(data.map(val => val.value));
 
+    const oneDayDisplacement = 30
+
     var margin = {
-        top: 10,
+        top: (this.lessThanDay(padding.pad)) ? oneDayDisplacement : 10,
         right: 25,
         bottom: 15,
         left: 30
@@ -204,7 +206,7 @@ getDatePadding(minDate, maxDate) {
     
     var width = width_svgel - 50;
     
-    var height = (this.lessThanDay(padding.pad)) ? (height_svgel - margin.top - margin.bottom) : (height_svgel - margin.top - margin.bottom);
+    var height = (this.lessThanDay(padding.pad)) ? (height_svgel - margin.top - margin.bottom - oneDayDisplacement) : (height_svgel - margin.top - margin.bottom);
 
     //console.log(width);
     //console.log(height);
@@ -235,12 +237,12 @@ getDatePadding(minDate, maxDate) {
         .tickFormat(d3.timeFormat(xFormat));
 
     var yAxis = d3.axisLeft().scale(y)
-        .ticks(6)
+        .ticks(5)
         .tickSize(-width + margin.right, 0)
         .tickFormat(d3.timeFormat(yFormat));
 
-    svg.attr("width", width + margin.left + margin.right)
-       .attr("height", height + margin.top + margin.bottom);
+    //svg.attr("width", width + margin.left + margin.right)
+    //   .attr("height", height + margin.top + margin.bottom);
 
     var context = svg.append("g")
         .attr("class", "context")
@@ -259,26 +261,49 @@ getDatePadding(minDate, maxDate) {
     var circles = context.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
+    var z = d3.scaleOrdinal(d3.schemeCategory10).domain(_.uniq(data.map((x) => x.category)));
+
+    // Use this to get displacement for each different category when in 1 day mode 
+    var catNumbers = Array.from(Array(_.uniq(data.map((x) => x.category)).length).keys());
+    var catDict = {};
+    var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
+        catDict[e] = catNumbers[i];
+      });
+    
+    //console.log(catDict)
+
+    const catDisplacement = 25;
+
     circles.selectAll(".circ")
         .data(data)
         .enter().append("circle")
         .attr("class", "circ")
         .style("fill", d => {
-            return "white"
+            return z(d.category)
         })
         .attr("cx", d => {
             var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
             return res;
         })
         .attr("cy",(d, i) => {
-            return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) : y(this.getTime(d.value));
+            return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) + catDisplacement * catDict[d.category] - oneDayDisplacement : y(this.getTime(d.value));
         })
         .attr("r", 9)
         .on("click", function(d) {
             console.log(new Date(d.value));
         })
         .append("svg:title")
-        .text(function(d) { return d.category; });
+        .text(function(d) { return d.device + ": " + d.category; });
+
+    if (this.lastHovering != undefined) {
+        svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 + (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "14px") 
+        .text(this.lastHovering);
+    }
+    
 
     
     // ----------------------------------------- Legend ---------------------------------------------
