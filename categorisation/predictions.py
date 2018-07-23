@@ -4,6 +4,7 @@ Contains methods for each device that we have models for that predict category n
 import os, json, pickle
 import pandas as pd
 import numpy as np
+from ipwhois import IPWhois
 from collections import defaultdict
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -205,9 +206,17 @@ def predictOther(rows):
 
     total = sum(ext.values())
 
+
     for key in ext.keys():
         if ext[key]*1.0 / total*1.0 > percentCutoff:
-            return "Mostly: " + key
-
+            try:
+                domainObj = IPWhois(key)
+                domainRes = domainObj.lookup_whois()
+                domain = domainRes['nets'][0]['description']
+                if len(domain) > 20:
+                    domain = domain[:20]
+                return "Mostly " + domain
+            except:
+                return "Unknown"
     return "Unknown"
 
