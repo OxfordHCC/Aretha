@@ -21,6 +21,7 @@ export class TargetWatcher extends UsageListener {
         return;
       }
       this.target = target; 
+      /*
       if ((<APIAppInfo>target).app !== undefined) { 
         this.targettype = 'app'; 
         return; 
@@ -28,7 +29,7 @@ export class TargetWatcher extends UsageListener {
       if ((<CompanyInfo>target).company !== undefined) { 
         this.targettype = 'company'; 
         return; 
-      }  
+      }  */
       delete this.targettype;
     });
   }

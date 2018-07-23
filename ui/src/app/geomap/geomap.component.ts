@@ -55,6 +55,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
   _companyHovering: CompanyInfo;
   _hoveringApp: string ;
+  _ignoredApps: string[];
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -72,7 +73,17 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         this._hoveringApp = target ? target as string : undefined;
         this.render()
       }
-  });
+    
+    });
+    this._ignoredApps = new Array();
+
+    focus.focusChanged$.subscribe((target) => {
+      //console.log('hover changed > ', target);
+      if (target !== this._ignoredApps) {
+        this._ignoredApps = target ? target as string[] : [];
+        this.render();
+      }
+    });
     this.getIoTData();
     
     (<any>window)._rb = this;
@@ -174,8 +185,8 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage,
-      impacts = this.impacts;
+    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
       //console.log(impacts);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
@@ -247,9 +258,10 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        .on('click', (d) => {
-          this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        }).attr('opacity', (d) => {
+        //.on('click', (d) => {
+        //  this.focus.focusChanged(this.loader.getCachedAppInfo(d));
+        //})
+        .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
             return d === highApp ? 1.0 : 0.2;

@@ -61,6 +61,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   _hoveringType: string;
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
+  _ignoredApps: string[];
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -86,6 +87,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         this.render();
       }
     });
+
+    this._ignoredApps = new Array();
+
+    focus.focusChanged$.subscribe((target) => {
+      //console.log('hover changed > ', target);
+      if (target !== this._ignoredApps) {
+        this._ignoredApps = target ? target as string[] : [];
+        this.render();
+      }
+    });
     
     (<any>window)._rb = this;
   }
@@ -101,6 +112,19 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       console.log(this.impacts)
       this.render()
     });
+  }
+
+  addOrRemove(newClick: string): string[] {
+    //console.log(this._ignoredApps);
+    if (this._ignoredApps.indexOf(newClick) > -1) {
+      this._ignoredApps = this._ignoredApps.filter(obj => obj !== newClick);
+    }
+    else {
+      this._ignoredApps.push(newClick);
+    }
+    //console.log(this._ignoredApps);
+    this.render()
+    return this._ignoredApps
   }
 
 
@@ -234,8 +258,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    let usage = this.usage,
-      impacts = this.impacts,
+
+    let usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
       apps = _.uniq(impacts.map((x) => x.appid)),
       companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
@@ -316,8 +341,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .enter().append('rect')
         .attr('class', 'bar')
         .attr('x', (d) => x(d.data.company))
-        .attr('y', (d) => y(d[1]))
-        .attr('height', function (d) { return y(d[0]) - y(d[1]); })
+        .attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
+        .attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
         .attr('width', x.bandwidth())
         // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
         .on('click', function (d) {
@@ -426,7 +451,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           this.hover.hoverChanged(d)
         })
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        .on('click', (d) => this.focus.focusChanged(this.loader.getCachedAppInfo(d)));
+        .on('click', (d) => this.focus.focusChanged(this.addOrRemove(d)));
 
       legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
@@ -445,7 +470,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d)
+        .text((d) => this._ignoredApps.indexOf(d) == -1 ? d : "Removed: " + d)
+        .style("fill", d => this._ignoredApps.indexOf(d) == -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {

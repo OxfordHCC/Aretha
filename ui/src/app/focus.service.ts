@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { ActivityLogService } from "app/activity-log.service";
 
-export type FocusTarget = APIAppInfo | CompanyInfo;
+export type FocusTarget = string[];
 
 @Injectable()
 export class FocusService {
@@ -14,11 +14,6 @@ export class FocusService {
   constructor(private actlog : ActivityLogService) {}
 
   focusChanged(focusTarget: FocusTarget) {
-    if (focusTarget) {
-      this.actlog.log('focus', focusTarget instanceof APIAppInfo ? focusTarget.app : focusTarget.company);
-    } else {
-      this.actlog.log('focus', 'unfocus');
-    }
     this.focusChangedSource.next(focusTarget);
   }
 

@@ -113,7 +113,7 @@ export class UsagetableComponent implements OnInit {
   }
   appFocused(appid: string) {
     console.log('app focusing ', appid);    
-    this.focus.focusChanged(this.loader.getCachedAppInfo(appid));
+    //this.focus.focusChanged(this.loader.getCachedAppInfo(appid));
   }
   
   appValueChanged(usage?: AppUsageHHMM) {

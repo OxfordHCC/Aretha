@@ -53,6 +53,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
+  _ignoredApps: string[];
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -71,6 +72,16 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         this.render();
       }
     });
+    this._ignoredApps = new Array();
+
+    focus.focusChanged$.subscribe((target) => {
+      //console.log('hover changed > ', target);
+      if (target !== this._ignoredApps) {
+        this._ignoredApps = target ? target as string[] : [];
+        this.render();
+      }
+    });
+    
     this.getIoTData();
     (<any>window)._rb = this;
   }
@@ -172,8 +183,8 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage,
-      impacts = this.impacts;
+    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
 
     let apps = _.uniq(impacts.map((x) => x.appid)),
       countries = _.uniq(impacts.map((x) => x.country)),
@@ -228,12 +239,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         .enter().append('rect')
         .attr('class', 'bar')
         .attr('x', (d) => x(d.data.country))
-        .attr('y', (d) => y(d[1]))
-        .attr('height', function (d) { return y(d[0]) - y(d[1]); })
+        .attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
+        .attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
         .attr('width', x.bandwidth())
         .on('click', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
-            this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+            /*this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));*/
           }
         })
         .on('mouseenter', function (d) {
@@ -282,7 +293,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       svg.selectAll('g.axis.x g.tick')
         .filter(function (d) { return d; })
         .attr('class', (d) => d.country)
-        .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)));
+        /*.on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)))*/;
     }
 
     g.append('g')
@@ -307,9 +318,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        .on('click', (d) => {
+        /*.on('click', (d) => {
           this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        });
+        })*/;
 
       legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
