@@ -126,8 +126,6 @@ def processImpactsUsage(data, manualReset):
 
     [record for record in result if (record[1] < (datetime.datetime.now() - datetime.timedelta(days=30)))]
 
-    print(result)
-
     macs = """ SELECT DISTINCT mac FROM packets """
     macRes = databaseBursts.execute(macs, "")
 
