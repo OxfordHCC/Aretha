@@ -115,12 +115,12 @@ def processImpactsUsage(data, manualReset):
 
     resetted = False
     if data["dbreset"] or manualReset:
-        getALL = """ SELECT * FROM packets ORDER BY id """
+        getALL = """ SELECT * FROM packets WHERE time > (now() - interval '1 month') ORDER BY id """
         usage = []
         impacts = []
         resetted = True
     else:
-        getALL = """ SELECT * FROM packets WHERE id > """ + str(data["idSoFar"]) + """ORDER BY id """
+        getALL = """ SELECT * FROM packets WHERE id > """ + str(data["idSoFar"]) + """AND time > (now() - interval '1 month') ORDER BY id """
 
     result = databaseBursts.execute(getALL, "")
 
