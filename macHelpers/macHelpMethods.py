@@ -24,7 +24,11 @@ def getManufactFromMac(mac):
         manufacturer = r.text
 
         if "errors" in manufacturer:
-            manDict[mac] = "Unknown"
+            counter = 1
+            for value in manDict.items():
+                if "Unknown" in value and value[-1] > counter:
+                    counter = value[-1]
+            manDict[mac] = "Unknown" + str(counter)
         else:
             manDict[mac] = manufacturer
 
@@ -52,9 +56,12 @@ def getDeviceFromMac(mac):
     try:
         dev = manDev[manufact]
     except:
-        dev = "Unknown"
-        print("Unknown device for: " + manufact)
-        manDev[manufact] = "Unknown"
+        if "Unknown" in manufact:
+            dev = manufact
+            manDev[manufact] = manufact
+        else:
+            dev = "Unknown - " + manufact
+            manDev[manufact] = "Unknown - " + manufact
 
         data["manDev"] = manDev
 

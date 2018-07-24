@@ -254,7 +254,7 @@ def processGeoData(resetted, data):
                 if geo["geo"] == """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
                     miss = True
                     duffImpacts.append(impact)
-                elif ip == geo["geo"]["ip"]:
+                elif ip == geo["geo"]["ip"] and impact["appid"] == geo["appid"]:
                     miss = True
             
             for difIP in ipsToIgnore:
@@ -270,7 +270,7 @@ def processGeoData(resetted, data):
         except KeyError:
             impactsToDo.append(impact)
 
-    #print(impactsToDo)
+    print(impactsToDo)
 
     ## Get geo for each impact and add it 
 
@@ -282,7 +282,7 @@ def processGeoData(resetted, data):
     for impact in impactsToDo:
         geo = getGeoFromIp(impact["companyid"])
         #print("Calling")
-        if geo != """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""":
+        if geo != """{\"message\": \"0 does not appear to be an IPv4 or IPv6 address\"}""" and not isinstance(geo, str):
             if geo["organisation"] == "":
                 geo = getFake(impact["companyid"])
             newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
@@ -291,10 +291,13 @@ def processGeoData(resetted, data):
             
             # store duff IPs so that they aren't called again
             ipsToIgnore.append(impact["companyid"])
+            duffImpacts.append(impact)
 
     for impact in duffImpacts:
         geo = getFake(impact["companyid"])
         newGeos.append({"appid": impact["appid"], "impact": impact["impact"], "geo": geo})
+
+    
 
     data["geos"] = newGeos
     data["ipsToIgnore"] = ipsToIgnore
