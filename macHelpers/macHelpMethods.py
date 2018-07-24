@@ -54,19 +54,19 @@ def getDeviceFromMac(mac):
     manDev = data["manDev"]
 
     try:
-        dev = manDev[manufact]
+        dev = manDev[manufact + " : " + mac]
     except:
         if "Unknown" in manufact:
             dev = manufact
-            manDev[manufact] = manufact
+            manDev[manufact + " : " + mac] = manufact
         else:
             dev = "Unknown - " + manufact
-            manDev[manufact] = "Unknown - " + manufact
+            manDev[manufact + " : " + mac] = "Unknown - " + manufact
 
         data["manDev"] = manDev
 
         with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
-            json.dump(data, fp, sort_keys=True, indent=4)
+            json.dump(data, fp, sort_keys=False, indent=4)
 
 
     return dev
