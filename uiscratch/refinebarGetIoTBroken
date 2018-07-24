@@ -1,0 +1,135 @@
+this.http.get('http://localhost:3000/packets').toPromise().then(response => {
+      var list = response.json();
+
+      var allMacs = []
+
+      for (var i = 0; i < list.length; i++){
+        if (allMacs.indexOf(list[i]["mac"]) == -1 ){
+          allMacs.push(list[i]["mac"]);
+        }
+      }
+      console.log(allMacs);
+      this.http.get('assets/data/dicts.json').toPromise().then(response2 => {
+
+        var usage = [];
+        this.usage = usage;
+        var impacts = [];
+        
+
+        var fn = function(mac): any {
+          try{
+            this.usage.push({"appid":response2.json()["manDev"][response2.json()["macMan"][mac]], "mins":15})
+          }
+          catch(err){
+            //console.log(err)
+            usage.push({"appid":allMacs[i], "mins":15})
+          }
+          var impacts;
+          this.http.get('http://localhost:3000/packets?mac=eq.'+mac + "&dst=not.like.192*&dst=not.like.10*").toPromise().then(macResponse => {
+            var macList = macResponse.json();
+            //console.log(macResponse);
+            var destinations = [];
+            var destCount = {};
+            for (var i = 0; i < macList.length; i++){
+              var dst = macList[i]["dst"]
+              if (destinations.indexOf(dst) == -1){
+                destinations.push(dst)
+                destCount[dst] = 1;
+              } else {
+                destCount[dst] += 1;
+              }
+            }
+            for (var i = 0; i < destinations.length; i++) 
+            {
+              impacts.push({"appid":response2.json()["manDev"][response2.json()["macMan"][mac]],
+                          "companyid":destinations[i],
+                          "impact":destCount[destinations[i]]});
+              console.log("HEREE");
+            }
+            return impacts
+          });
+
+          
+        };
+
+        var res2 = Promise.all(allMacs.map(fn)).then( data => {console.log(data);})
+
+        
+         
+          
+        console.log(impacts);
+        this.impacts = impacts;
+      });
+
+      /*
+      this.http.get('assets/data/dicts.json').toPromise().then(response2 => {
+        var usage = []
+        //console.log(response2);
+
+        // Setup all the usages as 15 mins
+        for (var i = 0; i < allMacs.length; i++){
+          try{
+            usage.push({"appid":response2.json()["manDev"][response2.json()["macMan"][allMacs[i]]], "mins":15})
+          }
+          catch(err){
+            console.log(err)
+            usage.push({"appid":allMacs[i], "mins":15})
+          }
+        }
+        //console.log(usage);
+
+        var lengthsPerIpPerMac = {}
+        var allDests = []
+        
+        for (var i = 0; i < list.length; i++){
+          console.log(list[i]["src"]);
+          
+          if ((list[i]["src"].indexOf(LOCAL_IP_MASK_16) !== -1 || list[i]["src"].indexOf(LOCAL_IP_MASK_24) !== -1) &&  
+            (list[i]["dst"].indexOf(LOCAL_IP_MASK_16) !== -1|| list[i]["dst"].indexOf(LOCAL_IP_MASK_24) !== -1)){
+            // Internal comms so ignore for now
+            continue
+          }
+          console.log("HEREEE")
+          var destination;
+
+          if (list[i]["src"].indexOf(LOCAL_IP_MASK_16)!== -1 || list[i]["src"].indexOf(LOCAL_IP_MASK_24)!== -1){
+            destination = list[i]["dst"];
+          }
+          else{
+            destination = list[i]["src"];
+          }
+
+          if (allDests.indexOf(destination) == -1 ){
+            allDests.push(destination);
+          }
+
+          try{
+            lengthsPerIpPerMac[destination+list[i]["mac"]] += 1;
+          }
+          catch(err){
+            lengthsPerIpPerMac[destination+list[i]["mac"]] = 1;
+          } 
+          
+        } 
+
+        var impacts = [];
+
+        for (var i = 0; i < allDests.length; i++){
+          for (var j = 0; j < allMacs.length; i++) {
+            if (lengthsPerIpPerMac[allDests[i]+allMacs[j]] != 0){
+              impacts.push({"appid":response2.json()["manDev"][response2.json()["macMan"][allMacs[j]]],
+                            "companyid":allDests[i],
+                            "impact":lengthsPerIpPerMac[allDests[i]+allMacs[j]]})
+            }
+          }
+        }
+        console.log("HERE")
+        console.log(usage);
+        console.log(impacts);
+
+        this.usage = usage;
+        this.impacts = impacts;
+
+        return;
+      });
+      return; */

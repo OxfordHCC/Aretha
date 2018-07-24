@@ -1,0 +1,10 @@
+<div class="root">
+    <!-- basic configuration: full grid -->
+    <app-refinebar *ngIf="!mode" class='gridleft' [appusage]="usage"></app-refinebar>
+
+    <div *ngIf='!mode' class="gridright">
+        <app-refinecat [appusage]="usage" [showLegend]='false'></app-refinecat>
+        <app-geomap [appusage]="usage" [showLegend]='false'></app-geomap>
+        <app-geobar [appusage]="usage" [showLegend]='false'></app-geobar>
+    </div>
+</div>

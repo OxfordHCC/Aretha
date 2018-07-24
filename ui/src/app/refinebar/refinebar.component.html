@@ -1,0 +1,9 @@
+<div class="main">
+    <div class="mode-options" [hidden]='!showModes'>
+        <a [ngClass]="{active: timeSpan=='d'}" (click)='timeSpan="d"'> Yesterday </a>
+        <a [ngClass]="{active: timeSpan=='w'}" (click)='timeSpan="w"'> Last Week </a>
+        <a [ngClass]="{active: timeSpan=='m'}" (click)='timeSpan="m"'> Last Month </a>
+        <span *ngIf="_companyHovering"> {{ _companyHovering.id }} </span>
+    </div>
+    <svg #thing></svg>
+</div>

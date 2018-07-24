@@ -7,6 +7,9 @@ import predictions
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts # pylint: disable=C0413, E0401
 
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "macHelpers"))
+import macHelpMethods # pylint: disable=C0413, E0401
+
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 def packetBurstification():
@@ -24,12 +27,14 @@ def packetBurstification():
         id = row[0]
         mac = row[4]
 
-        dev = getDeviceFromMac(mac)
+        dev = macHelpMethods.getDeviceFromMac(mac)
 
         with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
             config = json.load(f)
-
-            burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+            try:
+                burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+            except KeyError:
+                burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
         
         if id not in allIds:
             
@@ -81,50 +86,7 @@ def packetBurstification():
         for packetRowId in burst:
             databaseBursts.updatePacketBurst(packetRowId, newBurstId)
             
-def getManufactFromMac(mac):
-    """ 
-    Gets a device manufacturer from a mac
-    Uses a pickled dict to relate mac addresses to manufacturers from the api
-    """
-    if os.path.isfile(os.path.join(FILE_PATH, "manDict.p")):
-        with open(os.path.join(FILE_PATH, "manDict.p"), "rb") as f:
-            manDict = pickle.load(f)
-    else:
-        manDict = {}
 
-    if mac in manDict.keys():
-        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
-            pickle.dump(manDict, f)
-
-        return manDict[mac]
-
-    else:
-        r = requests.get("https://api.macvendors.com/" + mac)
-        manufacturer = r.text
-
-        manDict[mac] = manufacturer
-
-        with open(os.path.join(FILE_PATH, "manDict.p"), "wb") as f:
-            pickle.dump(manDict, f)
-
-        return manufacturer
-    
-
-def getDeviceFromMac(mac):
-    """ 
-    Gets a device name from a mac 
-    Relates manufacturer names to devices via a json dictionary
-    """
-    
-    manufact = getManufactFromMac(mac)
-
-    if manufact == """ {"errors":{"detail":"Page not found"}} """:
-        return "Unknown"
-
-    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-        manDev = json.load(f)["manDev"]
-
-    return manDev[manufact]
 
 def burstPrediction():
     """
@@ -132,22 +94,33 @@ def burstPrediction():
     """
     unCat = databaseBursts.getNoCat()
 
+    #print(unCat)
+
     with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
         config = json.load(f)
         cutoffs = config["burstNumberCutoffs"]
+    
+    
 
     for burst in unCat:
         
         rows = databaseBursts.getRowsWithBurst(burst[0])
 
-        device = getDeviceFromMac(rows[0][4])
+        #print(burst, rows)
 
-        if device == "Echo" and len(rows) > cutoffs[device]:
+        if len(rows) == 0:
+            continue
+
+        device = macHelpMethods.getDeviceFromMac(rows[0][4])
+
+        if "Echo" in device and len(rows) > cutoffs["Echo"]:
             category = predictions.predictEcho(rows)
         elif device == "Hue" and len(rows) > cutoffs[device]:
             category = predictions.predictHue(rows)
         else:
-            category = "Unknown"
+            category = predictions.predictOther(rows)
+
+        
 
 
         # Get the id of this category, and add if necessary

@@ -1,0 +1,7 @@
+{
+  "name": "iot-refine",
+  "version": "0.0.1",
+  "dependencies": {
+    "d3": "4"
+  }
+}

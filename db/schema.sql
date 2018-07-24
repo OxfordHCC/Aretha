@@ -2,7 +2,7 @@
 drop table if exists categories cascade ;
 create table categories (
 	id SERIAL primary key,
-	name varchar(20) not null -- e.g. "Alexa-time" or "Alexa-joke"
+	name varchar(40) not null -- e.g. "Alexa-time" or "Alexa-joke"
 );
 
 --collates bursts of traffic and optionally assigns them a category
@@ -22,6 +22,6 @@ create table packets (
 	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
 	proto varchar(10) not null, --protocol if known, otherwise port number
-	burst integer references bursts --optional, 
+	burst integer references bursts --optional,
 	--company integer references companies --optional, assumes table of companies (stolen from refine)
 );
