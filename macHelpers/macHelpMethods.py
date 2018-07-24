@@ -26,8 +26,8 @@ def getManufactFromMac(mac):
         if "errors" in manufacturer:
             counter = 1
             for value in manDict.items():
-                if "Unknown" in value and value[-1] > counter:
-                    counter = value[-1]
+                if "Unknown" in value and value[-1] >= counter:
+                    counter = value[-1] + 1
             manDict[mac] = "Unknown" + str(counter)
         else:
             manDict[mac] = manufacturer

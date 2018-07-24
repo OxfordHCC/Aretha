@@ -94,16 +94,22 @@ def burstPrediction():
     """
     unCat = databaseBursts.getNoCat()
 
+    #print(unCat)
+
     with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
         config = json.load(f)
         cutoffs = config["burstNumberCutoffs"]
+    
+    
 
     for burst in unCat:
         
         rows = databaseBursts.getRowsWithBurst(burst[0])
 
+        #print(burst, rows)
+
         if len(rows) == 0:
-            return
+            continue
 
         device = macHelpMethods.getDeviceFromMac(rows[0][4])
 
@@ -113,6 +119,8 @@ def burstPrediction():
             category = predictions.predictHue(rows)
         else:
             category = predictions.predictOther(rows)
+
+        
 
 
         # Get the id of this category, and add if necessary
