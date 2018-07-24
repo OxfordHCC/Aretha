@@ -270,7 +270,7 @@ def processGeoData(resetted, data):
         except KeyError:
             impactsToDo.append(impact)
 
-    print(impactsToDo)
+    #print(impactsToDo)
 
     ## Get geo for each impact and add it 
 
