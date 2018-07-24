@@ -294,11 +294,12 @@ getDatePadding(minDate, maxDate) {
         })
         .append("svg:title")
         .text(function(d) { return d.device + ": " + d.category; });
-
+    
+    // This is for the title 
     if (this.lastHovering != undefined) {
         svg.append("text")
         .attr("x", (width / 2))             
-        .attr("y", 0 + (margin.top / 2))
+        .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
         .attr("text-anchor", "middle")  
         .style("font-size", "14px") 
         .text(this.lastHovering);
