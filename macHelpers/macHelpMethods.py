@@ -4,13 +4,15 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DATAPATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 
-def getManufactFromMac(mac):
+def getManufactFromMac(mac, data=False):
     """ 
     Gets a device manufacturer from a mac
     Uses a pickled dict to relate mac addresses to manufacturers from the api
     """
-    with open(os.path.join(DATAPATH, "iotData.json"), 'r') as fp:
-        data = json.load(fp)
+    if not data:
+        with open(os.path.join(DATAPATH, "iotData.json"), 'r') as fp:
+            data = json.load(fp)
+            
     try:
         manDict = data["macMan"]
     except:
@@ -40,7 +42,7 @@ def getManufactFromMac(mac):
         return manDict[mac]
     
 
-def getDeviceFromMac(mac):
+def getDeviceFromMac(mac, data=False):
     """ 
     Gets a device name from a mac 
     Relates manufacturer names to devices via a json dictionary
@@ -48,8 +50,9 @@ def getDeviceFromMac(mac):
     
     manufact = getManufactFromMac(mac)
 
-    with open(os.path.join(DATAPATH, "iotData.json"), 'r') as f:
-        data = json.load(f)
+    if not data:
+        with open(os.path.join(DATAPATH, "iotData.json"), 'r') as f:
+            data = json.load(f)
 
     manDev = data["manDev"]
 

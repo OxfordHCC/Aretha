@@ -140,7 +140,7 @@ def processImpactsUsage(data, manualReset):
     counter = len(usage) + 1 
      
     for mac in allMacs:
-        dev = getDeviceFromMac(mac)
+        dev = getDeviceFromMac(mac, data)
         miss = False
         for thisUsage in usage:
             if dev == thisUsage["appid"]:
@@ -157,7 +157,7 @@ def processImpactsUsage(data, manualReset):
     lengthsPerIpPerMac = defaultdict(int)
 
     for mac in allMacs:
-        dev = getDeviceFromMac(mac)
+        dev = getDeviceFromMac(mac, data)
         for impact in impacts:
             if impact["appid"] == dev:
                 alreadyHaveEntry.append((impact["companyid"],dev))
@@ -192,10 +192,10 @@ def processImpactsUsage(data, manualReset):
                 try:
                     if(lengthsPerIpPerMac[dest+mac] !=0):
 
-                        if (dest,getDeviceFromMac(mac)) in alreadyHaveEntry:
-                            impacts = updateImpact(impacts, getDeviceFromMac(mac), dest, lengthsPerIpPerMac[dest+mac])
+                        if (dest,getDeviceFromMac(mac, data)) in alreadyHaveEntry:
+                            impacts = updateImpact(impacts, getDeviceFromMac(mac, data), dest, lengthsPerIpPerMac[dest+mac])
                         else:
-                            impacts.append({"appid":getDeviceFromMac(mac), "companyid":dest, "impact":lengthsPerIpPerMac[dest+mac]})
+                            impacts.append({"appid":getDeviceFromMac(mac, data), "companyid":dest, "impact":lengthsPerIpPerMac[dest+mac]})
 
                 except KeyError:
                     print("Key error, but not sure why")
@@ -332,19 +332,19 @@ def extractBurstsFromDb():
     
     iotBurstData = []
 
+    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
+        data = json.load(fp)
+
     for row in result: 
         epoch = datetime.datetime.utcfromtimestamp(0)
 
         unixTime = int( (row[0] - epoch).total_seconds() * 1000.0)
 
-        device = getDeviceFromMac(row[1])
+        device = getDeviceFromMac(row[1], data)
 
         category = row[3]
 
         iotBurstData.append({"value": unixTime, "category": category, "device": device })
-
-    with open(os.path.join(dataPath, "iotData.json"), 'r') as fp:
-        data = json.load(fp)
 
     data["bursts"] = iotBurstData
 
