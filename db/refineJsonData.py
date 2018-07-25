@@ -256,6 +256,7 @@ def processGeoData(resetted, data):
                     duffImpacts.append(impact)
                 elif ip == geo["geo"]["ip"] and impact["appid"] == geo["appid"]:
                     miss = True
+                    geo["impact"] = impact["impact"]
             
             for difIP in ipsToIgnore:
                 if ip == difIP:
