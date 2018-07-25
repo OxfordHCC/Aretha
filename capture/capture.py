@@ -3,14 +3,6 @@
 import pyshark
 import datetime
 import psycopg2
-import threading
-import sys, os
-
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-from burstProcessing import packetBurstification, burstPrediction # pylint: disable=C0413, E0401
-
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import refineJsonData # pylint: disable=C0413, E0401
 
 #constants
 COMMIT_INTERVAL = 5
@@ -67,14 +59,6 @@ def DatabaseInsert(packets):
 	cur.close()
 	conn.close()
 
-def Categorise():
-	packetBurstification()
-	burstPrediction()
-	RefineData()
-
-def RefineData():
-	refineJsonData.compileUsageImpacts()
-
 def QueuedCommit(packet):
 	#commit packets to the database in COMMIT_INTERVAL second intervals
 
@@ -91,13 +75,11 @@ def QueuedCommit(packet):
 	#time to commit to db
 	if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
 		DatabaseInsert(queue)
-		t = threading.Thread(target=Categorise)
-		t.start()
 		queue = []
 		timestamp = 0
 
 #configure capture object
-capture = pyshark.LiveCapture(interface='2')#, only_summaries=True)
+capture = pyshark.LiveCapture(interface='2')
 capture.set_debug()
 
 #start capturing
