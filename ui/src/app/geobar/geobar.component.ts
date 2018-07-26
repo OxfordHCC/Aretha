@@ -189,8 +189,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     let apps = _.uniq(impacts.map((x) => x.appid)),
       countries = _.uniq(impacts.map((x) => x.country)),
       get_impact = (cid, aid) => {
-        const t = impacts.filter((imp) => imp.country === cid && imp.appid === aid)[0];
-        return t !== undefined ? t.impact : 0;
+        const t = impacts.filter((imp) => imp.country === cid && imp.appid === aid);
+        const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+        return t !== undefined ? t.reduce(reducer, 0) : 0;
       },
       by_country = countries.map((countryname) => ({
         country: countryname,
@@ -209,6 +210,8 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     // re-order companies
     countries = by_country.map((bc) => bc.country);
+
+    console.log(by_country)
 
     let margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
