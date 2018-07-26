@@ -6,7 +6,9 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 from burstProcessing import packetBurstification, burstPrediction # pylint: disable=C0413, E0401
 
 packetBurstification()
+print("Burstification done")
 burstPrediction()
+print("Prediction done")
 
 getAll = """ SELECT * FROM bursts ORDER BY id"""
 print ( databaseBursts.execute(getAll, ""))

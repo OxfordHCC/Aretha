@@ -9,7 +9,7 @@ def execute(query, data, all=True):
     If `all` is False then only gets one entry matching the query
     """
     try:
-        connection = psycopg2.connect("dbname=testdb user=postgres password=password")
+        connection = psycopg2.connect("dbname=static user=postgres password=password")
     except:
         print("Connection error")
     else:
@@ -74,3 +74,15 @@ def updateBurstCategory(burst_id, category_id):
     """ Adds the category id to the burst specified by the id """
     sql = """ UPDATE bursts SET category = %s WHERE id = %s"""
     execute(sql, (category_id, burst_id))
+
+def updatePacketBurstBulk(packet_ids, burst_ids):
+    """ Update packet burst ids for the given packet ids"""
+    number = len(packet_ids)
+    arraycontents = "%s" + ", %s"*(number-1)
+
+    start = """UPDATE packets SET burst = data_table.burst_id FROM (select unnest(array["""
+    middle = """]) as packet_id, unnest(array["""
+    end = """]) as burst_id) as data_table WHERE packets.id = data_table.packet_id """
+
+    sql = start + arraycontents + middle + arraycontents + end
+    execute(sql, packet_ids + burst_ids)

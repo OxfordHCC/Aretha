@@ -1,9 +1,9 @@
-# IoT-refine
+# IoT-refine Static Interface
 Refine for the smart home
 
 How to get this running from scratch:
 
-1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
+1. Ensure postgres is installed, create a db with name static, user is postgres and password is password
 
 2. Run `npm install` in /ui and /crunchbaseSupport, also do `npm install @angular/cli@1.1.3` in /ui
 

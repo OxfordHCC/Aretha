@@ -7,5 +7,6 @@ tests/testPredictEcho.py
 db/__pycache__/
 categorisation/__pycache__/
 tests/__pycache__/
+staticData/
 
 *node_modules*

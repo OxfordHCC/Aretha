@@ -22,6 +22,9 @@ def packetBurstification():
     allIds = set()  # Set of ids considered already
     nextBurst = []  # Ids to go in next burst
 
+    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+        config = json.load(f)
+
     # Get ids of all the packets we want in bursts
     for counter, row in enumerate(unBinned):
         id = row[0]
@@ -29,12 +32,11 @@ def packetBurstification():
 
         dev = macHelpMethods.getDeviceFromMac(mac)
 
-        with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-            config = json.load(f)
-            try:
-                burstTimeInterval = int( config["burstTimeIntervals"][dev] )
-            except KeyError:
-                burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
+        
+        try:
+            burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+        except KeyError:
+            burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
         
         if id not in allIds:
             
@@ -82,9 +84,7 @@ def packetBurstification():
     # Add each new burst, and add all the packet rows to it
     for burst in allBursts:
         newBurstId = databaseBursts.insertNewBurst()
-
-        for packetRowId in burst:
-            databaseBursts.updatePacketBurst(packetRowId, newBurstId)
+        databaseBursts.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
             
 
 
