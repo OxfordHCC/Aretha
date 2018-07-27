@@ -194,7 +194,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       this.render();
     }));
   }
+
   get byTime() { return this._byTime; }
+
+  // accessors for timeSpan
+  set timeSpan(val) {
+    this._timeSpan = val;
+    this.render();
+  }
+
+  get timeSpan() {return this._timeSpan; }
 
   setHoveringTypeHighlight(ctype: string) {
     let svg = this.getSVGElement();
@@ -237,7 +246,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
 
-    //console.log(this.impacts);
+    console.log(this._timeSpan);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),

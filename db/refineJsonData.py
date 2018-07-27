@@ -12,6 +12,8 @@ from macHelpMethods import getDeviceFromMac # pylint: disable=C0413, E0401
 # This is where all the data for IoT-refine will be stored after processing
 dataPath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 
+DB_MANAGER = databaseBursts.dbManager()
+
 LOCAL_IP_MASK_16 = "192.168."
 LOCAL_IP_MASK_24 = "10."
 FAKE_GEO = {"asn": "X",
@@ -122,10 +124,10 @@ def processImpactsUsage(data, manualReset):
     else:
         getALL = """ SELECT * FROM packets WHERE id > """ + str(data["idSoFar"]) + """ ORDER BY id """
 
-    result = databaseBursts.execute(getALL, "")
+    result = DB_MANAGER.execute(getALL, "")
 
     macs = """ SELECT DISTINCT mac FROM packets """
-    macRes = databaseBursts.execute(macs, "")
+    macRes = DB_MANAGER.execute(macs, "")
 
     ## Get all the mac address 
 
@@ -322,11 +324,11 @@ def updateOrgNames(data):
             impact["companyName"] = "Unknown"
 
     with open(os.path.join(dataPath,"iotData.json"), 'w') as fp:
-            json.dump(data, fp, sort_keys=True, indent=4)
+        json.dump(data, fp, sort_keys=True, indent=4)
 
 def extractBurstsFromDb():
     getALL = """ SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category GROUP BY burst ORDER BY burst"""
-    result = databaseBursts.execute(getALL, "")
+    result = DB_MANAGER.execute(getALL, "")
     
     iotBurstData = []
 

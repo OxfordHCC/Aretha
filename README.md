@@ -7,13 +7,20 @@ How to get this running from scratch:
 
 2. Run `npm install` in /ui and /crunchbaseSupport, also do `npm install @angular/cli@1.1.3` in /ui
 
-3. Run `/capture/resetDb.py` and then `/db/runRefine.py`
+3. Run `node google-serv.js` in /crunchbaseSupport
 
-4. Run `node google-serv.js` in /crunchbaseSupport
+4. Run `ng serve` in \ui and head to `localhost:4200`
 
-5. Run `ng serve` in \ui and head to `localhost:4200`
+To add your own data: 
 
-6. Run`capture.py` to capture data and it should display in this browser 
+1. Fill a folder `staticData/` with pcaps labeled by device 
+
+2. Add device Mac and IP to the dictionary in `/categorisation/getAndStoreStaticData.py` with the name in the filename as key
+
+3. Run `/categorisation/getAndStoreStaticData.py`
+
+4. If device names have "unknown" in them, follow directions below 
+
 
 ## Device names
 

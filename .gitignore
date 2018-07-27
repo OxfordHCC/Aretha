@@ -8,5 +8,6 @@ db/__pycache__/
 categorisation/__pycache__/
 tests/__pycache__/
 staticData/
+staticDataReserved/
 
 *node_modules*

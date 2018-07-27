@@ -16,7 +16,13 @@ import refineJsonData # pylint: disable=C0413, E0401
 DATAPATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-MAC_IP_DICT = {"Alexa":("88:71:e5:e9:9e:6c", "192.168.4.2"), "Google":("20:df:b9:37:b2:70","192.168.4.2" )}
+MAC_IP_DICT = {"Alexa":("88:71:e5:e9:9e:6c", "192.168.4.2"), 
+               "Google":("20:df:b9:37:b2:70","192.168.4.2"),
+               "Hue":("00:17:88:7b:dd:8c","192.168.4.16"),
+               "WeMoSwitch":("08:86:3b:c9:ac:f5","192.168.4.6"),
+               "Nokia":("00:24:e4:66:6b:4c","192.168.4.12")}
+
+DB_MANAGER = databaseBursts.dbManager()
 
 def test():
     print("Test")
@@ -72,13 +78,11 @@ def putDataIntoDB(filename):
     #print(results)
     #print(len(results))
     #print((int(len(results)/6)-1))
-    databaseBursts.execute(sql, results, all=False)
+    DB_MANAGER.execute(sql, results, all=False)
     
-
-
 def main():
     
-    databaseBursts.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
+    DB_MANAGER.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
 
     with open(os.path.join(DATAPATH,"iotData.json"), 'r') as fp:
         data = json.load(fp)
@@ -97,9 +101,9 @@ def main():
         putDataIntoDB(file)
         print("Done: " + file)
 
-    packetBurstification()
+    packetBurstification(data=data)
     print("Burstification complete")
-    burstPrediction()
+    burstPrediction(data=data)
     print("Prediction complete")
 
     refineJsonData.compileUsageImpacts()
