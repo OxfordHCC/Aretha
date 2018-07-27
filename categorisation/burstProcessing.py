@@ -12,29 +12,33 @@ import macHelpMethods # pylint: disable=C0413, E0401
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-def packetBurstification():
+DB_MANAGER = databaseBursts.dbManager()
+
+def packetBurstification(data=False):
     """ Get all packets not in bursts and assign them to a new burst """
     # Get packets not in bursts
     
-    unBinned = databaseBursts.getNoBurst()
+    unBinned = DB_MANAGER.getNoBurst()
 
     allBursts = []  # List of list of ids
     allIds = set()  # Set of ids considered already
     nextBurst = []  # Ids to go in next burst
+
+    with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+        config = json.load(f)
 
     # Get ids of all the packets we want in bursts
     for counter, row in enumerate(unBinned):
         id = row[0]
         mac = row[4]
 
-        dev = macHelpMethods.getDeviceFromMac(mac)
+        dev = macHelpMethods.getDeviceFromMac(mac, data)
 
-        with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-            config = json.load(f)
-            try:
-                burstTimeInterval = int( config["burstTimeIntervals"][dev] )
-            except KeyError:
-                burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
+        
+        try:
+            burstTimeInterval = int( config["burstTimeIntervals"][dev] )
+        except KeyError:
+            burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
         
         if id not in allIds:
             
@@ -81,18 +85,16 @@ def packetBurstification():
 
     # Add each new burst, and add all the packet rows to it
     for burst in allBursts:
-        newBurstId = databaseBursts.insertNewBurst()
-
-        for packetRowId in burst:
-            databaseBursts.updatePacketBurst(packetRowId, newBurstId)
+        newBurstId = DB_MANAGER.insertNewBurst()
+        DB_MANAGER.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
             
 
 
-def burstPrediction():
+def burstPrediction(data=False):
     """
     Predict a category for each burst, or don't assign if there is no prediction
     """
-    unCat = databaseBursts.getNoCat()
+    unCat = DB_MANAGER.getNoCat()
 
     #print(unCat)
 
@@ -104,14 +106,14 @@ def burstPrediction():
 
     for burst in unCat:
         
-        rows = databaseBursts.getRowsWithBurst(burst[0])
+        rows = DB_MANAGER.getRowsWithBurst(burst[0])
 
         #print(burst, rows)
 
         if len(rows) == 0:
             continue
 
-        device = macHelpMethods.getDeviceFromMac(rows[0][4])
+        device = macHelpMethods.getDeviceFromMac(rows[0][4], data)
 
         if "Echo" in device and len(rows) > cutoffs["Echo"]:
             category = predictions.predictEcho(rows)
@@ -124,10 +126,10 @@ def burstPrediction():
 
 
         # Get the id of this category, and add if necessary
-        newCategoryId = databaseBursts.addOrGetCategoryNumber(category)
+        newCategoryId = DB_MANAGER.addOrGetCategoryNumber(category)
 
         # Update the burst with the name of the new category, packets already have a reference to the burst
-        databaseBursts.updateBurstCategory(burst[0], newCategoryId)
+        DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 
 

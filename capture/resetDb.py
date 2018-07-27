@@ -7,7 +7,7 @@ import databaseBursts # pylint: disable=C0413, E0401
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 from burstProcessing import packetBurstification, burstPrediction # pylint: disable=C0413, E0401
 
-
+DB_MANAGER = databaseBursts.dbManager()
 
 DATAPATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -19,7 +19,7 @@ with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
     json.dump(data, fp, sort_keys=True, indent=4)
 
 
-databaseBursts.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
+DB_MANAGER.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
 
 first = True
 
@@ -43,13 +43,13 @@ for packet in rdpcap(os.path.join(os.path.join(os.path.dirname(FILE_PATH),"tests
 
             proto = packet[TCP].dport
 
-            databaseBursts.execute(sql, (strTime, scr, dst, mac, length, proto), all=False)
+            DB_MANAGER.execute(sql, (strTime, scr, dst, mac, length, proto), all=False)
 
         except IndexError:
             pass
 
 getAll = """ SELECT * FROM packets ORDER BY id"""
-result = databaseBursts.execute(getAll, "")
+result = DB_MANAGER.execute(getAll, "")
 
 for row in result:
     print(row)
