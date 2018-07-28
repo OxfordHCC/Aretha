@@ -174,49 +174,67 @@ def getCategoryFromModel(flowStatistics):
         return result
     except KeyError:
         return "Unknown"
+
+class Predictor():
     
-def predictEcho(rows):
-    """ Given rows of data from a burst from packets table, predict an Echo category"""
+    def __init__(self):
+        with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
+            self.config = json.load(f)
+            self.ipDict = self.config["ipDests"]
+        
+        
+    def predictEcho(self, rows):
+        """ Given rows of data from a burst from packets table, predict an Echo category"""
 
-     # Get all IP sources and dests
-    srcdest = getIps(rows)
+        # Get all IP sources and dests
+        srcdest = getIps(rows)
 
-    # Get lengths of flows
-    flowLengths = getFlowDict(srcdest, rows)
+        # Get lengths of flows
+        flowLengths = getFlowDict(srcdest, rows)
 
-    # Get statistics for each flow
-    flowStatistics = getStatisticsFromDict(srcdest, flowLengths )
+        # Get statistics for each flow
+        flowStatistics = getStatisticsFromDict(srcdest, flowLengths )
 
-    # Predict the category
-    category = getCategoryFromModel(flowStatistics)
+        # Predict the category
+        category = getCategoryFromModel(flowStatistics)
 
-    return category
+        return category
 
-def predictHue(rows):
-    """ TODO: Given rows of data from a burst from packets table, predict a Hue category"""
+    def predictHue(self, rows):
+        """ TODO: Given rows of data from a burst from packets table, predict a Hue category"""
 
-    return "Unknown"
+        return self.predictOther(rows)
 
-def predictOther(rows):
-    """ Given rows from a burst with no model, display category as majority destination"""
+    def predictOther(self, rows):
+        """ Given rows from a burst with no model, display category as majority destination"""
 
-    percentCutoff = 0.8
+        percentCutoff = 0.8
 
-    ext = getExtIpsCount(rows)
+        # Of the form {ip: number of times destination in burst}
+        ext = getExtIpsCount(rows)
 
-    total = sum(ext.values())
+        total = sum(ext.values())
 
+        for key in ext.keys():
+            if ext[key]*1.0 / total*1.0 > percentCutoff:
+                try:
+                    result = self.ipDict[key]
+                except KeyError:
+                    try:
+                        domainObj = IPWhois(key)
+                        domainRes = domainObj.lookup_whois()
+                        domain = domainRes['nets'][0]['description']
+                        if len(domain) > 20:
+                            domain = domain[:20]
+                        self.ipDict[key] = "Mostly " + domain
+                        return "Mostly " + domain
+                    except:
+                        self.ipDict[key] = "Unknown"
+                        return "Unknown"
+        return "Unknown"
 
-    for key in ext.keys():
-        if ext[key]*1.0 / total*1.0 > percentCutoff:
-            try:
-                domainObj = IPWhois(key)
-                domainRes = domainObj.lookup_whois()
-                domain = domainRes['nets'][0]['description']
-                if len(domain) > 20:
-                    domain = domain[:20]
-                return "Mostly " + domain
-            except:
-                return "Unknown"
-    return "Unknown"
+    def saveIpDict(self):
+        self.config["ipDests"] = self.ipDict
+        with open(os.path.join(FILE_PATH, 'dicts.json'), 'w') as f:
+            json.dump(self.config, f, sort_keys=True, indent=4)
 

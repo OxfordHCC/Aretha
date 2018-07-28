@@ -14,6 +14,8 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DB_MANAGER = databaseBursts.dbManager()
 
+MAC_MANAGER = macHelpMethods.MacHelper()
+
 def packetBurstification(data=False):
     """ Get all packets not in bursts and assign them to a new burst """
     # Get packets not in bursts
@@ -32,7 +34,7 @@ def packetBurstification(data=False):
         id = row[0]
         mac = row[4]
 
-        dev = macHelpMethods.getDeviceFromMac(mac, data)
+        dev = MAC_MANAGER.getDeviceFromMac(mac)
 
         
         try:
@@ -102,7 +104,7 @@ def burstPrediction(data=False):
         config = json.load(f)
         cutoffs = config["burstNumberCutoffs"]
     
-    
+    predictor = predictions.Predictor()
 
     for burst in unCat:
         
@@ -113,17 +115,14 @@ def burstPrediction(data=False):
         if len(rows) == 0:
             continue
 
-        device = macHelpMethods.getDeviceFromMac(rows[0][4], data)
+        device = MAC_MANAGER.getDeviceFromMac(rows[0][4])
 
         if "Echo" in device and len(rows) > cutoffs["Echo"]:
-            category = predictions.predictEcho(rows)
+            category = predictor.predictEcho(rows)
         elif device == "Hue" and len(rows) > cutoffs[device]:
-            category = predictions.predictHue(rows)
+            category = predictor.predictHue(rows)
         else:
-            category = predictions.predictOther(rows)
-
-        
-
+            category = predictor.predictOther(rows)
 
         # Get the id of this category, and add if necessary
         newCategoryId = DB_MANAGER.addOrGetCategoryNumber(category)
@@ -131,6 +130,6 @@ def burstPrediction(data=False):
         # Update the burst with the name of the new category, packets already have a reference to the burst
         DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
-
+    predictor.saveIpDict()
 
     #88:71:e5:e9:9e:6c

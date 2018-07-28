@@ -7,12 +7,14 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 import databaseBursts # pylint: disable=C0413, E0401
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "macHelpers"))
-from macHelpMethods import getDeviceFromMac # pylint: disable=C0413, E0401
+import macHelpMethods # pylint: disable=C0413, E0401
 
 # This is where all the data for IoT-refine will be stored after processing
 dataPath = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 
 DB_MANAGER = databaseBursts.dbManager()
+
+MAC_MANAGER = macHelpMethods.MacHelper()
 
 LOCAL_IP_MASK_16 = "192.168."
 LOCAL_IP_MASK_24 = "10."
@@ -140,7 +142,7 @@ def processImpactsUsage(data, manualReset):
     counter = len(usage) + 1 
      
     for mac in allMacs:
-        dev = getDeviceFromMac(mac, data)
+        dev = MAC_MANAGER.getDeviceFromMac(mac)
         miss = False
         for thisUsage in usage:
             if dev == thisUsage["appid"]:
@@ -157,7 +159,7 @@ def processImpactsUsage(data, manualReset):
     lengthsPerIpPerMac = defaultdict(int)
 
     for mac in allMacs:
-        dev = getDeviceFromMac(mac, data)
+        dev = MAC_MANAGER.getDeviceFromMac(mac)
         for impact in impacts:
             if impact["appid"] == dev:
                 alreadyHaveEntry.append((impact["companyid"],dev))
@@ -192,10 +194,10 @@ def processImpactsUsage(data, manualReset):
                 try:
                     if(lengthsPerIpPerMac[dest+mac] !=0):
 
-                        if (dest,getDeviceFromMac(mac, data)) in alreadyHaveEntry:
-                            impacts = updateImpact(impacts, getDeviceFromMac(mac, data), dest, lengthsPerIpPerMac[dest+mac])
+                        if (dest,MAC_MANAGER.getDeviceFromMac(mac)) in alreadyHaveEntry:
+                            impacts = updateImpact(impacts, MAC_MANAGER.getDeviceFromMac(mac), dest, lengthsPerIpPerMac[dest+mac])
                         else:
-                            impacts.append({"appid":getDeviceFromMac(mac, data), "companyid":dest, "impact":lengthsPerIpPerMac[dest+mac]})
+                            impacts.append({"appid":MAC_MANAGER.getDeviceFromMac(mac), "companyid":dest, "impact":lengthsPerIpPerMac[dest+mac]})
 
                 except KeyError:
                     print("Key error, but not sure why")
@@ -340,7 +342,7 @@ def extractBurstsFromDb():
 
         unixTime = int( (row[0] - epoch).total_seconds() * 1000.0)
 
-        device = getDeviceFromMac(row[1], data)
+        device = MAC_MANAGER.getDeviceFromMac(row[1])
 
         category = row[3]
 

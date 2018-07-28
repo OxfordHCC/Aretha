@@ -4,72 +4,74 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 DATAPATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "src", "assets", "data")
 
-def getManufactFromMac(mac, data=False):
-    """ 
-    Gets a device manufacturer from a mac
-    Uses a pickled dict to relate mac addresses to manufacturers from the api
-    """
-    if not data:
+
+class MacHelper():
+
+    def __init__(self):
         with open(os.path.join(DATAPATH, "iotData.json"), 'r') as fp:
-            data = json.load(fp)
-            
-    try:
-        manDict = data["macMan"]
-    except:
-        manDict = {}
+            self.data = json.load(fp)
 
-    if mac in manDict.keys():
-        return manDict[mac]
+    def getManufactFromMac(self, mac):
+        """ 
+        Gets a device manufacturer from a mac
+        Uses a pickled dict to relate mac addresses to manufacturers from the api
+        """
+                
+        try:
+            manDict = self.data["macMan"]
+        except:
+            manDict = {}
 
-    else:
-        r = requests.get("https://api.macvendors.com/" + mac)
-        manufacturer = r.text
+        if mac in manDict.keys():
+            return manDict[mac]
 
-        if "errors" in manufacturer:
-            counter = 1
-            for value in manDict.items():
-                if "Unknown" in value and value[-1] >= counter:
-                    counter = value[-1] + 1
-            manDict[mac] = "Unknown" + str(counter)
         else:
-            manDict[mac] = manufacturer
+            r = requests.get("https://api.macvendors.com/" + mac)
+            manufacturer = r.text
 
-        data["macMan"] = manDict
+            if "errors" in manufacturer:
+                counter = 1
+                for value in manDict.items():
+                    if "Unknown" in value and value[-1] >= counter:
+                        counter = value[-1] + 1
+                manDict[mac] = "Unknown" + str(counter)
+            else:
+                manDict[mac] = manufacturer
 
-        with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
-            json.dump(data, fp, sort_keys=True, indent=4)
+            self.data["macMan"] = manDict
 
-        return manDict[mac]
-    
+            with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
+                json.dump(self.data, fp, sort_keys=True, indent=4)
 
-def getDeviceFromMac(mac, data=False):
-    """ 
-    Gets a device name from a mac 
-    Relates manufacturer names to devices via a json dictionary
-    """
-    
-    manufact = getManufactFromMac(mac)
+            return manDict[mac]
+        
 
-    if not data:
-        with open(os.path.join(DATAPATH, "iotData.json"), 'r') as f:
-            data = json.load(f)
+    def getDeviceFromMac(self, mac):
+        """ 
+        Gets a device name from a mac 
+        Relates manufacturer names to devices via a json dictionary
+        """
+        
+        manufact = self.getManufactFromMac(mac)
 
-    manDev = data["manDev"]
+       
 
-    try:
-        dev = manDev[manufact + " : " + mac]
-    except:
-        if "Unknown" in manufact:
-            dev = manufact
-            manDev[manufact + " : " + mac] = manufact
-        else:
-            dev = "Unknown - " + manufact
-            manDev[manufact + " : " + mac] = "Unknown - " + manufact
+        manDev = self.data["manDev"]
 
-        data["manDev"] = manDev
+        try:
+            dev = manDev[manufact + " : " + mac]
+        except:
+            if "Unknown" in manufact:
+                dev = manufact
+                manDev[manufact + " : " + mac] = manufact
+            else:
+                dev = "Unknown - " + manufact
+                manDev[manufact + " : " + mac] = "Unknown - " + manufact
 
-        with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
-            json.dump(data, fp, sort_keys=False, indent=4)
+            self.data["manDev"] = manDev
+
+            with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
+                json.dump(self.data, fp, sort_keys=False, indent=4)
 
 
-    return dev
+        return dev
