@@ -20,7 +20,8 @@ MAC_IP_DICT = {"Alexa":("88:71:e5:e9:9e:6c", "192.168.4.2"),
                "Google":("20:df:b9:37:b2:70","192.168.4.2"),
                "Hue":("00:17:88:7b:dd:8c","192.168.4.16"),
                "WeMoSwitch":("08:86:3b:c9:ac:f5","192.168.4.6"),
-               "Nokia":("00:24:e4:66:6b:4c","192.168.4.12")}
+               "Nokia":("00:24:e4:66:6b:4c","192.168.4.12"),
+               "WeMoMotion":("08:86:3b:c9:c0:bd","192.168.4.18")}
 
 DB_MANAGER = databaseBursts.dbManager()
 
@@ -90,8 +91,6 @@ def main():
     with open(os.path.join(DATAPATH,"iotData.json"), 'w') as fp:
         json.dump(data, fp, sort_keys=True, indent=4)
 
-    #putDataIntoDB("AlexaTime1")
-
     f = []
     for (dirpath, dirnames, filenames) in os.walk(os.path.join(os.path.dirname(FILE_PATH), "staticData")):
         f.extend(filenames)
@@ -101,9 +100,9 @@ def main():
         putDataIntoDB(file)
         print("Done: " + file)
 
-    packetBurstification(data=data)
+    packetBurstification()
     print("Burstification complete")
-    burstPrediction(data=data)
+    burstPrediction()
     print("Prediction complete")
 
     refineJsonData.compileUsageImpacts()
@@ -119,5 +118,21 @@ def onlyBurst():
     refineJsonData.compileUsageImpacts()
     print("JSON extraction complete")
 
+def updateWithNew(filename):
+    putDataIntoDB(filename)
+    print("Done: " + filename)
+
+    packetBurstification()
+    print("Burstification complete")
+    burstPrediction()
+    print("Prediction complete")
+
+    refineJsonData.compileUsageImpacts()
+    print("JSON extraction complete")
+
 if __name__ == "__main__":
-    main()
+    try:
+        filename = sys.argv[1]
+        updateWithNew(filename)
+    except:
+        main()

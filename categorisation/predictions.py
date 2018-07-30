@@ -203,9 +203,9 @@ class Predictor():
     def predictHue(self, rows):
         """ TODO: Given rows of data from a burst from packets table, predict a Hue category"""
 
-        return self.predictOther(rows)
+        return self.predictOther(rows, printing=False)
 
-    def predictOther(self, rows):
+    def predictOther(self, rows, printing=False):
         """ Given rows from a burst with no model, display category as majority destination"""
 
         percentCutoff = 0.8
@@ -215,10 +215,15 @@ class Predictor():
 
         total = sum(ext.values())
 
+        if printing:
+            print(ext)
+            print(total)
+
         for key in ext.keys():
             if ext[key]*1.0 / total*1.0 > percentCutoff:
                 try:
                     result = self.ipDict[key]
+                    return result
                 except KeyError:
                     try:
                         domainObj = IPWhois(key)
