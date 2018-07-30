@@ -59,6 +59,7 @@ export class RefinecatComponent {
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
   lastHovering: string;
+  _ignoredApps: string[];
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -71,14 +72,25 @@ export class RefinecatComponent {
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
     hover.HoverChanged$.subscribe((target) => {
-        // console.log('hover changed > ', target);
         if (target !== this._hoveringApp) {
           this._hoveringApp = target ? target as string : undefined;
-          if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
-          //console.log("Here and " + this._hoveringApp);
+
+          if (this._hoveringApp == this.lastHovering) {this.lastHovering = undefined;}
+          else if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
+
           this.getDataAndRender()
         }
     });
+
+    this._ignoredApps = new Array();
+
+    focus.focusChanged$.subscribe((target) => {
+        //console.log('hover changed > ', target);
+        if (target !== this._ignoredApps) {
+          this._ignoredApps = target ? target as string[] : [];
+          this.render('', 'timeseries'.toString(), this.data, false);
+        }
+      });
     (<any>window)._rb = this;
     
     this.getDataAndRender()
@@ -182,6 +194,10 @@ getDatePadding(minDate, maxDate) {
 
     var data = inputData.filter( d => {if (d.device == this.lastHovering || this.lastHovering == undefined) {return d;}});
 
+    if (this.lastHovering == undefined) 
+    {
+        data = data.filter(obj => this._ignoredApps.indexOf(obj.device) == -1 )
+    }
     //console.log(data);
         
     var padding = this.timeRangePad(data.map(val => val.value));
@@ -306,17 +322,18 @@ getDatePadding(minDate, maxDate) {
         
         
         // This is for the title 
-        if (this.lastHovering != undefined) {
-            svg.append("text")
-            .attr("x", (width / 2))             
-            .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
-            .attr("text-anchor", "middle")  
-            .style("font-size", "14px") 
-            .text((d) =>
-            {   var ans = this.lastHovering + " Traffic Bursts"
-                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : ""
-                return ans + date;});
-    }
+        
+        svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "14px") 
+        .text((d) =>
+        {   var ans = this.lastHovering + " Traffic Bursts";
+            var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
+            if (this.lastHovering == undefined) {return "All Traffic Bursts"}
+            return ans + date;});
+    
     
 
     

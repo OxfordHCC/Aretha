@@ -369,6 +369,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .on("mouseleave", (d) => {return}); // this._companyHover(this.companyid2info.get(d), false));
 
     // main rects
+
+    var self = this;
     
     const f = (selection, first, last) => {
       return selection.selectAll('rect')
@@ -381,8 +383,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('width', x.bandwidth())
         // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
         .on('click', function (d) {
-			//console.log("Clicked" + d)
-          //this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+          self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
         .on('mouseleave', function (d) {
           //console.log("Leave" + d );
