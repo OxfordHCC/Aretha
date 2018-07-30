@@ -219,6 +219,7 @@ class Predictor():
             if ext[key]*1.0 / total*1.0 > percentCutoff:
                 try:
                     result = self.ipDict[key]
+                    return result
                 except KeyError:
                     try:
                         domainObj = IPWhois(key)
