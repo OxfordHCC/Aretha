@@ -21,6 +21,14 @@ To add your own data:
 
 4. If device names have "unknown" in them, follow directions below 
 
+To add data to existing data:
+
+1. Fill a folder `staticData/` with pcaps labeled by device 
+
+2. Add device Mac and IP to the dictionary in `/categorisation/getAndStoreStaticData.py` with the name in the filename as key
+
+3. Run `/categorisation/getAndStoreStaticData.py [FILE]` where `[FILE]` is the name of the file to be added to the other data 
+
 
 ## Device names
 
