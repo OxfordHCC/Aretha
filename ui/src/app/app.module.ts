@@ -43,6 +43,8 @@ const appRoutes: Routes = [
   }
 ];
 
+RouterModule.forRoot(appRoutes, {useHash: true});
+
 
 @NgModule({
   declarations: [

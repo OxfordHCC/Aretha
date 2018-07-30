@@ -223,7 +223,10 @@ class Predictor():
             if ext[key]*1.0 / total*1.0 > percentCutoff:
                 try:
                     result = self.ipDict[key]
-                    return result
+                    if ext[key] == total:
+                        return "Exclusively " + result
+                    else:
+                        return "Mostly " + result
                 except KeyError:
                     try:
                         domainObj = IPWhois(key)
@@ -231,8 +234,11 @@ class Predictor():
                         domain = domainRes['nets'][0]['description']
                         if len(domain) > 20:
                             domain = domain[:20]
-                        self.ipDict[key] = "Mostly " + domain
-                        return "Mostly " + domain
+                        self.ipDict[key] = domain
+                        if ext[key] == total:
+                            return "Exclusively " + result
+                        else:
+                            return "Mostly " + result
                     except:
                         self.ipDict[key] = "Unknown"
                         return "Unknown"

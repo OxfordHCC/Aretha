@@ -90,7 +90,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       this.usage = response2.json()["usage"];
       var impacts = response2.json()["geos"];
       this.impacts = impacts.map(impact => ({ appid: impact.appid, country: impact.geo.country_name !== '' ? impact.geo.country_name : 'Unknown', country_code: impact.geo.country_code, impact: impact.impact }))
-      console.log(this.impacts)
+      //console.log(this.impacts)
       this.render()
     });
   }
@@ -211,7 +211,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     // re-order companies
     countries = by_country.map((bc) => bc.country);
 
-    console.log(by_country)
+    //console.log(by_country)
 
     let margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,

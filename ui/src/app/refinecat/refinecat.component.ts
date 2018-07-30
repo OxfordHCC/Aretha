@@ -148,6 +148,7 @@ timeRangePad(dates) {
     } else {
         minDate = moment(dates[0]).subtract(1, 'hour');
         maxDate = moment(dates[0]).add(1, 'hour');
+        pad = this.getDatePadding(minDate, maxDate);
     }
     return {
         'minDate': minDate,
@@ -224,7 +225,7 @@ getDatePadding(minDate, maxDate) {
         yFormat = "%m/%d/%y";
         y.domain(d3.extent([padding.minDate]));
     } else {
-        xFormat = "%m/%d/%y";
+        xFormat = "%d/%m/%y";
         yFormat = "%H:%M";
         var start = new Date(2012, 0, 1, 0, 0, 0, 0).getTime();
         var stop = new Date(2012, 0, 1, 23, 59, 59, 59).getTime();
@@ -243,66 +244,78 @@ getDatePadding(minDate, maxDate) {
 
     //svg.attr("width", width + margin.left + margin.right)
     //   .attr("height", height + margin.top + margin.bottom);
+    //console.log(data)
+    if (data.length == 0) {
 
-    var context = svg.append("g")
-        .attr("class", "context")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    } else
+    {
+        var context = svg.append("g")
+            .attr("class", "context")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    context.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top + (height - margin.bottom)) + ")")
-        .call(xAxis);
+        context.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(" + margin.left + "," + (margin.top + (height - margin.bottom)) + ")")
+            .call(xAxis);
 
-    context.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-        .call(yAxis);
+        context.append("g")
+            .attr("class", "y axis")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .call(yAxis);
 
-    var circles = context.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        var circles = context.append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-    var z = d3.scaleOrdinal(d3.schemeCategory10).domain(_.uniq(data.map((x) => x.category)));
+        var z = d3.scaleOrdinal(d3.schemeCategory10).domain(_.uniq(data.map((x) => x.category)));
 
-    // Use this to get displacement for each different category when in 1 day mode 
-    var catNumbers = Array.from(Array(_.uniq(data.map((x) => x.category)).length).keys());
-    var catDict = {};
-    var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
-        catDict[e] = catNumbers[i];
-      });
-    
-    //console.log(catDict)
+        // Use this to get displacement for each different category when in 1 day mode 
+        var catNumbers = Array.from(Array(_.uniq(data.map((x) => x.category)).length).keys());
+        var catDict = {};
+        var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
+            catDict[e] = catNumbers[i];
+        });
+        
+        //console.log(catDict)
 
-    const catDisplacement = 25;
+        const catDisplacement = 25;
 
-    circles.selectAll(".circ")
-        .data(data)
-        .enter().append("circle")
-        .attr("class", "circ")
-        .style("fill", d => {
-            return z(d.category)
-        })
-        .attr("cx", d => {
-            var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
-            return res;
-        })
-        .attr("cy",(d, i) => {
-            return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) + catDisplacement * catDict[d.category] - oneDayDisplacement : y(this.getTime(d.value));
-        })
-        .attr("r", 9)
-        .on("click", function(d) {
-            console.log(new Date(d.value));
-        })
-        .append("svg:title")
-        .text(function(d) { return d.device + ": " + d.category; });
-    
-    // This is for the title 
-    if (this.lastHovering != undefined) {
-        svg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "14px") 
-        .text(this.lastHovering);
+        circles.selectAll(".circ")
+            .data(data)
+            .enter().append("circle")
+            .attr("class", "circ")
+            .style("fill", d => {
+                return z(d.category)
+            })
+            .attr("cx", d => {
+                var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
+                return res;
+            })
+            .attr("cy",(d, i) => {
+                return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) + catDisplacement * catDict[d.category] - oneDayDisplacement : y(this.getTime(d.value));
+            })
+            .attr("r", 9)
+            .on("click", function(d) {
+                console.log(new Date(d.value));
+            })
+            .append("svg:title")
+            .text((d) => { 
+                var ans = this.lessThanDay(padding.pad) ? d.category : d.device + ": " + d.category ;
+                return ans; });
+        }
+
+        
+        
+        // This is for the title 
+        if (this.lastHovering != undefined) {
+            svg.append("text")
+            .attr("x", (width / 2))             
+            .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
+            .attr("text-anchor", "middle")  
+            .style("font-size", "14px") 
+            .text((d) =>
+            {   var ans = this.lastHovering + " Traffic Bursts"
+                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : ""
+                return ans + date;});
     }
     
 

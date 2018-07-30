@@ -246,7 +246,7 @@
             "value": 1527087243242
         },
         {
-            "category": "Mostly NETBLK-03-EU-93-184-",
+            "category": "Exclusively NETBLK-03-EU-93-184-",
             "device": "Amazon Echo",
             "value": 1527087247230
         },
@@ -666,7 +666,7 @@
             "value": 1528121701266
         },
         {
-            "category": "Mostly NETBLK-03-EU-93-184-",
+            "category": "Exclusively NETBLK-03-EU-93-184-",
             "device": "Amazon Echo",
             "value": 1528121713415
         },
@@ -1001,7 +1001,7 @@
             "value": 1527153350337
         },
         {
-            "category": "Shopping",
+            "category": "Unknown",
             "device": "Amazon Echo",
             "value": 1527153365050
         },
@@ -1136,12 +1136,12 @@
             "value": 1531320283359
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320285787
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320295010
         },
@@ -1151,7 +1151,7 @@
             "value": 1531320300642
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320307458
         },
@@ -1161,22 +1161,22 @@
             "value": 1531320315609
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320323562
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320332086
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320341815
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320343394
         },
@@ -1186,7 +1186,7 @@
             "value": 1531320345800
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320352257
         },
@@ -1201,12 +1201,12 @@
             "value": 1531320373279
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320376313
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320386779
         },
@@ -1216,12 +1216,12 @@
             "value": 1531320392783
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320399401
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320403468
         },
@@ -1231,7 +1231,7 @@
             "value": 1531320407191
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320413236
         },
@@ -1246,7 +1246,7 @@
             "value": 1531320436940
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320447209
         },
@@ -1266,17 +1266,17 @@
             "value": 1531320467873
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320476264
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320482743
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320494971
         },
@@ -1301,12 +1301,12 @@
             "value": 1531320523621
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320528619
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320538502
         },
@@ -1326,12 +1326,12 @@
             "value": 1531320558389
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320565093
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320574876
         },
@@ -1341,7 +1341,7 @@
             "value": 1531320583716
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320589251
         },
@@ -1351,12 +1351,12 @@
             "value": 1531320604108
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320615045
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320619067
         },
@@ -1366,7 +1366,7 @@
             "value": 1531320628403
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320635632
         },
@@ -1381,17 +1381,17 @@
             "value": 1531320649312
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320656922
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320664816
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320674799
         },
@@ -1406,22 +1406,22 @@
             "value": 1531320688831
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320696271
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320705592
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320710672
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320719844
         },
@@ -1431,27 +1431,27 @@
             "value": 1531320725549
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320735895
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320740512
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320750146
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320756973
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320766721
         },
@@ -1466,7 +1466,7 @@
             "value": 1531320770749
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320776672
         },
@@ -1476,12 +1476,12 @@
             "value": 1531320779149
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320786222
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320793983
         },
@@ -1496,22 +1496,22 @@
             "value": 1531320808908
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320817800
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320827359
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320832075
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320840895
         },
@@ -1521,27 +1521,27 @@
             "value": 1531320846930
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320856083
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320861890
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320871380
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320878357
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320887326
         },
@@ -1551,27 +1551,27 @@
             "value": 1531320892756
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320900330
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320907625
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320917481
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320922609
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320936627
         },
@@ -1586,22 +1586,22 @@
             "value": 1531320948529
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320953488
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320965116
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320968293
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320977745
         },
@@ -1611,12 +1611,12 @@
             "value": 1531320983249
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320990555
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531320999751
         },
@@ -1626,12 +1626,12 @@
             "value": 1531321008368
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321014166
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321025161
         },
@@ -1641,17 +1641,17 @@
             "value": 1531321029001
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321040911
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321043992
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321053167
         },
@@ -1661,12 +1661,12 @@
             "value": 1531321060434
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321068915
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321071054
         },
@@ -1676,17 +1676,17 @@
             "value": 1531321074832
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321083547
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321089699
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321102194
         },
@@ -1696,27 +1696,27 @@
             "value": 1531321104675
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321113721
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321121162
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321130861
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321135524
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321145423
         },
@@ -1731,7 +1731,7 @@
             "value": 1531321165324
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321174529
         },
@@ -1746,17 +1746,17 @@
             "value": 1531321195572
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321206711
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321211159
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321220189
         },
@@ -1766,7 +1766,7 @@
             "value": 1531321225778
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321236107
         },
@@ -1776,17 +1776,17 @@
             "value": 1531321242528
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321252745
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321256929
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321265311
         },
@@ -1796,7 +1796,7 @@
             "value": 1531321270896
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321280105
         },
@@ -1806,7 +1806,7 @@
             "value": 1531321286573
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321295903
         },
@@ -1816,7 +1816,7 @@
             "value": 1531321303272
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321313511
         },
@@ -1826,17 +1826,17 @@
             "value": 1531321317629
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321327753
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321332459
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321341588
         },
@@ -1846,7 +1846,7 @@
             "value": 1531321347452
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321355335
         },
@@ -1856,37 +1856,37 @@
             "value": 1531321363987
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321369956
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321372978
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321376676
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321378339
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321389328
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321393180
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321402342
         },
@@ -1896,7 +1896,7 @@
             "value": 1531321408158
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321418245
         },
@@ -1906,12 +1906,12 @@
             "value": 1531321480408
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321494689
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321497412
         },
@@ -1921,17 +1921,17 @@
             "value": 1531321509784
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321513154
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321524666
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321527757
         },
@@ -1941,27 +1941,27 @@
             "value": 1531321540668
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321543522
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321554937
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321557761
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321570090
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321573388
         },
@@ -1971,12 +1971,12 @@
             "value": 1531321584927
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321587959
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321600953
         },
@@ -1986,12 +1986,12 @@
             "value": 1531321604310
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321615282
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321618339
         },
@@ -2001,7 +2001,7 @@
             "value": 1531321630375
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321633696
         },
@@ -2016,7 +2016,7 @@
             "value": 1531321660940
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321668945
         },
@@ -2061,7 +2061,7 @@
             "value": 1531321750910
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321753735
         },
@@ -2086,12 +2086,12 @@
             "value": 1531321784772
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321796145
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321799196
         },
@@ -2101,7 +2101,7 @@
             "value": 1531321811043
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321814568
         },
@@ -2121,7 +2121,7 @@
             "value": 1531321856164
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321859461
         },
@@ -2131,7 +2131,7 @@
             "value": 1531321871465
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321875053
         },
@@ -2146,12 +2146,12 @@
             "value": 1531321902362
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321916633
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321919727
         },
@@ -2176,7 +2176,7 @@
             "value": 1531321962617
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321968941
         },
@@ -2191,12 +2191,12 @@
             "value": 1531321991638
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531321995385
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322006890
         },
@@ -2211,17 +2211,17 @@
             "value": 1531322022969
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322026253
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322037196
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322040619
         },
@@ -2246,17 +2246,17 @@
             "value": 1531322083193
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322086289
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322097463
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322101268
         },
@@ -2266,12 +2266,12 @@
             "value": 1531322112629
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322116242
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322127448
         },
@@ -2286,27 +2286,27 @@
             "value": 1531322143481
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322146593
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322157737
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322160370
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322172871
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322176379
         },
@@ -2321,17 +2321,17 @@
             "value": 1531322203753
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322206844
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322218053
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322221095
         },
@@ -2341,7 +2341,7 @@
             "value": 1531322233136
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322244768
         },
@@ -2361,12 +2361,12 @@
             "value": 1531322267162
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322269075
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322276714
         },
@@ -2376,17 +2376,17 @@
             "value": 1531322278343
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322281711
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322293425
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322296377
         },
@@ -2396,7 +2396,7 @@
             "value": 1531322308327
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322311224
         },
@@ -2406,27 +2406,27 @@
             "value": 1531322323510
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322327270
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322338599
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322341495
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322353700
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322357016
         },
@@ -2436,7 +2436,7 @@
             "value": 1531322368629
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322371373
         },
@@ -2446,7 +2446,7 @@
             "value": 1531322384608
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322387693
         },
@@ -2456,17 +2456,17 @@
             "value": 1531322398857
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322401988
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322413994
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322417740
         },
@@ -2476,7 +2476,7 @@
             "value": 1531322428900
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322431937
         },
@@ -2496,17 +2496,17 @@
             "value": 1531322459173
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322461942
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322474247
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322477228
         },
@@ -2526,12 +2526,12 @@
             "value": 1531322508148
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322519440
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322523510
         },
@@ -2541,7 +2541,7 @@
             "value": 1531322534557
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322537481
         },
@@ -2551,7 +2551,7 @@
             "value": 1531322549420
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322552690
         },
@@ -2566,7 +2566,7 @@
             "value": 1531322568497
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322576726
         },
@@ -2576,7 +2576,7 @@
             "value": 1531322579814
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322582696
         },
@@ -2586,7 +2586,7 @@
             "value": 1531322594543
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322598066
         },
@@ -2596,47 +2596,47 @@
             "value": 1531322609723
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Google Home",
             "value": 1531322612775
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527067711160
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527067831412
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527067951150
         },
         {
-            "category": "Mostly Akamai Technologies",
+            "category": "Exclusively Akamai Technologies",
             "device": "Philips Hue Bridge",
             "value": 1527068061137
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527068071386
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527068191161
         },
         {
-            "category": "Mostly Google LLC",
+            "category": "Exclusively Google LLC",
             "device": "Philips Hue Bridge",
             "value": 1527068311436
         },
         {
-            "category": "Mostly WITHINGS",
+            "category": "Exclusively WITHINGS",
             "device": "Nokia Body Cardio",
             "value": 1532511838983
         },
@@ -2646,12 +2646,12 @@
             "value": 1532683338175
         },
         {
-            "category": "Mostly Amazon.com, Inc.",
+            "category": "Exclusively Amazon.com, Inc.",
             "device": "WeMo Motion",
             "value": 1532706485381
         },
         {
-            "category": "Mostly Amazon.com, Inc.",
+            "category": "Exclusively Amazon.com, Inc.",
             "device": "WeMo Switch",
             "value": 1532623156802
         }
@@ -2659,51 +2659,6 @@
     "dbreset": false,
     "geos": [
         {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.46.132.96",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:32.884425-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 24650
-        },
-        {
             "appid": "Google Home",
             "geo": {
                 "asn": "AS15169",
@@ -2711,52 +2666,7 @@
                 "city": "Mountain View",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.206.46",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:33.017454-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 26811
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
@@ -2785,7 +2695,7 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:33.150860-07:00",
+                    "current_time": "2018-07-30T02:46:59.665128-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
@@ -2796,12 +2706,1182 @@
         {
             "appid": "Amazon Echo",
             "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "54.81.164.57",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:46:59.798000-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 3406
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.208.174",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:46:59.931926-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 8986
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "172.217.23.14",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:00.061534-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 121922
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "74.125.133.188",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:00.204282-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 10030
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "34.194.157.131",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:00.325690-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 4883
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.94.229.76",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:00.448329-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 22730
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.46.129.41",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:00.582635-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 29902
+        },
+        {
+            "appid": "Philips Hue Bridge",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "104.155.18.91",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:00.709993-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 3588
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "173.194.76.188",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:00.847312-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 7606
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.206.106",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:00.960857-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 54640
+        },
+        {
+            "appid": "WeMo Switch",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "174.129.217.97",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.093004-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 128512
+        },
+        {
+            "appid": "WeMo Motion",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "174.129.217.97",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.224720-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 405120
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.204.46",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:01.349664-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 715
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.0.124.206",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.489347-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 594
+        },
+        {
+            "appid": "WeMo Switch",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "184.73.174.14",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.633822-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 20718
+        },
+        {
+            "appid": "WeMo Motion",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "184.73.174.14",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.769440-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 79356
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "34.202.18.7",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:01.886100-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 1834
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.204.78",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:02.005111-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 7913
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "54.239.27.116",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:02.130032-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 7231
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.72.197.149",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:02.257800-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 5403
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.204.36",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:02.389917-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 13928286
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "52.94.229.215",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:02.523872-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 145
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.206.68",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:02.659766-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 11351168
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.206.46",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:02.788690-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 26811
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.208.170",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:02.912555-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 64299
+        },
+        {
+            "appid": "Google Home",
+            "geo": {
+                "asn": "AS15169",
+                "calling_code": "1",
+                "city": "Mountain View",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "216.58.198.174",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 37.419200000000004,
+                "longitude": -122.0574,
+                "organisation": "Google LLC",
+                "postal": "94043",
+                "region": "California",
+                "region_code": "CA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "PDT",
+                    "current_time": "2018-07-30T02:47:03.036699-07:00",
+                    "is_dst": true,
+                    "name": "America/Los_Angeles",
+                    "offset": "-0700"
+                }
+            },
+            "impact": 9154
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
                 "asn": "AS16509",
                 "calling_code": "353",
                 "city": "Dublin",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "197",
+                "count": "236",
                 "country_code": "IE",
                 "country_name": "Ireland",
                 "flag": "https://ipdata.co/flags/ie.png",
@@ -2834,238 +3914,13 @@
                 },
                 "time_zone": {
                     "abbr": "IST",
-                    "current_time": "2018-07-30T10:33:33.275907+01:00",
+                    "current_time": "2018-07-30T10:47:03.163404+01:00",
                     "is_dst": true,
                     "name": "Europe/Dublin",
                     "offset": "+0100"
                 }
             },
             "impact": 7711169
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.46.129.41",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:33.402873-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 29902
-        },
-        {
-            "appid": "Philips Hue Bridge",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "104.155.18.91",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:33.531308-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 3588
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "54.81.164.57",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:33.663880-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 3406
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.206.68",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:33.788598-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 11351168
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.72.197.149",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:33.910946-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 5403
         },
         {
             "appid": "Philips Hue Bridge",
@@ -3075,7 +3930,7 @@
                 "city": "",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "197",
+                "count": "236",
                 "country_code": "",
                 "country_name": "",
                 "flag": "",
@@ -3099,7 +3954,7 @@
                 },
                 "time_zone": {
                     "abbr": "CEST",
-                    "current_time": "2018-07-30T11:33:34.048018+02:00",
+                    "current_time": "2018-07-30T11:47:03.287027+02:00",
                     "is_dst": true,
                     "name": "Europe/Vaduz",
                     "offset": "+0200"
@@ -3108,18 +3963,18 @@
             "impact": 348
         },
         {
-            "appid": "WeMo Switch",
+            "appid": "Amazon Echo",
             "geo": {
-                "asn": "AS14618",
+                "asn": "AS16509",
                 "calling_code": "1",
                 "city": "Ashburn",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
-                "ip": "174.129.217.97",
+                "ip": "52.46.132.96",
                 "is_eu": false,
                 "languages": [
                     {
@@ -3144,27 +3999,32 @@
                 },
                 "time_zone": {
                     "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:34.169176-04:00",
+                    "current_time": "2018-07-30T05:47:03.418160-04:00",
                     "is_dst": true,
                     "name": "America/New_York",
                     "offset": "-0400"
                 }
             },
-            "impact": 128512
+            "impact": 24650
         },
         {
-            "appid": "WeMo Motion",
+            "appid": "Amazon Echo",
             "geo": {
-                "asn": "AS14618",
+                "asn": "AS15133",
                 "calling_code": "1",
-                "city": "Ashburn",
+                "carrier": {
+                    "mcc": "310",
+                    "mnc": "004",
+                    "name": "Verizon"
+                },
+                "city": "Norwell",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
-                "ip": "174.129.217.97",
+                "ip": "93.184.216.34",
                 "is_eu": false,
                 "languages": [
                     {
@@ -3172,12 +4032,12 @@
                         "native": "English"
                     }
                 ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
+                "latitude": 42.1508,
+                "longitude": -70.8228,
+                "organisation": "MCI Communications Services, Inc. d/b/a Verizon Business",
+                "postal": "02061",
+                "region": "Massachusetts",
+                "region_code": "MA",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -3189,40 +4049,35 @@
                 },
                 "time_zone": {
                     "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:34.294974-04:00",
+                    "current_time": "2018-07-30T05:47:03.540953-04:00",
                     "is_dst": true,
                     "name": "America/New_York",
                     "offset": "-0400"
                 }
             },
-            "impact": 405120
+            "impact": 13662
         },
         {
-            "appid": "WeMo Switch",
+            "appid": "Nokia Body Cardio",
             "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "184.73.174.14",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
+                "asn": "AS31216",
+                "calling_code": "",
+                "city": "",
+                "continent_code": "EU",
+                "continent_name": "Europe",
+                "count": "236",
+                "country_code": "",
+                "country_name": "",
+                "flag": "",
+                "ip": "89.30.121.150",
+                "is_eu": "",
+                "languages": "",
+                "latitude": 47.0,
+                "longitude": 8.0,
+                "organisation": "BSO Network Solutions SAS",
+                "postal": "",
+                "region": "",
+                "region_code": "",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -3233,59 +4088,14 @@
                     "is_tor": false
                 },
                 "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:34.430112-04:00",
+                    "abbr": "CEST",
+                    "current_time": "2018-07-30T11:47:03.666426+02:00",
                     "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
+                    "name": "Europe/Vaduz",
+                    "offset": "+0200"
                 }
             },
-            "impact": 20718
-        },
-        {
-            "appid": "WeMo Motion",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "184.73.174.14",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:34.551165-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 79356
+            "impact": 224024
         },
         {
             "appid": "Google Home",
@@ -3295,11 +4105,11 @@
                 "city": "Mountain View",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
-                "ip": "172.217.23.14",
+                "ip": "216.58.201.14",
                 "is_eu": false,
                 "languages": [
                     {
@@ -3324,58 +4134,13 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:34.689095-07:00",
+                    "current_time": "2018-07-30T02:47:03.784752-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
                 }
             },
-            "impact": 121922
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.94.229.76",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:34.821427-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 22730
+            "impact": 74759
         },
         {
             "appid": "Amazon Echo",
@@ -3385,7 +4150,7 @@
                 "city": "Dublin",
                 "continent_code": "EU",
                 "continent_name": "Europe",
-                "count": "197",
+                "count": "236",
                 "country_code": "IE",
                 "country_name": "Ireland",
                 "flag": "https://ipdata.co/flags/ie.png",
@@ -3418,7 +4183,7 @@
                 },
                 "time_zone": {
                     "abbr": "IST",
-                    "current_time": "2018-07-30T10:33:34.943305+01:00",
+                    "current_time": "2018-07-30T10:47:03.923771+01:00",
                     "is_dst": true,
                     "name": "Europe/Dublin",
                     "offset": "+0100"
@@ -3427,51 +4192,6 @@
             "impact": 6703161
         },
         {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "34.194.157.131",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:35.069522-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 4883
-        },
-        {
             "appid": "Google Home",
             "geo": {
                 "asn": "AS15169",
@@ -3479,542 +4199,7 @@
                 "city": "Mountain View",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "74.125.133.188",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:35.204725-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 10030
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.204.36",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:35.325120-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 13928286
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.0.124.206",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:35.444165-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 594
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "72.21.207.87",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:35.591641-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 29350
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "34.202.18.7",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:35.733875-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 1834
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "173.194.76.188",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:35.850916-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 7606
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.204.78",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:35.989003-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 7913
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.198.174",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:36.116968-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 9154
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.208.174",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:36.244769-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 8986
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "54.239.27.116",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:36.387993-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 7231
-        },
-        {
-            "appid": "Nokia Body Cardio",
-            "geo": {
-                "asn": "AS31216",
-                "calling_code": "",
-                "city": "",
-                "continent_code": "EU",
-                "continent_name": "Europe",
-                "count": "197",
-                "country_code": "",
-                "country_name": "",
-                "flag": "",
-                "ip": "89.30.121.150",
-                "is_eu": "",
-                "languages": "",
-                "latitude": 47.0,
-                "longitude": 8.0,
-                "organisation": "BSO Network Solutions SAS",
-                "postal": "",
-                "region": "",
-                "region_code": "",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "CEST",
-                    "current_time": "2018-07-30T11:33:36.507689+02:00",
-                    "is_dst": true,
-                    "name": "Europe/Vaduz",
-                    "offset": "+0200"
-                }
-            },
-            "impact": 224024
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.206.106",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:36.634360-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 54640
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
@@ -4043,7 +4228,7 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:36.751716-07:00",
+                    "current_time": "2018-07-30T02:47:04.048641-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
@@ -4052,51 +4237,6 @@
             "impact": 40402
         },
         {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS14618",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "34.194.105.124",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:36.876341-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 262
-        },
-        {
             "appid": "Google Home",
             "geo": {
                 "asn": "AS15169",
@@ -4104,187 +4244,7 @@
                 "city": "Mountain View",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.208.170",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:37.003740-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 64299
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.201.14",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:37.124210-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 74759
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "54.239.25.214",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:37.265526-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 145
-        },
-        {
-            "appid": "Amazon Echo",
-            "geo": {
-                "asn": "AS16509",
-                "calling_code": "1",
-                "city": "Ashburn",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "52.94.229.215",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 39.0481,
-                "longitude": -77.4728,
-                "organisation": "Amazon.com, Inc.",
-                "postal": "20149",
-                "region": "Virginia",
-                "region_code": "VA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:37.408148-04:00",
-                    "is_dst": true,
-                    "name": "America/New_York",
-                    "offset": "-0400"
-                }
-            },
-            "impact": 145
-        },
-        {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
@@ -4313,7 +4273,7 @@
                 },
                 "time_zone": {
                     "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:37.528896-07:00",
+                    "current_time": "2018-07-30T02:47:04.176719-07:00",
                     "is_dst": true,
                     "name": "America/Los_Angeles",
                     "offset": "-0700"
@@ -4322,68 +4282,18 @@
             "impact": 2233
         },
         {
-            "appid": "Google Home",
-            "geo": {
-                "asn": "AS15169",
-                "calling_code": "1",
-                "city": "Mountain View",
-                "continent_code": "NA",
-                "continent_name": "North America",
-                "count": "197",
-                "country_code": "US",
-                "country_name": "United States",
-                "flag": "https://ipdata.co/flags/us.png",
-                "ip": "216.58.204.46",
-                "is_eu": false,
-                "languages": [
-                    {
-                        "name": "English",
-                        "native": "English"
-                    }
-                ],
-                "latitude": 37.419200000000004,
-                "longitude": -122.0574,
-                "organisation": "Google LLC",
-                "postal": "94043",
-                "region": "California",
-                "region_code": "CA",
-                "threat": {
-                    "is_anonymous": false,
-                    "is_bogon": false,
-                    "is_known_abuser": false,
-                    "is_known_attacker": false,
-                    "is_proxy": false,
-                    "is_threat": false,
-                    "is_tor": false
-                },
-                "time_zone": {
-                    "abbr": "PDT",
-                    "current_time": "2018-07-30T02:33:37.656530-07:00",
-                    "is_dst": true,
-                    "name": "America/Los_Angeles",
-                    "offset": "-0700"
-                }
-            },
-            "impact": 715
-        },
-        {
             "appid": "Amazon Echo",
             "geo": {
-                "asn": "AS15133",
+                "asn": "AS16509",
                 "calling_code": "1",
-                "carrier": {
-                    "mcc": "310",
-                    "mnc": "004",
-                    "name": "Verizon"
-                },
-                "city": "Norwell",
+                "city": "Ashburn",
                 "continent_code": "NA",
                 "continent_name": "North America",
-                "count": "197",
+                "count": "236",
                 "country_code": "US",
                 "country_name": "United States",
                 "flag": "https://ipdata.co/flags/us.png",
-                "ip": "93.184.216.34",
+                "ip": "54.239.25.214",
                 "is_eu": false,
                 "languages": [
                     {
@@ -4391,12 +4301,12 @@
                         "native": "English"
                     }
                 ],
-                "latitude": 42.1508,
-                "longitude": -70.8228,
-                "organisation": "MCI Communications Services, Inc. d/b/a Verizon Business",
-                "postal": "02061",
-                "region": "Massachusetts",
-                "region_code": "MA",
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
                 "threat": {
                     "is_anonymous": false,
                     "is_bogon": false,
@@ -4408,29 +4318,107 @@
                 },
                 "time_zone": {
                     "abbr": "EDT",
-                    "current_time": "2018-07-30T05:33:37.789915-04:00",
+                    "current_time": "2018-07-30T05:47:04.306696-04:00",
                     "is_dst": true,
                     "name": "America/New_York",
                     "offset": "-0400"
                 }
             },
-            "impact": 13662
+            "impact": 145
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS16509",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "72.21.207.87",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:04.431385-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 29350
+        },
+        {
+            "appid": "Amazon Echo",
+            "geo": {
+                "asn": "AS14618",
+                "calling_code": "1",
+                "city": "Ashburn",
+                "continent_code": "NA",
+                "continent_name": "North America",
+                "count": "236",
+                "country_code": "US",
+                "country_name": "United States",
+                "flag": "https://ipdata.co/flags/us.png",
+                "ip": "34.194.105.124",
+                "is_eu": false,
+                "languages": [
+                    {
+                        "name": "English",
+                        "native": "English"
+                    }
+                ],
+                "latitude": 39.0481,
+                "longitude": -77.4728,
+                "organisation": "Amazon.com, Inc.",
+                "postal": "20149",
+                "region": "Virginia",
+                "region_code": "VA",
+                "threat": {
+                    "is_anonymous": false,
+                    "is_bogon": false,
+                    "is_known_abuser": false,
+                    "is_known_attacker": false,
+                    "is_proxy": false,
+                    "is_threat": false,
+                    "is_tor": false
+                },
+                "time_zone": {
+                    "abbr": "EDT",
+                    "current_time": "2018-07-30T05:47:04.563919-04:00",
+                    "is_dst": true,
+                    "name": "America/New_York",
+                    "offset": "-0400"
+                }
+            },
+            "impact": 262
         }
     ],
     "idSoFar": 88428,
     "impacts": [
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "52.46.132.96",
-            "impact": 24650
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.206.46",
-            "impact": 26811
-        },
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
@@ -4440,8 +4428,38 @@
         {
             "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "52.95.112.20",
-            "impact": 7711169
+            "companyid": "54.81.164.57",
+            "impact": 3406
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "216.58.208.174",
+            "impact": 8986
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "172.217.23.14",
+            "impact": 121922
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "74.125.133.188",
+            "impact": 10030
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "34.194.157.131",
+            "impact": 4883
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.94.229.76",
+            "impact": 22730
         },
         {
             "appid": "Amazon Echo",
@@ -4456,28 +4474,16 @@
             "impact": 3588
         },
         {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "54.81.164.57",
-            "impact": 3406
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "173.194.76.188",
+            "impact": 7606
         },
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
-            "companyid": "216.58.206.68",
-            "impact": 11351168
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "52.72.197.149",
-            "impact": 5403
-        },
-        {
-            "appid": "Philips Hue Bridge",
-            "companyName": "Akamai International B.V.",
-            "companyid": "92.122.206.84",
-            "impact": 348
+            "companyid": "216.58.206.106",
+            "impact": 54640
         },
         {
             "appid": "WeMo Switch",
@@ -4492,6 +4498,18 @@
             "impact": 405120
         },
         {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "216.58.204.46",
+            "impact": 715
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.0.124.206",
+            "impact": 594
+        },
+        {
             "appid": "WeMo Switch",
             "companyName": "Amazon.com, Inc.",
             "companyid": "184.73.174.14",
@@ -4504,34 +4522,28 @@
             "impact": 79356
         },
         {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "172.217.23.14",
-            "impact": 121922
-        },
-        {
             "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "52.94.229.76",
-            "impact": 22730
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "52.94.221.173",
-            "impact": 6703161
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "34.194.157.131",
-            "impact": 4883
+            "companyid": "34.202.18.7",
+            "impact": 1834
         },
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
-            "companyid": "74.125.133.188",
-            "impact": 10030
+            "companyid": "216.58.204.78",
+            "impact": 7913
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "54.239.27.116",
+            "impact": 7231
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.72.197.149",
+            "impact": 5403
         },
         {
             "appid": "Google Home",
@@ -4542,74 +4554,20 @@
         {
             "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "52.0.124.206",
-            "impact": 594
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "72.21.207.87",
-            "impact": 29350
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "34.202.18.7",
-            "impact": 1834
+            "companyid": "52.94.229.215",
+            "impact": 145
         },
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
-            "companyid": "173.194.76.188",
-            "impact": 7606
+            "companyid": "216.58.206.68",
+            "impact": 11351168
         },
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
-            "companyid": "216.58.204.78",
-            "impact": 7913
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.198.174",
-            "impact": 9154
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.208.174",
-            "impact": 8986
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "54.239.27.116",
-            "impact": 7231
-        },
-        {
-            "appid": "Nokia Body Cardio",
-            "companyName": "BSO Network Solutions SAS",
-            "companyid": "89.30.121.150",
-            "impact": 224024
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.206.106",
-            "impact": 54640
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.201.3",
-            "impact": 40402
-        },
-        {
-            "appid": "Amazon Echo",
-            "companyName": "Amazon.com, Inc.",
-            "companyid": "34.194.105.124",
-            "impact": 262
+            "companyid": "216.58.206.46",
+            "impact": 26811
         },
         {
             "appid": "Google Home",
@@ -4620,8 +4578,62 @@
         {
             "appid": "Google Home",
             "companyName": "Google LLC",
+            "companyid": "216.58.198.174",
+            "impact": 9154
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.95.112.20",
+            "impact": 7711169
+        },
+        {
+            "appid": "Philips Hue Bridge",
+            "companyName": "Akamai International B.V.",
+            "companyid": "92.122.206.84",
+            "impact": 348
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.46.132.96",
+            "impact": 24650
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "MCI Communications Services, Inc. d/b/a Verizon Business",
+            "companyid": "93.184.216.34",
+            "impact": 13662
+        },
+        {
+            "appid": "Nokia Body Cardio",
+            "companyName": "BSO Network Solutions SAS",
+            "companyid": "89.30.121.150",
+            "impact": 224024
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
             "companyid": "216.58.201.14",
             "impact": 74759
+        },
+        {
+            "appid": "Amazon Echo",
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "52.94.221.173",
+            "impact": 6703161
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "216.58.201.3",
+            "impact": 40402
+        },
+        {
+            "appid": "Google Home",
+            "companyName": "Google LLC",
+            "companyid": "216.58.213.67",
+            "impact": 2233
         },
         {
             "appid": "Amazon Echo",
@@ -4632,26 +4644,14 @@
         {
             "appid": "Amazon Echo",
             "companyName": "Amazon.com, Inc.",
-            "companyid": "52.94.229.215",
-            "impact": 145
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.213.67",
-            "impact": 2233
-        },
-        {
-            "appid": "Google Home",
-            "companyName": "Google LLC",
-            "companyid": "216.58.204.46",
-            "impact": 715
+            "companyid": "72.21.207.87",
+            "impact": 29350
         },
         {
             "appid": "Amazon Echo",
-            "companyName": "MCI Communications Services, Inc. d/b/a Verizon Business",
-            "companyid": "93.184.216.34",
-            "impact": 13662
+            "companyName": "Amazon.com, Inc.",
+            "companyid": "34.194.105.124",
+            "impact": 262
         }
     ],
     "ipsToIgnore": [
