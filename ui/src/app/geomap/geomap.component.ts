@@ -89,7 +89,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     (<any>window)._rb = this;
   }
   getIoTData(): void {
-    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
       var impacts = response2.json()["geos"];
 

@@ -106,7 +106,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   }
 
   getIoTData(): void {
-    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
       this.impacts = response2.json()["impacts"];
       //console.log(this.impacts)

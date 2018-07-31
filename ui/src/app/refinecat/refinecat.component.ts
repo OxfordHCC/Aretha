@@ -61,6 +61,9 @@ export class RefinecatComponent {
   lastHovering: string;
   _ignoredApps: string[];
 
+  firstDay: number;
+  lastDay: number;
+
   constructor(private httpM: HttpModule, 
     private http: Http, 
     private el: ElementRef,
@@ -74,6 +77,9 @@ export class RefinecatComponent {
     hover.HoverChanged$.subscribe((target) => {
         if (target !== this._hoveringApp) {
           this._hoveringApp = target ? target as string : undefined;
+
+          this.firstDay = undefined;
+          this.lastDay = undefined;
 
           if (this._hoveringApp == this.lastHovering) {this.lastHovering = undefined;}
           else if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
@@ -90,6 +96,8 @@ export class RefinecatComponent {
           this._ignoredApps = target ? target as string[] : [];
           this.render('', 'timeseries'.toString(), this.data, false);
         }
+        this.firstDay = undefined;
+        this.lastDay = undefined;
       });
     (<any>window)._rb = this;
     
@@ -98,7 +106,7 @@ export class RefinecatComponent {
   }
 
 getIoTData(): void {
-    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
     this.data = response2.json()["bursts"];
     //console.log(this.data);
     });
@@ -184,7 +192,24 @@ getDatePadding(minDate, maxDate) {
         return 'seconds';
 };
 
-  render(classd, spaced, inputData: BurstData[], enableBrush) {
+selectOnlyDay(d): void{
+    var date = moment(d);
+    date.hour(0)
+    date.minute(0)
+    date.second(1)
+    this.firstDay = date.valueOf();
+
+    var date2 = moment(d);
+    date2.hour(23)
+    date2.minute(59)
+    date2.second(59)
+    this.lastDay = date2.valueOf();
+
+    this.render('', 'timeseries'.toString(), this.data, false);
+
+}
+
+render(classd, spaced, inputData: BurstData[], enableBrush) {
 
     if (inputData == undefined) {return;}
 
@@ -197,6 +222,11 @@ getDatePadding(minDate, maxDate) {
     if (this.lastHovering == undefined) 
     {
         data = data.filter(obj => this._ignoredApps.indexOf(obj.device) == -1 )
+    }
+
+    if (this.firstDay !== undefined)
+    {
+        data = data.filter(obj => obj.value > this.firstDay && obj.value < this.lastDay )
     }
     //console.log(data);
         
@@ -215,9 +245,9 @@ getDatePadding(minDate, maxDate) {
     if (!svgel) { return; }
 
     var rect = svgel.getBoundingClientRect(),
-      width_svgel = Math.round(rect.width - 5),
-      height_svgel = Math.round(rect.height - 5),
-      svg = d3.select(svgel)
+    width_svgel = Math.round(rect.width - 5),
+    height_svgel = Math.round(rect.height - 5),
+    svg = d3.select(svgel)
 
     svg.selectAll('*').remove();
     
@@ -261,63 +291,62 @@ getDatePadding(minDate, maxDate) {
     //svg.attr("width", width + margin.left + margin.right)
     //   .attr("height", height + margin.top + margin.bottom);
     //console.log(data)
-    if (data.length == 0) {
+    
+    var context = svg.append("g")
+        .attr("class", "context")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    } else
-    {
-        var context = svg.append("g")
-            .attr("class", "context")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    context.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(" + margin.left + "," + (margin.top + (height - margin.bottom)) + ")")
+        .call(xAxis);
 
-        context.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(" + margin.left + "," + (margin.top + (height - margin.bottom)) + ")")
-            .call(xAxis);
+    context.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(yAxis);
 
-        context.append("g")
-            .attr("class", "y axis")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(yAxis);
+    var circles = context.append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-        var circles = context.append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    var z = d3.scaleOrdinal(d3.schemeCategory10).domain(_.uniq(data.map((x) => x.category)));
 
-        var z = d3.scaleOrdinal(d3.schemeCategory10).domain(_.uniq(data.map((x) => x.category)));
+    // Use this to get displacement for each different category when in 1 day mode 
+    var catNumbers = Array.from(Array(_.uniq(data.map((x) => x.category)).length).keys());
+    var catDict = {};
+    var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
+        catDict[e] = catNumbers[i];
+    });
+    
+    //console.log(catDict)
 
-        // Use this to get displacement for each different category when in 1 day mode 
-        var catNumbers = Array.from(Array(_.uniq(data.map((x) => x.category)).length).keys());
-        var catDict = {};
-        var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
-            catDict[e] = catNumbers[i];
-        });
+    const catDisplacement = 25;
+    var self = this;
+
+    circles.selectAll(".circ")
+        .data(data)
+        .enter().append("circle")
+        .attr("class", "circ")
+        .style("fill", d => {
+            return z(d.category)
+        })
+        .attr("cx", d => {
+            var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
+            return res;
+        })
+        .attr("cy",(d, i) => {
+            return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) + catDisplacement * catDict[d.category] - oneDayDisplacement : y(this.getTime(d.value));
+        })
+        .attr("r", 9)
+        .on("click", function(d) {
+            //console.log(new Date(d.value));
+            self.selectOnlyDay(d.value);
+        })
+        .append("svg:title")
+        .text((d) => { 
+            var ans = this.lessThanDay(padding.pad) && this.lastDay == undefined ? d.category : d.device + ": " + d.category ;
+            return ans; });
         
-        //console.log(catDict)
-
-        const catDisplacement = 25;
-
-        circles.selectAll(".circ")
-            .data(data)
-            .enter().append("circle")
-            .attr("class", "circ")
-            .style("fill", d => {
-                return z(d.category)
-            })
-            .attr("cx", d => {
-                var res = ((this.lessThanDay(padding.pad)) ? x(d.value) : x(this.getDate(d.value)));
-                return res;
-            })
-            .attr("cy",(d, i) => {
-                return (this.lessThanDay(padding.pad)) ? y(this.getDate(d.value)) + catDisplacement * catDict[d.category] - oneDayDisplacement : y(this.getTime(d.value));
-            })
-            .attr("r", 9)
-            .on("click", function(d) {
-                console.log(new Date(d.value));
-            })
-            .append("svg:title")
-            .text((d) => { 
-                var ans = this.lessThanDay(padding.pad) ? d.category : d.device + ": " + d.category ;
-                return ans; });
-        }
 
         
         
@@ -331,7 +360,7 @@ getDatePadding(minDate, maxDate) {
         .text((d) =>
         {   var ans = this.lastHovering + " Traffic Bursts";
             var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
-            if (this.lastHovering == undefined) {return "All Traffic Bursts"}
+            if (this.lastHovering == undefined) {ans =  "All Traffic Bursts"}
             return ans + date;});
     
     
@@ -352,23 +381,23 @@ getDatePadding(minDate, maxDate) {
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
         .on('click', (d) => this.focus.focusChanged(this.loader.getCachedAppInfo(d)));
 
-      legend.append('rect')
+    legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
         .attr('width', 19)
         .attr('height', 19)
         
 
-      legend.append('text')
+    legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text((d) => {return d})
 
-     */
+    */
     }
     @HostListener('window:resize')
     onResize() {
     // call our matchHeight function here
     this.getDataAndRender()
-  }
+}
 }
