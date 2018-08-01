@@ -359,7 +359,13 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         .style("font-size", "14px") 
         .text((d) =>
         {   var ans = this.lastHovering + " Traffic Bursts";
-            var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
+            if  (padding.minDate.format('DD/MM/YYYY') ==  padding.maxDate.format('DD/MM/YYYY')) {
+                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
+            } else {
+                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') + " to " + padding.maxDate.format('DD/MM/YYYY') : "";
+            }
+            
+            
             if (this.lastHovering == undefined) {ans =  "All Traffic Bursts"}
             return ans + date;});
     
