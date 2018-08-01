@@ -2,11 +2,13 @@
     "EchoFlowNumberCutoff": 10,
     "burstNumberCutoffs": {
         "Echo": 20,
+        "Google Home": 60,
         "Philips Hue Bridge": 2,
         "Unknown": 10
     },
     "burstTimeIntervals": {
         "Echo": 1,
+        "Google Home": 1,
         "Philips Hue Bridge": 1,
         "Unknown": 1
     },
@@ -31,7 +33,11 @@
         "34.194.105.124": "Amazon Technologies ",
         "34.194.157.131": "Amazon Technologies ",
         "34.202.18.7": "Amazon Technologies ",
+        "34.246.46.173": "Amazon Technologies ",
+        "34.250.194.16": "Amazon Technologies ",
+        "34.251.94.130": "Amazon Technologies ",
         "52.0.124.206": "Amazon Technologies ",
+        "52.214.6.41": "Amazon Technologies ",
         "52.46.132.96": "Amazon Technologies ",
         "52.72.197.149": "Amazon Technologies ",
         "52.94.221.173": "Amazon Technologies ",
@@ -41,6 +47,8 @@
         "72.21.207.87": "Amazon.com, Inc.",
         "74.125.133.188": "Google LLC",
         "89.30.121.150": "WITHINGS",
+        "91.193.245.120": "Sharpstream Ltd.",
+        "91.193.247.119": "Sharpstream Ltd.",
         "92.122.206.84": "Akamai Technologies",
         "93.184.216.34": "NETBLK-03-EU-93-184-"
     }

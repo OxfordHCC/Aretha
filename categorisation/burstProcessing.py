@@ -124,6 +124,8 @@ def burstPrediction():
 
         if "Echo" in device and len(rows) > cutoffs["Echo"]:
             category = predictor.predictEcho(rows)
+        elif "Google" in device:
+            category = predictor.predictGoogle(rows)
         elif device == "Philips Hue Bridge" and len(rows) > cutoffs[device]:
             category = predictor.predictHue(rows)
         else:

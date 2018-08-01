@@ -142,18 +142,30 @@ def addBiases(data):
     all_X[:, 1:] = data
     return all_X
 
-def getCategoryFromModel(flowStatistics):
+def getCategoryFromModel(flowStatistics, modelType):
     """
     This needs significant re-working depending on what models we use
     """
     data = np.array(flowStatistics, dtype='float32')
 
-    weights1 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights1.npy"))
-    weights2 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights2.npy"))
+    if "Echo" in modelType:
+        weights1 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights1.npy"))
+        weights2 = np.load(os.path.join(FILE_PATH, "echoModel", "echoPCAweights2.npy"))
 
-    pca = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "echoPCA.p"), "rb" ) )
-    preScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "preScaler.p"), "rb" ) )
-    postScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "postScaler.p"), "rb" ) )
+        pca = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "echoPCA.p"), "rb" ) )
+        preScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "preScaler.p"), "rb" ) )
+        postScaler = pickle.load( open( os.path.join(FILE_PATH, "echoModel", "postScaler.p"), "rb" ) )
+    
+    elif "Google" in modelType:
+        weights1 = np.load(os.path.join(FILE_PATH, "googleHomeModel", "weights1.npy"))
+        weights2 = np.load(os.path.join(FILE_PATH, "googleHomeModel", "weights2.npy"))
+
+        pca = pickle.load( open( os.path.join(FILE_PATH, "googleHomeModel", "pca.p"), "rb" ) )
+        preScaler = pickle.load( open( os.path.join(FILE_PATH, "googleHomeModel", "preScaler.p"), "rb" ) )
+        postScaler = pickle.load( open( os.path.join(FILE_PATH, "googleHomeModel", "postScaler.p"), "rb" ) )
+
+    else:
+        return "Unknown"
 
     normalized = preScaler.transform(data)
     principal = pca.transform(normalized)
@@ -196,7 +208,24 @@ class Predictor():
         flowStatistics = getStatisticsFromDict(srcdest, flowLengths )
 
         # Predict the category
-        category = getCategoryFromModel(flowStatistics)
+        category = getCategoryFromModel(flowStatistics, "Echo")
+
+        return category
+
+    def predictGoogle(self, rows):
+        """ Given rows of data from a burst from packets table, predict a google home category"""
+
+        # Get all IP sources and dests
+        srcdest = getIps(rows)
+
+        # Get lengths of flows
+        flowLengths = getFlowDict(srcdest, rows)
+
+        # Get statistics for each flow
+        flowStatistics = getStatisticsFromDict(srcdest, flowLengths )
+
+        # Predict the category
+        category = getCategoryFromModel(flowStatistics, "Google")
 
         return category
 
@@ -219,28 +248,34 @@ class Predictor():
             print(ext)
             print(total)
 
-        for key in ext.keys():
-            if ext[key]*1.0 / total*1.0 > percentCutoff:
+        for externalIP in ext.keys():
+            if ext[externalIP]*1.0 / total*1.0 > percentCutoff:
                 try:
-                    result = self.ipDict[key]
-                    if ext[key] == total:
+                    # If already looked up, return that organisation
+                    result = self.ipDict[externalIP]
+                    if ext[externalIP] == total:
                         return "Exclusively " + result
                     else:
                         return "Mostly " + result
                 except KeyError:
                     try:
-                        domainObj = IPWhois(key)
+                        # Else we need to look up again 
+                        domainObj = IPWhois(externalIP)
                         domainRes = domainObj.lookup_whois()
                         domain = domainRes['nets'][0]['description']
+
+                        # Trim the resolved domain 
                         if len(domain) > 20:
                             domain = domain[:20]
-                        self.ipDict[key] = domain
-                        if ext[key] == total:
+
+                        self.ipDict[externalIP] = domain
+
+                        if ext[externalIP] == total:
                             return "Exclusively " + result
                         else:
                             return "Mostly " + result
                     except:
-                        self.ipDict[key] = "Unknown"
+                        self.ipDict[externalIP] = "Unknown"
                         return "Unknown"
         return "Unknown"
 

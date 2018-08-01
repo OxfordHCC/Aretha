@@ -21,6 +21,7 @@ MAC_IP_DICT = {"Alexa":("88:71:e5:e9:9e:6c", "192.168.4.2"),
                "Hue":("00:17:88:7b:dd:8c","192.168.4.16"),
                "WeMoSwitch":("08:86:3b:c9:ac:f5","192.168.4.6"),
                "Nokia":("00:24:e4:66:6b:4c","192.168.4.12"),
+               "Sonos":("78:28:ca:a5:7f:1c","192.168.4.6"),
                "WeMoMotion":("08:86:3b:c9:c0:bd","192.168.4.18")}
 
 DB_MANAGER = databaseBursts.dbManager()
