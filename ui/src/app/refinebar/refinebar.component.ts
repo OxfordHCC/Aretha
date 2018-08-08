@@ -106,10 +106,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   }
 
   getIoTData(): void {
-    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
       this.impacts = response2.json()["impacts"];
-      console.log(this.impacts)
+      //console.log(this.impacts)
       this.render()
     });
   }
@@ -125,6 +125,32 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     //console.log(this._ignoredApps);
     this.render()
     return this._ignoredApps
+  }
+
+  wrap(text, width) {
+    text.each(function() {
+      var text = d3.select(this),
+          words = text.text().split(/\s+/).reverse(),
+          word,
+          line = [],
+          lineNumber = 0,
+          lineHeight = 1.1, // ems
+          y = text.attr("y"),
+          dy = parseFloat(text.attr("dy")),
+          tspan = text.text(null).append("tspan")
+          .style('text-anchor', 'end').attr("x", 0).attr("y", y).attr("dy", dy + "em");
+      while (word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        if (tspan.node().getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          tspan = text.append("tspan")
+          .style('text-anchor', 'end').attr("x", -20).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        }
+      }
+    });
   }
 
 
@@ -194,7 +220,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       this.render();
     }));
   }
+
   get byTime() { return this._byTime; }
+
+  // accessors for timeSpan
+  set timeSpan(val) {
+    this._timeSpan = val;
+    this.render();
+  }
+
+  get timeSpan() {return this._timeSpan; }
 
   setHoveringTypeHighlight(ctype: string) {
     let svg = this.getSVGElement();
@@ -237,7 +272,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
 
-    //console.log(this.impacts);
+    //console.log(this._timeSpan);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
@@ -334,6 +369,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .on("mouseleave", (d) => {return}); // this._companyHover(this.companyid2info.get(d), false));
 
     // main rects
+
+    var self = this;
     
     const f = (selection, first, last) => {
       return selection.selectAll('rect')
@@ -346,8 +383,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('width', x.bandwidth())
         // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
         .on('click', function (d) {
-			//console.log("Clicked" + d)
-          //this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));
+          self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
         .on('mouseleave', function (d) {
           //console.log("Leave" + d );
@@ -389,7 +425,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .attr('y', 1)
       .attr('dx', '-.8em')
       .attr('dy', '.15em')
-      .attr('transform', 'rotate(-90)');
+      .attr('transform', 'rotate(-90)')
+      .call(this.wrap, margin.bottom - 10);
 
     if (!this.showXAxis) {
       svg.selectAll('g.axis.x text').text('');

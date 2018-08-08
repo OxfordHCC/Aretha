@@ -59,6 +59,10 @@ export class RefinecatComponent {
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
   lastHovering: string;
+  _ignoredApps: string[];
+
+  firstDay: number;
+  lastDay: number;
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -71,14 +75,30 @@ export class RefinecatComponent {
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
     hover.HoverChanged$.subscribe((target) => {
-        // console.log('hover changed > ', target);
         if (target !== this._hoveringApp) {
           this._hoveringApp = target ? target as string : undefined;
-          if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
-          //console.log("Here and " + this._hoveringApp);
+
+          this.firstDay = undefined;
+          this.lastDay = undefined;
+
+          if (this._hoveringApp == this.lastHovering) {this.lastHovering = undefined;}
+          else if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
+
           this.getDataAndRender()
         }
     });
+
+    this._ignoredApps = new Array();
+
+    focus.focusChanged$.subscribe((target) => {
+        //console.log('hover changed > ', target);
+        if (target !== this._ignoredApps) {
+          this._ignoredApps = target ? target as string[] : [];
+          this.render('', 'timeseries'.toString(), this.data, false);
+        }
+        this.firstDay = undefined;
+        this.lastDay = undefined;
+      });
     (<any>window)._rb = this;
     
     this.getDataAndRender()
@@ -86,7 +106,7 @@ export class RefinecatComponent {
   }
 
 getIoTData(): void {
-    this.http.get('../assets/data/iotData.json').toPromise().then(response2 => {
+    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
     this.data = response2.json()["bursts"];
     //console.log(this.data);
     });
@@ -148,6 +168,7 @@ timeRangePad(dates) {
     } else {
         minDate = moment(dates[0]).subtract(1, 'hour');
         maxDate = moment(dates[0]).add(1, 'hour');
+        pad = this.getDatePadding(minDate, maxDate);
     }
     return {
         'minDate': minDate,
@@ -171,7 +192,24 @@ getDatePadding(minDate, maxDate) {
         return 'seconds';
 };
 
-  render(classd, spaced, inputData: BurstData[], enableBrush) {
+selectOnlyDay(d): void{
+    var date = moment(d);
+    date.hour(0)
+    date.minute(0)
+    date.second(1)
+    this.firstDay = date.valueOf();
+
+    var date2 = moment(d);
+    date2.hour(23)
+    date2.minute(59)
+    date2.second(59)
+    this.lastDay = date2.valueOf();
+
+    this.render('', 'timeseries'.toString(), this.data, false);
+
+}
+
+render(classd, spaced, inputData: BurstData[], enableBrush) {
 
     if (inputData == undefined) {return;}
 
@@ -181,6 +219,15 @@ getDatePadding(minDate, maxDate) {
 
     var data = inputData.filter( d => {if (d.device == this.lastHovering || this.lastHovering == undefined) {return d;}});
 
+    if (this.lastHovering == undefined) 
+    {
+        data = data.filter(obj => this._ignoredApps.indexOf(obj.device) == -1 )
+    }
+
+    if (this.firstDay !== undefined)
+    {
+        data = data.filter(obj => obj.value > this.firstDay && obj.value < this.lastDay )
+    }
     //console.log(data);
         
     var padding = this.timeRangePad(data.map(val => val.value));
@@ -198,9 +245,9 @@ getDatePadding(minDate, maxDate) {
     if (!svgel) { return; }
 
     var rect = svgel.getBoundingClientRect(),
-      width_svgel = Math.round(rect.width - 5),
-      height_svgel = Math.round(rect.height - 5),
-      svg = d3.select(svgel)
+    width_svgel = Math.round(rect.width - 5),
+    height_svgel = Math.round(rect.height - 5),
+    svg = d3.select(svgel)
 
     svg.selectAll('*').remove();
     
@@ -224,7 +271,7 @@ getDatePadding(minDate, maxDate) {
         yFormat = "%m/%d/%y";
         y.domain(d3.extent([padding.minDate]));
     } else {
-        xFormat = "%m/%d/%y";
+        xFormat = "%d/%m/%y";
         yFormat = "%H:%M";
         var start = new Date(2012, 0, 1, 0, 0, 0, 0).getTime();
         var stop = new Date(2012, 0, 1, 23, 59, 59, 59).getTime();
@@ -243,7 +290,8 @@ getDatePadding(minDate, maxDate) {
 
     //svg.attr("width", width + margin.left + margin.right)
     //   .attr("height", height + margin.top + margin.bottom);
-
+    //console.log(data)
+    
     var context = svg.append("g")
         .attr("class", "context")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -268,11 +316,12 @@ getDatePadding(minDate, maxDate) {
     var catDict = {};
     var c = _.uniq(data.map((x) => x.category)).map(function(e, i) {
         catDict[e] = catNumbers[i];
-      });
+    });
     
     //console.log(catDict)
 
     const catDisplacement = 25;
+    var self = this;
 
     circles.selectAll(".circ")
         .data(data)
@@ -290,20 +339,36 @@ getDatePadding(minDate, maxDate) {
         })
         .attr("r", 9)
         .on("click", function(d) {
-            console.log(new Date(d.value));
+            //console.log(new Date(d.value));
+            self.selectOnlyDay(d.value);
         })
         .append("svg:title")
-        .text(function(d) { return d.device + ": " + d.category; });
-    
-    // This is for the title 
-    if (this.lastHovering != undefined) {
+        .text((d) => { 
+            var ans = this.lessThanDay(padding.pad) && this.lastDay == undefined ? d.category : d.device + ": " + d.category ;
+            return ans; });
+        
+
+        
+        
+        // This is for the title 
+        
         svg.append("text")
         .attr("x", (width / 2))             
         .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
         .attr("text-anchor", "middle")  
         .style("font-size", "14px") 
-        .text(this.lastHovering);
-    }
+        .text((d) =>
+        {   var ans = this.lastHovering + " Traffic Bursts";
+            if  (padding.minDate.format('DD/MM/YYYY') ==  padding.maxDate.format('DD/MM/YYYY')) {
+                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
+            } else {
+                var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') + " to " + padding.maxDate.format('DD/MM/YYYY') : "";
+            }
+            
+            
+            if (this.lastHovering == undefined) {ans =  "All Traffic Bursts"}
+            return ans + date;});
+    
     
 
     
@@ -322,23 +387,23 @@ getDatePadding(minDate, maxDate) {
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
         .on('click', (d) => this.focus.focusChanged(this.loader.getCachedAppInfo(d)));
 
-      legend.append('rect')
+    legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
         .attr('width', 19)
         .attr('height', 19)
         
 
-      legend.append('text')
+    legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
         .text((d) => {return d})
 
-     */
+    */
     }
     @HostListener('window:resize')
     onResize() {
     // call our matchHeight function here
     this.getDataAndRender()
-  }
+}
 }

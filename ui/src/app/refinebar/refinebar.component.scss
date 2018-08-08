@@ -15,6 +15,7 @@ g.axis text {
 
 g.axis.x text {
     font-size: 10pt;
+    word-wrap: break-word;
 }
 
 g.axis.y g.tick text {

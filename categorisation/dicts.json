@@ -1,19 +1,55 @@
 {
-    
-    "burstTimeIntervals": {
-        "Echo": 1,
-        "Hue": 1, 
-        "Unknown": 1
-    },
-
+    "EchoFlowNumberCutoff": 10,
     "burstNumberCutoffs": {
         "Echo": 20,
-        "Hue": 4, 
+        "Google Home": 60,
+        "Philips Hue Bridge": 2,
         "Unknown": 10
     },
-
-    "EchoFlowNumberCutoff" : 10
-
+    "burstTimeIntervals": {
+        "Echo": 1,
+        "Google Home": 1,
+        "Philips Hue Bridge": 1,
+        "Unknown": 1
+    },
+    "ipDests": {
+        "104.155.18.91": "Google LLC",
+        "172.217.23.14": "Google LLC",
+        "173.194.76.188": "Google LLC",
+        "174.129.217.97": "Amazon.com, Inc.",
+        "184.73.174.14": "Amazon.com, Inc.",
+        "216.58.198.174": "Google LLC",
+        "216.58.201.14": "Google LLC",
+        "216.58.201.3": "Google LLC",
+        "216.58.204.36": "Google LLC",
+        "216.58.204.46": "Google LLC",
+        "216.58.204.78": "Google LLC",
+        "216.58.206.46": "Google LLC",
+        "216.58.206.68": "Google LLC",
+        "216.58.208.170": "Google LLC",
+        "216.58.208.174": "Google LLC",
+        "216.58.210.46": "Google LLC",
+        "216.58.213.67": "Google LLC",
+        "34.194.105.124": "Amazon Technologies ",
+        "34.194.157.131": "Amazon Technologies ",
+        "34.202.18.7": "Amazon Technologies ",
+        "34.246.46.173": "Amazon Technologies ",
+        "34.250.194.16": "Amazon Technologies ",
+        "34.251.94.130": "Amazon Technologies ",
+        "52.0.124.206": "Amazon Technologies ",
+        "52.214.6.41": "Amazon Technologies ",
+        "52.46.132.96": "Amazon Technologies ",
+        "52.72.197.149": "Amazon Technologies ",
+        "52.94.221.173": "Amazon Technologies ",
+        "52.94.229.76": "Amazon Technologies ",
+        "52.95.112.20": "Amazon Technologies ",
+        "54.81.164.57": "Amazon Technologies ",
+        "72.21.207.87": "Amazon.com, Inc.",
+        "74.125.133.188": "Google LLC",
+        "89.30.121.150": "WITHINGS",
+        "91.193.245.120": "Sharpstream Ltd.",
+        "91.193.247.119": "Sharpstream Ltd.",
+        "92.122.206.84": "Akamai Technologies",
+        "93.184.216.34": "NETBLK-03-EU-93-184-"
+    }
 }
-
-

@@ -16,7 +16,7 @@ DB_MANAGER = databaseBursts.dbManager()
 
 MAC_MANAGER = macHelpMethods.MacHelper()
 
-def packetBurstification(data=False):
+def packetBurstification():
     """ Get all packets not in bursts and assign them to a new burst """
     # Get packets not in bursts
     
@@ -41,6 +41,11 @@ def packetBurstification(data=False):
             burstTimeInterval = int( config["burstTimeIntervals"][dev] )
         except KeyError:
             burstTimeInterval = int( config["burstTimeIntervals"]["Unknown"] )
+
+        try:
+            burstPacketNoCutoff = int( config["burstNumberCutoffs"][dev] )
+        except KeyError:
+            burstPacketNoCutoff = int( config["burstNumberCutoffs"]["Unknown"] )
         
         if id not in allIds:
             
@@ -66,8 +71,8 @@ def packetBurstification(data=False):
                             currentTime = otherRow[1]
 
                         elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - currentTime).total_seconds():
-                            
-                            allBursts.append(nextBurst)
+                            if len(nextBurst) > burstPacketNoCutoff:
+                                allBursts.append(nextBurst)
                             # If same device, but too far away, we can stop, there won't be another burst here
                             break
                             # Can't add to considered, might be the start of the next burst
@@ -82,8 +87,8 @@ def packetBurstification(data=False):
             # If we've considered it we know it was within interval of another packet and so
             # it's either a valid burst or part of one that is too short
             continue
-
-    allBursts.append(nextBurst)
+    if len(nextBurst) > burstPacketNoCutoff:
+        allBursts.append(nextBurst)
 
     # Add each new burst, and add all the packet rows to it
     for burst in allBursts:
@@ -92,7 +97,7 @@ def packetBurstification(data=False):
             
 
 
-def burstPrediction(data=False):
+def burstPrediction():
     """
     Predict a category for each burst, or don't assign if there is no prediction
     """
@@ -119,7 +124,9 @@ def burstPrediction(data=False):
 
         if "Echo" in device and len(rows) > cutoffs["Echo"]:
             category = predictor.predictEcho(rows)
-        elif device == "Hue" and len(rows) > cutoffs[device]:
+        elif "Google" in device:
+            category = predictor.predictGoogle(rows)
+        elif device == "Philips Hue Bridge" and len(rows) > cutoffs[device]:
             category = predictor.predictHue(rows)
         else:
             category = predictor.predictOther(rows)
