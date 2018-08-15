@@ -63,13 +63,3 @@ A misguided attempt to build the UI from scratch, hacking refine will be far ugl
 
 Pip install dnspython and ipwhois, run `dbTocsv.py` to convert postgres data to csv, visualise with stacked bars in `test.html`
 
-## Testing
-
-Create a postgres db with name testdb, user is postgres and password is password (or else change in `databaseBursts.py`)
-
-Run `testDB.py` to populate with packet data from `AlexaTest1`
-
-Run `testCategorisation.py` to run categorisation scripts on this data
-
-Expected result is 8 bursts, 3 of which are Time and the rest are Unknown. 
-Output should be similar to [(1, 1), (2, 2), (3, 2), (4, 2), (5, 1), (6, 2), (7, 2), (8, 1)]
