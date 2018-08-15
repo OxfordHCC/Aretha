@@ -1,33 +1,19 @@
-# IoT-refine Static Interface
+# IoT-refine
 Refine for the smart home
 
 How to get this running from scratch:
 
-1. Ensure postgres is installed, create a db with name static, user is postgres and password is password
+1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
 
 2. Run `npm install` in /ui and /crunchbaseSupport, also do `npm install @angular/cli@1.1.3` in /ui
 
-3. Run `node google-serv.js` in /crunchbaseSupport
+3. Run `/capture/resetDb.py` and then `/db/runRefine.py`
 
-4. Run `ng serve` in \ui and head to `localhost:4200`
+4. Run `node google-serv.js` in /crunchbaseSupport
 
-To add your own data: 
+5. Run `ng serve` in \ui and head to `localhost:4200`
 
-1. Fill a folder `staticData/` with pcaps labeled by device 
-
-2. Add device Mac and IP to the dictionary in `/categorisation/getAndStoreStaticData.py` with the name in the filename as key
-
-3. Run `/categorisation/getAndStoreStaticData.py`
-
-4. If device names have "unknown" in them, follow directions below 
-
-To add data to existing data:
-
-1. Fill a folder `staticData/` with pcaps labeled by device 
-
-2. Add device Mac and IP to the dictionary in `/categorisation/getAndStoreStaticData.py` with the name in the filename as key
-
-3. Run `/categorisation/getAndStoreStaticData.py [FILE]` where `[FILE]` is the name of the file to be added to the other data 
+6. Run`/capture/capture.py` and `/categorisation/loop.py` to capture data and it should display in this browser 
 
 
 ## Device names
