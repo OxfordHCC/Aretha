@@ -4,10 +4,11 @@ from scapy.all import rdpcap, IP, TCP # pylint: disable=C0413, E0611
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts # pylint: disable=C0413, E0401
 
+DB_MANAGER = databaseBursts.dbManager()
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-databaseBursts.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
+DB_MANAGER.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
 
 first = True
 
@@ -30,13 +31,13 @@ for packet in rdpcap(os.path.join(FILE_PATH, "testData", "AlexaTime1")):
 
             proto = packet[TCP].dport
 
-            databaseBursts.execute(sql, (strTime, scr, dst, mac, length, proto), all=False)
+            DB_MANAGER.execute(sql, (strTime, scr, dst, mac, length, proto), all=False)
 
         except IndexError:
             pass
 
 getAll = """ SELECT * FROM packets ORDER BY id"""
-result = databaseBursts.execute(getAll, "")
+result = DB_MANAGER.execute(getAll, "")
 
 for row in result:
     print(row)

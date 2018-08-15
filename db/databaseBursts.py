@@ -7,7 +7,7 @@ class dbManager():
     
     def __init__(self):
         try:
-            self.connection = psycopg2.connect("dbname=static user=postgres password=password")
+            self.connection = psycopg2.connect("dbname=testdb user=postgres password=password")
         except:
             print("Connection error")
         
