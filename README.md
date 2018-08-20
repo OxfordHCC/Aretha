@@ -15,6 +15,9 @@ How to get this running from scratch:
 
 6. Run`/capture/capture.py` and `/categorisation/loop.py` to capture data and it should display in this browser 
 
+A video explaining some features of the UI is below, it is in better quality (mp4) in `/screenGrabs/`:
+
+![IoT Refine Showcase](screenGrabs/IoTRefineShowcase.gif?raw=true "IoT Refine Showcase")
 
 ## Device names
 
