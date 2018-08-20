@@ -1,6 +1,12 @@
 # IoT-refine Static Interface
 Refine for the smart home
 
+A video explaining some features of the UI is below, it is in better quality (mp4) in `/screenGrabs/`:
+
+![IoT Refine Showcase](screenGrabs/IoTRefineShowcase.gif?raw=true "IoT Refine Showcase")
+
+The Static-Refine version is hosted at: https://dkarandikar.github.io/StaticRefine/
+
 How to get this running from scratch:
 
 1. Ensure postgres is installed, create a db with name static, user is postgres and password is password
