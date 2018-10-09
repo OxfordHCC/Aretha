@@ -26,6 +26,8 @@ class MacHelper():
             return manDict[mac]
 
         else:
+            if mac == "":
+                raise ValueError('macMan: was given an empty mac')
             r = requests.get("https://api.macvendors.com/" + mac)
             manufacturer = r.text
 

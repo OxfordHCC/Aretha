@@ -7,6 +7,7 @@ import psycopg2
 #constants
 COMMIT_INTERVAL = 5
 LOCAL_IP_MASK_16 = "192.168."
+LOCAL_IP_MASK_16_2 = "169.254"
 LOCAL_IP_MASK_24 = "10."
 
 #initialise vars
@@ -35,12 +36,11 @@ def DatabaseInsert(packets):
 			dst = 0
 
 		try:
-			srcLocal = LOCAL_IP_MASK_16 in src or LOCAL_IP_MASK_24 in src
-			dstLocal = LOCAL_IP_MASK_16 in dst or LOCAL_IP_MASK_24 in dst
+			srcLocal = LOCAL_IP_MASK_16 in src or LOCAL_IP_MASK_16_2 in src or LOCAL_IP_MASK_24 in src
+			dstLocal = LOCAL_IP_MASK_16 in dst or LOCAL_IP_MASK_16_2 in dst or LOCAL_IP_MASK_24 in dst
 		except:
 			srcLocal = False
 			dstLocal = False
-
 		if dstLocal and not srcLocal:
 			mac = packet['eth'].dst
 		else:
@@ -79,7 +79,7 @@ def QueuedCommit(packet):
 		timestamp = 0
 
 #configure capture object
-capture = pyshark.LiveCapture(interface='2')
+capture = pyshark.LiveCapture(interface='1')
 capture.set_debug()
 
 #start capturing
