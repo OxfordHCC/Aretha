@@ -17,9 +17,21 @@ class Digest(Resource):
     def get(self):
         refresh()
 
+        destinations = calculateImpacts()
+        topDest = ''
+        topImpact = 0
+        totalImpact = 0
+        for dest, impact in destinations.items():
+            totalImpact += impact
+            if impact > topImpact:
+                print(dest, impact)
+                topImpact = impact
+                topDest = dest
+
+        digest = "Most traffic went to " + topDest + ' (' + str(int((topImpact/totalImpact)*100)) + '%)'
+
         print('Route /api/digest')
-        digest = jsonify("TODO")
-        return digest
+        return jsonify(digest)
 
 class Devices(Resource):
     def get(self):
@@ -33,6 +45,13 @@ class Destinations(Resource):
         refresh()
         print('Route /api/destinations')
         destinations = jsonify(calculateImpacts())
+        return destinations
+
+class DestinationsByDevice(Resource):
+    def get(self, device):
+        refresh()
+        print('Route /api/destinations/' + device)
+        destinations = jsonify(calculateImpacts(device))
         return destinations
 
 def refresh():
@@ -63,14 +82,12 @@ def calculateImpacts(device=''):
     data = iotData['impacts']
     impacts = {}
 
-    if device == '':
-        for impact in data:
+    for impact in data:
+        if device == '' or device == impact['appid']:
             if impact['companyName'] in impacts:
                 impacts[impact['companyName']] += impact['impact']
             else:
                 impacts[impact['companyName']] = impact['impact']
-    else:
-        pass
 
     return impacts
 
@@ -78,6 +95,7 @@ if __name__ == '__main__':
     api.add_resource(Digest, '/api/digest')
     api.add_resource(Devices, '/api/devices')
     api.add_resource(Destinations, '/api/destinations')
+    api.add_resource(DestinationsByDevice, '/api/destinations/<device>')
 
     iotData = ""
     lastLoad = datetime.min
