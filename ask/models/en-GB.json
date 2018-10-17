@@ -1,0 +1,122 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "respectful aretha",
+      "intents": [
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "Digest",
+          "samples": [
+            "update me",
+            "give me an update",
+            "digest",
+            "report",
+            "update",
+            "give me a digest",
+            "what's going on"
+          ]
+        },
+        {
+          "name": "SpecificDevice",
+          "slots": [
+            {
+              "name": "device",
+              "type": "device",
+              "samples": [
+                "tell me about the {device}"
+              ]
+            }
+          ],
+          "samples": [
+            "Who has {device} been talking to",
+            "Where has {device} been sending traffic",
+            "Where has {device} been sending data",
+            "I want to know about {device}",
+            "Tell me about {device}"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "computer"
+              }
+            },
+            {
+              "name": {
+                "value": "TV"
+              }
+            },
+            {
+              "name": {
+                "value": "fridge"
+              }
+            },
+            {
+              "name": {
+                "value": "toaster"
+              }
+            },
+            {
+              "name": {
+                "value": "laptop"
+              }
+            }
+          ],
+          "name": "device"
+        }
+      ]
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "SpecificDevice",
+          "confirmationRequired": false,
+          "slots": [
+            {
+              "name": "device",
+              "type": "device",
+              "elicitationRequired": true,
+              "confirmationRequired": false,
+              "prompts": {
+                "elicitation": "Elicit.Slot.688342941164.574373750390"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.688342941164.574373750390",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Please let me know which device you are interested in."
+          }
+        ]
+      }
+    ]
+  }
+}

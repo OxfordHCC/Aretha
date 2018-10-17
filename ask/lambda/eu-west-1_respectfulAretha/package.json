@@ -1,0 +1,12 @@
+{
+  "name": "alexa-skill-kit-sdk-factskill",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "alexa-sdk": "^1.0.25",
+    "i18next": "^11.9.1",
+    "i18next-sprintf-postprocessor": "^0.2.2",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2"
+  }
+}
