@@ -98,19 +98,19 @@ def calculateImpacts(device=''):
 
     for impact in data:
         found = False
-        for destination in destinations:
-            if device == '' or device == impact['appid']:
+        if device == '' or device == impact['appid']:
+            for destination in destinations:
                 if destination['name'] == impact['companyName']:
                     destination['impact'] += impact['impact']
                     found = True
                     break
-        if not found:
-            country = 'Unknown'
-            for geo in geos:
-                if geo['geo']['organisation'] == impact['companyName']:
-                    country = geo['geo']['country_name']
-            destinations.append({'name':impact['companyName'], 'impact':impact['impact'], 'country':country})
-            results += 1
+            if not found: 
+                country = 'Unknown'
+                for geo in geos:
+                    if geo['geo']['organisation'] == impact['companyName']:
+                        country = geo['geo']['country_name']
+                destinations.append({'name':impact['companyName'], 'impact':impact['impact'], 'country':country})
+                results += 1
             total += impact['impact']
 
     returnObject['results'] = results
