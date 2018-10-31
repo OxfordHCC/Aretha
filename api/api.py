@@ -79,7 +79,7 @@ def getDevices():
     devices = []
     for device in iotData['manDev']:
         name = re.search('(?<= : )[a-z0-9:]*', device).group(0)
-        if name not in devices:
+        if iotData['manDev'][device] not in devices:
             devices.append(iotData['manDev'][device])
 
     return devices
