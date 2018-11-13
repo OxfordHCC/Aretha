@@ -4,126 +4,72 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 import json
 import re
-import logging
+import sys
+import os
 from datetime import datetime
+
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+import databaseBursts
+DB_MANAGER = databaseBursts.dbManager()
 
 app = Flask(__name__)
 api = Api(app)
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+#=============
+#api endpoints
 
-REFRESH_INTERVAL = 60
+#return aggregated data for the given time period (called by refine)
+class Refine(Resource):
+    def get(self, days):
+        return jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev()})
 
-#Produce a summary of the main traffic destinations, and (in future) notify of any alerts that have been triggered
-class Digest(Resource):
-    def get(self):
-        refresh()
-
-        impacts = calculateImpacts()
-        results = impacts['results']
-        total = impacts['total']
-        destinations = impacts['destinations']
-
-        topDest = {'name':'','impact':-1,'country':''}
-        for dest in destinations:
-            if dest['impact'] > topDest['impact']:
-                topDest = dest
-
-        digest = "Tracking " + str(int(total/1000)) + " megabytes of traffic to " + str(results) + " different destinations."
-        digest += " The top destination was " + topDest['name'] + ' with ' + str(int((topDest['impact']/total)*100)) + '% of all traffic.'
-        digest += " No alerts have been triggered in the last 24 hours."
-
-        print('Route /api/digest')
-        return jsonify(digest)
-
-#Return a list of device names
+#get the mac addresse, manufacturer, and custom name of every device
 class Devices(Resource):
     def get(self):
-        refresh()
-        print('Route /api/devices')
-        devices = jsonify(getDevices())
-        return devices
+        return jsonify({"macMan": MacMan(), "manDev": ManDev()})
 
-#Return a list of traffic destinations, along with which country they are in and how much data was sent there
-class Destinations(Resource):
-    def get(self):
-        refresh()
-        print('Route /api/destinations')
-        destinations = jsonify(calculateImpacts())
-        return destinations
+#set the custom name of a device with a given mac
+class SetDevice(Resource):
+    def get(self, mac, name):
+        DB_MANAGER.execute("UPDATE devices SET name=%s WHERE mac=%s", (name, mac))
+        return jsonify({"message": "Device with mac " + mac + " now has name " + name})
 
-#As for Destinations, but for a specific device name
-class DestinationsByDevice(Resource):
-    def get(self, device):
-        refresh()
-        print('Route /api/destinations/' + device)
-        destinations = jsonify(calculateImpacts(device))
-        return destinations
+#================
+#internal methods
 
-#If iotData.json was last checked more than REFRESH_INTERVAL seconds ago, reload it now
-def refresh():
-    global lastLoad
-    global iotData
-    if (datetime.now() - lastLoad).total_seconds() > REFRESH_INTERVAL:
-        print("Refreshing data")
-        lastLoad = datetime.now()
-        with open('../ui/src/assets/data/iotData.json') as raw:
-            iotData = json.load(raw)
+#return a dictionary of mac addresses to manufacturers
+def MacMan():
+    macMan = dict()
+    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+    for device in devices:
+        mac,manufacturer,_ = device
+        macMan[mac] = manufacturer
+    return macMan
 
-#Return a list of devices in the iotData.json file
-def getDevices():
-    refresh()
-    global iotData
+#return a dictionary of mac addresses to custom device names
+def ManDev():
+    manDev = dict()
+    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+    for device in devices:
+        mac,_,name = device
+        manDev[mac] = name
+    return manDev
 
-    devices = []
-    for device in iotData['manDev']:
-        name = re.search('(?<= : )[a-z0-9:]*', device).group(0)
-        if iotData['manDev'][device] not in devices:
-            devices.append(iotData['manDev'][device])
+#get geo data for an ip
+def GetGeo(ip):
+    _,lat,lon,c_code = DB_MANAGER.execute("SELECT * FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
+    geo = {"latitude": lat, "longitude": lon, "country_code": c_code}
+    return geo
 
-    return devices
-
-#Return a list of impacts for the entire data set, or from a specific device
-def calculateImpacts(device=''):
-    refresh()
-    global iotData
-
-    data = iotData['impacts']
-    geos = iotData['geos']
-    returnObject = {}
-    destinations = []
-    results = 0
-    total = 0
-
-    for impact in data:
-        found = False
-        if device == '' or device == impact['appid']:
-            for destination in destinations:
-                if destination['name'] == impact['companyName']:
-                    destination['impact'] += impact['impact']
-                    found = True
-                    break
-            if not found: 
-                country = 'Unknown'
-                for geo in geos:
-                    if geo['geo']['organisation'] == impact['companyName']:
-                        country = geo['geo']['country_name']
-                destinations.append({'name':impact['companyName'], 'impact':impact['impact'], 'country':country})
-                results += 1
-            total += impact['impact']
-
-    returnObject['results'] = results
-    returnObject['total'] = total
-    returnObject['destinations'] = destinations
-    return returnObject
+#get bursts for the given time period in days
+def GetBursts(days):
+    pass
 
 if __name__ == '__main__':
     #Register the API endpoints with flask
-    api.add_resource(Digest, '/api/digest')
+    api.add_resource(Refine, '/api/refine/<days>')
     api.add_resource(Devices, '/api/devices')
-    api.add_resource(Destinations, '/api/destinations')
-    api.add_resource(DestinationsByDevice, '/api/destinations/<device>')
+    api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
 
     #Initialise variables
     iotData = ""

@@ -5,6 +5,7 @@ import sys
 import os
 
 DEBUG = True
+TRAFFIC_THRESHOLD = 10 #% increase or decrease that will trigger an alert
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts
@@ -28,7 +29,7 @@ for device in devices_filtered:
         print("Skipping model for " + device)
     else:
         for destination in destinations['destinations']:
-            current_models[device[:20]] = (timestamp, destination['name'][:20], destination['country'], destination['impact'])
+            current_models[(device[:20],destination['name'][:20])] = (destination['country'], destination['impact'])
             if DEBUG:
                 print("INSERT INTO models VALUES(" + device[:20] + ", " + timestamp + ", " + destination['name'][:20] + ", " + destination['country'][:20] + ", " + str(destination['impact']) + ")")
             else:
@@ -43,15 +44,21 @@ twoday = (datetime.datetime.now() - datetime.timedelta(days=20)).isoformat()
 query_string = "SELECT * FROM models where time > %s AND time < %s AND name = ''"
 for device in devices_filtered:
     query_string += " OR name = %s"
-print(query_string)
-print(tuple(devices_filtered))
 results = DB_MANAGER.execute(query_string, (twoday, oneday) + tuple(devices_filtered))
-print(results)
 for row in results:
-    print(row[1], row[5], current_models[row[1]][3])
+    #calculate traffic differentials
+    diff = int((current_models[(row[1],row[3])][1] / row[5]) * 100)
 
-#This needs to index the dictionary based on both device name *and* destination, rather than just device name
+    if abs(diff - 100) > TRAFFIC_THRESHOLD:
+        if diff > 100:
+            diff_text = str(diff - 100) + "% more traffic to "
+        if diff < 100:
+            diff_text = str(100 - diff) + "% less traffic to "
+
+        print(row[1] + " has sent " + diff_text + row[3] + " since yesterday.")
+
 #We need a way of specifying a time period to the API, so that we can actually compare these, otherwise they will only increase
 #But iotdata.json doesn't make the distinction, which is a bit awkward - perhaps we need a filter in categorise loop to only
 #consider packets that were captured in the last 24 hours?
 
+#Also need to decide how this is going to be used
