@@ -2,15 +2,18 @@ import sys
 import time
 import os
 import signal
-
-INTERVAL = 5
-
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-from burstProcessing import packetBurstification, burstPrediction # pylint: disable=C0413, E0401
- 
+import requests
+import re
+import predictions
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import refineJsonData # pylint: disable=C0413, E0401
+import databaseBursts
 
+FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+DB_MANAGER = databaseBursts.dbManager()
+INTERVAL = 5
+config = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
+
+#handler for signals (don't want to stop processing packets halfway through)
 class sigTermHandler:
     exit = False
     def __init__(self):
@@ -19,15 +22,117 @@ class sigTermHandler:
     def shutdown(self, signum, frame):
         self.exit = True
 
+def packetBurstification():
+    # Get packets not in bursts
+    unBinned = DB_MANAGER.getNoBurst()
+
+    allBursts = []  # List of list of ids
+    allIds = set()  # Set of ids considered already
+    nextBurst = []  # Ids to go in next burst
+    burstPacketNoCutoff = 0
+
+    # Get ids of all the packets we want in bursts
+    for counter, row in enumerate(unBinned):
+        id = row[0]
+        mac = row[4]
+        dev = requests.get(url='http://localhost:4201/api/devices').json()["manDev"][mac]
+        print(dev)
+        burstTimeInterval = int(config["burstTimeIntervals"]["Unknown"])
+        burstPacketNoCutoff = int(config["burstNumberCutoffs"]["Unknown"])
+        try:
+            burstTimeInterval = int(config["burstTimeIntervals"][dev])
+        except KeyError:
+            pass
+        try:
+            burstPacketNoCutoff = int(config["burstNumberCutoffs"][dev])
+        except KeyError:
+            pass
+        
+        if id not in allIds:
+            nextBurst = [id]
+            allIds.add(id)
+            currentTime = row[1]
+
+            try:
+                for otherRow in unBinned[counter+1:]:
+                    if otherRow[0] not in allIds:
+                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - currentTime).total_seconds():
+                            # If less than TIME_INTERVAL away, add to this burst
+                            nextBurst.append(otherRow[0])
+                            # Don't need to look at this one again, it's in this potential burst
+                            allIds.add(otherRow[0])
+                            currentTime = otherRow[1]
+
+                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - currentTime).total_seconds():
+                            if len(nextBurst) > burstPacketNoCutoff:
+                                allBursts.append(nextBurst)
+                            # If same device, but too far away, we can stop, there won't be another burst here
+                            break
+                            # Can't add to considered, might be the start of the next burst
+
+                        elif otherRow[4] != mac:
+                            continue
+                            # If it's a different device, we can't say anything at this point
+            except IndexError:
+                continue     
+
+        else:
+            # If we've considered it we know it was within interval of another packet and so
+            # it's either a valid burst or part of one that is too short
+            continue
+    if len(nextBurst) > burstPacketNoCutoff:
+        allBursts.append(nextBurst)
+
+    # Add each new burst, and add all the packet rows to it
+    for burst in allBursts:
+        newBurstId = DB_MANAGER.insertNewBurst()
+        DB_MANAGER.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
+
+def burstPrediction():
+    pass
+
+def processGeos():
+    raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
+    raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
+    local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+    known_ips = []
+
+    for row in raw_geos:
+        known_ips.append(row[0])
+
+    for dst,src in raw_ips:
+        external_ip = None
+        if local_ip_mask.match(dst) is not None:
+            external_ip = src
+        else:
+            external_ip = dst
+        if external_ip not in known_ips:
+            data = requests.get('https://api.ipdata.co/' + external_ip + '?api-key=***REMOVED***')
+            if data.status_code==200 and data.json()['latitude'] is not '':
+                data = data.json()
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, data['latitude'], data['longitude'], data['country_code'], data['organisation']))
+            else:
+                print('IP lookup for ' + external_ip + ' failed with HTTP error code ' + str(data.status_code))
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, "0", "0", "XX", "unknown"))
+
+def processMacs():
+    pass
+
+#============
+#loop control
 if __name__ == '__main__':
-    handler = sigTermHandler()
+    #register the signal handler
+    handler = sigTermHandler() 
+
+    #loop through categorisation tasks
     while(True):
-        print("Loop start")
+        processGeos()
+        processMacs()
         packetBurstification()
         burstPrediction()
-        refineJsonData.compileUsageImpacts()
+
+        #exit gracefully if we were asked to shutdown
         if handler.exit:
             break
+        
         time.sleep(INTERVAL)
-    print("Graceful shutdown")
-

@@ -42,7 +42,7 @@ const handlers = {
         const itemSlot = this.event.request.intent.slots.device.value;
 		var message = ''
         var context = this;
-		var options = {uri: 'https://wseymour.co.uk/alexa/destination-fridge.json', json: true}
+		var options = {uri: 'https://wseymour.co.uk/alexa/Belkin-WeMo-Socket.json', json: true}
 		const prefix = ['The most popular destination for this device was ', ', followed by ', ', and ']
 
 		rq(options)

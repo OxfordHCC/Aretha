@@ -6,9 +6,6 @@ import psycopg2
 
 #constants
 COMMIT_INTERVAL = 5
-LOCAL_IP_MASK_16 = "192.168."
-LOCAL_IP_MASK_16_2 = "169.254"
-LOCAL_IP_MASK_24 = "10."
 
 #initialise vars
 timestamp = 0 
@@ -16,6 +13,7 @@ queue = []
 
 def DatabaseInsert(packets):
 	global timestamp
+        local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 
 	#open db connection
 	conn = psycopg2.connect("dbname=testdb user=postgres password=password")
@@ -35,16 +33,15 @@ def DatabaseInsert(packets):
 			src = 0
 			dst = 0
 
-		try:
-			srcLocal = LOCAL_IP_MASK_16 in src or LOCAL_IP_MASK_16_2 in src or LOCAL_IP_MASK_24 in src
-			dstLocal = LOCAL_IP_MASK_16 in dst or LOCAL_IP_MASK_16_2 in dst or LOCAL_IP_MASK_24 in dst
-		except:
-			srcLocal = False
-			dstLocal = False
-		if dstLocal and not srcLocal:
-			mac = packet['eth'].dst
-		else:
+		srcLocal = local_ip_mask.match(src)
+		dstLocal = local_ip_mask.match(dst)
+		
+                if (not dstLocal and not srcLocal) or (dstLocal and srcLocal):
+                    continue #internal packet that we don't care about, or no local host (should never happen)
+                elif not dstLocal:
 			mac = packet['eth'].src
+                else:
+			mac = packet['eth'].dst
 
 		if len(packet.highest_layer) > 10:
 			proto = packet.highest_layer[:10]
