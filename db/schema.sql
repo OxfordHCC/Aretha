@@ -29,7 +29,7 @@ create table packets (
 drop table if exists devices cascade;
 create table devices(
 	mac varchar(17) primary key,
-	manufacturer varchar(40) DEFAULT 'unknown',
+	manufacturer varchar(40),
 	name varchar(40) DEFAULT 'unknown'
 );
 

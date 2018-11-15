@@ -4,9 +4,10 @@ import os
 import signal
 import requests
 import re
-import predictions
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts
+import predictions
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
@@ -22,8 +23,7 @@ class sigTermHandler:
     def shutdown(self, signum, frame):
         self.exit = True
 
-def packetBurstification():
-    # Get packets not in bursts
+def packetBurstification(devices):
     unBinned = DB_MANAGER.getNoBurst()
 
     allBursts = []  # List of list of ids
@@ -35,16 +35,14 @@ def packetBurstification():
     for counter, row in enumerate(unBinned):
         id = row[0]
         mac = row[4]
-        dev = requests.get(url='http://localhost:4201/api/devices').json()["manDev"][mac]
-        print(dev)
         burstTimeInterval = int(config["burstTimeIntervals"]["Unknown"])
         burstPacketNoCutoff = int(config["burstNumberCutoffs"]["Unknown"])
         try:
-            burstTimeInterval = int(config["burstTimeIntervals"][dev])
+            burstTimeInterval = int(config["burstTimeIntervals"][devices[mac]])
         except KeyError:
             pass
         try:
-            burstPacketNoCutoff = int(config["burstNumberCutoffs"][dev])
+            burstPacketNoCutoff = int(config["burstNumberCutoffs"][devices[mac]])
         except KeyError:
             pass
         
@@ -88,8 +86,33 @@ def packetBurstification():
         newBurstId = DB_MANAGER.insertNewBurst()
         DB_MANAGER.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
 
-def burstPrediction():
-    pass
+def burstPrediction(devices):
+    unCat = DB_MANAGER.getNoCat()
+    cutoffs = config["burstNumberCutoffs"]
+    predictor = predictions.Predictor()
+
+    for burst in unCat:
+        rows = DB_MANAGER.getRowsWithBurst(burst[0])
+
+        if len(rows) == 0:
+            continue
+
+        device = devices[rows[0][4]]
+
+        if "Echo" in device and len(rows) > cutoffs["Echo"]:
+            category = predictor.predictEcho(rows)
+        elif "Google" in device:
+            category = predictor.predictGoogle(rows)
+        elif device == "Philips Hue Bridge" and len(rows) > cutoffs[device]:
+            category = predictor.predictHue(rows)
+        else:
+            category = predictor.predictOther(rows)
+
+        # Get the id of this category, and add if necessary
+        newCategoryId = DB_MANAGER.addOrGetCategoryNumber(category)
+
+        # Update the burst with the name of the new category, packets already have a reference to the burst
+        DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 def processGeos():
     raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
@@ -106,17 +129,26 @@ def processGeos():
             external_ip = src
         else:
             external_ip = dst
+
         if external_ip not in known_ips:
             data = requests.get('https://api.ipdata.co/' + external_ip + '?api-key=***REMOVED***')
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, data['latitude'], data['longitude'], data['country_code'], data['organisation']))
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, data['latitude'], data['longitude'], data['country_code'], data['organisation'][:20]))
             else:
-                print('IP lookup for ' + external_ip + ' failed with HTTP error code ' + str(data.status_code))
                 DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, "0", "0", "XX", "unknown"))
+        known_ips.append(external_ip)
 
 def processMacs():
-    pass
+    raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
+    known_macs = DB_MANAGER.execute("SELECT mac FROM devices", ())
+    for mac in raw_macs:
+        if mac not in known_macs:
+            manufacturer = requests.get("https://api.macvendors.com/" + mac[0]).text
+            if "errors" not in manufacturer:
+                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, %s, 'unknown')", (mac[0], manufacturer[:20]))
+            else:
+                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', 'unknown')", (mac[0]))
 
 #============
 #loop control
@@ -126,10 +158,12 @@ if __name__ == '__main__':
 
     #loop through categorisation tasks
     while(True):
+        print("Loop start")
         processGeos()
         processMacs()
-        packetBurstification()
-        burstPrediction()
+        devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
+        packetBurstification(devices)
+        burstPrediction(devices)
 
         #exit gracefully if we were asked to shutdown
         if handler.exit:

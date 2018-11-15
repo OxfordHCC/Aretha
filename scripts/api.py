@@ -49,7 +49,7 @@ class Bursts(Resource):
 #return all impacts for the given time period (in days)
 class Impacts(Resource):
     def get(self, days):
-        return jsonify(GetImpactss(days))
+        return jsonify(GetImpacts(days))
 
 #================
 #internal methods
@@ -74,9 +74,14 @@ def ManDev():
 
 #get geo data for an ip
 def GetGeo(ip):
-    lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
-    geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "company_name": c_name}
-    return geo
+    print("Get Geo ", ip)
+    try:
+        lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
+        geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "company_name": c_name}
+        return geo
+    except:
+        geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "company_name": 'unknown'}
+        return geo
 
 #get bursts for the given time period (in days)
 def GetBursts(days):
