@@ -1,6 +1,6 @@
 #! /usr/bin/python3
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_restful import Resource, Api
 import json
 import re
@@ -24,7 +24,9 @@ lastDays = 0 #timespan of the last request (for caching)
 #return aggregated data for the given time period (in days, called by refine)
 class Refine(Resource):
     def get(self, days):
-        return jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()})
+        response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
 
 #get the mac address, manufacturer, and custom name of every device
 class Devices(Resource):
@@ -77,10 +79,10 @@ def GetGeo(ip):
     print("Get Geo ", ip)
     try:
         lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
-        geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "company_name": c_name}
+        geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "companyName": c_name}
         return geo
     except:
-        geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "company_name": 'unknown'}
+        geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "companyName": 'unknown'}
         return geo
 
 #get bursts for the given time period (in days)
@@ -137,9 +139,10 @@ def GetImpacts(days):
         for mac,_ in ManDev().items():
             item = geo
             item['impact'] = GetImpact(mac, ip)
-            item['ip'] = ip
-            item['device'] = mac
-            result.append(item)
+            item['companyid'] = ip
+            item['appid'] = mac
+            if item['impact'] > 0:
+                result.append(item)
     lastDays = days
     return result #shipit
 
@@ -174,7 +177,12 @@ def ResetImpactCache():
 
 #generate fake usage for devices (a hack so they show up in refine)
 def GenerateUsage():
-    return []
+    usage = []
+    counter = 1
+    for mac in MacMan():
+        usage.append({"appid": mac, "mins": counter})
+        counter += 1
+    return usage
 
 #=======================
 #main part of the script

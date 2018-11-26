@@ -86,10 +86,19 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     (<any>window)._rb = this;
   }
   getIoTData(): void {
-    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
+	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
       this.usage = response2.json()["usage"];
-      var impacts = response2.json()["geos"];
-      this.impacts = impacts.map(impact => ({ appid: impact.appid, country: impact.geo.country_name !== '' ? impact.geo.country_name : 'Unknown', country_code: impact.geo.country_code, impact: impact.impact }))
+		  var impacts = response2.json()["impacts"];
+
+	var manDev = response2.json()["manDev"];
+ 
+       impacts.forEach(function(impact){
+         if (manDev[impact.appid] != "unknown") {
+           impact.appid = manDev[impact.appid];
+         }
+       });
+
+      this.impacts = impacts.map(impact => ({ appid: impact.appid, country: impact.country_code !== 'XX' ? impact.country_code : 'Unknown', country_code: impact.country_code, impact: impact.impact }))
       //console.log(this.impacts)
       this.render()
     });
