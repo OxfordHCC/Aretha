@@ -22,7 +22,7 @@ cd /home/mcnutty/Documents/IoT-refine
 
 #start capturing packets
 cd capture
-python3 capture.py &
+./capture.py &
 PID3=$!
 >&2 echo Started capture with PID $PID3
 
@@ -33,21 +33,20 @@ PID1=$!
 >&2 echo Started angular with PID $PID1
 
 #start crunchbase
-cd ../crunchbaseSupport
-sudo -u mcnutty node google-serv.js &
-PID2=$!
->&2 echo Started crunchbase with PID $PID2
-
+#cd ../crunchbaseSupport
+#sudo -u mcnutty node google-serv.js &
+#PID2=$!
+#>&2 echo Started crunchbase with PID $PID2
 
 #start categorising packets
 cd ../categorisation
-sudo -u mcnutty python3 loop.py &
+sudo -u mcnutty ./loop.py &
 PID4=$!
 >&2 echo Started categorisation with PID $PID4
 
 #start the API
 cd ../api
-sudo -u mcnutty python3 api.py &
+sudo -u mcnutty ./api.py &
 PID5=$!
 >&2 echo Started the API with PID $PID5
 
