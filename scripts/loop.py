@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import sys
 import time
 import os
@@ -158,7 +160,6 @@ if __name__ == '__main__':
 
     #loop through categorisation tasks
     while(True):
-        print("Loop start")
         processGeos()
         processMacs()
         devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
