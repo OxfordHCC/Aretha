@@ -39,3 +39,6 @@ Device names will initially display as MAC addresses. To assign a 'friendly' nam
 
 ## Reset the database
 Run `scripts/resetDb.py`
+
+## Companion Amazon Alexa Skill
+Work in progress. Skill files are stored in the `ask` directory
