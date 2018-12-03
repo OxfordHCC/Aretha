@@ -1,7 +1,8 @@
 import psycopg2, os, sys, json, csv, datetime 
 from collections import defaultdict
 from ipwhois import IPWhois
-from ipdata import ipdata
+#from ipdata import ipdata
+import requests
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts # pylint: disable=C0413, E0401
@@ -89,15 +90,20 @@ def getGeoFromIp(ip):
     This is limited to 1500 per day, but that shouldn't actually be too few for IoT devices
     """
 
-    _ip = ipdata.ipdata(apikey="a1d902ad33fcd325dc6f5c94e93bb3d3c8337194a9738855b682b7f4")
-    data = _ip.lookup(ip)
-    if data['status']==200:
-        data["response"].pop("emoji_flag", None)
-        data["response"].pop("emoji_unicode", None)
-        data["response"].pop("currency", None)
-        return data['response']
+    if '169.254' not in ip and ip not in ['0', '0.0.0.0', '255.255.255.255']:
+        data = requests.get('https://api.ipdata.co/' + ip + '?api-key=***REMOVED***')
+        if data.status_code==200:
+            data.json().pop("emoji_flag", None)
+            data.json().pop("emoji_unicode", None)
+            data.json().pop("currency", None)
+            return data.json()
+        else:
+            print('IP lookup for ' + ip + ' failed with HTTP error code ' + str(data.status_code))
+            #raise ConnectionError('IP lookup for ' + ip + ' failed with HTTP error code ' + str(data.status_code))
     else:
-        return data['response']
+        data = FAKE_GEO
+        data['organisation'] = 'Unknown'
+        return data
 
 def processImpactsUsage(data, manualReset):
     """
@@ -171,7 +177,6 @@ def processImpactsUsage(data, manualReset):
         ## Get every external destination, and count them for that mac 
 
         for row in result:
-            #print(row)
             if (LOCAL_IP_MASK_16 in row[2] or LOCAL_IP_MASK_24 in row[2]) and \
             (LOCAL_IP_MASK_16 in row[3] or LOCAL_IP_MASK_24 in row[3]):
                 # internal comms so ignore

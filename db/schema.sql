@@ -25,3 +25,30 @@ create table packets (
 	burst integer references bursts --optional,
 	--company integer references companies --optional, assumes table of companies (stolen from refine)
 );
+
+drop table if exists devices cascade;
+create table devices(
+	mac varchar(17) primary key,
+	manufacturer varchar(40),
+	name varchar(40) DEFAULT 'unknown'
+);
+
+drop table if exists geodata cascade;
+create table geodata(
+	ip varchar(15) primary key,
+	lat real not null,
+	lon real not null,
+	c_code varchar(2) not null,
+	c_name varchar(20) not null
+);
+
+--store simplified profiles of devices: Name, time, destination company, traffic
+drop table if exists models cascade ;
+create table models (
+	id SERIAL primary key,
+	name varchar(20) not null, --name given to the device in iotData.json
+	time timestamp not null, --time the model was made
+	destination varchar(20) not null, --name of the company data was sent to
+	location varchar(20) not null, --country the company is based in
+	impact real not null --amount of traffic in mb
+);

@@ -5,6 +5,8 @@ How to get this running from scratch:
 
 1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
 
+2. Install the following python packages: `psycopg2 scapy pandas sklearn ipdata Pyshark`
+
 2. Run `npm install` in /ui and /crunchbaseSupport, also do `npm install @angular/cli@1.1.3` in /ui
 
 3. Run `/capture/resetDb.py` and then `/db/runRefine.py`
@@ -14,6 +16,8 @@ How to get this running from scratch:
 5. Run `ng serve` in \ui and head to `localhost:4200`
 
 6. Run`/capture/capture.py` and `/categorisation/loop.py` to capture data and it should display in this browser 
+
+7. Optionally install the systemd service by copying iotrefine.service to `/etc/systemd/system/`. You can start/stop it by running `sudo systemctl {start|stop} iotrefine` and have it start on boot by running `sudo systemctl enable iotrefine`
 
 A video explaining some features of the UI is below, it is in better quality (mp4) in `/screenGrabs/`:
 

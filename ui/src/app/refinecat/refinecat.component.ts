@@ -84,7 +84,7 @@ export class RefinecatComponent {
           if (this._hoveringApp == this.lastHovering) {this.lastHovering = undefined;}
           else if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
 
-          this.getDataAndRender()
+          this.getIoTData()
         }
     });
 
@@ -101,23 +101,22 @@ export class RefinecatComponent {
       });
     (<any>window)._rb = this;
     
-    this.getDataAndRender()
+    this.getIoTData()
     
   }
 
 getIoTData(): void {
-    this.http.get('assets/data/iotData.json').toPromise().then(response2 => {
-    this.data = response2.json()["bursts"];
-    //console.log(this.data);
-    });
-}
+	this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
+		this.data = response2.json()["bursts"];
+		var manDev = response2.json()["manDev"];
 
-
-getDataAndRender() {
-    var data = [{'value': 1380854103662, 'col': true},{'value': 1363641921283, col: false}];
-    this.getIoTData();
-    var brushEnabled = false;
-    this.render('', 'timeseries'.toString(), this.data, brushEnabled);
+       this.data.forEach(function(burst){
+         if (manDev[burst.device] != "unknown") {
+           burst.device = manDev[burst.device];
+		 }
+	   });
+		this.render('','timeseries'.toString(),this.data,false);
+	});
 }
 
 getSVGElement() {
@@ -130,11 +129,11 @@ lessThanDay(d) {
 };
 
 ngAfterViewInit(): void { this.init.then(() => {
-    this.getDataAndRender()
+    this.getIoTData()
 }) ; }
 
 ngOnChanges(changes: SimpleChanges): void {
-    this.getDataAndRender()
+    this.getIoTData()
 }
 
 getDate(d) {
@@ -210,12 +209,7 @@ selectOnlyDay(d): void{
 }
 
 render(classd, spaced, inputData: BurstData[], enableBrush) {
-
     if (inputData == undefined) {return;}
-
-    //console.log(this._hoveringApp);
-
-    //console.log(inputData)
 
     var data = inputData.filter( d => {if (d.device == this.lastHovering || this.lastHovering == undefined) {return d;}});
 
@@ -228,7 +222,6 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
     {
         data = data.filter(obj => obj.value > this.firstDay && obj.value < this.lastDay )
     }
-    //console.log(data);
         
     var padding = this.timeRangePad(data.map(val => val.value));
 
@@ -404,6 +397,6 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
     @HostListener('window:resize')
     onResize() {
     // call our matchHeight function here
-    this.getDataAndRender()
+    this.getIoTData()
 }
 }

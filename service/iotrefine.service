@@ -1,0 +1,12 @@
+[Unit]
+Description=IoT Refine
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/mcnutty/Documents/IoT-refine
+ExecStart=/home/mcnutty/Documents/IoT-refine/daemon.sh
+ExecRestart=on-failure
+
+[Install]
+WantedBy=multi-user.target

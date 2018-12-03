@@ -6,33 +6,28 @@ import pandas as pd
 import numpy as np
 from ipwhois import IPWhois
 from collections import defaultdict
+import re
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+import databaseBursts
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-#FEATURES_FILE = os.path.join(FILE_PATH, "data", "FlowFeatures.csv")
+DB_MANAGER = databaseBursts.dbManager()
 
 NUMBER_COLUMNS = 56     # Columns used in feature vectors for NN prediction
-with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-    FLOW_NUMBER_CUTOFF = json.load(f)["EchoFlowNumberCutoff"] # Number of packets required for a valid flow
-
-HOME_IP = "192.168"
-
-
+FLOW_NUMBER_CUTOFF = 10 # Number of packets required for a valid flow (Echo)
+local_ip_mask = re.compile('^(192\.168|10\.).*') #so we can filter for local ip addresses
 
 def normaliseColumn(array, colNo):
-    """
-    Min-max normalise data in array (a N * 54 shape) w.r.t. max/min in FEATURES_FILE
-    """
+    #Min-max normalise data in array (a N * 54 shape) w.r.t. max/min in FEATURES_FILE
     df = pd.read_csv(FEATURES_FILE, usecols = [x for x in range(2,NUMBER_COLUMNS)], header=None)
-
     values = array[:, colNo]
     normalized = (values - df.iloc[:,colNo].min()) / (df.iloc[:,colNo].max() - df.iloc[:,colNo].min() + 0.000000000000000001) # pylint: disable=maybe-no-member
-
     array[:, colNo] = normalized
-    #print(array)
     return array
 
 def getIps(rows):
-    """ Get a list of IP src/dest pairs out of a burst """
+    #Get a list of IP src/dest pairs out of a burst
     srcdest = set()
 
     for row in rows:
@@ -42,7 +37,6 @@ def getIps(rows):
         
     srcdest = list(srcdest)
     return srcdest
-    
 
 def getExtIpsCount(rows):
     """ Get a dictionary of external IPs out of a burst with their frequency"""
@@ -51,11 +45,10 @@ def getExtIpsCount(rows):
     for row in rows:
         source = row[2]
         destination = row[3]
-        if HOME_IP not in source:
+        if local_ip_mask.match(source) is None:
             ips[source] += 1
-        if HOME_IP not in destination:
+        if local_ip_mask.match(destination) is None:
             ips[destination] += 1
-    
     return ips
 
 def getFlowDict(sourcedest, burst):
@@ -123,7 +116,7 @@ def getStatisticsFromDict(sourceDest, lengthDict):
                 row = []
 
                 # Ensure data is added in the following order: OUT / IN / BOTH
-                if HOME_IP in pair[0]:
+                if local_ip_mask.match(pair[0]) is not None:
                     row.extend(res)
                     row.extend(res2)
                 else:
@@ -190,10 +183,7 @@ def getCategoryFromModel(flowStatistics, modelType):
 class Predictor():
     
     def __init__(self):
-        with open(os.path.join(FILE_PATH, 'dicts.json'), 'r') as f:
-            self.config = json.load(f)
-            self.ipDict = self.config["ipDests"]
-        
+        self.config = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
         
     def predictEcho(self, rows):
         """ Given rows of data from a burst from packets table, predict an Echo category"""
@@ -250,37 +240,9 @@ class Predictor():
 
         for externalIP in ext.keys():
             if ext[externalIP]*1.0 / total*1.0 > percentCutoff:
-                try:
-                    # If already looked up, return that organisation
-                    result = self.ipDict[externalIP]
-                    if ext[externalIP] == total:
-                        return "Exclusively " + result
-                    else:
-                        return "Mostly " + result
-                except KeyError:
-                    try:
-                        # Else we need to look up again 
-                        domainObj = IPWhois(externalIP)
-                        domainRes = domainObj.lookup_whois()
-                        domain = domainRes['nets'][0]['description']
-
-                        # Trim the resolved domain 
-                        if len(domain) > 20:
-                            domain = domain[:20]
-
-                        self.ipDict[externalIP] = domain
-
-                        if ext[externalIP] == total:
-                            return "Exclusively " + result
-                        else:
-                            return "Mostly " + result
-                    except:
-                        self.ipDict[externalIP] = "Unknown"
-                        return "Unknown"
+                c_name = DB_MANAGER.execute("SELECT c_name FROM geodata WHERE ip=%s LIMIT 1", (externalIP,), False)
+                if ext[externalIP] == total:
+                    return "Exclusively " + c_name[0]
+                else:
+                    return "Mostly " + c_name[0]
         return "Unknown"
-
-    def saveIpDict(self):
-        self.config["ipDests"] = self.ipDict
-        with open(os.path.join(FILE_PATH, 'dicts.json'), 'w') as f:
-            json.dump(self.config, f, sort_keys=True, indent=4)
-
