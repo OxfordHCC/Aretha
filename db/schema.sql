@@ -46,9 +46,9 @@ create table geodata(
 drop table if exists models cascade ;
 create table models (
 	id SERIAL primary key,
-	name varchar(20) not null, --name given to the device in iotData.json
+	device varchar(17) not null, --device mac address
 	time timestamp not null, --time the model was made
 	destination varchar(20) not null, --name of the company data was sent to
-	location varchar(20) not null, --country the company is based in
+	location varchar(2) not null, --country the company is based in
 	impact real not null --amount of traffic in mb
 );
