@@ -14,7 +14,7 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 
 3. Install angular (for Refine web interface): `cd ui/ && npm install && npm install @angular/cli@1.1.3`
 
-4. Configure the database from the schema: `/scripts/resetDb.py`
+4. Configure the database from the schema: `/scripts/resetDb.py` (dbname=`testdb` user=`postgres` password=`password`)
 
 ## Run (manually)
 1. Run `ng serve` in \ui
