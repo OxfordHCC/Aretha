@@ -1,0 +1,6 @@
+psycopg2
+scapy
+pandas
+sklearn
+ipdata
+Pyshark
