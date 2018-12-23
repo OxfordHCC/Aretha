@@ -162,6 +162,7 @@ def UpdateImpact(mac, ip, impact):
 def GetImpact(mac, ip):
     global impacts
     if mac in impacts:
+        # mac is shadowing parent variable here, what
         if ip in impacts[mac]:
             return impacts[mac][ip]
         else:

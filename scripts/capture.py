@@ -4,9 +4,11 @@ import pyshark
 import datetime
 import psycopg2
 import re
+import argparse
 
 #constants
 COMMIT_INTERVAL = 5
+DEBUG = False
 
 #initialise vars
 timestamp = 0 
@@ -79,10 +81,39 @@ def QueuedCommit(packet):
         queue = []
         timestamp = 0
 
-#configure capture object
-capture = pyshark.LiveCapture(interface='1')
-capture.set_debug()
+def log(*args):
+    if DEBUG:
+        print(*args)
+        
 
-#start capturing
-capture.apply_on_packets(QueuedCommit) #, timeout=30)
-capture.close();
+if __name__=='__main__':
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
+    parser.add_argument('--cinterval', dest="cinterval", type=int, help="Commit interval in seconds", default=5)
+    parser.add_argument('--debug', dest='debug', action='store_true')
+    args = parser.parse_args()
+
+    DEBUG = args.debug
+
+    if args.interface is None:
+        print(parser.print_help())
+        sys.exit(-1)
+
+    log("Configuring capture on ", args.interface)
+    
+    if args.cinterval is not None:
+        COMMIT_INTERVAL = args.cinterval
+        log("Setting commit interval as ", COMMIT_INTERVAL)
+
+    capture = pyshark.LiveCapture(interface=args.interface)
+
+    if DEBUG:
+        capture.set_debug()
+
+    log("Starting capture")
+
+    capture.apply_on_packets(QueuedCommit) #, timeout=30)
+    capture.close();
+
+    
