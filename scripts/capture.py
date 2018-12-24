@@ -1,10 +1,6 @@
 #! /usr/bin/env python3
 
-import pyshark
-import datetime
-import psycopg2
-import re
-import argparse
+import pyshark, datetime, psycopg2, re, argparse, sys
 
 #constants
 COMMIT_INTERVAL = 5

@@ -150,7 +150,7 @@ def processMacs():
             if "errors" not in manufacturer:
                 DB_MANAGER.execute("INSERT INTO devices VALUES(%s, %s, 'unknown')", (mac[0], manufacturer[:20]))
             else:
-                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', 'unknown')", (mac[0]))
+                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', 'unknown')", (mac[0],))
 
 #============
 #loop control
