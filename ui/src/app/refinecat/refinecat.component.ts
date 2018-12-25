@@ -45,7 +45,7 @@ export class RefinecatComponent {
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
+  // @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
@@ -111,7 +111,7 @@ getIoTData(): void {
 		var manDev = response2.json()["manDev"];
 
        this.data.forEach(function(burst){
-         if (manDev[burst.device] != "unknown") {
+         if (manDev[burst.device] !== "unknown") {
            burst.device = manDev[burst.device];
 		 }
 	   });
@@ -209,17 +209,15 @@ selectOnlyDay(d): void{
 }
 
 render(classd, spaced, inputData: BurstData[], enableBrush) {
-    if (inputData == undefined) {return;}
+    if (inputData === undefined) {return;}
 
-    var data = inputData.filter( d => {if (d.device == this.lastHovering || this.lastHovering == undefined) {return d;}});
+    var data = inputData.filter( d => {if (d.device === this.lastHovering || this.lastHovering === undefined) {return d;}});
 
-    if (this.lastHovering == undefined) 
-    {
-        data = data.filter(obj => this._ignoredApps.indexOf(obj.device) == -1 )
+    if (this.lastHovering === undefined) {
+        data = data.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 )
     }
 
-    if (this.firstDay !== undefined)
-    {
+    if (this.firstDay !== undefined) {
         data = data.filter(obj => obj.value > this.firstDay && obj.value < this.lastDay )
     }
         
@@ -234,7 +232,7 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         left: 30
     }
     var svgel = this.getSVGElement();
-    //console.log(svgel);
+    // console.log(svgel);
     if (!svgel) { return; }
 
     var rect = svgel.getBoundingClientRect(),
@@ -248,8 +246,8 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
     
     var height = (this.lessThanDay(padding.pad)) ? (height_svgel - margin.top - margin.bottom - oneDayDisplacement) : (height_svgel - margin.top - margin.bottom);
 
-    //console.log(width);
-    //console.log(height);
+    // console.log(width);
+    // console.log(height);
 
     var x = d3.scaleLinear().range([0 + margin.right, width - margin.left]),
         y = d3.scaleLinear().range([margin.top, height - margin.bottom - margin.top]);

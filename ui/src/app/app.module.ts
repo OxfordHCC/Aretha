@@ -4,7 +4,7 @@ import { LoaderService } from './loader.service';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { RefinebarComponent } from './refinebar/refinebar.component';
-import { UsageListenerComponent } from './usage-listener/usage-listener.component';
+// import { UsageListenerComponent } from './usage-listener/usage-listener.component';
 import { UsagetableComponent } from './usagetable/usagetable.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
@@ -16,9 +16,11 @@ import { Ng2CompleterModule } from 'ng2-completer';
 
 import { SingleDisplayComponent } from './single-display/single-display.component';
 import { TiledDisplayComponent } from './tiled-display/tiled-display.component';
-import { CompareComponent } from './compare/compare.component';
+// no longer used with IoTRefine => 
+// import { CompareComponent } from './compare/compare.component';
+// import { CompareContainerComponent } from './compare-container/compare-container.component';
+// 
 import { CompanyListComponent } from './company-list/company-list.component';
-import { CompareContainerComponent } from './compare-container/compare-container.component';
 import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { HostUtilsService } from "app/host-utils.service";
 import { AppinfoComponent } from './appinfo/appinfo.component';
@@ -54,10 +56,10 @@ const appRoutes: Routes = [
     FoobarComponent,
     ErrorComponent,
     CompanybarComponent,
-    CompareComponent,
+    // CompareComponent,
     CompanyListComponent,
-    UsageListenerComponent,
-    CompareContainerComponent,
+    // UsageListenerComponent,
+    // CompareContainerComponent,
     AutocompleteComponent,
     AppinfoComponent,
     CompanyinfoComponent,

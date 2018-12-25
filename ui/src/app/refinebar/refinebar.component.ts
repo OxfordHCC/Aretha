@@ -46,7 +46,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
+  // @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
@@ -101,18 +101,18 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
 
+  // todo; move this out to loader
   getIoTData(): void {
 	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-      this.usage = response2.json()["usage"];
-	  this.impacts = response2.json()["impacts"];
-	  var manDev = response2.json()["manDev"];
+      this.usage = response2.json()["usage"]; // ah ha! 
+	    this.impacts = response2.json()["impacts"];
+	    var manDev = response2.json()["manDev"];
 
-	  this.impacts.forEach(function(impact){
-	  	if (manDev[impact.appid] != "unknown") {
-		  impact.appid = manDev[impact.appid];
-		}
-	  });
-
+      this.impacts.forEach(function(impact){
+        if (manDev[impact.appid] != "unknown") {
+        impact.appid = manDev[impact.appid];
+      }
+    });
       this.render()
     });
   }
@@ -157,13 +157,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   }
 
 
+  // TODO 
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage_in) { return; }
+    if (!this.usage) { return; }
     this.init.then(() => {
-      if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-        delete this.apps;
-      }
+      // if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
+      //   delete this.apps;
+      // }
       this.render();
     });
   }
@@ -194,7 +195,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
       return this._getApp(usg.appid).then(app => {
         const hosts = app && app.hosts;
-		if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
+		  if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
 
         return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
           .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))

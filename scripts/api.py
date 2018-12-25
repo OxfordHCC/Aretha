@@ -144,7 +144,7 @@ def GetImpacts(days):
         if ext_ip not in geos:
             geos[ext_ip] = GetGeo(ext_ip)
 
-        print("UpdateImpact ", pkt_mac, ext_ip, pkt_len)
+        # print("UpdateImpact ", pkt_mac, ext_ip, pkt_len)
         UpdateImpact(impacts, pkt_mac, ext_ip, pkt_len)
 
         if idp < pkt_id:
@@ -155,7 +155,7 @@ def GetImpacts(days):
         for mac,_ in ManDev().items():
             item = geo.copy() # emax added .copy here() this is so gross
             item['impact'] = GetImpact(mac, ip, impacts)
-            print("Calling getimpact mac::", mac, " ip::", ip, 'impact result ', item['impact']);            
+            # print("Calling getimpact mac::", mac, " ip::", ip, 'impact result ', item['impact']);            
             item['companyid'] = ip
             item['appid'] = mac
             if item['impact'] > 0:
