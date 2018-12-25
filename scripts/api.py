@@ -99,10 +99,13 @@ def GetBursts(days):
 
 #get impact (traffic) of every device/external ip combination for the given time period (in days)
 def GetImpacts(days):
+
     global geos, ID_POINTER, lastDays
+    print("GetImpacts: days::", days, " ID>::", ID_POINTER, " lastDays::", lastDays)
 
     #we can only keep the cache if we're looking at the same packets as the previous request
     if days is not lastDays:
+        print("ResetImpactCache()")
         ResetImpactCache() 
 
     #get all packets from the database (if we have cached impacts from before, then only get new packets)
@@ -112,8 +115,10 @@ def GetImpacts(days):
 
     for packet in packets:
         #determine if the src or dst is the external ip address
-        ip_src = local_ip_mask.match(packet[2]) is not None
-        ip_dst = local_ip_mask.match(packet[3]) is not None
+        pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
+        
+        ip_src = local_ip_mask.match(pkt_src) is not None
+        ip_dst = local_ip_mask.match(pkt_dst) is not None
         ext_ip = None
         
         if (ip_src and ip_dst) or (not ip_src and not ip_dst):
@@ -121,40 +126,47 @@ def GetImpacts(days):
         
         #remember which ip address was external
         elif ip_src:
-            ext_ip = packet[3]
+            ext_ip = pkt_dst
         else:
-            ext_ip = packet[2]
+            ext_ip = pkt_src
         
         #make sure we have geo data, then update the impact
         if ext_ip not in geos:
             geos[ext_ip] = GetGeo(ext_ip)
-        UpdateImpact(packet[4], ext_ip, packet[5])
+
+        print("UpdateImpact ", pkt_mac, ext_ip, pkt_len)
+        UpdateImpact(pkt_mac, ext_ip, pkt_len)
 
         #fast forward the id pointer so we know this packet is cached
-        if ID_POINTER < packet[0]:
-            ID_POINTER = packet[0]
+        if ID_POINTER < pkt_id:
+            ID_POINTER = pkt_id
 
     #build a list of all device/ip impacts and geo data
     for ip,geo in geos.items():
         for mac,_ in ManDev().items():
-            item = geo
+            item = geo.copy() # emax added .copy here() this is so gross
             item['impact'] = GetImpact(mac, ip)
+            print("Calling getimpact mac::", mac, " ip::", ip, 'impact result ', item['impact']);            
             item['companyid'] = ip
             item['appid'] = mac
             if item['impact'] > 0:
                 result.append(item)
     lastDays = days
+    print("result ", json.dumps(result))
     return result #shipit
 
 #setter method for impacts
 def UpdateImpact(mac, ip, impact):
-    global impacts
     if mac in impacts:
+        print("updateimpact existing mac ", mac)
         if ip in impacts[mac]:
+            print("updateimpact existing ip, updating impact for mac ", mac, " ip ", ip, " impact: ", impacts[mac][ip])        
             impacts[mac][ip] += impact
         else:
+            print("updateimpact no existing ip for mac ", mac, " ip ", ip, " impact: ", impact)                    
             impacts[mac][ip] = impact #impact did not exist
     else:
+        print("updateimpact unknown mac, creating new entry for  ", mac, ip)        
         impacts[mac] = dict()
         impacts[mac][ip] = impact #impact did not exist
 
@@ -162,7 +174,6 @@ def UpdateImpact(mac, ip, impact):
 def GetImpact(mac, ip):
     global impacts
     if mac in impacts:
-        # mac is shadowing parent variable here, what
         if ip in impacts[mac]:
             return impacts[mac][ip]
         else:
