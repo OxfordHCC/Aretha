@@ -6,6 +6,8 @@ import json
 import re
 import sys
 import os
+import traceback
+import copy
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts
@@ -14,7 +16,7 @@ DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
 ID_POINTER = 0 #so we know which packets we've seen (for caching)
-impacts = dict() #for building and caching impacts
+_impact_cache = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
 lastDays = 0 #timespan of the last request (for caching)
 
@@ -24,9 +26,14 @@ lastDays = 0 #timespan of the last request (for caching)
 #return aggregated data for the given time period (in days, called by refine)
 class Refine(Resource):
     def get(self, days):
-        response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        return response
+        try:
+            response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
+            response.headers['Access-Control-Allow-Origin'] = '*'
+            return response
+        except:
+            print("Unexpected error:", sys.exc_info())
+            traceback.print_exc()
+            sys.exit(-1)                    
 
 #get the mac address, manufacturer, and custom name of every device
 class Devices(Resource):
@@ -99,17 +106,20 @@ def GetBursts(days):
 
 #get impact (traffic) of every device/external ip combination for the given time period (in days)
 def GetImpacts(days):
-
-    global geos, ID_POINTER, lastDays
+    global geos, ID_POINTER, lastDays, _impact_cache
+    
     print("GetImpacts: days::", days, " ID>::", ID_POINTER, " lastDays::", lastDays)
 
     #we can only keep the cache if we're looking at the same packets as the previous request
     if days is not lastDays:
         print("ResetImpactCache()")
-        ResetImpactCache() 
+        ResetImpactCache()
+
+    impacts = copy.deepcopy(_impact_cache) # shallow copy
+    idp = ID_POINTER
 
     #get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packets = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(days) + " DAY'"))
+    packets = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(idp), "'" + str(days) + " DAY'"))
     result = []
     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 
@@ -135,28 +145,32 @@ def GetImpacts(days):
             geos[ext_ip] = GetGeo(ext_ip)
 
         print("UpdateImpact ", pkt_mac, ext_ip, pkt_len)
-        UpdateImpact(pkt_mac, ext_ip, pkt_len)
+        UpdateImpact(impacts, pkt_mac, ext_ip, pkt_len)
 
-        #fast forward the id pointer so we know this packet is cached
-        if ID_POINTER < pkt_id:
-            ID_POINTER = pkt_id
+        if idp < pkt_id:
+            idp = pkt_id
 
     #build a list of all device/ip impacts and geo data
     for ip,geo in geos.items():
         for mac,_ in ManDev().items():
             item = geo.copy() # emax added .copy here() this is so gross
-            item['impact'] = GetImpact(mac, ip)
+            item['impact'] = GetImpact(mac, ip, impacts)
             print("Calling getimpact mac::", mac, " ip::", ip, 'impact result ', item['impact']);            
             item['companyid'] = ip
             item['appid'] = mac
             if item['impact'] > 0:
                 result.append(item)
+
+    # commit these all at once to the globals #
+    _impact_cache = impacts    
     lastDays = days
-    print("result ", json.dumps(result))
+    ID_POINTER = idp
+    
+    # print("result ", json.dumps(result))
     return result #shipit
 
 #setter method for impacts
-def UpdateImpact(mac, ip, impact):
+def UpdateImpact(impacts, mac, ip, impact):
     if mac in impacts:
         print("updateimpact existing mac ", mac)
         if ip in impacts[mac]:
@@ -171,20 +185,18 @@ def UpdateImpact(mac, ip, impact):
         impacts[mac][ip] = impact #impact did not exist
 
 #getter method for impacts
-def GetImpact(mac, ip):
-    global impacts
+def GetImpact(mac, ip, impacts=_impact_cache):
     if mac in impacts:
         if ip in impacts[mac]:
             return impacts[mac][ip]
-        else:
-            return 0 #impact does not exist
+        else:            return 0 #impact does not exist
     else:
         return 0 #impact does not exist
 
 #clear impact dictionary and packet id pointer
 def ResetImpactCache():
-    global impacts, ID_POINTER
-    impacts = dict()
+    global _impacts_cache, ID_POINTER
+    _impacts_cache = dict()
     ID_POINTER = 0
 
 #generate fake usage for devices (a hack so they show up in refine)
