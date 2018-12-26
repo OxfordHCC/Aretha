@@ -5,10 +5,10 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { RefinebarComponent } from './refinebar/refinebar.component';
 // import { UsageListenerComponent } from './usage-listener/usage-listener.component';
-import { UsagetableComponent } from './usagetable/usagetable.component';
+// import { UsagetableComponent } from './usagetable/usagetable.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { FoobarComponent } from './foobar/foobar.component';
+// import { FoobarComponent } from './foobar/foobar.component';
 import { ErrorComponent } from './error/error.component';
 import { UsageConnectorService } from './usage-connector.service';
 import { CompanybarComponent } from './companybar/companybar.component';
@@ -21,7 +21,7 @@ import { TiledDisplayComponent } from './tiled-display/tiled-display.component';
 // import { CompareContainerComponent } from './compare-container/compare-container.component';
 // 
 import { CompanyListComponent } from './company-list/company-list.component';
-import { AutocompleteComponent } from './autocomplete/autocomplete.component';
+// import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { HostUtilsService } from "app/host-utils.service";
 import { AppinfoComponent } from './appinfo/appinfo.component';
 import { CompanyinfoComponent } from './companyinfo/companyinfo.component';
@@ -50,17 +50,19 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     RefinebarComponent,
-    UsagetableComponent,
     SingleDisplayComponent,
     TiledDisplayComponent,    
-    FoobarComponent,
     ErrorComponent,
     CompanybarComponent,
-    // CompareComponent,
     CompanyListComponent,
+    // not used with IoT Refine >>
+    // UsagetableComponent,
+    // CompareComponent,    
     // UsageListenerComponent,
     // CompareContainerComponent,
-    AutocompleteComponent,
+    // AutocompleteComponent,
+    // not ever used:
+    // FoobarComponent,    
     AppinfoComponent,
     CompanyinfoComponent,
     RefinecatComponent,
