@@ -1,10 +1,11 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
+import { Observable } from '../../node_modules/rxjs/Observable';
 
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
@@ -12,12 +13,15 @@ enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USE
 // export const API_ENDPOINT = 'http://localhost:8118/api';
 export const API_ENDPOINT = 'https://negi.io/api';
 export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
+export const IOT_API_ENDPOINT='http://localhost:4201';
 
 export interface App2Hosts { [app: string]: string[] }
 export interface Host2PITypes { [host: string]: PI_TYPES[] }
 export interface String2String { [host: string]: string }
 
 export interface AppSubstitutions { [app: string]: string[] };
+
+let zone = new NgZone({ enableLongStackTrace: false });
 
 export class GeoIPInfo {
   host?: string;
@@ -33,6 +37,23 @@ export class GeoIPInfo {
   longitude?: number;
   metro_code?: number;  
 };
+
+export class PacketUpdateInfo {
+  id: string;
+  dst: string;
+  src: string;
+  burst?: string;
+  mac: string;
+  len: string;
+}
+
+export class DBUpdate {
+  timestamp: string;
+  operation: string;
+  schema: string;
+  table: string;
+  data: PacketUpdateInfo
+}
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
   // console.log('@cache:: ~~ ', target, propertyKey, descriptor);
@@ -431,6 +452,27 @@ export class LoaderService {
   getCachedAppInfo(appid: string): APIAppInfo | undefined {
     // returns a previously seen appid
     return this.apps[appid];
+  }
+
+  listenToUpdates() : Observable<DBUpdate> {
+      return Observable.create(observer => {
+        const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+        eventSource.onopen = thing => {
+          console.info('EventSource Open', thing);
+        };
+        eventSource.onmessage = score => {
+          console.info("EventSource onMessage", score, score.data);
+          zone.run(() => {
+            observer.next(JSON.parse(score.data));
+          });
+        };
+        eventSource.onerror = error => {
+          console.error("eventSource onerror", error);
+          zone.run(() => observer.error(error));
+        };
+        (<any>window)._eS = eventSource;
+        return () => eventSource.close();
+    });        
   }
   
   @memoize((appid: string): string => appid)

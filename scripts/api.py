@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, Response
 from flask_restful import Resource, Api
 import json
 import re
@@ -27,7 +27,9 @@ lastDays = 0 #timespan of the last request (for caching)
 class Refine(Resource):
     def get(self, days):
         try:
-            response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
+            response = make_response(jsonify({"bursts": GetBursts(1), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(1), "usage": GenerateUsage()}))
+            # response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
+            
             response.headers['Access-Control-Allow-Origin'] = '*'
             return response
         except:
@@ -208,6 +210,21 @@ def GenerateUsage():
         counter += 1
     return usage
 
+_events = []
+
+def event_stream():
+    import time
+    while True:
+        time.sleep(0.5)
+        while len(_events) > 0:
+            yield "data: %s\n\n" % _events.pop(0)
+
+@app.route('/stream')
+def stream():
+    response = Response(event_stream(), mimetype="text/event-stream")
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 #=======================
 #main part of the script
 if __name__ == '__main__':
@@ -217,6 +234,10 @@ if __name__ == '__main__':
     api.add_resource(Bursts, '/api/bursts/<days>')
     api.add_resource(Impacts, '/api/impacts/<days>')
     api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
+
+    # watch for listen events -- not sure if this has to be on its own connection
+    listenManager = databaseBursts.dbManager()
+    listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 
     #Start the flask server
     app.run(port=4201, threaded=True, host='0.0.0.0')
