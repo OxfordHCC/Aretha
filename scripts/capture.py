@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import pyshark, datetime, psycopg2, re, argparse, sys
+import pyshark, datetime, psycopg2, re, argparse, sys, traceback
 
 #constants
 COMMIT_INTERVAL = 5
@@ -12,6 +12,7 @@ queue = []
 
 def DatabaseInsert(packets):
     global timestamp
+    print("packets ", len(packets))
     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 
     #open db connection
@@ -29,9 +30,12 @@ def DatabaseInsert(packets):
         try:
             src = packet['ip'].src
             dst = packet['ip'].dst
-        except KeyError:
+        except KeyError as ke:
             src = ''
             dst = ''
+            print("error", ke)
+            # print(packet)
+            continue
 
         srcLocal = local_ip_mask.match(src)
         dstLocal = local_ip_mask.match(dst)
@@ -49,7 +53,12 @@ def DatabaseInsert(packets):
             proto = packet.highest_layer
 
         #insert packets into table
-        cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto) VALUES (%s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto))
+        try:
+            cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto) VALUES (%s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto))
+        except:
+            print("Unexpected error on insert:", sys.exc_info())
+            traceback.print_exc()
+            sys.exit(-1)  
         counter += 1
         
     #commit the new records and close db connection
