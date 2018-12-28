@@ -106,17 +106,23 @@ export class RefinecatComponent {
   }
 
 getIoTData(): void {
-	this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-		this.data = response2.json()["bursts"];
-		var manDev = response2.json()["manDev"];
+    this.loader.getIoTData().then( bundle => {
+        this.data = bundle.bursts;
+        console.log('refinecat.component data is ', this.data);
+        this.render('','timeseries'.toString(),this.data,false);
+    });
+    //
+	// this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
+	// 	this.data = response2.json()["bursts"];
+	// 	var manDev = response2.json()["manDev"];
 
-       this.data.forEach(function(burst){
-         if (manDev[burst.device] !== "unknown") {
-           burst.device = manDev[burst.device];
-		 }
-	   });
-		this.render('','timeseries'.toString(),this.data,false);
-	});
+    //    this.data.forEach(function(burst){
+    //      if (manDev[burst.device] !== "unknown") {
+    //        burst.device = manDev[burst.device];
+	// 	 }
+	//    });
+	// 	this.render('','timeseries'.toString(),this.data,false);
+	// });
 }
 
 getSVGElement() {

@@ -3,6 +3,8 @@ import { Router, NavigationEnd } from "@angular/router";
 import { ActivityLogService } from "app/activity-log.service";
 import { LoaderService } from './loader.service';
 
+(<any>window)._listen_count = 0;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,11 +22,16 @@ export class AppComponent {
       }      
     });
     let updates = this.loader.listenToUpdates().subscribe({
-      next(x) {  console.log("Listen next! ", x); },
+      next(x) {  
+        // console.log("Listen next! ", x); 
+        (<any>window)._listen_count++
+      },
       error(err) {
         console.log("Listen error! ", err, err.message);
       },
-      complete() { console.log("Listen complete"); }
+      complete() { 
+        console.log("Listen complete"); 
+      }
     });
   }
 

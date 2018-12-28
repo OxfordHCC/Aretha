@@ -89,25 +89,26 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     (<any>window)._rb = this;
   }
   getIoTData(): void {
-	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-		  this.usage = response2.json()["usage"];
-		  var impacts = response2.json()["impacts"];
-		  var manDev = response2.json()["manDev"];
-       impacts.forEach(function(impact){
-          if (manDev[impact.appid] != "unknown") {
-             impact.appid = manDev[impact.appid];
-           }
-       });
+	  // this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
+		//   this.usage = response2.json()["usage"];
+		//   var impacts = response2.json()["impacts"];
+		//   var manDev = response2.json()["manDev"];
+    //    impacts.forEach(function(impact){
+    //       if (manDev[impact.appid] != "unknown") {
+    //          impact.appid = manDev[impact.appid];
+    //        }
+    //    });
 
+    this.loader.getIoTData().then(bundle => {
+      this.usage = bundle.usage;
 
-      var minMax = impacts.reduce((acc, val) => {
+      let minMax = bundle.impacts.reduce((acc, val) => {
         acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
         acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
         return acc;
       }, []);
 
-      this.impacts = impacts.map(impact => ({impact: impact.impact/minMax[1], geo: impact, appid: impact.appid }))
-
+      this.impacts = bundle.impacts.map(impact => ({impact: impact.impact/minMax[1], geo: impact, appid: impact.appid }))
       this.render()
     });
   }

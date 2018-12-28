@@ -103,19 +103,25 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   // todo; move this out to loader
   getIoTData(): void {
-	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-      this.usage = response2.json()["usage"]; // ah ha! 
-	    this.impacts = response2.json()["impacts"];
-	    var manDev = response2.json()["manDev"];
-
-      this.impacts.forEach(function(impact){
-        if (manDev[impact.appid] != "unknown") {
-        impact.appid = manDev[impact.appid];
-      }
+    this.loader.getIoTData().then( bundle => {
+      console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
+      this.usage = bundle.usage;
+      this.impacts = bundle.impacts;
+      this.render();
     });
-      this.render()
-    });
-  }
+  //   this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
+  //   this.usage = response2.json()["usage"]; // ah ha! 
+  //   this.impacts = response2.json()["impacts"];
+  //   var manDev = response2.json()["manDev"];
+    
+  //   this.impacts.forEach(function(impact){
+  //     if (manDev[impact.appid] !== "unknown") {
+  //       impact.appid = manDev[impact.appid];
+  //     }
+  //   });
+  //   this.render()
+  // });
+}
 
   addOrRemove(newClick: string): string[] {
     //console.log(this._ignoredApps);
@@ -210,7 +216,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.lastMax = 0;
     this._byTime = val;
     this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-    this.render();
+      this.render();
     }));
   }
 

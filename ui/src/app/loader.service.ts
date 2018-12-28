@@ -176,6 +176,13 @@ export class CompanyInfo {
     }
 }
 
+export class IoTDataBundle {
+  usage: any;
+  impacts: any;
+  manDev: any;
+  bursts: any;
+}
+
 export class APIAppInfo {
     app: string;
     title: string;
@@ -461,18 +468,40 @@ export class LoaderService {
           console.info('EventSource Open', thing);
         };
         eventSource.onmessage = score => {
-          console.info("EventSource onMessage", score, score.data);
+          // console.info("EventSource onMessage", score, score.data);
           zone.run(() => {
             observer.next(JSON.parse(score.data));
           });
         };
         eventSource.onerror = error => {
-          console.error("eventSource onerror", error);
+          // console.error("eventSource onerror", error);
           zone.run(() => observer.error(error));
         };
-        (<any>window)._eS = eventSource;
         return () => eventSource.close();
     });        
+  }
+
+  // todo; move this out to loader
+  @memoize(x => 'iotdata')
+  getIoTData(): Promise<IoTDataBundle> {
+    return this.http.get(IOT_API_ENDPOINT + '/api/refine/15').toPromise().then(response2 => {
+      let resp = response2.json(),
+        impacts = resp.impacts,
+        manDev = resp.manDev,
+        bursts = resp.bursts;
+
+      impacts.forEach(function(impact){
+        if (manDev[impact.appid] !== "unknown") {
+          impact.appid = manDev[impact.appid];
+        }
+      });
+      bursts.forEach(function(burst){
+        if (manDev[burst.device] !== "unknown") {
+          burst.device = manDev[burst.device];
+        }
+      });
+      return resp;
+    });
   }
   
   @memoize((appid: string): string => appid)

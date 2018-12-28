@@ -27,7 +27,7 @@ lastDays = 0 #timespan of the last request (for caching)
 class Refine(Resource):
     def get(self, days):
         try:
-            response = make_response(jsonify({"bursts": GetBursts(1), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(1), "usage": GenerateUsage()}))
+            response = make_response(jsonify({"bursts": GetBursts(2), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(2), "usage": GenerateUsage()}))
             # response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
             
             response.headers['Access-Control-Allow-Origin'] = '*'
