@@ -21,18 +21,22 @@ export class AppComponent {
         try { this.actlog.log('routeChange', routeEvent.url); } catch(e) { }
       }      
     });
-    let updates = this.loader.listenToUpdates().subscribe({
-      next(x) {  
-        // console.log("Listen next! ", x); 
-        (<any>window)._listen_count++
-      },
-      error(err) {
-        console.log("Listen error! ", err, err.message);
-      },
-      complete() { 
-        console.log("Listen complete"); 
-      }
-    });
+
+    // startup loader listener
+    this.loader.connectToAsyncDBUpdates();
+
+    // let updates = this.loader.listenToUpdates().subscribe({
+    //   next(x) {  
+    //     // console.log("Listen next! ", x); 
+    //     (<any>window)._listen_count++
+    //   },
+    //   error(err) {
+    //     console.log("Listen error! ", err, err.message);
+    //   },
+    //   complete() { 
+    //     console.log("Listen complete"); 
+    //   }
+    // });
   }
 
   // isActive(instruction: any[]): boolean {

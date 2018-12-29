@@ -28,7 +28,7 @@ interface BurstData {
   styleUrls: ['./refinecat.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class RefinecatComponent {
+export class RefinecatComponent implements AfterViewInit, OnChanges {
   impacts: AppImpactCat[];
 
   // still in use!
@@ -81,8 +81,11 @@ export class RefinecatComponent {
           this.firstDay = undefined;
           this.lastDay = undefined;
 
-          if (this._hoveringApp == this.lastHovering) {this.lastHovering = undefined;}
-          else if (this._hoveringApp != undefined) {this.lastHovering = this._hoveringApp;}
+        if (this._hoveringApp === this.lastHovering) {
+              this.lastHovering = undefined;
+        } else if (this._hoveringApp !== undefined) {
+            this.lastHovering = this._hoveringApp;
+        }
 
           this.getIoTData()
         }
@@ -91,7 +94,7 @@ export class RefinecatComponent {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-        //console.log('hover changed > ', target);
+        // console.log('hover changed > ', target);
         if (target !== this._ignoredApps) {
           this._ignoredApps = target ? target as string[] : [];
           this.render('', 'timeseries'.toString(), this.data, false);
@@ -134,9 +137,11 @@ lessThanDay(d) {
     return (d === "hours" || d === "minutes" || d === "seconds") ? true : false;
 };
 
-ngAfterViewInit(): void { this.init.then(() => {
-    this.getIoTData()
-}) ; }
+ngAfterViewInit(): void { 
+    this.init.then(() => {
+        this.getIoTData()
+    }); 
+}
 
 ngOnChanges(changes: SimpleChanges): void {
     this.getIoTData()
@@ -183,21 +188,22 @@ timeRangePad(dates) {
 };
 
 getDatePadding(minDate, maxDate) {
-    if (maxDate.diff(minDate, 'years') > 0)
+    if (maxDate.diff(minDate, 'years') > 0) {
         return 'months';
-    else if (maxDate.diff(minDate, 'months') > 0)
+    } else if (maxDate.diff(minDate, 'months') > 0) {
         return 'days';
-    else if (maxDate.diff(minDate, 'days') > 0)
+    } else if (maxDate.diff(minDate, 'days') > 0) {
         return 'days';
-    else if (maxDate.diff(minDate, 'hours') > 0)
+    } else if (maxDate.diff(minDate, 'hours') > 0) {
         return 'hours';
-    else if (maxDate.diff(minDate, 'minutes') > 0)
+    } else if (maxDate.diff(minDate, 'minutes') > 0) {
         return 'minutes';
-    else
+    } else {
         return 'seconds';
+    }
 };
 
-selectOnlyDay(d): void{
+selectOnlyDay(d): void {
     var date = moment(d);
     date.hour(0)
     date.minute(0)
@@ -285,9 +291,9 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         .tickSize(-width + margin.right, 0)
         .tickFormat(d3.timeFormat(yFormat));
 
-    //svg.attr("width", width + margin.left + margin.right)
+    // svg.attr("width", width + margin.left + margin.right)
     //   .attr("height", height + margin.top + margin.bottom);
-    //console.log(data)
+    // console.log(data)
     
     var context = svg.append("g")
         .attr("class", "context")
@@ -315,7 +321,7 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         catDict[e] = catNumbers[i];
     });
     
-    //console.log(catDict)
+    // console.log(catDict)
 
     const catDisplacement = 25;
     var self = this;
@@ -336,12 +342,12 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         })
         .attr("r", 9)
         .on("click", function(d) {
-            //console.log(new Date(d.value));
+            // console.log(new Date(d.value));
             self.selectOnlyDay(d.value);
         })
         .append("svg:title")
         .text((d) => { 
-            var ans = this.lessThanDay(padding.pad) && this.lastDay == undefined ? d.category : d.device + ": " + d.category ;
+            var ans = this.lessThanDay(padding.pad) && this.lastDay === undefined ? d.category : d.device + ": " + d.category ;
             return ans; });
         
 
@@ -354,20 +360,16 @@ render(classd, spaced, inputData: BurstData[], enableBrush) {
         .attr("y", 0 + (this.lessThanDay(padding.pad) ? margin.top / 2 : margin.top * 1.5 ))
         .attr("text-anchor", "middle")  
         .style("font-size", "14px") 
-        .text((d) =>
-        {   var ans = this.lastHovering + " Traffic Bursts";
-            if  (padding.minDate.format('DD/MM/YYYY') ==  padding.maxDate.format('DD/MM/YYYY')) {
+        .text((d) => {   
+            var ans = this.lastHovering + " Traffic Bursts";
+            if  (padding.minDate.format('DD/MM/YYYY') ===  padding.maxDate.format('DD/MM/YYYY')) {
                 var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') : "";
             } else {
                 var date = this.lessThanDay(padding.pad) ? " on: " + padding.minDate.format('DD/MM/YYYY') + " to " + padding.maxDate.format('DD/MM/YYYY') : "";
-            }
-            
-            
-            if (this.lastHovering == undefined) {ans =  "All Traffic Bursts"}
-            return ans + date;});
-    
-    
-
+            }            
+            if (this.lastHovering === undefined) {ans =  "All Traffic Bursts"}
+            return ans + date;
+        });
     
     // ----------------------------------------- Legend ---------------------------------------------
     /*

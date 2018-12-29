@@ -11,7 +11,7 @@ import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 const LOCAL_IP_MASK_16 = "192.168.";
 const LOCAL_IP_MASK_24 = "10.";
 
-interface AppImpact {
+export interface AppImpact {
   appid: string;
   companyid: string;
   impact: number;
@@ -37,8 +37,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   private impacts: AppImpact[];
   private init: Promise<any>;
   lastMax = 0;
-  _timeSpan = 'd';
-  _byTime = 'yes';
+  // _timeSpan = 'd';
+  // _byTime = 'yes';
   normaliseImpacts = false;
 
   apps: string[]; // keeps app ordering between renders
@@ -77,7 +77,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.getIoTData();
     
     hover.HoverChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
         this._hoveringApp = target ? target as string : undefined;
         this.render();
@@ -87,14 +87,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
       }
     });
     
-    (<any>window)._rb = this;
+    // (<any>window)._rb = this;
   }
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
@@ -104,11 +104,26 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   // todo; move this out to loader
   getIoTData(): void {
     this.loader.getIoTData().then( bundle => {
-      console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
+      // console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
       this.usage = bundle.usage;
       this.impacts = bundle.impacts;
       this.render();
     });
+
+    var throttledRender = _.throttle(() => this.render(), 1000),
+      this_ = this;
+
+    this.loader.asyncAppImpactChanges().subscribe({
+      next(x: AppImpact) {  
+        console.log('AppImpact CHANGE!', x);
+        // this_.impacts.push(x);
+        // throttledRender();
+      },
+      error(err) { console.log("Listen error! ", err, err.message); },
+      complete() { console.log("Listen complete"); }
+    });
+
+
   //   this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
   //   this.usage = response2.json()["usage"]; // ah ha! 
   //   this.impacts = response2.json()["impacts"];
@@ -124,14 +139,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 }
 
   addOrRemove(newClick: string): string[] {
-    //console.log(this._ignoredApps);
+    // console.log(this._ignoredApps);
     if (this._ignoredApps.indexOf(newClick) > -1) {
       this._ignoredApps = this._ignoredApps.filter(obj => obj !== newClick);
-    }
-    else {
+    } else {
       this._ignoredApps.push(newClick);
     }
-    //console.log(this._ignoredApps);
+    // console.log(this._ignoredApps);
     this.render()
     return this._ignoredApps
   }
@@ -186,49 +200,49 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     return this.linear ? v : Math.max(0, 5000*Math.log(v) + 10);
   }
 
-  compileImpacts(usage: AppUsage[]): Promise<AppImpact[]> {
-    // folds privacy impact in simply by doing a weighted sum over hosts
-    // usage has to be in a standard unit: days, minutes
-    // first, normalise usage
+  // compileImpacts(usage: AppUsage[]): Promise<AppImpact[]> {
+  //   // folds privacy impact in simply by doing a weighted sum over hosts
+  //   // usage has to be in a standard unit: days, minutes
+  //   // first, normalise usage
 
-    const timebased = this.byTime === 'yes',
-      total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-      impacts = usage.map((u) => ({ ...u, impact: 
-		  this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total / 1000000 : 1.0)))
-      }));
+  //   const timebased = this.byTime === 'yes',
+  //     total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
+  //     impacts = usage.map((u) => ({ ...u, impact: 
+	// 	  this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total / 1000000 : 1.0)))
+  //     }));
 
-    return Promise.all(impacts.map((usg): Promise<AppImpact[]> => {
+  //   return Promise.all(impacts.map((usg): Promise<AppImpact[]> => {
 
-      return this._getApp(usg.appid).then(app => {
-        const hosts = app && app.hosts;
-		  if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
+  //     return this._getApp(usg.appid).then(app => {
+  //       const hosts = app && app.hosts;
+	// 	  if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
 
-        return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
-          .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))
-          .then((companies: CompanyInfo[]) => companies.map((company) => ({ appid: usg.appid, companyid: company.id, impact: usg.impact })));
-      });
-    })).then((nested_impacts: AppImpact[][]): AppImpact[] => _.flatten(nested_impacts));
-  }
+  //       return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
+  //         .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))
+  //         .then((companies: CompanyInfo[]) => companies.map((company) => ({ appid: usg.appid, companyid: company.id, impact: usg.impact })));
+  //     });
+  //   })).then((nested_impacts: AppImpact[][]): AppImpact[] => _.flatten(nested_impacts));
+  // }
 
 
-  // accessors for .byTime 
-  set byTime(val) {
-    this.lastMax = 0;
-    this._byTime = val;
-    this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      this.render();
-    }));
-  }
+  // // accessors for .byTime 
+  // set byTime(val) {
+  //   this.lastMax = 0;
+  //   this._byTime = val;
+  //   this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
+  //     this.render();
+  //   }));
+  // }
 
-  get byTime() { return this._byTime; }
+  // get byTime() { return this._byTime; }
 
-  // accessors for timeSpan
-  set timeSpan(val) {
-    this._timeSpan = val;
-    this.render();
-  }
+  // // accessors for timeSpan
+  // set timeSpan(val) {
+  //   this._timeSpan = val;
+  //   this.render();
+  // }
 
-  get timeSpan() {return this._timeSpan; }
+  // get timeSpan() {return this._timeSpan; }
 
   setHoveringTypeHighlight(ctype: string) {
     let svg = this.getSVGElement();
@@ -249,16 +263,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'refinebar');
+    // this.actlog.log('mouseenter', 'refinebar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'refinebar');
+    // this.actlog.log('mouseleave', 'refinebar');
   }  
 
   setHoveringApp(s: string) {
-    if (this._hoveringApp != s) {
+    if (this._hoveringApp !== s) {
       this._hoveringApp = s;
       this.render();
     }
@@ -270,8 +284,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     const svgel = this.getSVGElement();
 
     if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
-
-    //console.log(this._timeSpan);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
@@ -292,14 +304,12 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-
-    let usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
+    let usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       apps = _.uniq(impacts.map((x) => x.appid)),
       companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
         const t = impacts.filter((imp) => imp.companyName === cid && imp.appid === aid);
-        //console.log(t);
         const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
         return t !== undefined ? t.reduce(reducer, 0) : 0;
       },
@@ -308,12 +318,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         total: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
         ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
       }));
-      //console.log(by_company);
 
     if (this.apps === undefined) {
       // sort apps
       apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-		//console.log(apps)
       this.apps = apps;
     } else {
       apps = this.apps;
@@ -385,15 +393,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
         .on('mouseleave', function (d) {
-          //console.log("Leave" + d );
-          //self.setHoveringApp(undefined)
+          // console.log("Leave" + d );
+          // self.setHoveringApp(undefined)
           this_.hover.hoverChanged(undefined);
         })
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
             // unsure why this is dying
-            //console.log("Enter" + this.parentElement.__data__.key );
-            //self.setHoveringApp(this.parentElement.__data__.key);
+            // console.log("Enter" + this.parentElement.__data__.key );
+            // self.setHoveringApp(this.parentElement.__data__.key);
             this_.hover.hoverChanged(this.parentElement.__data__.key);
           } 
         });
@@ -483,7 +491,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => {
-          //console.log(d);
+          // console.log(d);
           this.hover.hoverChanged(d)
         })
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
@@ -506,8 +514,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this._ignoredApps.indexOf(d) == -1 ? d : "Removed: " + d)
-        .style("fill", d => this._ignoredApps.indexOf(d) == -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
+        .text((d) => this._ignoredApps.indexOf(d) === -1 ? d : "Removed: " + d)
+        .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {

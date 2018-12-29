@@ -78,7 +78,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
@@ -123,7 +123,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
         delete this.apps;
       }
-      //this.usage = this.usage_in;
+      // this.usage = this.usage_in;
       this.compileImpacts(this.usage_in).then(impacts => {
         this.render();
       });
@@ -193,9 +193,9 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
-      //console.log(impacts);
+    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 );
+      // console.log(impacts);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     if (this.apps === undefined) {
@@ -266,9 +266,9 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        //.on('click', (d) => {
+        // .on('click', (d) => {
         //  this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        //})
+        // })
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
@@ -300,12 +300,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'geomap');
+    // this.actlog.log('mouseenter', 'geomap');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'geomap');
+    // this.actlog.log('mouseleave', 'geomap');
   }
 
 }

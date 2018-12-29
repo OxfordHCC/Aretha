@@ -75,7 +75,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
@@ -83,7 +83,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     });
     
     this.getIoTData();
-    (<any>window)._rb = this;
+    // (<any>window)._rb = this;
   }
   getIoTData(): void {
     this.loader.getIoTData().then(bundle => {
@@ -191,8 +191,8 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
+    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 );
 
     let apps = _.uniq(impacts.map((x) => x.appid)),
       countries = _.uniq(impacts.map((x) => x.country)),
@@ -219,7 +219,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     // re-order companies
     countries = by_country.map((bc) => bc.country);
 
-    //console.log(by_country)
+    // console.log(by_country)
 
     let margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
@@ -356,12 +356,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'geobar');
+    // this.actlog.log('mouseenter', 'geobar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'geobar');
+    // this.actlog.log('mouseleave', 'geobar');
   }  
 
 }

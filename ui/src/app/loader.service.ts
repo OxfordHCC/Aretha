@@ -6,6 +6,7 @@ import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
+import { AppImpact } from './refinebar/refinebar.component';
 
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
@@ -243,6 +244,8 @@ export class LoaderService {
   _host_blacklist : {[key:string]:boolean};n
 
   apps: { [id: string]: APIAppInfo } = {};
+  updateObservable: Observable<DBUpdate>;
+
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
@@ -461,17 +464,16 @@ export class LoaderService {
     return this.apps[appid];
   }
 
-  listenToUpdates() : Observable<DBUpdate> {
-      return Observable.create(observer => {
+  connectToAsyncDBUpdates() : void {
+      this.updateObservable = Observable.create(observer => {
         const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
         eventSource.onopen = thing => {
           console.info('EventSource Open', thing);
         };
         eventSource.onmessage = score => {
           // console.info("EventSource onMessage", score, score.data);
-          zone.run(() => {
-            observer.next(JSON.parse(score.data));
-          });
+          let incoming = <DBUpdate>JSON.parse(score.data);
+          zone.run(() => observer.next(incoming));
         };
         eventSource.onerror = error => {
           // console.error("eventSource onerror", error);
@@ -479,6 +481,25 @@ export class LoaderService {
         };
         return () => eventSource.close();
     });        
+  }
+
+  asyncAppImpactChanges(): Observable<AppImpact> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) { 
+          if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
+            // this is an impact operation
+            observer.next({
+              appid: x.data.mac,
+              companyid:x.data.src,
+              companyName:undefined,
+              impact:x.data.len
+            });
+          }
+        },
+        error(e) { observer.error(e); }
+      });
+    });
   }
 
   // todo; move this out to loader
@@ -519,7 +540,7 @@ export class LoaderService {
       } else {
         console.warn('null appinfo');
       }
-      //console.log(appinfo);
+      // console.log(appinfo);
       return appinfo;
     });
   }
