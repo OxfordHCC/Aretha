@@ -49,11 +49,13 @@ export class PacketUpdateInfo {
 }
 
 export class DBUpdate {
-  timestamp: string;
-  operation: string;
-  schema: string;
-  table: string;
-  data: PacketUpdateInfo
+  type: string;
+  data: any;
+  // timestamp: string;
+  // operation: string;
+  // schema: string;
+  // table: string;
+  // data: PacketUpdateInfo
 }
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
@@ -486,16 +488,20 @@ export class LoaderService {
   asyncAppImpactChanges(): Observable<AppImpact> {
     return Observable.create(observer => {
       this.updateObservable.subscribe({
-        next(x) { 
-          if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
-            // this is an impact operation
-            observer.next({
-              appid: x.data.mac,
-              companyid:x.data.src,
-              companyName:undefined,
-              impact:x.data.len
-            });
+        next(x) {           
+          if (x.type === 'impact') {
+            // console.info('incoming is an ', x);
+            observer.next(<AppImpact>x.data);
           }
+          // if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
+          //   // this is an impact operation
+          //   observer.next({
+          //     appid: x.data.mac,
+          //     companyid:x.data.src,
+          //     companyName:undefined,
+          //     impact:x.data.len
+          //   });
+          // }
         },
         error(e) { observer.error(e); }
       });

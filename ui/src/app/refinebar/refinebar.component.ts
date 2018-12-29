@@ -116,8 +116,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this.loader.asyncAppImpactChanges().subscribe({
       next(x: AppImpact) {  
         console.log('AppImpact CHANGE!', x);
-        // this_.impacts.push(x);
-        // throttledRender();
+        if (this_.impacts) { 
+          this_.impacts = this_.impacts.concat(x);
+        }
+        throttledRender();
       },
       error(err) { console.log("Listen error! ", err, err.message); },
       complete() { console.log("Listen complete"); }

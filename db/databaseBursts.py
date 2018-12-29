@@ -24,12 +24,13 @@ class dbManager():
             def subp(): 
                 while 1:
                     if select.select([conn],[],[],5) == ([],[],[]):
-                        print("Timeout")
+                        # print("Timeout")
+                        pass
                     else:
                         conn.poll()
                         while conn.notifies:
                             notify = conn.notifies.pop(0)
-                            print("Got NOTIFY:", notify.pid, notify.channel, notify.payload)
+                            # print("Got NOTIFY:", notify.pid, notify.channel, notify.payload)
                             if cb is not None:
                                 cb(notify.payload)
             thread = threading.Thread(target=subp)
