@@ -27,7 +27,9 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 
 ## Run (systemd service)
 
-1. Copy `service/iotrefine.service` to `/etc/systemd/system/`
+1. Copy `service/iotrefine-sample.service` to `/etc/systemd/system/iotrefine.service` and edit in the marked fields
+
+2. Copy `service/daemon-sample.sh` to `service/daemon.sh` and edit the marked fields
 
 2. Start and stop the service by running `sudo systemctl {start|stop} iotrefine`
 
