@@ -1,0 +1,12 @@
+[Unit]
+Description=IoT Refine
+
+[Service]
+Type=simple
+User=roo
+WorkingDirectory=insert_path_to_iotrefine
+ExecStart=insert_path_to_daemon
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
