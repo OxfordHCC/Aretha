@@ -16,6 +16,8 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 
 4. Configure the database from the schema: `/scripts/resetDb.py` (dbname=`testdb` user=`postgres` password=`password`)
 
+5. Copy `config-sample.cfg` to `config.cfg` and change values as appropriate
+
 ## Run (manually)
 1. Run `ng serve` in \ui
 
