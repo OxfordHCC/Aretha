@@ -9,3 +9,5 @@ categorisation/__pycache__/
 tests/__pycache__/
 
 *node_modules*
+
+scripts/config.ini
