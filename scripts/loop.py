@@ -17,7 +17,7 @@ DB_MANAGER = databaseBursts.dbManager()
 INTERVAL = 5
 modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
 config = configparser.ConfigParser()
-config.read("config.cfg")
+config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.cfg")
 
 #handler for signals (don't want to stop processing packets halfway through)
 class sigTermHandler:
