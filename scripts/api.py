@@ -9,6 +9,7 @@ import os
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts
+import configparser
 
 DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
@@ -17,6 +18,8 @@ ID_POINTER = 0 #so we know which packets we've seen (for caching)
 impacts = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
 lastDays = 0 #timespan of the last request (for caching)
+config = configparser.ConfigParser()
+config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.cfg")
 
 #=============
 #api endpoints
@@ -195,4 +198,4 @@ if __name__ == '__main__':
     api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
 
     #Start the flask server
-    app.run(port=4201, threaded=True, host='0.0.0.0')
+    app.run(port=int(config['api']['port']), threaded=True, host='0.0.0.0')
