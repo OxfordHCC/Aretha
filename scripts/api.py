@@ -159,6 +159,7 @@ def CompileImpacts(impacts, packets):
     # macs are gonna be unique in impacts 
 
     # iterating over impacts [should be] safe at this point
+    
     result = []
     for mmac, ipimpacts in impacts.items():
         for ip, impact in ipimpacts.items():
@@ -243,7 +244,10 @@ def GenerateUsage():
 _events = []
 
 def packets_insert_to_impact(packet):
-    return CompileImpacts(dict(),[packet])
+    print("packets insert to packet ", packet)
+    impacts = CompileImpacts(dict(),[packet])
+    print("resulting impacts length ", len(impacts))
+    return impacts
 
 def event_stream():
     import time
