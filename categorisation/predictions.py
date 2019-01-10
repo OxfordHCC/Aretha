@@ -241,8 +241,11 @@ class Predictor():
         for externalIP in ext.keys():
             if ext[externalIP]*1.0 / total*1.0 > percentCutoff:
                 c_name = DB_MANAGER.execute("SELECT c_name FROM geodata WHERE ip=%s LIMIT 1", (externalIP,), False)
-                if ext[externalIP] == total:
-                    return "Exclusively " + c_name[0]
-                else:
-                    return "Mostly " + c_name[0]
+                try:
+                    if ext[externalIP] == total:
+                        return "Exclusively " + c_name[0]
+                    else:
+                        return "Mostly " + c_name[0]
+                except:
+                    return "Unknown"
         return "Unknown"
