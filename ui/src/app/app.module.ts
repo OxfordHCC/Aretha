@@ -14,9 +14,9 @@ import { UsageConnectorService } from './usage-connector.service';
 import { CompanybarComponent } from './companybar/companybar.component';
 import { Ng2CompleterModule } from 'ng2-completer';
 
-import { SingleDisplayComponent } from './single-display/single-display.component';
-import { TiledDisplayComponent } from './tiled-display/tiled-display.component';
 // no longer used with IoTRefine => 
+// import { SingleDisplayComponent } from './single-display/single-display.component';
+// import { TiledDisplayComponent } from './tiled-display/tiled-display.component';
 // import { CompareComponent } from './compare/compare.component';
 // import { CompareContainerComponent } from './compare-container/compare-container.component';
 // 
@@ -50,8 +50,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     RefinebarComponent,
-    SingleDisplayComponent,
-    TiledDisplayComponent,    
+    // SingleDisplayComponent,
+    // TiledDisplayComponent,    
     ErrorComponent,
     CompanybarComponent,
     CompanyListComponent,
