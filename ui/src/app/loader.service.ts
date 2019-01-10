@@ -485,13 +485,13 @@ export class LoaderService {
     });        
   }
 
-  asyncAppImpactChanges(): Observable<AppImpact> {
+  asyncAppImpactChanges(): Observable<AppImpact[]> {
     return Observable.create(observer => {
       this.updateObservable.subscribe({
         next(x) {           
           if (x.type === 'impact') {
             // console.info('incoming is an ', x);
-            observer.next(<AppImpact>x.data);
+            observer.next(<AppImpact[]>x.data);
           }
           // if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
           //   // this is an impact operation

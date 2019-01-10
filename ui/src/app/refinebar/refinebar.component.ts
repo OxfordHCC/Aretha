@@ -114,10 +114,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       this_ = this;
 
     this.loader.asyncAppImpactChanges().subscribe({
-      next(x: AppImpact) {  
-        console.log('AppImpact CHANGE!', x);
+      next(i: AppImpact[]) {  
+        console.log('AppImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
         if (this_.impacts) { 
-          this_.impacts = this_.impacts.concat(x);
+          this_.impacts = this_.impacts.concat(i);
         }
         throttledRender();
       },

@@ -246,23 +246,26 @@ _events = []
 def event_stream():
     import time
 
-    def packets_insert_to_impact(packets):
-        print("packets insert to pitt ", packets)
+    def packets_insert_to_impact(packets):        
         impacts = CompileImpacts(dict(),packets)
-        print("resulting impacts length ", len(impacts))
+        print("packets insert to pitt ", len(packets), " resulting impacts len ~ ", len(impacts))
         return impacts
     
     try:
         while True:
             time.sleep(0.5)
             insert_buf = []
+
             while len(_events) > 0:
                 event_str = _events.pop(0)
                 event = json.loads(event_str)
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'packets':
                     event['data']['len'] = int(event['data'].get('len'))
                     insert_buf.append(event["data"])
-            yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
+
+            if len(insert_buf) > 0: 
+                yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
+
     except GeneratorExit:
         return;
     except:
