@@ -255,6 +255,8 @@ def event_stream():
         while True:
             time.sleep(0.5)
             insert_buf = []
+            geo_updates = []
+            device_updates = []
 
             while len(_events) > 0:
                 event_str = _events.pop(0)
@@ -262,9 +264,21 @@ def event_stream():
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'packets':
                     event['data']['len'] = int(event['data'].get('len'))
                     insert_buf.append(event["data"])
+                if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'geodata':
+                    print("Geodata update", event["data"])
+                    geo_updates.append(event["data"])
+                if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'devices':
+                    print("Device update", event["data"])                    
+                    device_updates.append(event["data"])
 
             if len(insert_buf) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
+            if len(geo_updates) > 0:
+                print("Got a geo update, must reset impact cache.")
+                ResetImpactCache()
+                yield "data: %s\n\n" % json.dumps({"type":'geo_update_flush_impacts'})
+            if len(device_updates) > 0: 
+                yield "data: %s\n\n" % json.dumps({"type":'device_updates', "data": packets_insert_to_impact(insert_buf)})
 
     except GeneratorExit:
         return;

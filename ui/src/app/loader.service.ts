@@ -492,6 +492,8 @@ export class LoaderService {
           if (x.type === 'impact') {
             // console.info('incoming is an ', x);
             observer.next(<AppImpact[]>x.data);
+          } else {
+            console.info("Got an event of type ", x.type, "skipping > ", x);
           }
           // if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
           //   // this is an impact operation

@@ -50,9 +50,18 @@ FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'burst'
 );
 
-CREATE TRIGGER packets_notify AFTER INSERT OR UPDATE OR DELETE ON devices
+CREATE TRIGGER device_notify AFTER INSERT OR UPDATE OR DELETE ON devices
 FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'mac',
   'manufacturer',
   'name'
+);
+
+CREATE TRIGGER geodata_notify AFTER INSERT OR UPDATE OR DELETE ON geodata
+FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
+  'ip',
+  'lat',
+  'lon',
+  'c_code',
+  'c_name'
 );
