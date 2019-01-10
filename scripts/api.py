@@ -243,32 +243,33 @@ def GenerateUsage():
 
 _events = []
 
-def packets_insert_to_impact(packet):
-    print("packets insert to packet ", packet)
-    impacts = CompileImpacts(dict(),[packet])
-    print("resulting impacts length ", len(impacts))
-    return impacts
-
 def event_stream():
     import time
-    while True:
-        time.sleep(0.5)
-        while len(_events) > 0:
-            try:
+
+    def packets_insert_to_impact(packets):
+        print("packets insert to pitt ", packets)
+        impacts = CompileImpacts(dict(),packets)
+        print("resulting impacts length ", len(impacts))
+        return impacts
+    
+    try:
+        while True:
+            time.sleep(0.5)
+            insert_buf = []
+            while len(_events) > 0:
                 event_str = _events.pop(0)
-                # print("parsing event_str %s" % event_str)
                 event = json.loads(event_str)
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'packets':
-                    # print("gettingp packets insert to impact", event["data"])
                     event['data']['len'] = int(event['data'].get('len'))
-                    yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(event["data"])})
-            except GeneratorExit:
-                return;
-            except:
-                print("Unexpected error:", sys.exc_info())
-                traceback.print_exc()                
-                return
-                # sys.exit(-1)                
+                    insert_buf.append(event["data"])
+            yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
+    except GeneratorExit:
+        return;
+    except:
+        print("Unexpected error:", sys.exc_info())
+        traceback.print_exc()                
+        return
+        # sys.exit(-1)                
 
 @app.route('/stream')
 def stream():
