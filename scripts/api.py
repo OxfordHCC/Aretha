@@ -231,8 +231,8 @@ def GetImpact(mac, ip, impacts=_impact_cache):
 
 #clear impact dictionary and packet id pointer
 def ResetImpactCache():
-    global _impacts_cache, ID_POINTER
-    _impacts_cache = dict()
+    global _impact_cache, ID_POINTER
+    _impact_cache = dict()
     ID_POINTER = 0
 
 #generate fake usage for devices (a hack so they show up in refine)
