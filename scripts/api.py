@@ -198,7 +198,7 @@ def GetImpacts(days):
 
     impacts = copy.deepcopy(_impact_cache) # shallow copy
     # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(days) + " DAY'"))
+    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(days) + " DAYS'"))
     packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
     # pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
 
@@ -276,9 +276,9 @@ def event_stream():
             if len(geo_updates) > 0:
                 print("Got a geo update, must reset impact cache.")
                 ResetImpactCache()
-                yield "data: %s\n\n" % json.dumps({"type":'geo_update_flush_impacts'})
+                yield "data: %s\n\n" % json.dumps({"type":'geodata'})
             if len(device_updates) > 0: 
-                yield "data: %s\n\n" % json.dumps({"type":'device_updates', "data": packets_insert_to_impact(insert_buf)})
+                yield "data: %s\n\n" % json.dumps({"type":'device', "data": packets_insert_to_impact(insert_buf)})
 
     except GeneratorExit:
         return;

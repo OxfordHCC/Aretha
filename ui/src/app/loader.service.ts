@@ -6,7 +6,7 @@ import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
-import { AppImpact } from './refinebar/refinebar.component';
+import { AppImpact, AppDevice } from './refinebar/refinebar.component';
 
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
@@ -466,52 +466,95 @@ export class LoaderService {
     return this.apps[appid];
   }
 
+  // connectToAsyncDBUpdates() : void {
+  //     this.updateObservable = Observable.create(observer => {
+  //       const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+  //       eventSource.onopen = thing => {
+  //         console.info('EventSource Open', thing);
+  //       };
+  //       eventSource.onmessage = score => {
+  //         // console.info("EventSource onMessage", score, score.data);
+  //         let incoming = <DBUpdate>JSON.parse(score.data);
+  //         zone.run(() => observer.next(incoming));
+  //       };
+  //       eventSource.onerror = error => {
+  //         // console.error("eventSource onerror", error);
+  //         zone.run(() => observer.error(error));
+  //       };
+  //       return () => eventSource.close();
+  //   });        
+  // }
   connectToAsyncDBUpdates() : void {
-      this.updateObservable = Observable.create(observer => {
-        const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+    let observers = [],eventSource; 
+
+    this.updateObservable = Observable.create(observer => {
+      observers.push(observer);
+      if (observers.length === 1 && eventSource === undefined) {       
+        eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
         eventSource.onopen = thing => {
           console.info('EventSource Open', thing);
         };
         eventSource.onmessage = score => {
           // console.info("EventSource onMessage", score, score.data);
           let incoming = <DBUpdate>JSON.parse(score.data);
-          zone.run(() => observer.next(incoming));
+          zone.run(() => observers.map(obs => obs.next(incoming)))
         };
         eventSource.onerror = error => {
           // console.error("eventSource onerror", error);
-          zone.run(() => observer.error(error));
-        };
-        return () => eventSource.close();
-    });        
-  }
+          zone.run(() => observers.map(obs => obs.error(error)));
+        };              
+      }
+      return () => { if (eventSource) { eventSource.close(); } }
+  });        
+}
+
 
   asyncAppImpactChanges(): Observable<AppImpact[]> {
     return Observable.create(observer => {
       this.updateObservable.subscribe({
         next(x) {           
           if (x.type === 'impact') {
-            // console.info('incoming is an ', x);
             observer.next(<AppImpact[]>x.data);
-          } else {
-            console.info("Got an event of type ", x.type, "skipping > ", x);
-          }
-          // if (['INSERT','UPDATE'].indexOf(x.operation) >= 0 && x.table === 'packets') { 
-          //   // this is an impact operation
-          //   observer.next({
-          //     appid: x.data.mac,
-          //     companyid:x.data.src,
-          //     companyName:undefined,
-          //     impact:x.data.len
-          //   });
-          // }
+            return true;
+          } 
+          return false;
+        },
+        error(e) { observer.error(e); }
+      });
+    });
+  }
+  asyncGeoUpdateChanges(): Observable<any[]> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) {           
+          if (x.type === 'geodata') {
+            observer.next(x.data);
+            return true;
+          } 
+          return false;
+        },
+        error(e) { observer.error(e); }
+      });
+    });
+  }
+  asyncDeviceChanges(): Observable<AppDevice[]> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) {           
+          if (x.type === 'device') {
+            observer.next(<AppDevice[]>x.data);
+            return true;
+          } 
+          return false;
         },
         error(e) { observer.error(e); }
       });
     });
   }
 
+
   // todo; move this out to loader
-  @memoize(x => 'iotdata')
+  // @memoize(x => 'iotdata')
   getIoTData(): Promise<IoTDataBundle> {
     return this.http.get(IOT_API_ENDPOINT + '/api/refine/15').toPromise().then(response2 => {
       let resp = response2.json(),

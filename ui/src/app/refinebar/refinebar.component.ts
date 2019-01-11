@@ -17,6 +17,11 @@ export interface AppImpact {
   impact: number;
   companyName: string;
 };
+export interface AppDevice {
+  mac : string;
+  manufacturer: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-refinebar',
@@ -103,16 +108,20 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   // todo; move this out to loader
   getIoTData(): void {
-    this.loader.getIoTData().then( bundle => {
-      // console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
-      this.usage = bundle.usage;
-      this.impacts = bundle.impacts;
-      this.render();
-    });
 
-    var throttledRender = _.throttle(() => this.render(), 1000),
-      this_ = this;
+    let this_ = this,
+      refresh = () => {
+        this_.loader.getIoTData().then( bundle => {
+          // console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
+          this_.usage = bundle.usage;
+          this_.impacts = bundle.impacts;
+          this_.render();
+        });
+      },
+      throttledRender = _.throttle(() => this.render(), 500),
+      throttledRefresh = _.throttle(refresh, 1000);
 
+    refresh();
     this.loader.asyncAppImpactChanges().subscribe({
       next(i: AppImpact[]) {  
         console.log('AppImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
@@ -125,8 +134,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       complete() { console.log("Listen complete"); }
     });
 
+    this.loader.asyncGeoUpdateChanges().subscribe({
+      next(a: any[]) {
+        console.info("GOT GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
+        if (this_.impacts) { 
+          throttledRefresh();
+        }        
+      }
+    });
 
-  //   this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
+      //   this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
   //   this.usage = response2.json()["usage"]; // ah ha! 
   //   this.impacts = response2.json()["impacts"];
   //   var manDev = response2.json()["manDev"];
