@@ -485,7 +485,7 @@ export class LoaderService {
   //   });        
   // }
   connectToAsyncDBUpdates() : void {
-    let observers = [],eventSource; 
+    let observers = [], eventSource; 
 
     this.updateObservable = Observable.create(observer => {
       observers.push(observer);
@@ -556,7 +556,7 @@ export class LoaderService {
   // todo; move this out to loader
   // @memoize(x => 'iotdata')
   getIoTData(): Promise<IoTDataBundle> {
-    return this.http.get(IOT_API_ENDPOINT + '/api/refine/15').toPromise().then(response2 => {
+    return this.http.get(IOT_API_ENDPOINT + '/api/refine/5').toPromise().then(response2 => {
       let resp = response2.json(),
         impacts = resp.impacts,
         manDev = resp.manDev,

@@ -14,16 +14,17 @@ api = Api(app) #initialise the flask server
 ID_POINTER = 0 #so we know which packets we've seen (for caching)
 _impact_cache = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
-lastDays = 0 #timespan of the last request (for caching)
+lastN = None
+lastUnits = None
 
 #=============
 #api endpoints
 
 #return aggregated data for the given time period (in days, called by refine)
 class Refine(Resource):
-    def get(self, days):
+    def get(self, n):
         try:
-            response = make_response(jsonify({"bursts": GetBursts(2), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(2), "usage": GenerateUsage()}))
+            response = make_response(jsonify({"bursts": GetBursts(n), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(n), "usage": GenerateUsage()}))
             # response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
             
             response.headers['Access-Control-Allow-Origin'] = '*'
@@ -50,13 +51,13 @@ class SetDevice(Resource):
 
 #return all traffic bursts for the given time period (in days)
 class Bursts(Resource):
-    def get(self, days):
-        return jsonify(GetBursts(days))
+    def get(self, n):
+        return jsonify(GetBursts(n))
 
 #return all impacts for the given time period (in days)
 class Impacts(Resource):
-    def get(self, days):
-        return jsonify(GetImpacts(days))
+    def get(self, n):
+        return jsonify(GetImpacts(n))
 
 #================
 #internal methods
@@ -91,8 +92,8 @@ def GetGeo(ip):
         return geo
 
 #get bursts for the given time period (in days)
-def GetBursts(days):
-    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(days) + " DAY'",))
+def GetBursts(n, units="MINUTES"):
+    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(n) + " " + units + "'",)) #  " DAY'",))
     result = []
     epoch = datetime(1970, 1, 1, 0, 0)
     for burst in bursts:
@@ -188,17 +189,18 @@ def CompileImpacts(impacts, packets):
     return result
 
 
-def GetImpacts(days):
-    global geos, ID_POINTER, lastDays, _impact_cache
-    print("GetImpacts: days::", days, " ID>::", ID_POINTER, " lastDays::", lastDays)
+
+def GetImpacts(n, units="MINUTES"):
+    global geos, ID_POINTER, lastN, lastUnits, _impact_cache
+    print("GetImpacts: ::", n, ' ', units, " ID>::", ID_POINTER, " lastN::", lastN, " lastUnits", lastUnits)
     #we can only keep the cache if we're looking at the same packets as the previous request
-    if days is not lastDays:
+    if n != lastN or units != lastUnits:
         print("ResetImpactCache()")
         ResetImpactCache()
 
     impacts = copy.deepcopy(_impact_cache) # shallow copy
     # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(days) + " DAYS'"))
+    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(n) + " " + units + "'")) 
     packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
     # pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
 
@@ -213,7 +215,8 @@ def GetImpacts(days):
             ID_POINTER = max_pktid        
 
     _impact_cache = impacts    
-    lastDays = days
+    lastN = n
+    lastUnits = units
     return result #shipit
 
 #getter method for impacts
@@ -307,10 +310,10 @@ if __name__ == '__main__':
         print("Using local IP mask %s" % localipmask)    
 
     #Register the API endpoints with flask
-    api.add_resource(Refine, '/api/refine/<days>')
+    api.add_resource(Refine, '/api/refine/<n>')
     api.add_resource(Devices, '/api/devices')
     api.add_resource(Bursts, '/api/bursts/<days>')
-    api.add_resource(Impacts, '/api/impacts/<days>')
+    api.add_resource(Impacts, '/api/impacts/<n>')
     api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
 
     # watch for listen events -- not sure if this has to be on its own connection
