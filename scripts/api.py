@@ -11,11 +11,7 @@ LOCAL_IP_MASK = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can f
 DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
-ID_POINTER = 0 #so we know which packets we've seen (for caching)
-_impact_cache = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
-lastN = None
-lastUnits = None
 
 #=============
 #api endpoints
@@ -191,36 +187,23 @@ def CompileImpacts(impacts, packets):
 
 
 def GetImpacts(n, units="MINUTES"):
-    global geos, ID_POINTER, lastN, lastUnits, _impact_cache
-    print("GetImpacts: ::", n, ' ', units, " ID>::", ID_POINTER, " lastN::", lastN, " lastUnits", lastUnits)
+    global geos
+    print("GetImpacts: ::", n, ' ', units)
     #we can only keep the cache if we're looking at the same packets as the previous request
-    if n != lastN or units != lastUnits:
-        print("ResetImpactCache()")
-        ResetImpactCache()
 
-    impacts = copy.deepcopy(_impact_cache) # shallow copy
+    impacts = dict() # copy.deepcopy(_impact_cache) 
     # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(n) + " " + units + "'")) 
+    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s) ORDER BY id", ("'" + str(n) + " " + units + "'",)) 
     packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
-    # pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
 
+    # pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
      # {'id': '212950', 'dst': '224.0.0.251', 'len': '101', 'mac': '78:4f:43:64:62:01', 'src': '192.168.0.24', 'burst': None}
 
     result = CompileImpacts(impacts, packets)
-
-    if len(packets) > 0: 
-        # we didn't get any packets so we'll start next time with what we get.
-        max_pktid = max([pkt["id"] for pkt in packets])
-        if ID_POINTER < max_pktid:
-            ID_POINTER = max_pktid        
-
-    _impact_cache = impacts    
-    lastN = n
-    lastUnits = units
     return result #shipit
 
-#getter method for impacts
-def GetImpact(mac, ip, impacts=_impact_cache):
+# Getter method for impacts - nb: i think this is no longer used
+def GetImpact(mac, ip, impacts):
     if mac in impacts:
         if ip in impacts[mac]:
             return impacts[mac][ip]
@@ -229,13 +212,7 @@ def GetImpact(mac, ip, impacts=_impact_cache):
     else:
         return 0 #impact does not exist
 
-#clear impact dictionary and packet id pointer
-def ResetImpactCache():
-    global _impact_cache, ID_POINTER
-    _impact_cache = dict()
-    ID_POINTER = 0
-
-#generate fake usage for devices (a hack so they show up in refine)
+# Generate fake usage for devices (a hack so they show up in refine)
 def GenerateUsage():
     usage = []
     counter = 1
@@ -277,8 +254,11 @@ def event_stream():
             if len(insert_buf) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
             if len(geo_updates) > 0:
-                print("Got a geo update, must reset impact cache.")
-                ResetImpactCache()
+                # ResetImpactCache()
+                # updated ip should be 
+                for update in geo_updates:
+                    print("Got a geo update for %s, must reset GEO cache." % update["ip"])
+                    geos.pop(update["ip"], None)
                 yield "data: %s\n\n" % json.dumps({"type":'geodata'})
             if len(device_updates) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'device', "data": packets_insert_to_impact(insert_buf)})
