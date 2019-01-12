@@ -1,11 +1,6 @@
 #! /usr/bin/env python3
 
-import sys
-import time
-import os
-import signal
-import requests
-import re
+import sys, time, os, signal, requests, re, argparse
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts
@@ -14,6 +9,9 @@ import predictions
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
 INTERVAL = 1
+LOCAL_IP_MASK = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+DEBUG = False
+
 config = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
 
 #handler for signals (don't want to stop processing packets halfway through)
@@ -117,29 +115,31 @@ def burstPrediction(devices):
         DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 def processGeos():
-    raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
+    # raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
+    raw_ips = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
+        
+    # print("raw_ips", raw_ips)
+    
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
-    local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
     known_ips = []
 
     for row in raw_geos:
         known_ips.append(row[0])
 
-    for dst,src in raw_ips:
-        external_ip = None
-        if local_ip_mask.match(dst) is not None:
-            external_ip = src
-        else:
-            external_ip = dst
-
-        if external_ip not in known_ips:
-            data = requests.get('https://api.ipdata.co/' + external_ip + '?api-key=***REMOVED***')
+    for ip in raw_ips:
+        if LOCAL_IP_MASK.match(ip) is not None:
+            # local ip, so skip
+            continue
+        if ip not in known_ips:
+            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=***REMOVED***')
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, data['latitude'], data['longitude'], data['country_code'], data['organisation'][:20]))
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'], data['organisation'][:20]))
             else:
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, "0", "0", "XX", "unknown"))
-        known_ips.append(external_ip)
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
+            known_ips.append(ip)
+
+            if DEBUG: print("Adding to known IPs ", ip)
 
 def processMacs():
     raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
@@ -155,6 +155,27 @@ def processMacs():
 #============
 #loop control
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    parser.add_argument('--sleep', dest="sleep", type=float, help="Specify sleep in sec (can be fractions)")
+    parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
+    parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
+    parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
+    args = parser.parse_args()
+
+    if args.localip is not None:
+        localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
+        print("Using local IP mask %s" % localipmask)    
+        LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
+
+    if args.sleep is not None:
+        print("Setting sleep interval %s seconds." % args.sleep)    
+        INTERVAL = args.sleep
+
+    DEBUG = args.debug
+
     #register the signal handler
     handler = sigTermHandler() 
 
@@ -163,8 +184,12 @@ if __name__ == '__main__':
         processGeos()
         processMacs()
         devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
-        packetBurstification(devices)
-        burstPrediction(devices)
+        if args.burst:
+            print("Doing burstification")
+            packetBurstification(devices)
+        if args.predict:
+            print("Doing prediction")
+            burstPrediction(devices)
 
         #exit gracefully if we were asked to shutdown
         if handler.exit:

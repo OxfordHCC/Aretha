@@ -160,7 +160,10 @@ def CompileImpacts(impacts, packets):
     result = []
     for mmac, ipimpacts in impacts.items():
         for ip, impact in ipimpacts.items():
-            item = geos[ip].copy() # hard crash here if geos[ip] is none, we should be careful about this
+            item = geos.get(ip, None)
+            if item is None:  # we might have just killed the key 
+                continue
+            item = item.copy() 
             # note: geos[ip] should never be none because the invariant is that packet_to_impact has been
             # called BEFORE this point, and that populates the geos. Yeah, ugly huh. I didn't write this
             # code, don't blame me!
@@ -280,6 +283,7 @@ def stream():
 #main part of the script
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+
     parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
     args = parser.parse_args()
 

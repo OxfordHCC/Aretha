@@ -100,7 +100,7 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
-    parser.add_argument('--cinterval', dest="cinterval", type=int, help="Commit interval in seconds", default=5)
+    parser.add_argument('--cinterval', dest="cinterval", type=float, help="Commit interval in seconds", default=5)
     parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
     parser.add_argument('--debug', dest='debug', action='store_true')
     args = parser.parse_args()
