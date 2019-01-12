@@ -3,13 +3,13 @@
 import sys, time, os, signal, requests, re, argparse, json
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-import databaseBursts
+import databaseBursts, rutils
 import predictions
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
 INTERVAL = 1
-LOCAL_IP_MASK = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 DEBUG = False
 RAW_IPS = None
 _events = [] # async db events

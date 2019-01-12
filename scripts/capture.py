@@ -1,11 +1,11 @@
 #! /usr/bin/env python3
 
-import pyshark, datetime, psycopg2, re, argparse, sys, traceback
+import pyshark, datetime, psycopg2, re, argparse, sys, traceback, rutils
 
 #constants
 COMMIT_INTERVAL = 5
 DEBUG = False
-MANUAL_LOCAL_IP = None
+local_ip_mask = rutils.make_localip_mask()
 
 #initialise vars
 timestamp = 0 
@@ -14,11 +14,11 @@ queue = []
 def DatabaseInsert(packets):
     global timestamp
     print("packets ", len(packets))
-    if MANUAL_LOCAL_IP is None:
-        local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
-    else: 
-        print('Using local IP mask:', '^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.'))
-        local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.')) #so we can filter for local ip addresses
+    # if MANUAL_LOCAL_IP is None:
+    #     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+    # else: 
+    #     print('Using local IP mask:', '^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.'))
+    #     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.')) #so we can filter for local ip addresses
     
     #open db connection
     conn = psycopg2.connect("dbname=testdb user=postgres password=password")
@@ -101,7 +101,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
     parser.add_argument('--cinterval', dest="cinterval", type=float, help="Commit interval in seconds", default=5)
-    parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
     parser.add_argument('--debug', dest='debug', action='store_true')
     args = parser.parse_args()
 
@@ -111,8 +111,8 @@ if __name__=='__main__':
         print(parser.print_help())
         sys.exit(-1)
 
-    if args.localip is not None:
-        MANUAL_LOCAL_IP = args.localip
+    # if args.localip is not None:
+    #     MANUAL_LOCAL_IP = args.localip
 
     log("Configuring capture on ", args.interface)
     
@@ -128,6 +128,6 @@ if __name__=='__main__':
     log("Starting capture")
 
     capture.apply_on_packets(QueuedCommit) #, timeout=30)
-    capture.close();
+    capture.close()
 
     

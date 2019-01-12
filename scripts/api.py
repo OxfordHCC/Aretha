@@ -5,9 +5,9 @@ from flask_restful import Resource, Api
 import json, re, sys, os, traceback, copy, argparse
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts
+import databaseBursts, rutils
 
-LOCAL_IP_MASK = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
@@ -284,13 +284,13 @@ def stream():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
     args = parser.parse_args()
 
-    if args.localip is not None:
-        localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-        LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
-        print("Using local IP mask %s" % localipmask)    
+    # if args.localip is not None:
+    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
+    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
+    #     print("Using local IP mask %s" % localipmask)    
 
     #Register the API endpoints with flask
     api.add_resource(Refine, '/api/refine/<n>')
