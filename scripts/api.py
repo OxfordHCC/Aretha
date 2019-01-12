@@ -256,9 +256,8 @@ def event_stream():
             if len(geo_updates) > 0:
                 # ResetImpactCache()
                 # updated ip should be 
-                for update in geo_updates:
-                    print("Got a geo update for %s, must reset GEO cache." % update["ip"])
-                    geos.pop(update["ip"], None)
+                print("Got a geo updates for %s, must reset GEO cache." % [u["ip"] for u in geo_updates])
+                [geos.pop(u["ip"], None) for u in geo_updates]
                 yield "data: %s\n\n" % json.dumps({"type":'geodata'})
             if len(device_updates) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'device', "data": packets_insert_to_impact(insert_buf)})
