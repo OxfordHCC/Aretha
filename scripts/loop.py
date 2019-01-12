@@ -181,17 +181,17 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
     parser.add_argument('--sleep', dest="sleep", type=float, help="Specify sleep in sec (can be fractions)")
     parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
     parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
     parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
     args = parser.parse_args()
 
-    if args.localip is not None:
-        localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-        print("Using local IP mask %s" % localipmask)    
-        LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
+    # if args.localip is not None:
+    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
+    #     print("Using local IP mask %s" % localipmask)    
+    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
 
     if args.sleep is not None:
         print("Setting sleep interval %s seconds." % args.sleep)    
