@@ -124,7 +124,33 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         // }, []);
         this.zone.run(() => {
           console.info('geomap updating impacts');
-          this_.impacts = this_.impacts_in.map(impact => ({ impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }));        
+          let iin = this_.impacts_in;
+          // this_.impacts = iin.map(impact => ({ impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }));        
+
+          let apps = _.uniq(iin.map((x) => x.appid)),
+              companies = _.uniq(iin.map((x) => x.companyName)),
+              get_impact = (cname, aid) => {
+                const t = iin.filter((imp) => imp.companyName === cname && imp.appid === aid);
+                const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+                return t !== undefined ? t.reduce(reducer, 0) : 0;
+              },
+              by_company = apps.map(app => {
+                return companies.map((c) => {
+                  return {
+                    company: c,
+                    impact: get_impact(c, app),
+                    geo: iin.filter((imp) => imp.companyName === c && imp.appid === app)[0],
+                    appid: app
+                  };
+                });
+              });
+          this_.impacts = _.flatten(by_company).filter(x => x.geo);
+          console.info('impacts ', this_.impacts);
+
+          //     company: c,
+          //     impact: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
+          //   }));
+          
           this_.render();
         });
       }
