@@ -5,6 +5,6 @@
     <div *ngIf='!mode' class="gridright">
         <!-- <app-refinecat [showLegend]='false'></app-refinecat> -->
         <app-geomap [impacts]="impacts" [impactChanges]="impactChanges" [appusage]="usage" [showLegend]='false'></app-geomap>
-        <!-- <app-geobar [appusage]="usage" [showLegend]='false'></app-geobar> -->
+        <app-geobar [impacts]="impacts" [impactChanges]="impactChanges" [appusage]="usage" [showLegend]='false'></app-geobar>
     </div>
 </div>
