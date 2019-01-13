@@ -35,7 +35,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   private _impact_listener : Subscription;
   @Input('impacts') impacts_in : AppImpact[];
 
-  private usage: AppUsage[];
+  @Input('appusage') usage: AppUsage[];
   private impacts: AppImpactGeo[];
   private init: Promise<any>;
 
@@ -48,7 +48,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
+  // @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
@@ -111,17 +111,17 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     let convert_in = () => {
       if (this.impacts_in) { 
-        this.impacts = this.impacts_in.map(impact => ({ appid: impact.appid, country: (<any>impact).country_code !== 'XX' ? (<any>impact).country_code : 'Unknown', country_code: (<any>impact).country_code, impact: impact.impact }));
+        this.impacts = this.impacts_in.map(impact => ({ ...impact, appid: impact.appid, country: (<any>impact).country_code !== 'XX' ? (<any>impact).country_code : 'Unknown', country_code: (<any>impact).country_code, impact: impact.impact }));
+        // console.log('geobar impacts ', this.impacts);
         this.zone.run(() => this.render());
       }
     };
-    
-    if (!this.usage_in) { return; }
+    // if (!this.usage_in) { return; }
 
     if (this.impactChanges && this._impact_listener === undefined) {
       this._impact_listener = this.impactChanges.subscribe(convert_in);
     }
-    this.init.then(convert_in);
+    // this.init.then(convert_in);
   }
 
   ngAfterViewInit(): void { this.init.then(() => this.render()); }

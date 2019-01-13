@@ -141,7 +141,7 @@ def processGeos():
             data = requests.get('https://api.ipdata.co/' + ip + '?api-key=***REMOVED***')
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'], data['organisation'][:20]))
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], data['organisation'][:20]))
             else:
                 DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
             known_ips.append(ip)

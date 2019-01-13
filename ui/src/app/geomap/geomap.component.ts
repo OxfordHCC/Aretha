@@ -42,8 +42,8 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   private impacts: AppImpactGeo[];
   
   // these two will die
-  @Input('appusage') usage_in: AppUsage[];
-  private usage: AppUsage[];
+  @Input('appusage') usage: AppUsage[];
+  // private usage: AppUsage[];
 
   private init: Promise<any>;
   lastMax = 0;
@@ -117,21 +117,19 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     // subscribing to the changes impact
     let convert_in = () => {
       if (this.impacts_in) { 
-        let minMax = this.impacts_in.reduce((acc, val) => {
-          acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
-          acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
-          return acc;
-        }, []);
+        // let minMax = this.impacts_in.reduce((acc, val) => {
+        //   acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
+        //   acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
+        //   return acc;
+        // }, []);
         this.impacts = this.impacts_in.map(impact => ({impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }))
         this.zone.run(() => this.render());
       }
     };
 
-    if (this.usage_in) { this.usage = this.usage_in; }
-
     if (this.impactChanges && this._impact_listener === undefined) {
       this._impact_listener = this.impactChanges.subscribe(target => {        
-        console.info('geomap : change notification coming in.');         
+        // console.info('geomap : change notification coming in.');         
         convert_in();
       });      
     }
@@ -261,11 +259,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         return 0.8;
       }).attr("r", (d) => {
         // console.log('d impact ', d.impact, Math.floor(200*(d.impact / minmax[1])), minmax[1]);
-        return Math.min(40, Math.floor(120*d.impact / minmax[1]));
+        return Math.floor(80*d.impact / minmax[1]);
       }).attr("fill", (d) => z(d.appid))
       .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
       .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
 
+      console.info('map ending render');
     // datas.enter().append('text')
     //   .attr('x', (d) => projection([d.geo.longitude, d.geo.latitude])[0] + 5)
     //   .attr('y', (d) => projection([d.geo.longitude, d.geo.latitude])[1] + 5)
