@@ -33,8 +33,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   // still in use!
   companyid2info: CompanyDB;
 
-    
-  
+      
   @Input() impactChanges : Observable<any>;
   private _impact_listener : Subscription;
 
@@ -115,15 +114,19 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
     // subscribing to the changes impact
-    let convert_in = () => {
-      if (this.impacts_in) { 
+    let this_ = this,
+      convert_in = () => {
+      if (this_.impacts_in !== undefined) { 
         // let minMax = this.impacts_in.reduce((acc, val) => {
         //   acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
         //   acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
         //   return acc;
         // }, []);
-        this.impacts = this.impacts_in.map(impact => ({impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }))
-        this.zone.run(() => this.render());
+        this.zone.run(() => {
+          console.info('geomap updating impacts');
+          this_.impacts = this_.impacts_in.map(impact => ({ impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }));        
+          this_.render();
+        });
       }
     };
 
@@ -133,6 +136,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         convert_in();
       });      
     }
+    // this.render();
     // if (!this.usage_in) { return; }
     // this.init.then(() => {  convert_in();   });
   }
@@ -206,11 +210,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+    const usage = this.usage, // this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts, // this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       minmax = d3.extent(impacts.map( i => i.impact ));            
 
-      // console.log(impacts);
+
+       console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     apps.sort();    
@@ -238,11 +243,10 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     });
 
     // add circles to svg
-    var datas = svg.selectAll("circle")
-      .data(impacts);
+    var datas = svg.selectAll("circle").data(impacts);
+    // console.info('selecting on impacts ', impacts);
 
-    datas.enter()
-      .append("circle")
+    datas.enter().append("circle")
       .attr("cx", (d) => {
         const lat = projection([d.geo.longitude, d.geo.latitude])[0];
         return lat;
@@ -258,7 +262,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         }
         return 0.8;
       }).attr("r", (d) => {
-        // console.log('d impact ', d.impact, Math.floor(200*(d.impact / minmax[1])), minmax[1]);
+        // console.log('d impact r=', Math.floor(80*d.impact / minmax[1]), minmax[1]);
         return Math.floor(80*d.impact / minmax[1]);
       }).attr("fill", (d) => z(d.appid))
       .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
@@ -310,7 +314,6 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .attr('dy', '0.32em')
         .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d);
     }
-
   }
   @HostListener('window:resize')
   onResize() {
