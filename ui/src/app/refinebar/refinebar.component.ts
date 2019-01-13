@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
 import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
@@ -7,6 +7,9 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Observable } from '../../../node_modules/rxjs/Observable';
+import { Observer } from '../../../node_modules/rxjs/Observer';
+import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
 const LOCAL_IP_MASK_16 = "192.168.";
 const LOCAL_IP_MASK_24 = "10.";
@@ -38,8 +41,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   // still in use!
   companyid2info: CompanyDB;
 
-  private usage: AppUsage[];
-  private impacts: AppImpact[];
+  @Input() impacts: AppImpact[];
+  @Input() impactChanges : Observable<any>;
+  // private impacts: AppImpact[];
+  
   private init: Promise<any>;
   lastMax = 0;
   // _timeSpan = 'd';
@@ -67,6 +72,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
   _ignoredApps: string[];
+  _impact_listener : Subscription;
+  
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -74,13 +81,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService) {
+    private hover: HoverService,
+    private zone:NgZone) {
+  
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
 
-    this.getIoTData();
-    
     hover.HoverChanged$.subscribe((target) => {
       // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
@@ -105,57 +112,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     const nE: HTMLElement = this.el.nativeElement;
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
-
-  // todo; move this out to loader
-  getIoTData(): void {
-
-    let this_ = this,
-      refresh = () => {
-        this_.loader.getIoTData().then( bundle => {
-          // console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
-          this_.usage = bundle.usage;
-          this_.impacts = bundle.impacts;
-          this_.render();
-        });
-      },
-      throttledRender = _.throttle(() => this.render(), 500),
-      throttledRefresh = _.throttle(refresh, 1000);
-
-    refresh();
-    this.loader.asyncAppImpactChanges().subscribe({
-      next(i: AppImpact[]) {  
-        console.log('AppImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
-        if (this_.impacts) { 
-          this_.impacts = this_.impacts.concat(i);
-        }
-        throttledRender();
-      },
-      error(err) { console.log("Listen error! ", err, err.message); },
-      complete() { console.log("Listen complete"); }
-    });
-
-    this.loader.asyncGeoUpdateChanges().subscribe({
-      next(a: any[]) {
-        console.info("GOT GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
-        if (this_.impacts) { 
-          throttledRefresh();
-        }        
-      }
-    });
-
-      //   this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-  //   this.usage = response2.json()["usage"]; // ah ha! 
-  //   this.impacts = response2.json()["impacts"];
-  //   var manDev = response2.json()["manDev"];
-    
-  //   this.impacts.forEach(function(impact){
-  //     if (manDev[impact.appid] !== "unknown") {
-  //       impact.appid = manDev[impact.appid];
-  //     }
-  //   });
-  //   this.render()
-  // });
-}
 
   addOrRemove(newClick: string): string[] {
     // console.log(this._ignoredApps);
@@ -194,18 +150,22 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       }
     });
   }
-
-
   // TODO 
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage) { return; }
-    this.init.then(() => {
-      // if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-      //   delete this.apps;
-      // }
-      this.render();
-    });
+    // console.info("refinebar - ngOnChanges ", this.impacts, this.impactChanges); 
+    var this_ = this;
+    if (this.impactChanges && this._impact_listener === undefined) { 
+      this._impact_listener = this.impactChanges.subscribe(target => {
+        // console.info("Got notification of impact changes! re-rendering");
+        this.zone.run(() => this_.render());
+      });
+      if (this.impacts) {
+        this_.render();
+      }
+    }
+    // this.render();
+    this.init.then(() => { this.render(); });
   }
 
   ngAfterViewInit(): void { this.init.then(() => this.render()); }
@@ -219,50 +179,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     return this.linear ? v : Math.max(0, 5000*Math.log(v) + 10);
   }
 
-  // compileImpacts(usage: AppUsage[]): Promise<AppImpact[]> {
-  //   // folds privacy impact in simply by doing a weighted sum over hosts
-  //   // usage has to be in a standard unit: days, minutes
-  //   // first, normalise usage
-
-  //   const timebased = this.byTime === 'yes',
-  //     total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-  //     impacts = usage.map((u) => ({ ...u, impact: 
-	// 	  this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total / 1000000 : 1.0)))
-  //     }));
-
-  //   return Promise.all(impacts.map((usg): Promise<AppImpact[]> => {
-
-  //     return this._getApp(usg.appid).then(app => {
-  //       const hosts = app && app.hosts;
-	// 	  if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
-
-  //       return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
-  //         .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))
-  //         .then((companies: CompanyInfo[]) => companies.map((company) => ({ appid: usg.appid, companyid: company.id, impact: usg.impact })));
-  //     });
-  //   })).then((nested_impacts: AppImpact[][]): AppImpact[] => _.flatten(nested_impacts));
-  // }
-
-
-  // // accessors for .byTime 
-  // set byTime(val) {
-  //   this.lastMax = 0;
-  //   this._byTime = val;
-  //   this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-  //     this.render();
-  //   }));
-  // }
-
-  // get byTime() { return this._byTime; }
-
-  // // accessors for timeSpan
-  // set timeSpan(val) {
-  //   this._timeSpan = val;
-  //   this.render();
-  // }
-
-  // get timeSpan() {return this._timeSpan; }
-
   setHoveringTypeHighlight(ctype: string) {
     let svg = this.getSVGElement();
     this._hoveringType = ctype;
@@ -273,7 +189,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       d3.select(svg).selectAll('.ctypelegend g.' + ctype).classed('selected', true)
     };
   }
-
   // this is for displaying what company you're hovering on based 
   // on back rects
   _companyHover(company: CompanyInfo, hovering: boolean) {
@@ -296,13 +211,17 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       this.render();
     }
   }
-
   // 
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
+    
     const svgel = this.getSVGElement();
 
-    if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
+    if (!svgel || this.impacts === undefined ) { 
+      console.info('render(): impacts undefined, chilling');
+      return; 
+    }
+    // console.info("render :: ", this.impacts);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
@@ -323,8 +242,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    let usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+    let impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       apps = _.uniq(impacts.map((x) => x.appid)),
       companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
@@ -338,13 +256,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
       }));
 
-    if (this.apps === undefined) {
-      // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-      this.apps = apps;
-    } else {
-      apps = this.apps;
-    }
+    apps.sort();
+    // if (this.apps === undefined) {
+    //   // sort apps
+    //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+    //   this.apps = apps;
+    // } else {
+    //   apps = this.apps;
+    // }
 
     by_company.sort((c1, c2) => c2.total - c1.total); // apps.reduce((total, app) => total += c2[app], 0) - apps.reduce((total, app) => total += c1[app], 0));
 
