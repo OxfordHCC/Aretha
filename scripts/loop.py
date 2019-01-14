@@ -6,6 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 import databaseBursts, rutils
 import predictions
 import configparser
+import random
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
@@ -17,6 +18,7 @@ _events = [] # async db events
 modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
 config = configparser.ConfigParser()
 config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
+fruits = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
 
 #handler for signals (don't want to stop processing packets halfway through)
 class sigTermHandler:
@@ -156,14 +158,16 @@ def processMacs():
     known_macs = DB_MANAGER.execute("SELECT mac FROM devices", ())
     for mac in raw_macs:
         if mac not in known_macs:
+
+            deviceName = "unknown"
+            if config['loop']['autogen-device-names']:
+                deviceName = random.choice(fruits) + "#" + str(random.randint(100,999))
+
             manufacturer = requests.get("https://api.macvendors.com/" + mac[0]).text
             if "errors" not in manufacturer:
-                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, %s, 'unknown')", (mac[0], manufacturer[:20]))
+                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, %s, %s)", (mac[0], manufacturer[:20], deviceName + " (" + manufacturer + ")"))
             else:
-                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', 'unknown')", (mac[0],))
-
-
-#
+                DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', %s)", (mac[0], deviceName))
 
 def processEvents():
     global _events
@@ -176,7 +180,6 @@ def processEvents():
             RAW_IPS.add(evt["data"]["src"])
             RAW_IPS.add(evt["data"]["dst"])
         pass
-
 
 #============
 #loop control

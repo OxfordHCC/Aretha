@@ -18,7 +18,7 @@ config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/con
 #=============
 #api endpoints
 
-#return aggregated data for the given time period (in days, called by refine)
+#return aggregated data for the given time period (in minutes, called by refine)
 class Refine(Resource):
     def get(self, n):
         try:
@@ -47,12 +47,12 @@ class SetDevice(Resource):
         else:
             return jsonify({"message": "Invalid mac address given"})
 
-#return all traffic bursts for the given time period (in days)
+#return all traffic bursts for the given time period (in minutes)
 class Bursts(Resource):
     def get(self, n):
         return jsonify(GetBursts(n))
 
-#return all impacts for the given time period (in days)
+#return all impacts for the given time period (in minutes)
 class Impacts(Resource):
     def get(self, n):
         return jsonify(GetImpacts(n))
@@ -100,9 +100,6 @@ def GetBursts(n, units="MINUTES"):
         category = burst[3]
         result.append({"value": unixTime, "category": category, "device": device })
     return result
-
-
-#get impact (traffic) of every device/external ip combination for the given time period (in days)
 
 #setter method for impacts
 def _update_impact(impacts, mac, ip, impact):
@@ -188,8 +185,6 @@ def CompileImpacts(impacts, packets):
     #         pass
     #     pass    
     return result
-
-
 
 def GetImpacts(n, units="MINUTES"):
     global geos
@@ -295,6 +290,7 @@ if __name__ == '__main__':
     #     print("Using local IP mask %s" % localipmask)    
 
     #Register the API endpoints with flask
+<<<<<<< HEAD
     api.add_resource(Refine, '/api/refine/<n>')
     api.add_resource(Devices, '/api/devices')
     api.add_resource(Bursts, '/api/bursts/<days>')
