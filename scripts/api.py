@@ -290,7 +290,6 @@ if __name__ == '__main__':
     #     print("Using local IP mask %s" % localipmask)    
 
     #Register the API endpoints with flask
-<<<<<<< HEAD
     api.add_resource(Refine, '/api/refine/<n>')
     api.add_resource(Devices, '/api/devices')
     api.add_resource(Bursts, '/api/bursts/<days>')
