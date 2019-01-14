@@ -205,7 +205,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     if (this.apps === undefined) {
       // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+      // TODO: this is crashing:
+      apps.sort();
+      // apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
       this.apps = apps;
     } else {
       apps = this.apps;

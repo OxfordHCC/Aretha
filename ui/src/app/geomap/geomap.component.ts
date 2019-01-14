@@ -145,7 +145,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
                 });
               });
           this_.impacts = _.flatten(by_company).filter(x => x.geo);
-          console.info('impacts ', this_.impacts);
+          // console.info('impacts ', this_.impacts);
 
           //     company: c,
           //     impact: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
