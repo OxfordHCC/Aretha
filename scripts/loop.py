@@ -122,16 +122,12 @@ def burstPrediction(devices):
         DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 def processGeos():
-    # raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
     global RAW_IPS
 
     if not RAW_IPS:
-        print("Preloading RAW_IPS")
         RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-        print(" Done ", len(RAW_IPS), " known ips ")
+        print(f"Loaded {str(len(RAW_IPS))} known IPs")
         
-    # print("raw_ips", raw_ips)
-    
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
     known_ips = []
 

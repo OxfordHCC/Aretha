@@ -253,6 +253,7 @@ def event_stream():
 
             if len(insert_buf) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
+                print("sent new packets")
             if len(geo_updates) > 0:
                 # ResetImpactCache()
                 # updated ip should be 
