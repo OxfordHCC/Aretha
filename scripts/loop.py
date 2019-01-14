@@ -205,7 +205,7 @@ if __name__ == '__main__':
     handler = sigTermHandler() 
 
     # watch for listen events -- not sure if this has to be on its own connection
-    DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
+    listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
 
     #loop through categorisation tasks
     while(True):
@@ -223,6 +223,7 @@ if __name__ == '__main__':
 
         #exit gracefully if we were asked to shutdown
         if handler.exit:
-            os._exit(0)
+            listener_thread_stopper()
+            break
         
         time.sleep(INTERVAL)
