@@ -17,17 +17,17 @@ api = Api(app) #initialise the flask server
 ID_POINTER = 0 #so we know which packets we've seen (for caching)
 impacts = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
-lastDays = 0 #timespan of the last request (for caching)
+lastMinutes = 0 #timespan of the last request (for caching)
 config = configparser.ConfigParser()
-config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.cfg")
+config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 #=============
 #api endpoints
 
-#return aggregated data for the given time period (in days, called by refine)
+#return aggregated data for the given time period (in minutes, called by refine)
 class Refine(Resource):
-    def get(self, days):
-        response = make_response(jsonify({"bursts": GetBursts(days), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(days), "usage": GenerateUsage()}))
+    def get(self, minutes):
+        response = make_response(jsonify({"bursts": GetBursts(minutes), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(minutes), "usage": GenerateUsage()}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
 
@@ -46,15 +46,15 @@ class SetDevice(Resource):
         else:
             return jsonify({"message": "Invalid mac address given"})
 
-#return all traffic bursts for the given time period (in days)
+#return all traffic bursts for the given time period (in minutes)
 class Bursts(Resource):
-    def get(self, days):
-        return jsonify(GetBursts(days))
+    def get(self, minutes):
+        return jsonify(GetBursts(minutes))
 
-#return all impacts for the given time period (in days)
+#return all impacts for the given time period (in minutes)
 class Impacts(Resource):
-    def get(self, days):
-        return jsonify(GetImpacts(days))
+    def get(self, minutes):
+        return jsonify(GetImpacts(minutes))
 
 #================
 #internal methods
@@ -88,9 +88,9 @@ def GetGeo(ip):
         geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "companyName": 'unknown'}
         return geo
 
-#get bursts for the given time period (in days)
-def GetBursts(days):
-    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(days) + " DAY'",))
+#get bursts for the given time period (in minutes)
+def GetBursts(minutes):
+    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(minutes) + " MINUTE'",))
     result = []
     epoch = datetime(1970, 1, 1, 0, 0)
     for burst in bursts:
@@ -100,16 +100,16 @@ def GetBursts(days):
         result.append({"value": unixTime, "category": category, "device": device })
     return result
 
-#get impact (traffic) of every device/external ip combination for the given time period (in days)
-def GetImpacts(days):
-    global geos, ID_POINTER, lastDays
+#get impact (traffic) of every device/external ip combination for the given time period (in minutes)
+def GetImpacts(minutes):
+    global geos, ID_POINTER, lastMinutes
 
     #we can only keep the cache if we're looking at the same packets as the previous request
-    if days is not lastDays:
+    if minutes is not lastMinutes:
         ResetImpactCache() 
 
     #get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packets = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(days) + " DAY'"))
+    packets = DB_MANAGER.execute("SELECT * FROM packets WHERE id > %s AND time > (NOW() - INTERVAL %s) ORDER BY id", (str(ID_POINTER), "'" + str(minutes) + " MINUTE'"))
     result = []
     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 
@@ -146,7 +146,7 @@ def GetImpacts(days):
             item['appid'] = mac
             if item['impact'] > 0:
                 result.append(item)
-    lastDays = days
+    lastMinutes = minutes
     return result #shipit
 
 #setter method for impacts
@@ -191,10 +191,10 @@ def GenerateUsage():
 #main part of the script
 if __name__ == '__main__':
     #Register the API endpoints with flask
-    api.add_resource(Refine, '/api/refine/<days>')
+    api.add_resource(Refine, '/api/refine/<minutes>')
     api.add_resource(Devices, '/api/devices')
-    api.add_resource(Bursts, '/api/bursts/<days>')
-    api.add_resource(Impacts, '/api/impacts/<days>')
+    api.add_resource(Bursts, '/api/bursts/<minutes>')
+    api.add_resource(Impacts, '/api/impacts/<minutes>')
     api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
 
     #Start the flask server
