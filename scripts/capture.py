@@ -69,7 +69,7 @@ def DatabaseInsert(packets):
     conn.commit()
     cur.close()
     conn.close()
-    print(f"Captured {str(len(packets))} packets this tick")
+    print("Captured " + str(len(packets)) + " packets this tick")
 
 def QueuedCommit(packet):
     #commit packets to the database in COMMIT_INTERVAL second intervals

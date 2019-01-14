@@ -57,7 +57,7 @@ create table models (
 	impact real not null --amount of traffic in mb
 );
 
-drop function if exists notify_trigger;
+drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
 DECLARE
   rec RECORD;
