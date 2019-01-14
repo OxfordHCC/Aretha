@@ -1,15 +1,17 @@
 #! /usr/bin/env python3
 
-import pyshark, datetime, psycopg2, re, argparse, sys, traceback, rutils
+import pyshark, datetime, psycopg2, re, argparse, sys, traceback, rutils, configparser, os
 
 #constants
-COMMIT_INTERVAL = 5
 DEBUG = False
 local_ip_mask = rutils.make_localip_mask()
 
 #initialise vars
 timestamp = 0 
 queue = []
+COMMIT_INTERVAL = None
+config = configparser.ConfigParser()
+config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 def DatabaseInsert(packets):
     global timestamp
@@ -97,27 +99,32 @@ if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
-    parser.add_argument('--cinterval', dest="cinterval", type=float, help="Commit interval in seconds", default=5)
-    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    parser.add_argument('--interval', dest="interval", type=float, help="Commit interval in seconds")
     parser.add_argument('--debug', dest='debug', action='store_true')
     args = parser.parse_args()
 
     DEBUG = args.debug
+    INTERFACE = None
 
-    if args.interface is None:
+    if args.interface is not None:
+        INTERFACE = args.interface
+    elif "capture" in config and "interface" in config['capture']:
+        INTERFACE = config['capture']['interface']
+    else:
+        print(parser.print_help())
+        sys.exit(-1)
+    
+    if args.interval is not None:
+        COMMIT_INTERVAL = args.interval
+    elif "capture" in config and "interval" in config['capture']:
+        COMMIT_INTERVAL = float(config['capture']['interval'])
+    else:
         print(parser.print_help())
         sys.exit(-1)
 
-    # if args.localip is not None:
-    #     MANUAL_LOCAL_IP = args.localip
-
     log("Configuring capture on ", args.interface)
     
-    if args.cinterval is not None:
-        COMMIT_INTERVAL = args.cinterval
-        log("Setting commit interval as ", COMMIT_INTERVAL)
-
-    capture = pyshark.LiveCapture(interface=args.interface)
+    capture = pyshark.LiveCapture(interface=INTERFACE)
 
     if DEBUG:
         capture.set_debug()

@@ -2,7 +2,7 @@
 
 from flask import Flask, request, jsonify, make_response, Response
 from flask_restful import Resource, Api
-import json, re, sys, os, traceback, copy, argparse
+import json, re, sys, os, traceback, copy
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts, rutils, configparser
@@ -253,7 +253,6 @@ def event_stream():
 
             if len(insert_buf) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
-                print("sent new packets")
             if len(geo_updates) > 0:
                 # ResetImpactCache()
                 # updated ip should be 
@@ -280,15 +279,6 @@ def stream():
 #=======================
 #main part of the script
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
-    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
-    args = parser.parse_args()
-
-    # if args.localip is not None:
-    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
-    #     print("Using local IP mask %s" % localipmask)    
 
     #Register the API endpoints with flask
     api.add_resource(Refine, '/api/refine/<n>')

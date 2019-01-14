@@ -10,8 +10,7 @@ import random
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
-INTERVAL = 1
-LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
+LOCAL_IP_MASK = rutils.make_localip_mask() 
 DEBUG = False
 RAW_IPS = None
 _events = [] # async db events
@@ -20,14 +19,13 @@ config = configparser.ConfigParser()
 config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 fruits = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
 
-#handler for signals (don't want to stop processing packets halfway through)
+#handler for signals (don't want to stop processing packets halfway through a loop)
 class sigTermHandler:
     exit = False
     def __init__(self):
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
     def shutdown(self, signum, frame):
-        print("caught signal")
         self.exit = True
 
 def packetBurstification(devices):
@@ -126,7 +124,6 @@ def processGeos():
 
     if not RAW_IPS:
         RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-        print(f"Loaded {str(len(RAW_IPS))} known IPs")
         
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
     known_ips = []
@@ -172,7 +169,6 @@ def processEvents():
     for evt in cur_events:
         evt = json.loads(evt)
         if RAW_IPS and evt["operation"] in ['UPDATE','INSERT'] and evt["table"] == 'packets':
-            # print("adding to raw ips %s %s" % (evt["data"]["src"],evt["data"]["dst"]))
             RAW_IPS.add(evt["data"]["src"])
             RAW_IPS.add(evt["data"]["dst"])
         pass
@@ -182,9 +178,7 @@ def processEvents():
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
-    
-    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
-    parser.add_argument('--sleep', dest="sleep", type=float, help="Specify sleep in sec (can be fractions)")
+    parser.add_argument('--interval', dest="interval", type=float, help="Specify loop interval in sec (can be fractions)")
     parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
     parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
     parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
@@ -195,11 +189,34 @@ if __name__ == '__main__':
     #     print("Using local IP mask %s" % localipmask)    
     #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
 
-    if args.sleep is not None:
-        print("Setting sleep interval %s seconds." % args.sleep)    
-        INTERVAL = args.sleep
-
     DEBUG = args.debug
+    INTERVAL = None
+    ISBURST = None
+    ISPREDICT = None
+    
+    if args.interval is not None:
+        INTERVAL = float(args.interval)
+    elif "loop" in config and "interval" in config['loop']:
+        INTERVAL = float(config['loop']['interval'])
+    else:
+        parser.print_help()
+        sys.exit(-1)
+    
+    if args.burst is not None:
+        ISBURST = args.burst
+    elif "loop" in config and "burstify" in config['loop']:
+        ISBURST = config['loop']['burstify']
+    else:
+        parser.print_help()
+        sys.exit(-1)
+    
+    if args.predict is not None:
+        ISPREDICT = args.predict
+    elif "loop" in config and "predict" in config['loop']:
+        ISPREDICT = config['loop']['predict']
+    else:
+        parser.print_help()
+        sys.exit(-1)
 
     #register the signal handler
     handler = sigTermHandler() 
@@ -214,10 +231,10 @@ if __name__ == '__main__':
         processMacs()
         apiUrl = config['api']['url'] + '/devices'
         devices = requests.get(url=apiUrl).json()["manDev"]
-        if args.burst:
+        if ISBURST:
             print("Doing burstification")
             packetBurstification(devices)
-        if args.predict:
+        if ISPREDICT:
             print("Doing prediction")
             burstPrediction(devices)
 
