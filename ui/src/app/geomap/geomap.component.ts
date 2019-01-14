@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
 import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo, GeoIPInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
@@ -10,6 +10,9 @@ import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import * as colorbrewer from 'colorbrewer';
+import { Observable } from '../../../node_modules/rxjs/Observable';
+import { AppImpact } from '../refinebar/refinebar.component';
+import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
 
 interface AppImpactGeo {
@@ -30,8 +33,17 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   // still in use!
   companyid2info: CompanyDB;
 
-  private usage: AppUsage[];
+      
+  @Input() impactChanges : Observable<any>;
+  private _impact_listener : Subscription;
+
+  @Input('impacts') impacts_in: AppImpact[];
   private impacts: AppImpactGeo[];
+  
+  // these two will die
+  @Input('appusage') usage: AppUsage[];
+  // private usage: AppUsage[];
+
   private init: Promise<any>;
   lastMax = 0;
   _byTime = 'yes';
@@ -40,12 +52,10 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   apps: string[]; // keeps app ordering between renders
 
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
-
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
-  @Input() showLegend = true;
+  @Input() showLegend = false;
   @Input() showTypesLegend = true;
   @Input() showXAxis = true;
 
@@ -63,7 +73,9 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService) {
+    private hover: HoverService,
+    private zone : NgZone) {
+
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -78,85 +90,117 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
       }
     });
-    this.getIoTData();
-    
-    (<any>window)._rb = this;
   }
-  getIoTData(): void {
-	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-		  this.usage = response2.json()["usage"];
-		  var impacts = response2.json()["impacts"];
-		  var manDev = response2.json()["manDev"];
-       impacts.forEach(function(impact){
-          if (manDev[impact.appid] != "unknown") {
-             impact.appid = manDev[impact.appid];
-           }
-       });
+  // getIoTData(): void {
+	//   this.loader.getIoTData().then(bundle => {
+  //     this.usage = bundle.usage;
 
+  //     let minMax = bundle.impacts.reduce((acc, val) => {
+  //       acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
+  //       acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
+  //       return acc;
+  //     }, []);
 
-      var minMax = impacts.reduce((acc, val) => {
-        acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
-        acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
-        return acc;
-      }, []);
+  //     this.impacts = bundle.impacts.map(impact => ({impact: impact.impact/minMax[1], geo: impact, appid: impact.appid }))
+  //     this.render()
+  //   });
+  // }
+  // this gets called when this.usage_in changes
+  ngOnChanges(changes: SimpleChanges): void {
+    // subscribing to the changes impact
+    let this_ = this,
+      convert_in = () => {
+      if (this_.impacts_in !== undefined) { 
+        // let minMax = this.impacts_in.reduce((acc, val) => {
+        //   acc[0] = ( acc[0] === undefined || val.impact < acc[0] ) ? val.impact : acc[0]
+        //   acc[1] = ( acc[1] === undefined || val.impact > acc[1] ) ? val.impact : acc[1]
+        //   return acc;
+        // }, []);
+        this.zone.run(() => {
+          console.info('geomap updating impacts');
+          let iin = this_.impacts_in;
+          // this_.impacts = iin.map(impact => ({ impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }));        
 
-      this.impacts = impacts.map(impact => ({impact: impact.impact/minMax[1], geo: impact, appid: impact.appid }))
+          let apps = _.uniq(iin.map((x) => x.appid)),
+              companies = _.uniq(iin.map((x) => x.companyName)),
+              get_impact = (cname, aid) => {
+                const t = iin.filter((imp) => imp.companyName === cname && imp.appid === aid);
+                const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+                return t !== undefined ? t.reduce(reducer, 0) : 0;
+              },
+              by_company = apps.map(app => {
+                return companies.map((c) => {
+                  return {
+                    company: c,
+                    impact: get_impact(c, app),
+                    geo: iin.filter((imp) => imp.companyName === c && imp.appid === app)[0],
+                    appid: app
+                  };
+                });
+              });
+          this_.impacts = _.flatten(by_company).filter(x => x.geo);
+          console.info('impacts ', this_.impacts);
 
-      this.render()
-    });
+          //     company: c,
+          //     impact: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
+          //   }));
+          
+          this_.render();
+        });
+      }
+    };
+
+    if (this.impactChanges && this._impact_listener === undefined) {
+      this._impact_listener = this.impactChanges.subscribe(target => {        
+        // console.info('geomap : change notification coming in.');         
+        convert_in();
+      });      
+    }
+    // this.render();
+    // if (!this.usage_in) { return; }
+    // this.init.then(() => {  convert_in();   });
   }
+  
+  ngAfterViewInit(): void { this.init.then(() => this.render()); }
+
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
-  // this gets called when this.usage_in changes
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage_in) { return; }
-    this.init.then(() => {
-      if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-        delete this.apps;
-      }
-      //this.usage = this.usage_in;
-      this.compileImpacts(this.usage_in).then(impacts => {
-        this.render();
-      });
-    });
-  }
-  ngAfterViewInit(): void { this.init.then(() => this.render()); }
 
   private _getApp(appid: string): Promise<APIAppInfo> {
     return this.loader.getCachedAppInfo(appid) && Promise.resolve(this.loader.getCachedAppInfo(appid))
       || this.loader.getFullAppInfo(appid);
   }
 
-  compileImpacts(usage: AppUsage[]): Promise<AppImpactGeo[]> {
-    // folds privacy impact in simply by doing a weighted sum over hosts
-    // usage has to be in a standard unit: days, minutes
-    // first, normalise usage
+  // compileImpacts(usage: AppUsage[]): Promise<AppImpactGeo[]> {
+  //   // folds privacy impact in simply by doing a weighted sum over hosts
+  //   // usage has to be in a standard unit: days, minutes
+  //   // first, normalise usage
 
-    const timebased = this.byTime === 'yes',
-      total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-      impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
+  //   const timebased = this.byTime === 'yes',
+  //     total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
+  //     impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
 
-    return Promise.all(impacts.map((usg): Promise<AppImpactGeo[]> => {
+  //   return Promise.all(impacts.map((usg): Promise<AppImpactGeo[]> => {
 
-      return this._getApp(usg.appid).then(app => {
-        const hosts = app.hosts, geos = app.host_locations;
-        if (!hosts || !geos) { console.warn('No hosts found for app ', usg.appid); return []; }
-        return geos.map(geo => ({
-          appid: usg.appid,
-          geo: geo,
-          impact: usg.impact,
-        }));
-      });
-    })).then((nested_impacts: AppImpactGeo[][]): AppImpactGeo[] => _.flatten(_.flatten(nested_impacts)));
-  }
+  //     return this._getApp(usg.appid).then(app => {
+  //       const hosts = app.hosts, geos = app.host_locations;
+  //       if (!hosts || !geos) { console.warn('No hosts found for app ', usg.appid); return []; }
+  //       return geos.map(geo => ({
+  //         appid: usg.appid,
+  //         geo: geo,
+  //         impact: usg.impact,
+  //       }));
+  //     });
+  //   })).then((nested_impacts: AppImpactGeo[][]): AppImpactGeo[] => _.flatten(_.flatten(nested_impacts)));
+  // }
 
 
   // accessors for .byTime 
@@ -170,7 +214,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
     const svgel = this.getSVGElement();
-    if (!svgel || !this.usage || !this.impacts || this.usage.length === 0) { return; }
+    if (!svgel || !this.usage || !this.impacts) { return; }
     // console.log('refinebar render! getSVGElement > ', svgel);
 
     let rect = svgel.getBoundingClientRect(),
@@ -192,18 +236,22 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
-      //console.log(impacts);
+    const usage = this.usage, // this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts, // this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      minmax = d3.extent(impacts.map( i => i.impact ));            
+
+
+       console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
-    if (this.apps === undefined) {
-      // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-      this.apps = apps;
-    } else {
-      apps = this.apps;
-    }
+    apps.sort();    
+    // if (this.apps === undefined) {
+    //   // sort apps
+    //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+    //   this.apps = apps;
+    // } else {
+    //   apps = this.apps;
+    // }
     let margin = { top: 20, right: 20, bottom: -200, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
       height = height_svgel - margin.top - margin.bottom, // +svg.attr('height') - margin.top - margin.bottom,
@@ -217,15 +265,14 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       path = d3.geoPath().projection(projection);
 
     this.loader.getWorldMesh().then((mesh) => {
-      svg.append('path').attr("d", path(topojson.mesh(mesh))).attr('opacity', 0.2);
+      svg.append('path').attr("d", path(topojson.mesh(mesh))).attr('opacity', 0.2).attr("stroke", '#000').attr("fill", "none");
     });
 
     // add circles to svg
-    var datas = svg.selectAll("circle")
-      .data(impacts);
+    var datas = svg.selectAll("circle").data(impacts);
+    // console.info('selecting on impacts ', impacts);
 
-    datas.enter()
-      .append("circle")
+    datas.enter().append("circle")
       .attr("cx", (d) => {
         const lat = projection([d.geo.longitude, d.geo.latitude])[0];
         return lat;
@@ -240,20 +287,23 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
           return d.appid === highApp ? 0.75 : 0.01;
         }
         return 0.8;
-      }).attr("r", (d) => Math.max(4, Math.floor(d.impact / 100)))
-      .attr("fill", (d) => z(d.appid))
+      }).attr("r", (d) => {
+        // console.log('d impact r=', Math.floor(80*d.impact / minmax[1]), minmax[1]);
+        return Math.floor(80*d.impact / minmax[1]);
+      }).attr("fill", (d) => z(d.appid))
       .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
       .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
 
-    datas.enter().append('text')
-      .attr('x', (d) => projection([d.geo.longitude, d.geo.latitude])[0] + 5)
-      .attr('y', (d) => projection([d.geo.longitude, d.geo.latitude])[1] + 5)
-      .attr('opacity', d => this._hoveringApp && d.appid === this._hoveringApp ? 1 : 0)
-      .text((d) => d.geo.region_name || d.geo.country);
+      console.info('map ending render');
+    // datas.enter().append('text')
+    //   .attr('x', (d) => projection([d.geo.longitude, d.geo.latitude])[0] + 5)
+    //   .attr('y', (d) => projection([d.geo.longitude, d.geo.latitude])[1] + 5)
+    //   .attr('opacity', d => this._hoveringApp && d.appid === this._hoveringApp ? 1 : 0)
+    //   .text((d) => d.geo.region_name || d.geo.country);
 
     const leading = 26;
-    if (this.showLegend) {
 
+    if (this.showLegend) {
       let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top / 2 + ')');
       const legend = g.append('g')
         .attr('class', 'legend')
@@ -265,9 +315,9 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        //.on('click', (d) => {
+        // .on('click', (d) => {
         //  this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        //})
+        // })
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {
@@ -290,7 +340,6 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         .attr('dy', '0.32em')
         .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d);
     }
-
   }
   @HostListener('window:resize')
   onResize() {
@@ -299,12 +348,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'geomap');
+    // this.actlog.log('mouseenter', 'geomap');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'geomap');
+    // this.actlog.log('mouseleave', 'geomap');
   }
 
 }

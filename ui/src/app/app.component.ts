@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd } from "@angular/router";
 import { ActivityLogService } from "app/activity-log.service";
+import { LoaderService } from './loader.service';
+
+(<any>window)._listen_count = 0;
 
 @Component({
   selector: 'app-root',
@@ -10,7 +13,7 @@ import { ActivityLogService } from "app/activity-log.service";
 export class AppComponent {
   title = 'app';
   
-  constructor(private router: Router, private actlog: ActivityLogService) {
+  constructor(private router: Router, private actlog: ActivityLogService, private loader: LoaderService) {
     this.router.events.subscribe(routeEvent => {
       // console.info('routeEvent ', routeEvent);
       if (routeEvent instanceof NavigationEnd) {
@@ -18,6 +21,9 @@ export class AppComponent {
         try { this.actlog.log('routeChange', routeEvent.url); } catch(e) { }
       }      
     });
+    
+    // startup loader listener
+    this.loader.connectToAsyncDBUpdates();
   }
 
   // isActive(instruction: any[]): boolean {

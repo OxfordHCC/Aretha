@@ -1,10 +1,12 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
+import { Observable } from '../../node_modules/rxjs/Observable';
+import { AppImpact, AppDevice } from './refinebar/refinebar.component';
 
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
@@ -12,12 +14,15 @@ enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USE
 // export const API_ENDPOINT = 'http://localhost:8118/api';
 export const API_ENDPOINT = 'https://negi.io/api';
 export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
+export const IOT_API_ENDPOINT='http://localhost:4201';
 
 export interface App2Hosts { [app: string]: string[] }
 export interface Host2PITypes { [host: string]: PI_TYPES[] }
 export interface String2String { [host: string]: string }
 
 export interface AppSubstitutions { [app: string]: string[] };
+
+let zone = new NgZone({ enableLongStackTrace: false });
 
 export class GeoIPInfo {
   host?: string;
@@ -33,6 +38,25 @@ export class GeoIPInfo {
   longitude?: number;
   metro_code?: number;  
 };
+
+export class PacketUpdateInfo {
+  id: string;
+  dst: string;
+  src: string;
+  burst?: string;
+  mac: string;
+  len: string;
+}
+
+export class DBUpdate {
+  type: string;
+  data: any;
+  // timestamp: string;
+  // operation: string;
+  // schema: string;
+  // table: string;
+  // data: PacketUpdateInfo
+}
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
   // console.log('@cache:: ~~ ', target, propertyKey, descriptor);
@@ -155,6 +179,13 @@ export class CompanyInfo {
     }
 }
 
+export class IoTDataBundle {
+  usage: any;
+  impacts: any;
+  manDev: any;
+  bursts: any;
+}
+
 export class APIAppInfo {
     app: string;
     title: string;
@@ -215,6 +246,8 @@ export class LoaderService {
   _host_blacklist : {[key:string]:boolean};n
 
   apps: { [id: string]: APIAppInfo } = {};
+  updateObservable: Observable<DBUpdate>;
+
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
@@ -432,6 +465,116 @@ export class LoaderService {
     // returns a previously seen appid
     return this.apps[appid];
   }
+
+  // connectToAsyncDBUpdates() : void {
+  //     this.updateObservable = Observable.create(observer => {
+  //       const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+  //       eventSource.onopen = thing => {
+  //         console.info('EventSource Open', thing);
+  //       };
+  //       eventSource.onmessage = score => {
+  //         // console.info("EventSource onMessage", score, score.data);
+  //         let incoming = <DBUpdate>JSON.parse(score.data);
+  //         zone.run(() => observer.next(incoming));
+  //       };
+  //       eventSource.onerror = error => {
+  //         // console.error("eventSource onerror", error);
+  //         zone.run(() => observer.error(error));
+  //       };
+  //       return () => eventSource.close();
+  //   });        
+  // }
+  connectToAsyncDBUpdates() : void {
+    let observers = [], eventSource; 
+
+    this.updateObservable = Observable.create(observer => {
+      observers.push(observer);
+      if (observers.length === 1 && eventSource === undefined) {       
+        eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+        eventSource.onopen = thing => {
+          console.info('EventSource Open', thing);
+        };
+        eventSource.onmessage = score => {
+          // console.info("EventSource onMessage", score, score.data);
+          let incoming = <DBUpdate>JSON.parse(score.data);
+          zone.run(() => observers.map(obs => obs.next(incoming)))
+        };
+        eventSource.onerror = error => {
+          // console.error("eventSource onerror", error);
+          zone.run(() => observers.map(obs => obs.error(error)));
+        };              
+      }
+      return () => { if (eventSource) { eventSource.close(); } }
+  });        
+}
+
+
+  asyncAppImpactChanges(): Observable<AppImpact[]> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) {           
+          if (x.type === 'impact') {
+            observer.next(<AppImpact[]>x.data);
+            return true;
+          } 
+          return false;
+        },
+        error(e) { observer.error(e); }
+      });
+    });
+  }
+  asyncGeoUpdateChanges(): Observable<any[]> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) {           
+          if (x.type === 'geodata') {
+            observer.next(x.data);
+            return true;
+          } 
+          return false;
+        },
+        error(e) { observer.error(e); }
+      });
+    });
+  }
+  asyncDeviceChanges(): Observable<AppDevice[]> {
+    return Observable.create(observer => {
+      this.updateObservable.subscribe({
+        next(x) {           
+          if (x.type === 'device') {
+            observer.next(<AppDevice[]>x.data);
+            return true;
+          } 
+          return false;
+        },
+        error(e) { observer.error(e); }
+      });
+    });
+  }
+
+
+  // todo; move this out to loader
+  // @memoize(x => 'iotdata')
+  getIoTData(): Promise<IoTDataBundle> {
+    return this.http.get(IOT_API_ENDPOINT + '/api/refine/5').toPromise().then(response2 => {
+      let resp = response2.json(),
+        impacts = resp.impacts,
+        manDev = resp.manDev,
+        bursts = resp.bursts;
+
+      impacts.forEach(function(impact){
+        if (manDev[impact.appid] !== "unknown") {
+          impact.appid = manDev[impact.appid];
+        }
+      });
+      bursts.forEach(function(burst){
+        if (manDev[burst.device] !== "unknown") {
+          burst.device = manDev[burst.device];
+        }
+      });
+      return resp;
+    });
+  }
   
   @memoize((appid: string): string => appid)
   getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {
@@ -448,7 +591,7 @@ export class LoaderService {
       } else {
         console.warn('null appinfo');
       }
-      //console.log(appinfo);
+      // console.log(appinfo);
       return appinfo;
     });
   }

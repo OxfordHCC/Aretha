@@ -26,6 +26,10 @@ create table packets (
 	--company integer references companies --optional, assumes table of companies (stolen from refine)
 );
 
+-- create two indexes on src and dst to speed up lookups by these cols by loop.py
+create index on packets (src);
+create index on packets (dst);
+
 drop table if exists devices cascade;
 create table devices(
 	mac varchar(17) primary key,
