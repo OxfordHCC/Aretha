@@ -19,7 +19,7 @@ impacts = dict() #for building and caching impacts
 geos = dict() #for building and caching geo data
 lastMinutes = 0 #timespan of the last request (for caching)
 config = configparser.ConfigParser()
-config.read(os.path.dirname(os.path.abspath(__file__)) + "/config.cfg")
+config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 #=============
 #api endpoints
