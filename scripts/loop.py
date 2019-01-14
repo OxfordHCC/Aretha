@@ -11,6 +11,7 @@ DB_MANAGER = databaseBursts.dbManager()
 INTERVAL = 1
 LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 DEBUG = False
+dbgprint = lambda *args: print(*args) if DEBUG else ''
 RAW_IPS = None
 _events = [] # async db events
 
@@ -121,9 +122,9 @@ def processGeos():
     global RAW_IPS
 
     if not RAW_IPS:
-        print("Preloading RAW_IPS")
+        dbgprint("Preloading RAW_IPS")
         RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-        print(" Done ", len(RAW_IPS), " known ips ")
+        dbgprint(" Done ", len(RAW_IPS), " known ips ")
         
     # print("raw_ips", raw_ips)
     
@@ -138,6 +139,7 @@ def processGeos():
             # local ip, so skip
             continue
         if ip not in known_ips:
+            dbgprint("Getting ", ip)
             data = requests.get('https://api.ipdata.co/' + ip + '?api-key=***REMOVED***')
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
@@ -146,7 +148,7 @@ def processGeos():
                 DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
             known_ips.append(ip)
 
-            if DEBUG: print("Adding to known IPs ", ip)
+            dbgprint("Adding to known IPs ", ip)
 
 def processMacs():
     raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
@@ -159,20 +161,21 @@ def processMacs():
             else:
                 DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', 'unknown')", (mac[0],))
 
-
 #
 
 def processEvents():
     global _events
+    dbgprint("processEvents has ", len(_events), " waiting in queue")
     cur_events = _events.copy()
     _events.clear()
     for evt in cur_events:
         evt = json.loads(evt)
         if RAW_IPS and evt["operation"] in ['UPDATE','INSERT'] and evt["table"] == 'packets':
-            # print("adding to raw ips %s %s" % (evt["data"]["src"],evt["data"]["dst"]))
             RAW_IPS.add(evt["data"]["src"])
             RAW_IPS.add(evt["data"]["dst"])
         pass
+    dbgprint("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
+
 
 
 #============
@@ -199,28 +202,36 @@ if __name__ == '__main__':
 
     DEBUG = args.debug
 
-    #register the signal handler
-    handler = sigTermHandler() 
-
+    running = [True]
     # watch for listen events -- not sure if this has to be on its own connection
     listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
 
+    def shutdown(*sargs):
+        running[0] = False
+        listener_thread_stopper()
+    
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
+
+    #register the signal handler
+    #handler = sigTermHandler() 
+
     #loop through categorisation tasks
-    while(True):
+    while(running[0]):
+        dbgprint("Awake!");
         processEvents()
-        processGeos()
-        processMacs()
-        devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
-        if args.burst:
+        if running[0]:             
+            processGeos()
+        if running[0]:             
+            processMacs()        
+        if running[0] and args.burst:
+            devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
             print("Doing burstification")
             packetBurstification(devices)
-        if args.predict:
+        if running[0] and args.predict:
+            devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
             print("Doing prediction")
             burstPrediction(devices)
-
-        #exit gracefully if we were asked to shutdown
-        if handler.exit:
-            listener_thread_stopper()
-            break
-        
-        time.sleep(INTERVAL)
+        if running[0]:             
+            dbgprint("sleeping zzzz ", INTERVAL);
+            time.sleep(INTERVAL)

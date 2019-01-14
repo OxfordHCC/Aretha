@@ -42,6 +42,9 @@ def DatabaseInsert(packets):
             # print(packet)
             continue
 
+        if rutils.is_multicast_v4(src) or rutils.is_multicast_v4(dst):
+            continue                       
+        
         srcLocal = local_ip_mask.match(src)
         dstLocal = local_ip_mask.match(dst)
         
