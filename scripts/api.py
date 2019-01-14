@@ -5,13 +5,15 @@ from flask_restful import Resource, Api
 import json, re, sys, os, traceback, copy, argparse
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts, rutils
+import databaseBursts, rutils, configparser
 
 LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
 geos = dict() #for building and caching geo data
+config = configparser.ConfigParser()
+config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 #=============
 #api endpoints
@@ -304,4 +306,4 @@ if __name__ == '__main__':
     listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 
     #Start the flask server
-    app.run(port=4201, threaded=True, host='0.0.0.0')
+    app.run(port=int(config['api']['port']), threaded=True, host='0.0.0.0')

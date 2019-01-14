@@ -5,6 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils
 import predictions
+import configparser
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
@@ -13,8 +14,9 @@ LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.25
 DEBUG = False
 RAW_IPS = None
 _events = [] # async db events
-
-config = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
+modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
+config = configparser.ConfigParser()
+config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 #handler for signals (don't want to stop processing packets halfway through)
 class sigTermHandler:
@@ -23,6 +25,7 @@ class sigTermHandler:
         signal.signal(signal.SIGINT, self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
     def shutdown(self, signum, frame):
+        print("caught signal")
         self.exit = True
 
 def packetBurstification(devices):
@@ -37,14 +40,14 @@ def packetBurstification(devices):
     for counter, row in enumerate(unBinned):
         id = row[0]
         mac = row[4]
-        burstTimeInterval = int(config["burstTimeIntervals"]["Unknown"])
-        burstPacketNoCutoff = int(config["burstNumberCutoffs"]["Unknown"])
+        burstTimeInterval = int(modelDefaults["burstTimeIntervals"]["Unknown"])
+        burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"]["Unknown"])
         try:
-            burstTimeInterval = int(config["burstTimeIntervals"][devices[mac]])
+            burstTimeInterval = int(modelDefaults["burstTimeIntervals"][devices[mac]])
         except KeyError:
             pass
         try:
-            burstPacketNoCutoff = int(config["burstNumberCutoffs"][devices[mac]])
+            burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"][devices[mac]])
         except KeyError:
             pass
         
@@ -90,7 +93,7 @@ def packetBurstification(devices):
 
 def burstPrediction(devices):
     unCat = DB_MANAGER.getNoCat()
-    cutoffs = config["burstNumberCutoffs"]
+    cutoffs = modelDefaults["burstNumberCutoffs"]
     predictor = predictions.Predictor()
 
     for burst in unCat:
@@ -138,7 +141,7 @@ def processGeos():
             # local ip, so skip
             continue
         if ip not in known_ips:
-            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=***REMOVED***')
+            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + config['macvendors']['key'])
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
                 DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], data['organisation'][:20]))
@@ -210,7 +213,8 @@ if __name__ == '__main__':
         processEvents()
         processGeos()
         processMacs()
-        devices = requests.get(url='http://localhost:4201/api/devices').json()["manDev"]
+        apiUrl = config['api']['url'] + '/devices'
+        devices = requests.get(url=apiUrl).json()["manDev"]
         if args.burst:
             print("Doing burstification")
             packetBurstification(devices)
@@ -220,6 +224,6 @@ if __name__ == '__main__':
 
         #exit gracefully if we were asked to shutdown
         if handler.exit:
-            break
+            os._exit(0)
         
         time.sleep(INTERVAL)

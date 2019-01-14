@@ -1,5 +1,8 @@
 #! /bin/sh
 
+LOCATION=insert_path_to_ioterfine
+USER=user_to_run_as
+
 #define signal handler
 term()
 {
@@ -18,7 +21,7 @@ trap 'term' INT
 trap 'term' QUIT
 
 #move to working directory
-cd /home/mcnutty/Documents/IoT-refine
+cd $LOCATION
 cd scripts
 
 #start capturing packets
@@ -27,18 +30,18 @@ PID3=$!
 >&2 echo Started capture with PID $PID3
 
 #start categorising packets
-sudo -u mcnutty ./loop.py &
+sudo -u $USER ./loop.py &
 PID4=$!
 >&2 echo Started categorisation with PID $PID4
 
 #start the API
-sudo -u mcnutty ./api.py &
+sudo -u $USER ./api.py &
 PID5=$!
 >&2 echo Started the API with PID $PID5
 
 #start angular
 cd ../ui
-sudo -u mcnutty ng serve &
+sudo -u $USER ng serve &
 PID1=$!
 >&2 echo Started angular with PID $PID1
 

@@ -13,7 +13,6 @@ queue = []
 
 def DatabaseInsert(packets):
     global timestamp
-    print("packets ", len(packets))
     # if MANUAL_LOCAL_IP is None:
     #     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
     # else: 
@@ -23,7 +22,6 @@ def DatabaseInsert(packets):
     #open db connection
     conn = psycopg2.connect("dbname=testdb user=postgres password=password")
     cur = conn.cursor()
-    counter = 0
     
     for packet in packets:
         #clean up packet info before entry
@@ -64,13 +62,12 @@ def DatabaseInsert(packets):
             print("Unexpected error on insert:", sys.exc_info())
             traceback.print_exc()
             sys.exit(-1)  
-        counter += 1
         
     #commit the new records and close db connection
     conn.commit()
     cur.close()
     conn.close()
-    print("Captured " + str(counter) + " packets this tick")
+    print("Captured " + len(packets) + " packets this tick")
 
 def QueuedCommit(packet):
     #commit packets to the database in COMMIT_INTERVAL second intervals
