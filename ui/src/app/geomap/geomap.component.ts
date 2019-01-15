@@ -214,7 +214,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
     const svgel = this.getSVGElement();
-    if (!svgel || !this.usage || !this.impacts) { return; }
+    if (!svgel)  { return; }
     // console.log('refinebar render! getSVGElement > ', svgel);
 
     let rect = svgel.getBoundingClientRect(),
@@ -236,15 +236,16 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage, // this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
-      impacts = this.impacts, // this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+    const usage = this.usage || [], // this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts || [], // this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       minmax = d3.extent(impacts.map( i => i.impact ));            
 
-
-       console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
+    console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     apps.sort();    
+
+    // old sorting method
     // if (this.apps === undefined) {
     //   // sort apps
     //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
@@ -252,6 +253,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     // } else {
     //   apps = this.apps;
     // }
+
     let margin = { top: 20, right: 20, bottom: -200, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
       height = height_svgel - margin.top - margin.bottom, // +svg.attr('height') - margin.top - margin.bottom,
