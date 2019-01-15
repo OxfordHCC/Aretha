@@ -5,18 +5,23 @@ from flask_restful import Resource, Api
 import json, re, sys, os, traceback, copy, argparse
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts, rutils
+import databaseBursts, rutils, configparser
 
 LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
 DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
 geos = dict() #for building and caching geo data
+CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
+CONFIG = None
+DEBUG = False
+log = lambda *args: print(*args) if DEBUG else ''
+
 
 #=============
 #api endpoints
 
-#return aggregated data for the given time period (in days, called by refine)
+#return aggregated data for the given time period (in minutes, called by refine)
 class Refine(Resource):
     def get(self, n):
         try:
@@ -45,12 +50,12 @@ class SetDevice(Resource):
         else:
             return jsonify({"message": "Invalid mac address given"})
 
-#return all traffic bursts for the given time period (in days)
+#return all traffic bursts for the given time period (in minutes)
 class Bursts(Resource):
     def get(self, n):
         return jsonify(GetBursts(n))
 
-#return all impacts for the given time period (in days)
+#return all impacts for the given time period (in minutes)
 class Impacts(Resource):
     def get(self, n):
         return jsonify(GetImpacts(n))
@@ -98,9 +103,6 @@ def GetBursts(n, units="MINUTES"):
         category = burst[3]
         result.append({"value": unixTime, "category": category, "device": device })
     return result
-
-
-#get impact (traffic) of every device/external ip combination for the given time period (in days)
 
 #setter method for impacts
 def _update_impact(impacts, mac, ip, impact):
@@ -186,8 +188,6 @@ def CompileImpacts(impacts, packets):
     #         pass
     #     pass    
     return result
-
-
 
 def GetImpacts(n, units="MINUTES"):
     global geos
@@ -282,15 +282,17 @@ def stream():
 #=======================
 #main part of the script
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
 
-    # parser.add_argument('--localip', dest="localip", type=str, help="Specify local IP addr (if not 192.168.x.x/10.x.x.x)")    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s" % CONFIG_PATH)
+    parser.add_argument('--debug', dest='debug', action='store_true')
     args = parser.parse_args()
 
-    # if args.localip is not None:
-    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
-    #     print("Using local IP mask %s" % localipmask)    
+    DEBUG = args.debug
+    CONFIG = configparser.ConfigParser()
+    CONFIG_PATH = args.config if args.config else CONFIG_PATH
+    log("Loading config from path %s" % CONFIG_PATH)
+    CONFIG.read(CONFIG_PATH)    
 
     #Register the API endpoints with flask
     api.add_resource(Refine, '/api/refine/<n>')
@@ -304,4 +306,4 @@ if __name__ == '__main__':
     listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 
     #Start the flask server
-    app.run(port=4201, threaded=True, host='0.0.0.0')
+    app.run(port=int(CONFIG['api']['port']), threaded=True, host='0.0.0.0')

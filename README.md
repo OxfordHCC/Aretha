@@ -10,11 +10,13 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 ## Install
 1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
 
-2. Install python3 dependencies: `pip3 install psycopg2 scapy pandas sklearn ipdata Pyshark`
+2. Install python3 dependencies: `pip3 install psycopg2-binary scapy pandas sklearn ipdata Pyshark`
 
 3. Install angular (for Refine web interface): `cd ui/ && npm install && npm install @angular/cli@1.1.3`
 
-4. Configure the database from the schema: `/scripts/resetDb.py`
+4. Configure the database from the schema: `/scripts/resetDb.py` (dbname=`testdb` user=`postgres` password=`password`)
+
+5. Copy `config-sample.cfg` to `config.cfg` and change values as appropriate
 
 ## Run (manually)
 1. Run `ng serve` in \ui
@@ -25,7 +27,9 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 
 ## Run (systemd service)
 
-1. Copy `service/iotrefine.service` to `/etc/systemd/system/`
+1. Copy `service/iotrefine-sample.service` to `/etc/systemd/system/iotrefine.service` and edit in the marked fields
+
+2. Copy `service/daemon-sample.sh` to `service/daemon.sh` and edit the marked fields
 
 2. Start and stop the service by running `sudo systemctl {start|stop} iotrefine`
 
