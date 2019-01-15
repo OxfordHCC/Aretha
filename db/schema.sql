@@ -34,7 +34,7 @@ drop table if exists devices cascade;
 create table devices(
 	mac varchar(17) primary key,
 	manufacturer varchar(40),
-	name varchar(40) DEFAULT 'unknown'
+	name varchar(255) DEFAULT 'unknown'
 );
 
 drop table if exists geodata cascade;
