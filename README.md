@@ -35,6 +35,8 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 
 3. Enable or disable IoT Refine on boot by running `sudo systemctl {enable|disable} iotrefine`
 
+4. To have chromium point at iotrefine on login, copy and fill out logintask-sample.desktop and move it to ~/.config/autostart/
+
 ## Configure Device Names
 
 Device names will initially display as MAC addresses. To assign a 'friendly' name to a device, use the `SetDevice` API endpoint:

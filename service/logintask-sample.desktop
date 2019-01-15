@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=chromium-autostart
+GenericName=chromium autostart
+Comment=start chromium and point it at iotrefine
+Exec=path_to_iotrefine/scripts/restart-browser.sh
+Terminal=true
+Type=Application
+X-GNOME-Autostart-enabled=true

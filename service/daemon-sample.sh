@@ -24,6 +24,9 @@ trap 'term' QUIT
 cd $LOCATION
 cd scripts
 
+#start the wifi hotspot
+./reset-wifi
+
 #start capturing packets
 ./capture.py &
 PID3=$!
