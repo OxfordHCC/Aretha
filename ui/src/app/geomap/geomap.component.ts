@@ -243,8 +243,8 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
        console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
 
-    let apps = _.uniq(impacts.map((x) => x.appid));
-    apps.sort();    
+	  let apps = _.uniq(impacts.map((x) => x.appid));
+	  apps.sort();    
     // if (this.apps === undefined) {
     //   // sort apps
     //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
@@ -269,8 +269,12 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     });
 
     // add circles to svg
-    var datas = svg.selectAll("circle").data(impacts);
-    // console.info('selecting on impacts ', impacts);
+	var datas = svg.selectAll("circle").data(impacts);
+
+	//filter out impacts that have lat/lon of 0,0 (i.e. we don't know where they are located)
+	datas.filter((d) => {(d.geo.longitude == 0 && d.geo.lattitude == 0) ? 0 : 1});
+	  
+	// console.info('selecting on impacts ', impacts);
 
     datas.enter().append("circle")
       .attr("cx", (d) => {
