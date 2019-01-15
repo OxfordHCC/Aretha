@@ -11,6 +11,6 @@ tests/__pycache__/
 
 *node_modules*
 
-scripts/config.cfg
+config/config.cfg
 service/daemon.sh
 service/iotrefine.service
