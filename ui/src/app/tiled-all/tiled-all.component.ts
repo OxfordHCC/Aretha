@@ -4,7 +4,7 @@ import { FocusTarget, FocusService } from "app/focus.service";
 import { UsageListener } from "app/usage-listener/usage-listener.component";
 import { UsageConnectorService } from "app/usage-connector.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AppImpact } from '../refinebar/refinebar.component';
+import { AppImpact, AppDevice } from '../refinebar/refinebar.component';
 import * as _ from 'lodash';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
@@ -53,6 +53,7 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
   mode: string;
   impacts: AppImpact[];
   usage : AppUsage[];
+  devices : {[mac: string]:string};
   impactChanges: Observable<any>;
   private impactObservers: Observer<any>[] = [];
    
@@ -86,7 +87,7 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
         // console.log('!@#ILJ!@#L@!J# got bundle ', bundle);
         this_.usage = bundle.usage;
         this_.impacts = bundle.impacts;
-        console.log("yooo assigning impacts ", this_.impacts);
+        this_.devices = bundle.manDev;
         this_.triggerImpactsChange();
         // this_.render();
       });

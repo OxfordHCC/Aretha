@@ -10,8 +10,9 @@ local_ip_mask = rutils.make_localip_mask()
 timestamp = 0 
 queue = []
 COMMIT_INTERVAL = None
-config = configparser.ConfigParser()
-config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
+CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
+CONFIG = None
+# config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 def DatabaseInsert(packets):
     global timestamp
@@ -42,6 +43,9 @@ def DatabaseInsert(packets):
             # print(packet)
             continue
 
+        if rutils.is_multicast_v4(src) or rutils.is_multicast_v4(dst):
+            continue                       
+        
         srcLocal = local_ip_mask.match(src)
         dstLocal = local_ip_mask.match(dst)
         
@@ -86,7 +90,8 @@ def QueuedCommit(packet):
     
     #time to commit to db
     if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
-        DatabaseInsert(queue)
+        if len(queue) > 0: 
+            DatabaseInsert(queue)
         queue = []
         timestamp = 0
 
@@ -98,6 +103,7 @@ def log(*args):
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s" % CONFIG_PATH)
     parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
     parser.add_argument('--interval', dest="interval", type=float, help="Commit interval in seconds")
     parser.add_argument('--debug', dest='debug', action='store_true')
@@ -105,25 +111,30 @@ if __name__=='__main__':
 
     DEBUG = args.debug
     INTERFACE = None
+    CONFIG_PATH = args.config if args.config else CONFIG_PATH
+
+    print("Loading config from ", CONFIG_PATH)
+    CONFIG = configparser.ConfigParser()
+    CONFIG.read(CONFIG_PATH)
 
     if args.interface is not None:
         INTERFACE = args.interface
-    elif "capture" in config and "interface" in config['capture']:
-        INTERFACE = config['capture']['interface']
+    elif "capture" in CONFIG and "interface" in CONFIG['capture']:
+        INTERFACE = CONFIG['capture']['interface']
     else:
         print(parser.print_help())
         sys.exit(-1)
     
     if args.interval is not None:
         COMMIT_INTERVAL = args.interval
-    elif "capture" in config and "interval" in config['capture']:
-        COMMIT_INTERVAL = float(config['capture']['interval'])
+    elif "capture" in CONFIG and "interval" in CONFIG['capture']:
+        COMMIT_INTERVAL = float(CONFIG['capture']['interval'])
     else:
         print(parser.print_help())
         sys.exit(-1)
 
-    log("Configuring capture on ", args.interface)
-    
+    log("Setting capture interval ", COMMIT_INTERVAL)
+    print("Setting up to capture from ", INTERFACE)    
     capture = pyshark.LiveCapture(interface=INTERFACE)
 
     if DEBUG:
@@ -133,5 +144,3 @@ if __name__=='__main__':
 
     capture.apply_on_packets(QueuedCommit) #, timeout=30)
     capture.close()
-
-    

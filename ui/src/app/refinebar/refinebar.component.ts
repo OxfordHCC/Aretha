@@ -62,6 +62,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   @Input() showLegend = true;
   @Input() showTypesLegend = false;
   @Input() showXAxis = true;
+  @Input('devices') devices_in :({[mac: string]: string});
+  _devices: ({[mac: string]: string}) = {};
+  
 
   @Input() scale = false;
   linear = false;
@@ -73,6 +76,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   _hoveringApp: string;
   _ignoredApps: string[];
   _impact_listener : Subscription;
+
+
   
 
   constructor(private httpM: HttpModule, 
@@ -105,6 +110,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         this.render();
       }
     });
+
+    this.loader.asyncDeviceChanges().subscribe(devices => {
+        console.info(` ~ device name update ${devices.length} devices`);                
+        devices.map( d => { 
+          console.info(`adding mac::name binding ${d.mac} -> ${d.name}`);
+          this._devices[d.mac] = d.name; 
+        });
+        this.render();
+    });  
     
     // (<any>window)._rb = this;
   }
@@ -163,6 +177,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       if (this.impacts) {
         this_.render();
       }
+    }
+    if (this.devices_in) { 
+      this._devices = Object.assign({}, this.devices_in);
     }
     // this.render();
     this.init.then(() => { this.render(); });
@@ -448,11 +465,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           return 1.0;
         });
 
+      // console.info("raw impacts ", this.impacts);
+      // console.info("devices list is now > ", this.apps && this.apps.slice(), apps.slice().reverse(), " and devices ", this._devices);
+
       legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this._ignoredApps.indexOf(d) === -1 ? d : "Removed: " + d)
+        .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d] || d : "Removed: " + d)
         .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;

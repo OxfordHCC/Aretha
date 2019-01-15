@@ -36,17 +36,41 @@
         flex-basis: 30%;
     }
     .gridright {
+        display:flex;
+        flex-direction:column;    
         height: 100%;
         // display: flex;
         // flex-direction: column;
         flex-grow: 0.5;
         align-items: stretch;
-        app-refinecat /deep/ div.main,
-        app-geomap /deep/ div.main,
-        app-geobar /deep/ div.main {
-            height: 30vh;
+        // app-refinecat /deep/ div.main,
+        app-geomap {
+            height: 50vh;
             width: 100%;
+            flex-grow:0;
+            justify-content:flex-start;
         }
+        app-geobar  {  /*/deep/ div.main*/
+            flex-grow:1;
+            justify-content: flex-end;
+            position: relative;
+        }        
+        app-geobar /deep/ div.main {  /*/deep/ div.main*/
+            // height:100%;
+            position:absolute;
+            top:0px;right:0px;bottom:0px;left:0px;
+        }
+
+        // .start {
+        //     justify-content:flex-start;
+        //     flex-grow:0.0;
+        // }
+        // .end { 
+        //     justify-content: flex-end;
+        // }
+        // .grow {
+        //     flex-grow:1.0;
+        // }
     }
     .fullwidth {
         flex-grow: 0;

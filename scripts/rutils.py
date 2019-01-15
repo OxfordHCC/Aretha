@@ -17,6 +17,10 @@ def make_localip_mask(override=None):
 
     return initial_mask    
 
+def is_multicast_v4(ipv4):
+    splits = ipv4 and ipv4.split('.')
+    # print(' checking ', ipv4, ', ismulti? ', splits and int(splits[0]) >= 224 and int(splits[0]) <= 239)
+    return splits and int(splits[0]) >= 224 and int(splits[0]) <= 239
 
 def get_local_ip():
     import socket

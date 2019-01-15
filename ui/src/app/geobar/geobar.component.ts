@@ -219,7 +219,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     // console.log(by_country)
 
-    let margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
+    let margin = { top: 20, right: 20, bottom: this.showXAxis ? 70 : 0, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
       height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom,
 

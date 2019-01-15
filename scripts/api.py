@@ -2,7 +2,7 @@
 
 from flask import Flask, request, jsonify, make_response, Response
 from flask_restful import Resource, Api
-import json, re, sys, os, traceback, copy
+import json, re, sys, os, traceback, copy, argparse
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts, rutils, configparser
@@ -12,8 +12,11 @@ DB_MANAGER = databaseBursts.dbManager() #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
 geos = dict() #for building and caching geo data
-config = configparser.ConfigParser()
-config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
+CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
+CONFIG = None
+DEBUG = False
+log = lambda *args: print(*args) if DEBUG else ''
+
 
 #=============
 #api endpoints
@@ -280,6 +283,17 @@ def stream():
 #main part of the script
 if __name__ == '__main__':
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s" % CONFIG_PATH)
+    parser.add_argument('--debug', dest='debug', action='store_true')
+    args = parser.parse_args()
+
+    DEBUG = args.debug
+    CONFIG = configparser.ConfigParser()
+    CONFIG_PATH = args.config if args.config else CONFIG_PATH
+    log("Loading config from path %s" % CONFIG_PATH)
+    CONFIG.read(CONFIG_PATH)    
+
     #Register the API endpoints with flask
     api.add_resource(Refine, '/api/refine/<n>')
     api.add_resource(Devices, '/api/devices')
@@ -292,4 +306,4 @@ if __name__ == '__main__':
     listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 
     #Start the flask server
-    app.run(port=int(config['api']['port']), threaded=True, host='0.0.0.0')
+    app.run(port=int(CONFIG['api']['port']), threaded=True, host='0.0.0.0')
