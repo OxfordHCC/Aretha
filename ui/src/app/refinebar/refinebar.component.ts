@@ -465,6 +465,9 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           return 1.0;
         });
 
+      console.info("raw impacts ", this.impacts);
+      console.info("devices list is now > ", this.apps && this.apps.slice(), apps.slice().reverse(), " and devices ", this._devices);
+
       legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)

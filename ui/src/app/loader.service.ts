@@ -562,11 +562,11 @@ export class LoaderService {
         manDev = resp.manDev,
         bursts = resp.bursts;
 
-      impacts.forEach(function(impact){
-        if (manDev[impact.appid] !== "unknown") {
-          impact.appid = manDev[impact.appid];
-        }
-      });
+      // impacts.forEach(function(impact){
+      //   if (manDev[impact.appid] !== "unknown") {
+      //     impact.appid = manDev[impact.appid];
+      //   }
+      // });
       bursts.forEach(function(burst){
         if (manDev[burst.device] !== "unknown") {
           burst.device = manDev[burst.device];
