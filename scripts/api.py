@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 import databaseBursts, rutils, configparser
 
 LOCAL_IP_MASK = rutils.make_localip_mask() # re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
-DB_MANAGER = databaseBursts.dbManager() #for running database queries
+DB_MANAGER = None #for running database queries
 app = Flask(__name__) #initialise the flask server
 api = Api(app) #initialise the flask server
 geos = dict() #for building and caching geo data
@@ -196,8 +196,9 @@ def GetImpacts(n, units="MINUTES"):
 
     impacts = dict() # copy.deepcopy(_impact_cache) 
     # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s) ORDER BY id", ("'" + str(n) + " " + units + "'",)) 
+    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
     packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
+    print("got ", len(packets), "packets")
 
     # pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet
      # {'id': '212950', 'dst': '224.0.0.251', 'len': '101', 'mac': '78:4f:43:64:62:01', 'src': '192.168.0.24', 'burst': None}
@@ -302,6 +303,7 @@ if __name__ == '__main__':
     api.add_resource(SetDevice, '/api/setdevice/<mac>/<name>')
 
     # watch for listen events -- not sure if this has to be on its own connection
+    DB_MANAGER = databaseBursts.dbManager()
     listenManager = databaseBursts.dbManager()
     listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 

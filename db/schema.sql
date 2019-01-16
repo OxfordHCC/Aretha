@@ -29,6 +29,7 @@ create table packets (
 -- create two indexes on src and dst to speed up lookups by these cols by loop.py
 create index on packets (src);
 create index on packets (dst);
+create index on packets (time);
 
 drop table if exists devices cascade;
 create table devices(

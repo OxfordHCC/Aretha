@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 import databaseBursts, rutils, predictions
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-DB_MANAGER = databaseBursts.dbManager()
+DB_MANAGER = None
 LOCAL_IP_MASK = rutils.make_localip_mask() 
 DEBUG = False
 log = lambda *args: print(*args) if DEBUG else ''
@@ -193,6 +193,9 @@ if __name__ == '__main__':
     log("Loading config from .... ", CONFIG_PATH)
     CONFIG = configparser.ConfigParser()
     CONFIG.read(CONFIG_PATH)
+
+    dbconnect = {}
+    DB_MANAGER = databaseBursts.dbManager()
 
     INTERVAL = None
     ISBURST = None

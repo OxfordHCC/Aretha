@@ -8,9 +8,10 @@ import threading
 
 class dbManager():
     
-    def __init__(self):
+    def __init__(self, dbname='testdb', username='postgres', password='password'):
         try:
-            self.connection = psycopg2.connect("dbname=testdb user=postgres password=password")
+            print("connection string ", "dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
+            self.connection = psycopg2.connect("dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
         except:
             print("Connection error")
         
