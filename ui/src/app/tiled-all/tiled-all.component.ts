@@ -55,6 +55,7 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
   usage : AppUsage[];
   devices : {[mac: string]:string};
   impactChanges: Observable<any>;
+  _last_load_time: Date;
   private impactObservers: Observer<any>[] = [];
    
   constructor(focus: FocusService, connector: UsageConnectorService, private route: ActivatedRoute, private loader: LoaderService) {
@@ -90,13 +91,14 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
         this_.devices = bundle.manDev;
         this_.triggerImpactsChange();
         // this_.render();
+        this_._last_load_time = new Date();
       });
     }, 
     throttledReload = _.throttle(reload, 1000);
 
     this.loader.asyncAppImpactChanges().subscribe({
       next(i: AppImpact[]) {  
-        console.log('AppImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
+        // console.log('AppImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
         if (this_.impacts) { 
           this_.impacts = this_.impacts.concat(i);
           this_.triggerImpactsChange();
@@ -112,6 +114,15 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
         if (this_.impacts) { throttledReload(); }        
       }
     });  
+
+    setInterval(() => {
+      let msec_since_reload = (new Date()).valueOf() - this_._last_load_time.valueOf();
+      console.info('WATCHDOG checking ~~~~ ', msec_since_reload, ' msec since last reload');
+      if (msec_since_reload > 1000*60) {
+        console.info('WATCHDOG forcing reload of impacts ~~~~ ', msec_since_reload, 'since last reload');
+        reload();
+      }
+    }, 10*1000); 
     reload();
   }  
 
