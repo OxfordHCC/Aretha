@@ -123,7 +123,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         //   return acc;
         // }, []);
         this.zone.run(() => {
-          console.info('geomap updating impacts');
+          // console.info('geomap updating impacts');
           let iin = this_.impacts_in;
           // this_.impacts = iin.map(impact => ({ impact: impact.impact, /* impact.impact/minMax[1],*/ geo: <any>impact, appid: impact.appid }));        
 
@@ -240,7 +240,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       impacts = this.impacts || [], // this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       minmax = d3.extent(impacts.map( i => i.impact ));            
 
-    console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
+    // console.log(' impact extents ', minmax[0], ' - ', minmax[1]);
 
     let apps = _.uniq(impacts.map((x) => x.appid));
     apps.sort();    
@@ -300,7 +300,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
       .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
       .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
 
-      console.info('map ending render');
+      // console.info('map ending render');
     // datas.enter().append('text')
     //   .attr('x', (d) => projection([d.geo.longitude, d.geo.latitude])[0] + 5)
     //   .attr('y', (d) => projection([d.geo.longitude, d.geo.latitude])[1] + 5)
