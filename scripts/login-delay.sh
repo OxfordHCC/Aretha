@@ -5,7 +5,7 @@ LOCATION=/home/mcnutty/Documents/IoT-refine/scripts/
 echo Starting IoT-refine\n
 echo Clearing database...
 cd $LOCATION
-./reset-database.sh
+./reset-database.py
 
 echo Waiting for service to come up...
 sleep 15
