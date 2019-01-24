@@ -10,7 +10,7 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 ## Install
 1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
 
-2. Install python3 dependencies: `pip3 install psycopg2 scapy pandas sklearn ipdata Pyshark`
+2. Install python3 dependencies: `pip3 install psycopg2-binary scapy pandas sklearn ipdata Pyshark`
 
 3. Install angular (for Refine web interface): `cd ui/ && npm install && npm install @angular/cli@1.1.3`
 
@@ -34,6 +34,8 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 2. Start and stop the service by running `sudo systemctl {start|stop} iotrefine`
 
 3. Enable or disable IoT Refine on boot by running `sudo systemctl {enable|disable} iotrefine`
+
+4. To have chromium point at iotrefine on login, copy and fill out logintask-sample.desktop and move it to ~/.config/autostart/
 
 ## Configure Device Names
 

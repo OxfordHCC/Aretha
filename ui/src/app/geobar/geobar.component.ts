@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
 import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo, GeoIPInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
@@ -8,6 +8,9 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Observable } from '../../../node_modules/rxjs/Observable';
+import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import { AppImpact } from '../refinebar/refinebar.component';
 
 interface AppImpactGeo {
   appid: string;
@@ -28,11 +31,16 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   // still in use!
   companyid2info: CompanyDB;
 
-  private usage: AppUsage[];
+  @Input() impactChanges : Observable<any>;
+  private _impact_listener : Subscription;
+  @Input('impacts') impacts_in : AppImpact[];
+
+  @Input('appusage') usage: AppUsage[];
   private impacts: AppImpactGeo[];
   private init: Promise<any>;
+
   lastMax = 0;
-  _byTime = 'yes';
+  // _byTime = 'yes';
   normaliseImpacts = false;
 
   apps: string[]; // keeps app ordering between renders
@@ -40,7 +48,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
+  // @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
@@ -61,7 +69,8 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService) {
+    private hover: HoverService,
+    private zone :NgZone) {
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
@@ -75,58 +84,44 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
       }
     });
     
-    this.getIoTData();
-    (<any>window)._rb = this;
+    // this.getIoTData();
+    // (<any>window)._rb = this;
   }
-  getIoTData(): void {
-	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-      this.usage = response2.json()["usage"];
-		  var impacts = response2.json()["impacts"];
+  // getIoTData(): void {
+  //   this.loader.getIoTData().then(bundle => {
+  //     this.usage = bundle.usage;
+  //     this.impacts = bundle.impacts.map(impact => ({ appid: impact.appid, country: impact.country_code !== 'XX' ? impact.country_code : 'Unknown', country_code: impact.country_code, impact: impact.impact }))
+  //     this.render()
+  //   });
+  // }
 
-	var manDev = response2.json()["manDev"];
- 
-       impacts.forEach(function(impact){
-         if (manDev[impact.appid] != "unknown") {
-           impact.appid = manDev[impact.appid];
-         }
-       });
-
-      this.impacts = impacts.map(impact => ({ appid: impact.appid, country: impact.country_code !== 'XX' ? impact.country_code : 'Unknown', country_code: impact.country_code, impact: impact.impact }))
-      //console.log(this.impacts)
-      this.render()
-    });
-  }
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage_in) { return; }
-    this.init.then(() => {
-      if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-        delete this.apps;
+
+    let convert_in = () => {
+      if (this.impacts_in) { 
+        this.impacts = this.impacts_in.map(impact => ({ ...impact, appid: impact.appid, country: (<any>impact).country_code !== 'XX' ? (<any>impact).country_code : 'Unknown', country_code: (<any>impact).country_code, impact: impact.impact }));
+        // console.log('geobar impacts ', this.impacts);
+        this.zone.run(() => this.render());
       }
-      this.compileImpacts(this.usage_in).then(impacts => {
-        /* this.usage = this.usage_in;
-        let red_impacts = impacts.reduce((perapp, impact) => {
-          let appcat = (perapp[impact.appid] || {});
-          appcat[impact.country] = (appcat[impact.country] || 0) + impact.impact;
-          perapp[impact.appid] = appcat;
-          return perapp;
-        }, {});
-        this.impacts = _.flatten(_.map(red_impacts, (country, appid) => _.map(country, (impact, cat) => ({ appid: appid, country: cat, impact: impact } as AppImpactGeo))));
-        // console.log('country geo impacts after comp > ', impacts);  */     
-        this.render();
-      });
-    });
+    };
+    // if (!this.usage_in) { return; }
+
+    if (this.impactChanges && this._impact_listener === undefined) {
+      this._impact_listener = this.impactChanges.subscribe(convert_in);
+    }
+    // this.init.then(convert_in);
   }
 
   ngAfterViewInit(): void { this.init.then(() => this.render()); }
@@ -136,36 +131,36 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       || this.loader.getFullAppInfo(appid);
   }
 
-  compileImpacts(usage: AppUsage[]): Promise<AppImpactGeo[]> {
-    // folds privacy impact in simply by doing a weighted sum over hosts
-    // usage has to be in a standard unit: days, minutes
-    // first, normalise usage
+  // compileImpacts(usage: AppUsage[]): Promise<AppImpactGeo[]> {
+  //   // folds privacy impact in simply by doing a weighted sum over hosts
+  //   // usage has to be in a standard unit: days, minutes
+  //   // first, normalise usage
 
-    const timebased = this.byTime === 'yes',
-      total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-      impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
+  //   const timebased = this.byTime === 'yes',
+  //     total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
+  //     impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
 
-    return Promise.all(impacts.map((usg): Promise<AppImpactGeo[]> => {
+  //   return Promise.all(impacts.map((usg): Promise<AppImpactGeo[]> => {
 
-      return this._getApp(usg.appid).then(app => {
-        const hosts = app.hosts, geos = app.host_locations;
-        if (!hosts || !geos) { console.warn('No hosts found for app ', usg.appid); return []; }
-        return geos.map(geo => ({ appid: usg.appid, country: geo.country_name !== '' ? geo.country_name : 'Unknown', country_code: geo.country_code, impact: usg.impact }));
-      });
-    })).then((nested_impacts: AppImpactGeo[][]): AppImpactGeo[] => _.flatten(_.flatten(nested_impacts)));
-  }
+  //     return this._getApp(usg.appid).then(app => {
+  //       const hosts = app.hosts, geos = app.host_locations;
+  //       if (!hosts || !geos) { console.warn('No hosts found for app ', usg.appid); return []; }
+  //       return geos.map(geo => ({ appid: usg.appid, country: geo.country_name !== '' ? geo.country_name : 'Unknown', country_code: geo.country_code, impact: usg.impact }));
+  //     });
+  //   })).then((nested_impacts: AppImpactGeo[][]): AppImpactGeo[] => _.flatten(_.flatten(nested_impacts)));
+  // }
 
 
   // accessors for .byTime 
-  set byTime(val) {
-    this.lastMax = 0;
-    this._byTime = val;
-    this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-      this.impacts = impacts;
-      this.render();
-    }));
-  }
-  get byTime() { return this._byTime; }
+  // set byTime(val) {
+  //   this.lastMax = 0;
+  //   this._byTime = val;
+  //   this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
+  //     this.impacts = impacts;
+  //     this.render();
+  //   }));
+  // }
+  // get byTime() { return this._byTime; }
 
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
@@ -192,8 +187,8 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 );
+    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
+      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 );
 
     let apps = _.uniq(impacts.map((x) => x.appid)),
       countries = _.uniq(impacts.map((x) => x.country)),
@@ -210,7 +205,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     if (this.apps === undefined) {
       // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+      // TODO: this is crashing:
+      apps.sort();
+      // apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
       this.apps = apps;
     } else {
       apps = this.apps;
@@ -220,9 +217,9 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     // re-order companies
     countries = by_country.map((bc) => bc.country);
 
-    //console.log(by_country)
+    // console.log(by_country)
 
-    let margin = { top: 20, right: 20, bottom: this.showXAxis ? 120 : 0, left: 40 },
+    let margin = { top: 20, right: 20, bottom: this.showXAxis ? 70 : 0, left: 40 },
       width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
       height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom,
 
@@ -357,12 +354,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   }
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'geobar');
+    // this.actlog.log('mouseenter', 'geobar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'geobar');
+    // this.actlog.log('mouseleave', 'geobar');
   }  
 
 }

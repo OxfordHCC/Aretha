@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
 import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
@@ -7,16 +7,24 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Observable } from '../../../node_modules/rxjs/Observable';
+import { Observer } from '../../../node_modules/rxjs/Observer';
+import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
 const LOCAL_IP_MASK_16 = "192.168.";
 const LOCAL_IP_MASK_24 = "10.";
 
-interface AppImpact {
+export interface AppImpact {
   appid: string;
   companyid: string;
   impact: number;
   companyName: string;
 };
+export interface AppDevice {
+  mac : string;
+  manufacturer: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-refinebar',
@@ -33,12 +41,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   // still in use!
   companyid2info: CompanyDB;
 
-  private usage: AppUsage[];
-  private impacts: AppImpact[];
+  @Input() impacts: AppImpact[];
+  @Input() impactChanges : Observable<any>;
+  // private impacts: AppImpact[];
+  
   private init: Promise<any>;
   lastMax = 0;
-  _timeSpan = 'd';
-  _byTime = 'yes';
+  // _timeSpan = 'd';
+  // _byTime = 'yes';
   normaliseImpacts = false;
 
   apps: string[]; // keeps app ordering between renders
@@ -46,12 +56,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
-  @Input('appusage') usage_in: AppUsage[];
+  // @Input('appusage') usage_in: AppUsage[];
   @Input() showModes = true;
   @Input() highlightApp: APIAppInfo;
   @Input() showLegend = true;
   @Input() showTypesLegend = false;
   @Input() showXAxis = true;
+  @Input('devices') devices_in :({[mac: string]: string});
+  _devices: ({[mac: string]: string}) = {};
+  
 
   @Input() scale = false;
   linear = false;
@@ -62,6 +75,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
   _ignoredApps: string[];
+  _impact_listener : Subscription;
+
+
+  
 
   constructor(private httpM: HttpModule, 
     private http: Http, 
@@ -69,15 +86,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     private loader: LoaderService,
     private hostutils: HostUtilsService,
     private focus: FocusService,
-    private hover: HoverService) {
+    private hover: HoverService,
+    private zone:NgZone) {
+  
     this.init = Promise.all([
       this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
     ]);
 
-    this.getIoTData();
-    
     hover.HoverChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._hoveringApp) {
         this._hoveringApp = target ? target as string : undefined;
         this.render();
@@ -87,45 +104,37 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     this._ignoredApps = new Array();
 
     focus.focusChanged$.subscribe((target) => {
-      //console.log('hover changed > ', target);
+      // console.log('hover changed > ', target);
       if (target !== this._ignoredApps) {
         this._ignoredApps = target ? target as string[] : [];
         this.render();
       }
     });
+
+    this.loader.asyncDeviceChanges().subscribe(devices => {
+        console.info(` ~ device name update ${devices.length} devices`);                
+        devices.map( d => { 
+          console.info(`adding mac::name binding ${d.mac} -> ${d.name}`);
+          this._devices[d.mac] = d.name; 
+        });
+        this.render();
+    });  
     
-    (<any>window)._rb = this;
+    // (<any>window)._rb = this;
   }
   getSVGElement() {
     const nE: HTMLElement = this.el.nativeElement;
     return Array.from(nE.getElementsByTagName('svg'))[0];
   }
 
-  getIoTData(): void {
-	  this.http.get('http://localhost:4201/api/refine/15').toPromise().then(response2 => {
-      this.usage = response2.json()["usage"];
-	  this.impacts = response2.json()["impacts"];
-	  var manDev = response2.json()["manDev"];
-
-	  this.impacts.forEach(function(impact){
-	  	if (manDev[impact.appid] != "unknown") {
-		  impact.appid = manDev[impact.appid];
-		}
-	  });
-
-      this.render()
-    });
-  }
-
   addOrRemove(newClick: string): string[] {
-    //console.log(this._ignoredApps);
+    // console.log(this._ignoredApps);
     if (this._ignoredApps.indexOf(newClick) > -1) {
       this._ignoredApps = this._ignoredApps.filter(obj => obj !== newClick);
-    }
-    else {
+    } else {
       this._ignoredApps.push(newClick);
     }
-    //console.log(this._ignoredApps);
+    // console.log(this._ignoredApps);
     this.render()
     return this._ignoredApps
   }
@@ -155,17 +164,25 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       }
     });
   }
-
-
+  // TODO 
   // this gets called when this.usage_in changes
   ngOnChanges(changes: SimpleChanges): void {
-    if (!this.usage_in) { return; }
-    this.init.then(() => {
-      if (!this.usage_in || !this.usage || !this.apps || this.apps.length !== this.usage_in.length) {
-        delete this.apps;
+    // console.info("refinebar - ngOnChanges ", this.impacts, this.impactChanges); 
+    var this_ = this;
+    if (this.impactChanges && this._impact_listener === undefined) { 
+      this._impact_listener = this.impactChanges.subscribe(target => {
+        // console.info("Got notification of impact changes! re-rendering");
+        this.zone.run(() => this_.render());
+      });
+      if (this.impacts) {
+        this_.render();
       }
-      this.render();
-    });
+    }
+    if (this.devices_in) { 
+      this._devices = Object.assign({}, this.devices_in);
+    }
+    // this.render();
+    this.init.then(() => { this.render(); });
   }
 
   ngAfterViewInit(): void { this.init.then(() => this.render()); }
@@ -179,50 +196,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     return this.linear ? v : Math.max(0, 5000*Math.log(v) + 10);
   }
 
-  compileImpacts(usage: AppUsage[]): Promise<AppImpact[]> {
-    // folds privacy impact in simply by doing a weighted sum over hosts
-    // usage has to be in a standard unit: days, minutes
-    // first, normalise usage
-
-    const timebased = this.byTime === 'yes',
-      total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-      impacts = usage.map((u) => ({ ...u, impact: 
-		  this.nonLinearity((timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total / 1000000 : 1.0)))
-      }));
-
-    return Promise.all(impacts.map((usg): Promise<AppImpact[]> => {
-
-      return this._getApp(usg.appid).then(app => {
-        const hosts = app && app.hosts;
-		if (!hosts) { console.warn('No hosts found for app ', usg.appid); return Promise.resolve([]); }
-
-        return Promise.all(hosts.map(host => this.hostutils.findCompany(host, app)))
-          .then((companies: CompanyInfo[]) => _.uniq(companies.filter((company) => company !== undefined && company.typetag !== 'ignore')))
-          .then((companies: CompanyInfo[]) => companies.map((company) => ({ appid: usg.appid, companyid: company.id, impact: usg.impact })));
-      });
-    })).then((nested_impacts: AppImpact[][]): AppImpact[] => _.flatten(nested_impacts));
-  }
-
-
-  // accessors for .byTime 
-  set byTime(val) {
-    this.lastMax = 0;
-    this._byTime = val;
-    this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-    this.render();
-    }));
-  }
-
-  get byTime() { return this._byTime; }
-
-  // accessors for timeSpan
-  set timeSpan(val) {
-    this._timeSpan = val;
-    this.render();
-  }
-
-  get timeSpan() {return this._timeSpan; }
-
   setHoveringTypeHighlight(ctype: string) {
     let svg = this.getSVGElement();
     this._hoveringType = ctype;
@@ -233,7 +206,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       d3.select(svg).selectAll('.ctypelegend g.' + ctype).classed('selected', true)
     };
   }
-
   // this is for displaying what company you're hovering on based 
   // on back rects
   _companyHover(company: CompanyInfo, hovering: boolean) {
@@ -242,29 +214,31 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   @HostListener('mouseenter')
   mouseEnter() {
-    //this.actlog.log('mouseenter', 'refinebar');
+    // this.actlog.log('mouseenter', 'refinebar');
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    //this.actlog.log('mouseleave', 'refinebar');
+    // this.actlog.log('mouseleave', 'refinebar');
   }  
 
   setHoveringApp(s: string) {
-    if (this._hoveringApp != s) {
+    if (this._hoveringApp !== s) {
       this._hoveringApp = s;
       this.render();
     }
   }
-
   // 
   render() {
     // console.log(':: render usage:', this.usage && this.usage.length);
+    
     const svgel = this.getSVGElement();
 
-    if (!svgel || this.usage === undefined || this.impacts === undefined || this.usage.length === 0) { return; }
-
-    //console.log(this._timeSpan);
+    if (!svgel || this.impacts === undefined ) { 
+      console.info('render(): impacts undefined, chilling');
+      return; 
+    }
+    // console.info("render :: ", this.impacts);
 
     let rect = svgel.getBoundingClientRect(),
       width_svgel = Math.round(rect.width - 5),
@@ -285,14 +259,11 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     svg.selectAll('*').remove();
 
-
-    let usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) == -1 ),
+    let impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
       apps = _.uniq(impacts.map((x) => x.appid)),
       companies = _.uniq(impacts.map((x) => x.companyName)),
       get_impact = (cid, aid) => {
         const t = impacts.filter((imp) => imp.companyName === cid && imp.appid === aid);
-        //console.log(t);
         const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
         return t !== undefined ? t.reduce(reducer, 0) : 0;
       },
@@ -301,16 +272,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         total: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
         ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
       }));
-      //console.log(by_company);
 
-    if (this.apps === undefined) {
-      // sort apps
-      apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-		//console.log(apps)
-      this.apps = apps;
-    } else {
-      apps = this.apps;
-    }
+    apps.sort();
+    // if (this.apps === undefined) {
+    //   // sort apps
+    //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
+    //   this.apps = apps;
+    // } else {
+    //   apps = this.apps;
+    // }
 
     by_company.sort((c1, c2) => c2.total - c1.total); // apps.reduce((total, app) => total += c2[app], 0) - apps.reduce((total, app) => total += c1[app], 0));
 
@@ -378,15 +348,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
         .on('mouseleave', function (d) {
-          //console.log("Leave" + d );
-          //self.setHoveringApp(undefined)
+          // console.log("Leave" + d );
+          // self.setHoveringApp(undefined)
           this_.hover.hoverChanged(undefined);
         })
         .on('mouseenter', function (d) {
           if (this.parentElement && this.parentElement.__data__) {
             // unsure why this is dying
-            //console.log("Enter" + this.parentElement.__data__.key );
-            //self.setHoveringApp(this.parentElement.__data__.key);
+            // console.log("Enter" + this.parentElement.__data__.key );
+            // self.setHoveringApp(this.parentElement.__data__.key);
             this_.hover.hoverChanged(this.parentElement.__data__.key);
           } 
         });
@@ -476,7 +446,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => {
-          //console.log(d);
+          // console.log(d);
           this.hover.hoverChanged(d)
         })
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
@@ -495,12 +465,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           return 1.0;
         });
 
+      // console.info("raw impacts ", this.impacts);
+      // console.info("devices list is now > ", this.apps && this.apps.slice(), apps.slice().reverse(), " and devices ", this._devices);
+
       legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this._ignoredApps.indexOf(d) == -1 ? d : "Removed: " + d)
-        .style("fill", d => this._ignoredApps.indexOf(d) == -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
+        .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d] || d : "Removed: " + d)
+        .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
           if (highApp) {

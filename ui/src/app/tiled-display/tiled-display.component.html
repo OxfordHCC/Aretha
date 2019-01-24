@@ -1,6 +1,6 @@
 <div class="root">
     <div class="left">
-        <app-usagetable></app-usagetable>
+        <!-- <app-usagetable></app-usagetable> -->
         <div class="focus">
             <div class="app" *ngIf="targettype == 'app'">
                 <img class='appicon' *ngIf="target?.icon" [src]="target?.icon">
@@ -21,8 +21,8 @@
         </div>
     </div>
     <div class="right">
-        <app-refinebar [appusage]="usage"></app-refinebar>
-        <app-refinecat [appusage]="usage"></app-refinecat>
+        <app-refinebar></app-refinebar>
+        <app-refinecat></app-refinecat>
         <app-geomap [appusage]="usage"></app-geomap>
         <app-geobar [appusage]="usage"></app-geobar>
     </div>

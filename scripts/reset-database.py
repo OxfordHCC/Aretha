@@ -6,6 +6,6 @@ sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__f
 import databaseBursts
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = databaseBursts.dbManager()
-print("Resetting database...")
-DB_MANAGER.execute(open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read(), "")
+schema = open(os.path.join(os.path.dirname(FILE_PATH), "db", "schema.sql"), "rb").read()
+DB_MANAGER.execute(schema, None)
 print("Database sucessfully reset")

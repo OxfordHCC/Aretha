@@ -1,34 +1,24 @@
 #! /usr/bin/env python3
 
-import sys
-import time
-import os
-import signal
-import requests
-import re
+import sys, time, os, signal, requests, re, argparse, json, configparser, random
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-import databaseBursts
-import predictions
-import configparser
-import random
+import databaseBursts, rutils, predictions
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
-DB_MANAGER = databaseBursts.dbManager()
-INTERVAL = 5
-modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
-config = configparser.ConfigParser()
-config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
-fruits = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
+DB_MANAGER = None
+LOCAL_IP_MASK = rutils.make_localip_mask() 
+DEBUG = False
+log = lambda *args: print(*args) if DEBUG else ''
+RAW_IPS = None
+_events = [] # async db events
+CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
+CONFIG = None
+FRUITS = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
 
-#handler for signals (don't want to stop processing packets halfway through)
-class sigTermHandler:
-    exit = False
-    def __init__(self):
-        signal.signal(signal.SIGINT, self.shutdown)
-        signal.signal(signal.SIGTERM, self.shutdown)
-    def shutdown(self, signum, frame):
-        self.exit = True
+# TODO move to config
+modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
+
 
 def packetBurstification(devices):
     unBinned = DB_MANAGER.getNoBurst()
@@ -122,29 +112,33 @@ def burstPrediction(devices):
         DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 def processGeos():
-    raw_ips = DB_MANAGER.execute("SELECT DISTINCT src, dst FROM packets", ())
+    global RAW_IPS
+
+    if not RAW_IPS:
+        log("Preloading RAW_IPS")
+        RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
+        log(" Done ", len(RAW_IPS), " known ips ")
+        
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
-    local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
     known_ips = []
 
     for row in raw_geos:
         known_ips.append(row[0])
 
-    for dst,src in raw_ips:
-        external_ip = None
-        if local_ip_mask.match(dst) is not None:
-            external_ip = src
-        else:
-            external_ip = dst
-
-        if external_ip not in known_ips:
-            data = requests.get('https://api.ipdata.co/' + external_ip + '?api-key=' + config['macvendors']['key'])
+    for ip in RAW_IPS:
+        if LOCAL_IP_MASK.match(ip) is not None:
+            # local ip, so skip
+            continue
+        if ip not in known_ips:
+            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['macvendors']['key'])
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, data['latitude'], data['longitude'], data['country_code'], data['organisation'][:20]))
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], data['organisation'][:20] or 'unknown'))
             else:
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (external_ip, "0", "0", "XX", "unknown"))
-        known_ips.append(external_ip)
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
+            known_ips.append(ip)
+
+            log("Adding to known IPs ", ip)
 
 def processMacs():
     raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
@@ -153,8 +147,8 @@ def processMacs():
         if mac not in known_macs:
 
             deviceName = "unknown"
-            if config['loop']['autogen-device-names']:
-                deviceName = random.choice(fruits) + "#" + str(random.randint(100,999))
+            if CONFIG['loop'] and CONFIG['loop']['autogen-device-names']:
+                deviceName = random.choice(FRUITS) + "#" + str(random.randint(100,999))
 
             manufacturer = requests.get("https://api.macvendors.com/" + mac[0]).text
             if "errors" not in manufacturer:
@@ -162,23 +156,111 @@ def processMacs():
             else:
                 DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', %s)", (mac[0], deviceName))
 
+def processEvents():
+    global _events
+    log("processEvents has ", len(_events), " waiting in queue")
+    cur_events = _events.copy()
+    _events.clear()
+    for evt in cur_events:
+        evt = json.loads(evt)
+        if RAW_IPS and evt["operation"] in ['UPDATE','INSERT'] and evt["table"] == 'packets':
+            RAW_IPS.add(evt["data"]["src"])
+            RAW_IPS.add(evt["data"]["dst"])
+        pass
+    log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
+
+
 #============
 #loop control
 if __name__ == '__main__':
-    #register the signal handler
-    handler = sigTermHandler() 
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s " % CONFIG_PATH)    
+    parser.add_argument('--interval', dest="interval", type=float, help="Specify loop interval in sec (can be fractions)")
+    parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
+    parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
+    parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
+    args = parser.parse_args()
+
+    # if args.localip is not None:
+    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
+    #     print("Using local IP mask %s" % localipmask)    
+    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
+
+    DEBUG = args.debug    
+    CONFIG_PATH = args.config if args.config else CONFIG_PATH
+        
+    log("Loading config from .... ", CONFIG_PATH)
+    CONFIG = configparser.ConfigParser()
+    CONFIG.read(CONFIG_PATH)
+
+    dbconnect = {}
+    DB_MANAGER = databaseBursts.dbManager()
+
+    INTERVAL = None
+    ISBURST = None
+    ISPREDICT = None
+    
+    if args.interval is not None:
+        INTERVAL = float(args.interval)
+    elif "loop" in CONFIG and "interval" in CONFIG['loop']:
+        INTERVAL = float(CONFIG['loop']['interval'])
+    else:
+        print("Error parsing interval", 'loop' in CONFIG)
+        parser.print_help()
+        sys.exit(-1)
+    
+    if args.burst is not None:
+        ISBURST = args.burst
+    elif "loop" in CONFIG and "burstify" in CONFIG['loop']:
+        ISBURST = CONFIG['loop']['burstify']
+    else:
+        print("Error with [loop]/burstify parameter.")         
+        parser.print_help()
+        sys.exit(-1)
+    
+    if args.predict is not None:
+        ISPREDICT = args.predict
+    elif "loop" in CONFIG and "predict" in CONFIG['loop']:
+        ISPREDICT = CONFIG['loop']['predict']
+    else:
+        print('Error with [loop]/predict parameter')
+        parser.print_help()
+        sys.exit(-1)
+
+    if not CONFIG['api']['url']:
+        print("ERROR: CONFIG url must be set under [api]")
+        sys.exit(-1)
+
+    DEVICES_API_URL = CONFIG['api']['url'] + '/devices'
+    log("Devices API URL set to %s" % DEVICES_API_URL)
+
+    running = [True]
+    listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
+
+    def shutdown(*sargs):
+        running[0] = False
+        listener_thread_stopper()
+    
+    signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
 
     #loop through categorisation tasks
-    while(True):
-        processGeos()
-        processMacs()
-        apiUrl = config['api']['url'] + '/devices'
-        devices = requests.get(url=apiUrl).json()["manDev"]
-        packetBurstification(devices)
-        burstPrediction(devices)
-
-        #exit gracefully if we were asked to shutdown
-        if handler.exit:
-            break
-        
-        time.sleep(INTERVAL)
+    while(running[0]):
+        log("Awake!");
+        processEvents()
+        if running[0]:             
+            processGeos()
+        if running[0]:             
+            processMacs()        
+        if running[0] and ISBURST:
+            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
+            print("Doing burstification")
+            packetBurstification(devices)
+        if running[0] and ISPREDICT:
+            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
+            print("Doing prediction")
+            burstPrediction(devices)
+        if running[0]:             
+            log("sleeping zzzz ", INTERVAL);
+            time.sleep(INTERVAL)

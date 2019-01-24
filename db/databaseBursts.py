@@ -2,15 +2,47 @@
 Handles all interaction with the database for burstification and categorisation
 """
 import psycopg2
+import psycopg2.extensions
+import select
+import threading
 
 class dbManager():
     
-    def __init__(self):
+    def __init__(self, dbname='testdb', username='postgres', password='password'):
         try:
-            self.connection = psycopg2.connect("dbname=testdb user=postgres password=password")
+            print("connection string ", "dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
+            self.connection = psycopg2.connect("dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
         except:
             print("Connection error")
         
+
+    def listen(self, channel, cb=None):
+        try:
+            conn = self.connection
+            conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+            curs = conn.cursor()
+            curs.execute("LISTEN %s ;" % channel)
+            stop = [False]
+            def stopme(): 
+                stop[0] = True
+            def subp(): 
+                while not stop[0]: # kill me with a sharp stick. 
+                    if select.select([conn],[],[],5) == ([],[],[]):
+                        # print("Timeout")
+                        pass
+                    else:
+                        conn.poll()
+                        while not stop[0] and conn.notifies:
+                            notify = conn.notifies.pop(0)
+                            # print("Got NOTIFY:", notify.pid, notify.channel, notify.payload)
+                            if cb is not None:
+                                cb(notify.payload)
+            thread = threading.Thread(target=subp)
+            thread.start()                
+            return stopme
+        except:
+            print("listen error")
+            return lambda: None
         
 
     def execute(self, query, data, all=True):
