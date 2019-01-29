@@ -4,7 +4,6 @@ Contains methods for each device that we have models for that predict category n
 import os, json, pickle
 import pandas as pd
 import numpy as np
-from ipwhois import IPWhois
 from collections import defaultdict
 import re
 import sys
