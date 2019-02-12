@@ -14,3 +14,5 @@ tests/__pycache__/
 config/config.cfg
 service/daemon.sh
 service/iotrefine.service
+
+.idea/
