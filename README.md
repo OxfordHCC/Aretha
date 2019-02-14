@@ -23,7 +23,7 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 ## Run (manually)
 1. Run `ng serve` in \ui
 
-2. Run `scripts/capture.py`, `/scripts/loop.py` and `/scripts/api.py`
+2. Run `scripts/capture.py`, `/scripts/loop.py` and `gunicorn --bind 127.0.0.1:4201 api:app`
 
 3. The web front end will be available at `localhost:4200`, and the API at `localhost:4201`
 
