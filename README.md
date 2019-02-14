@@ -10,15 +10,15 @@ A static version of IoT Refine is hosted at: https://dkarandikar.github.io/Stati
 ## Install
 1. Ensure postgres is installed, create a db with name testdb, user is postgres and password is password
 
-2. Install python3 dependencies: `pip3 install psycopg2-binary pandas sklearn Pyshark flask flask_restful`
+2. Install python3 dependencies: `pip3 install psycopg2-binary pandas sklearn Pyshark flask gunicorn`
 
-3. Install angular (for Refine web interface): `cd ui/ && npm install && npm install -g @angular/cli && npm install @angular/cli@1.1.3`
+3. Install angular (for Refine web interface): `cd ui/ && npm install && npm install -g @angular/cli`
 
 4. Install the wireshark command line tools (tshark) `pacman -S wireshark-cli` (or equivalent for your platform)
 
-4. Configure the database from the schema: `/scripts/reset-database.py` (dbname=`testdb` user=`postgres` password=`password`)
+5. Configure the database from the schema: `/scripts/reset-database.py` (dbname=`testdb` user=`postgres` password=`password`)
 
-5. Copy `config-sample.cfg` to `config.cfg` and change values as appropriate
+6. Copy `config-sample.cfg` to `config.cfg` and change values as appropriate
 
 ## Run (manually)
 1. Run `ng serve` in \ui
