@@ -193,10 +193,7 @@ if __name__ == '__main__':
     log("Loading config from .... ", CONFIG_PATH)
     CONFIG = configparser.ConfigParser()
     CONFIG.read(CONFIG_PATH)
-
-    dbconnect = {}
     DB_MANAGER = databaseBursts.dbManager()
-
     INTERVAL = None
     ISBURST = None
     ISPREDICT = None

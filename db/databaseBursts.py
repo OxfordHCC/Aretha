@@ -5,16 +5,17 @@ import psycopg2
 import psycopg2.extensions
 import select
 import threading
+import sys
 
 class dbManager():
     
     def __init__(self, dbname='testdb', username='postgres', password='password'):
         try:
-            print("connection string ", "dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
+            sys.stdout.write("Connecting to database...")
             self.connection = psycopg2.connect("dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
+            print("ok")
         except:
-            print("Connection error")
-        
+            print("error")
 
     def listen(self, channel, cb=None):
         try:
@@ -125,3 +126,4 @@ class dbManager():
 
     def closeConnection(self):
         self.connection.close()
+
