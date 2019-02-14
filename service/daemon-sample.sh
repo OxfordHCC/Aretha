@@ -38,7 +38,7 @@ PID4=$!
 >&2 echo Started categorisation with PID $PID4
 
 #start the API
-sudo -u $USER ./api.py &
+sudo -u $USER gunicorn --bind 127.0.0.1:4201 api:app &
 PID5=$!
 >&2 echo Started the API with PID $PID5
 
