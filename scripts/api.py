@@ -53,9 +53,9 @@ def set_device(mac, name):
 def counterexample(question):
     ce = GetCounterexample(question)
     if ce:
-        return jsonify({"name": ce[0], "traffic": ce[1]})
+        return jsonify({"destination": ce[0], "traffic": ce[1], "device": ce[2]})
     else:
-        return jsonify({"name": "", "traffic": 0})
+        return jsonify({"destination": "", "traffic": 0, "device": 0})
 
 # open an event stream for database updates
 @app.route('/stream')
@@ -112,7 +112,7 @@ def GetBursts(n, units="MINUTES"):
 def GetCounterexample(question):
     options = []
     if int(question) == 1:
-        options = DB_MANAGER.execute("SELECT c_name, count(p.len) FROM packets AS p INNER JOIN geodata AS g ON p.src = g.ip WHERE g.c_name LIKE '*%%' GROUP BY c_name ORDER BY count(p.len) DESC LIMIT 5;", ())
+        options = DB_MANAGER.execute("select c_name, count(p.len), d.name from packets as p inner join geodata as g on p.src = g.ip inner join devices as d on p.mac = d.mac where g.c_name like '*%%' group by g.c_name, d.name order by count(p.len) desc limit 5;", ())
    
     blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
     for option in options:
