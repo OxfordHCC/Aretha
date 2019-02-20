@@ -80,7 +80,7 @@ def ManDev():
 
 #get geo data for an ip
 def GetGeo(ip):
-    print("Get Geo ", ip)
+    #print("Get Geo ", ip)
     try:
         lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
         geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "companyName": c_name}
@@ -162,14 +162,14 @@ def CompileImpacts(impacts, packets):
 
 def GetImpacts(n, units="MINUTES"):
     global geos
-    print("GetImpacts: ::", n, ' ', units)
+    #print("GetImpacts: ::", n, ' ', units)
     #we can only keep the cache if we're looking at the same packets as the previous request
 
     impacts = dict() # copy.deepcopy(_impact_cache) 
     # get all packets from the database (if we have cached impacts from before, then only get new packets)
     packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
     packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
-    print("got ", len(packets), "packets")
+    #print("got ", len(packets), "packets")
 
     result = CompileImpacts(impacts, packets)
     return result #shipit
@@ -190,7 +190,7 @@ def event_stream():
 
     def packets_insert_to_impact(packets):        
         impacts = CompileImpacts(dict(),packets)
-        print("packets insert to pitt ", len(packets), " resulting impacts len ~ ", len(impacts))
+        #print("packets insert to pitt ", len(packets), " resulting impacts len ~ ", len(impacts))
         return impacts
     
     try:
@@ -207,16 +207,16 @@ def event_stream():
                     event['data']['len'] = int(event['data'].get('len'))
                     insert_buf.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'geodata':
-                    print("Geodata update", event["data"])
+                    #print("Geodata update", event["data"])
                     geo_updates.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'devices':
-                    print("Device update", event["data"])                    
+                    #print("Device update", event["data"])                    
                     device_updates.append(event["data"])
 
             if len(insert_buf) > 0: 
                 yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
             if len(geo_updates) > 0:
-                print("Got a geo updates for %s, must reset GEO cache." % [u["ip"] for u in geo_updates])
+                #print("Got a geo updates for %s, must reset GEO cache." % [u["ip"] for u in geo_updates])
                 [geos.pop(u["ip"], None) for u in geo_updates]
                 yield "data: %s\n\n" % json.dumps({"type":'geodata'})
             if len(device_updates) > 0: 

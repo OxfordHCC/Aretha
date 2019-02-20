@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random
+import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -12,9 +12,11 @@ DEBUG = False
 log = lambda *args: print(*args) if DEBUG else ''
 RAW_IPS = None
 _events = [] # async db events
-CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
+IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 CONFIG = None
 FRUITS = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
+TRACKERS = None
 
 # TODO move to config
 modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
@@ -133,7 +135,8 @@ def processGeos():
             data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], data['organisation'][:20] or 'unknown'))
+                orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
+                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], orgname[:20] or 'unknown'))
             else:
                 DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
             known_ips.append(ip)
@@ -169,6 +172,16 @@ def processEvents():
         pass
     log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
 
+def istracker(ip):
+    if TRACKERS is None:
+        return False
+    try:
+        domain = tldextract.extract(socket.gethostbyaddr(ip)[0])
+        if domain.registered_domain in TRACKERS:
+            return True
+    except:
+        return False
+    return False
 
 #============
 #loop control
@@ -234,6 +247,20 @@ if __name__ == '__main__':
 
     running = [True]
     listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
+
+    sys.stdout.write("Loading trackers file...")
+    try:
+        with open(IOTR_BASE + CONFIG['loop']['trackers']) as trackers_file:
+            TRACKERS = []
+            for line in trackers_file.readlines():
+                TRACKERS.append(line.strip('\n'))
+        print("ok")
+        print(TRACKERS[0])
+        print(TRACKERS[1])
+        print(TRACKERS[2])
+        print(TRACKERS[3])
+    except:
+        print("error")
 
     def shutdown(*sargs):
         running[0] = False
