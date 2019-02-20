@@ -49,6 +49,14 @@ def set_device(mac, name):
     else:
         return jsonify({"message": "Invalid mac address given"})
 
+@app.route('/api/aretha/counterexample/<question>')
+def counterexample(question):
+    ce = GetCounterexample(question)
+    if ce:
+        return jsonify({"name": ce[0], "traffic": ce[1]})
+    else:
+        return jsonify({"name": "", "traffic": 0})
+
 # open an event stream for database updates
 @app.route('/stream')
 def stream():
@@ -100,6 +108,18 @@ def GetBursts(n, units="MINUTES"):
         category = burst[3]
         result.append({"value": unixTime, "category": category, "device": device })
     return result
+
+def GetCounterexample(question):
+    options = []
+    if int(question) == 1:
+        options = DB_MANAGER.execute("SELECT c_name, count(p.len) FROM packets AS p INNER JOIN geodata AS g ON p.src = g.ip WHERE g.c_name LIKE '*%%' GROUP BY c_name ORDER BY count(p.len) DESC LIMIT 5;", ())
+   
+    blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
+    for option in options:
+        if option[0] not in blacklist:
+            return option
+
+    return False
 
 #setter method for impacts
 def _update_impact(impacts, mac, ip, impact):
