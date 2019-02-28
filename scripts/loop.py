@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
 import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess
-from sys import platform
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -210,16 +209,14 @@ def process_firewall():
     for rule, company in rule_company.items():
         for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
             DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
-            if platform.startswith("linux"):
+            if sys.platform.startswith("linux"):
                 if rule_device[rule] is None:
-                    subprocess.run("iptables", "-A INPUT", "-s", ip, "-j DROP")
-                    subprocess.run("iptables", "-A OUTPUT", "-d", ip, "-j DROP")
-                    print(f"added {ip} to rule {rule} ({company})")
+                    subprocess.run(["iptables", "-A INPUT", "-s", ip, "-j DROP"])
+                    subprocess.run(["iptables", "-A OUTPUT", "-d", ip, "-j DROP"])
                 else:
-                    subprocess.run("iptables", "-A OUTPUT", "-d", ip, "-m mac", "--mac-source", rule_device[rule], "-j DROP")
-                    print(f"added {ip} to rule {rule} ({company}/{rule_device[rule]})")
+                    subprocess.run(["iptables", "-A OUTPUT", "-d", ip, "-m mac", "--mac-source", rule_device[rule], "-j DROP"])
             else:
-                print(f"ERROR: platform {platform} is not linux - cannot add {ip} to rule {rule} ({company})")
+                print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 
 #============
 #loop control

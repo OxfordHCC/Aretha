@@ -55,11 +55,11 @@ create table rules(
 	c_name varchar(20) not null --so that other matching ips can be blocked in future
 );
 
-drop table if exists blocked_ips;
+drop table if exists blocked_ips cascade;;
 create table blocked_ips(
 	id SERIAL primary key,
 	ip varchar(15) not null,
-	rule integer not null references rules
+	rule integer not null references rules on delete cascade
 );
 
 --store simplified profiles of devices: Name, time, destination company, traffic

@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 from flask import Flask, request, jsonify, make_response, Response
-import json, re, sys, os, traceback, copy, argparse
+import json, re, sys, os, traceback, copy, argparse, subprocess
 from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts, rutils
@@ -62,20 +62,52 @@ def counterexample(question):
         return jsonify({"destination": "", "traffic": 0, "device": 0})
 
 # add a firewall rule as dictated by aretha
-@app.route('/api/aretha/enforcement/<destination>')
-def enforcement_dest(destination):
+@app.route('/api/aretha/enforce/<destination>')
+def enforce_dest(destination):
     if DB_MANAGER.execute('INSERT INTO rules(c_name) VALUES(%s); SELECT id FROM rules WHERE c_name = %s', (destination,destination)):
         return jsonify({"message": f"destination only rule added for {destination}", "success": True})
     else:
         return jsonify({"message": f"error while creating destination only rule for {destination}", "success": False})
     pass
 
-@app.route('/api/aretha/enforcement/<destination>/<device>')
-def enforcement_dev_dest(destination, device):
+# add a firewall rule as dictated by aretha
+@app.route('/api/aretha/enforce/<destination>/<device>')
+def enforce_dest_dev(destination, device):
     if DB_MANAGER.execute('INSERT INTO rules(device, c_name) VALUES(%s, %s); SELECT id FROM rules WHERE c_name = %s AND device = %s', (device, destination, destination, device)):
         return jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
     else:
         return jsonify({"message": f"error while creating device to destination rule for {device} to {destination}", "success": False})
+
+# remove a firewall rule as dictated by aretha
+@app.route('/api/aretha/unenforce/<destination>')
+def unenforce_dest(destination):
+    blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s AND r.device IS NULL", (destination,))
+
+    for ip in blocked_ips:
+        if sys.platform.startswith("linux"):
+            if ip[1] is None:
+                subprocess.run(["iptables", "-D INPUT", "-s", ip[2], "-j DROP"])
+                subprocess.run(["iptables", "-D OUTPUT", "-d", ip[2], "-j DROP"])
+        else:
+            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
+            return jsonify({"message": f"error removing rule for {destination}", "success": False})
+    DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device IS NULL", (destination,))
+    return jsonify({"message": f"rule removed for {destination}", "success": True})
+
+# remove a firewall rule as dictated by aretha
+@app.route('/api/aretha/unenforce/<destination>/<device>')
+def unenforce_dest_dev(destination, device):
+    blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s and r.device = %s", (destination, device))
+
+    for ip in blocked_ips:
+        if sys.platform.startswith("linux") or True:
+            if ip[1] is not None:
+                subprocess.run(["iptables", "-D OUTPUT", "-d", ip[2], "-m mac", "--mac-source", ip[1], "-j DROP"])
+        else:
+            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
+            return jsonify({"message": f"error removing rule for {destination}/{device}", "success": False})
+    DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device = %s", (destination,device))
+    return jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
 
 # open an event stream for database updates
 @app.route('/stream')
