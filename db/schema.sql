@@ -47,16 +47,31 @@ create table geodata(
 	c_name varchar(20) not null
 );
 
---store simplified profiles of devices: Name, time, destination company, traffic
-drop table if exists models cascade;
-create table models (
+--firewall rules created by aretha
+drop table if exists rules cascade;
+create table rules(
 	id SERIAL primary key,
-	device varchar(17) not null, --device mac address
-	time timestamp not null, --time the model was made
-	destination varchar(20) not null, --name of the company data was sent to
-	location varchar(2) not null, --country the company is based in
-	impact real not null --amount of traffic in mb
+	device varchar(17), --optional device to block traffic from (otherwise all devices)
+	c_name varchar(20) not null --so that other matching ips can be blocked in future
 );
+
+drop table if exists blocked_ips;
+create table blocked_ips(
+	id SERIAL primary key,
+	ip varchar(15) not null,
+	rule integer not null references rules
+);
+
+--store simplified profiles of devices: Name, time, destination company, traffic
+--drop table if exists models cascade;
+--create table models (
+--	id SERIAL primary key,
+--	device varchar(17) not null, --device mac address
+--	time timestamp not null, --time the model was made
+--	destination varchar(20) not null, --name of the company data was sent to
+--	location varchar(2) not null, --country the company is based in
+--	impact real not null --amount of traffic in mb
+--);
 
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$

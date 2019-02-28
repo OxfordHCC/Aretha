@@ -12,15 +12,9 @@ queue = []
 COMMIT_INTERVAL = None
 CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
 CONFIG = None
-# config.read(os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg")
 
 def DatabaseInsert(packets):
     global timestamp
-    # if MANUAL_LOCAL_IP is None:
-    #     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255).*') #so we can filter for local ip addresses
-    # else: 
-    #     print('Using local IP mask:', '^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.'))
-    #     local_ip_mask = re.compile('^(192\.168|10\.|255\.255\.255\.255|%s).*' % MANUAL_LOCAL_IP.replace('.','\.')) #so we can filter for local ip addresses
     
     #open db connection
     conn = psycopg2.connect("dbname=testdb user=postgres password=password")
@@ -40,7 +34,6 @@ def DatabaseInsert(packets):
             src = ''
             dst = ''
             print("error", ke)
-            # print(packet)
             continue
 
         if rutils.is_multicast_v4(src) or rutils.is_multicast_v4(dst) or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
@@ -49,7 +42,7 @@ def DatabaseInsert(packets):
         srcLocal = local_ip_mask.match(src)
         dstLocal = local_ip_mask.match(dst)
         
-        if (not dstLocal and not srcLocal) or (dstLocal and srcLocal):
+        if srcLocal == dstLocal:
             continue #internal packet that we don't care about, or no local host (should never happen)
         elif not dstLocal:
             mac = packet['eth'].src
@@ -99,7 +92,6 @@ def log(*args):
     if DEBUG:
         print(*args)
         
-
 if __name__=='__main__':
 
     parser = argparse.ArgumentParser()
@@ -134,7 +126,7 @@ if __name__=='__main__':
         sys.exit(-1)
 
     log("Setting capture interval ", COMMIT_INTERVAL)
-    print("Setting up to capture from ", INTERFACE)    
+    print(f"Setting up to capture from {INTERFACE}")    
     capture = pyshark.LiveCapture(interface=INTERFACE)
 
     if DEBUG:

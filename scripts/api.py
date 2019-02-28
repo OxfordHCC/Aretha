@@ -8,7 +8,7 @@ import databaseBursts, rutils
 
 ####################
 # global variables #
-###################
+####################
 
 DB_MANAGER = None #for running database queries
 app = Flask(__name__) # WSGI entry point
@@ -49,6 +49,10 @@ def set_device(mac, name):
     else:
         return jsonify({"message": "Invalid mac address given"})
 
+# return a counter example to a question posed by aretha
+# 1 == trackers/advertisers
+# 2 == unencrypted http traffic (not yet implemented)
+# 3 == haveibeenpwned (not yet implemented)
 @app.route('/api/aretha/counterexample/<question>')
 def counterexample(question):
     ce = GetCounterexample(question)
@@ -56,6 +60,22 @@ def counterexample(question):
         return jsonify({"destination": ce[0], "traffic": ce[1], "device": ce[2]})
     else:
         return jsonify({"destination": "", "traffic": 0, "device": 0})
+
+# add a firewall rule as dictated by aretha
+@app.route('/api/aretha/enforcement/<destination>')
+def enforcement_dest(destination):
+    if DB_MANAGER.execute('INSERT INTO rules(c_name) VALUES(%s); SELECT id FROM rules WHERE c_name = %s', (destination,destination)):
+        return jsonify({"message": f"destination only rule added for {destination}", "success": True})
+    else:
+        return jsonify({"message": f"error while creating destination only rule for {destination}", "success": False})
+    pass
+
+@app.route('/api/aretha/enforcement/<destination>/<device>')
+def enforcement_dev_dest(destination, device):
+    if DB_MANAGER.execute('INSERT INTO rules(device, c_name) VALUES(%s, %s); SELECT id FROM rules WHERE c_name = %s AND device = %s', (device, destination, destination, device)):
+        return jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
+    else:
+        return jsonify({"message": f"error while creating device to destination rule for {device} to {destination}", "success": False})
 
 # open an event stream for database updates
 @app.route('/stream')

@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract
+import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess
+from sys import platform
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -183,6 +184,43 @@ def istracker(ip):
         return False
     return False
 
+def process_firewall():
+    fw = DB_MANAGER.execute("SELECT r.id, r.c_name, b.ip, r.device FROM rules as r LEFT JOIN blocked_ips as b ON r.id = b.rule", ())
+    gd = DB_MANAGER.execute("SELECT c_name, ip FROM geodata", ())
+
+    #construct a dict of all ips blocked for each rule
+    rule_company = dict()
+    rule_device = dict()
+    rule_ips = dict()
+    for rule in fw:
+        rule_company[rule[0]] = rule[1]
+        rule_device[rule[0]] = rule[3]
+        if rule[0] not in rule_ips:
+            rule_ips[rule[0]] = set()
+        rule_ips[rule[0]].add(rule[2])
+
+    #construct a dict of all known company/ip matchings
+    geos = dict()
+    for geo in gd:
+        if geo[0] not in geos:
+            geos[geo[0]] = set()
+        geos[geo[0]].add(geo[1])
+
+    #compare the two
+    for rule, company in rule_company.items():
+        for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
+            DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
+            if platform.startswith("linux"):
+                if rule_device[rule] is None:
+                    subprocess.run("iptables", "-A INPUT", "-s", ip, "-j DROP")
+                    subprocess.run("iptables", "-A OUTPUT", "-d", ip, "-j DROP")
+                    print(f"added {ip} to rule {rule} ({company})")
+                else:
+                    subprocess.run("iptables", "-A OUTPUT", "-d", ip, "-m mac", "--mac-source", rule_device[rule], "-j DROP")
+                    print(f"added {ip} to rule {rule} ({company}/{rule_device[rule]})")
+            else:
+                print(f"ERROR: platform {platform} is not linux - cannot add {ip} to rule {rule} ({company})")
+
 #============
 #loop control
 if __name__ == '__main__':
@@ -255,10 +293,6 @@ if __name__ == '__main__':
             for line in trackers_file.readlines():
                 TRACKERS.append(line.strip('\n'))
         print("ok")
-        print(TRACKERS[0])
-        print(TRACKERS[1])
-        print(TRACKERS[2])
-        print(TRACKERS[3])
     except:
         print("error")
 
@@ -285,6 +319,8 @@ if __name__ == '__main__':
             devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
             print("Doing prediction")
             burstPrediction(devices)
+        if running[0]:
+            process_firewall()
         if running[0]:             
             log("sleeping zzzz ", INTERVAL);
             time.sleep(INTERVAL)
