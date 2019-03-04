@@ -39,7 +39,7 @@ def devices():
     return jsonify({"macMan": MacMan(), "manDev": ManDev()})
 
 # set the custom name of a device with a given mac
-@app.route('/api/setdevice/<mac>/<name>')
+@app.route('/api/devices/set/<mac>/<name>')
 def set_device(mac, name):
     global DB_MANAGER
     mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
