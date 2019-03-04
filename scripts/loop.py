@@ -211,10 +211,10 @@ def process_firewall():
             DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
             if sys.platform.startswith("linux"):
                 if rule_device[rule] is None:
-                    subprocess.run(["iptables", "-A INPUT", "-s", ip, "-j DROP"])
-                    subprocess.run(["iptables", "-A OUTPUT", "-d", ip, "-j DROP"])
+                    subprocess.run(["sudo", "iptables", "-A", "INPUT", "-s", ip, "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-j", "DROP"])
                 else:
-                    subprocess.run(["iptables", "-A OUTPUT", "-d", ip, "-m mac", "--mac-source", rule_device[rule], "-j DROP"])
+                    subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
             else:
                 print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 
