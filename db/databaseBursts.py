@@ -1,15 +1,22 @@
-"""
-Handles all interaction with the database for burstification and categorisation
-"""
-import psycopg2
-import psycopg2.extensions
-import select
-import threading
-import sys
+import psycopg2, psycopg2.extensions, select, threading, sys, configparser, os
+
+IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 
 class dbManager():
     
-    def __init__(self, dbname='testdb', username='postgres', password='password'):
+    def __init__(self, dbname=None, username=None, password=None):
+        
+        CONFIG = configparser.ConfigParser()
+        CONFIG.read(CONFIG_PATH)
+
+        if dbname is None:
+            dbname = CONFIG['postgresql']['database']
+        if username is None:
+            username = CONFIG['postgresql']['username']
+        if password is None:
+            password = CONFIG['postgresql']['password']
+
         try:
             sys.stdout.write("Connecting to database...")
             self.connection = psycopg2.connect("dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })

@@ -17,7 +17,10 @@ def DatabaseInsert(packets):
     global timestamp
     
     #open db connection
-    conn = psycopg2.connect("dbname=testdb user=postgres password=password")
+    database = CONFIG['postgresql']['database']
+    username = CONFIG['postgresql']['username']
+    password = CONFIG['postgresql']['password']
+    conn = psycopg2.connect(f"dbname={database} user={username} password={password}")
     cur = conn.cursor()
     
     for packet in packets:
