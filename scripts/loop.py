@@ -214,7 +214,7 @@ def process_firewall():
                     subprocess.run(["sudo", "iptables", "-A", "INPUT", "-s", ip, "-j", "DROP"])
                     subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-j", "DROP"])
                 else:
-                    subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
             else:
                 print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 

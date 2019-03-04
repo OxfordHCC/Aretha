@@ -102,7 +102,7 @@ def unenforce_dest_dev(destination, device):
     for ip in blocked_ips:
         if sys.platform.startswith("linux") or True:
             if ip[1] is not None:
-                subprocess.run(["sudo", "iptables", "-D", "OUTPUT", "-d", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
+                subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-d", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
         else:
             print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
             return jsonify({"message": f"error removing rule for {destination}/{device}", "success": False})
