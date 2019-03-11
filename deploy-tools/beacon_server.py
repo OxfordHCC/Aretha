@@ -15,7 +15,7 @@ KEY = None
 def beacon(k, p, g, f):
     global KEY
     if KEY == k:
-        DB_MANAGER.execute("INSERT INTO beacon(source, packets, geodata, firewall) VALUES(%s, %s, %s, %s)", (request.remote_addr, p, g, f))
+        DB_MANAGER.execute("INSERT INTO beacon(source, packets, geodata, firewall) VALUES(%s, %s, %s, %s)", (request.remote_addr, int(p), int(g), int(f)))
         return "Request handled successfully"
     return "Request handled unsuccessfully"
 
