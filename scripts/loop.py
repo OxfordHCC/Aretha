@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess
+import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -17,6 +17,9 @@ CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 CONFIG = None
 FRUITS = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
 TRACKERS = None
+last_beacon = float(0)
+BEACON_URL = None
+BEACON_INTERVAL = None
 
 # TODO move to config
 modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
@@ -218,6 +221,15 @@ def process_firewall():
             else:
                 print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 
+def beacon():
+    global last_beacon
+    if time.time() - last_beacon > BEACON_INTERVAL:
+        p = DB_MANAGER.execute("SELECT COUNT(id) FROM packets", (), all=False)[0]
+        g = DB_MANAGER.execute("SELECT COUNT(ip) FROM geodata", (), all=False)[0]
+        f = DB_MANAGER.execute("SELECT COUNT(id) FROM rules", (), all=False)[0]
+        urllib.request.urlopen(f"{BEACON_URL}?p={p}&g={g}&f={f}")
+        last_beacon = time.time()
+
 #============
 #loop control
 if __name__ == '__main__':
@@ -245,6 +257,7 @@ if __name__ == '__main__':
     INTERVAL = None
     ISBURST = None
     ISPREDICT = None
+    ISBEACON = False
     
     if args.interval is not None:
         INTERVAL = float(args.interval)
@@ -272,6 +285,15 @@ if __name__ == '__main__':
         print('Error with [loop]/predict parameter')
         parser.print_help()
         sys.exit(-1)
+
+    if "loop" in CONFIG and "beacon" in CONFIG['loop']:
+        ISBEACON = CONFIG['loop']['beacon']
+        if "beacon-url" in CONFIG['loop']:
+            BEACON_URL = CONFIG['loop']['beacon-url']
+        if "beacon-interval" in CONFIG['loop']:
+            BEACON_INTERVAL = int(CONFIG['loop']['beacon-interval'])
+        else:
+            BEACON_INTERVAL = 3600
 
     if not CONFIG['api']['url']:
         print("ERROR: CONFIG url must be set under [api]")
@@ -318,6 +340,8 @@ if __name__ == '__main__':
             burstPrediction(devices)
         if running[0]:
             process_firewall()
+        if running[0] and ISBEACON:
+            beacon()
         if running[0]:             
             log("sleeping zzzz ", INTERVAL);
             time.sleep(INTERVAL)
