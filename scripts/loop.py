@@ -20,6 +20,7 @@ TRACKERS = None
 last_beacon = float(0)
 BEACON_URL = None
 BEACON_INTERVAL = None
+BEACON_KEY = None
 
 # TODO move to config
 modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
@@ -227,7 +228,7 @@ def beacon():
         p = DB_MANAGER.execute("SELECT COUNT(id) FROM packets", (), all=False)[0]
         g = DB_MANAGER.execute("SELECT COUNT(ip) FROM geodata", (), all=False)[0]
         f = DB_MANAGER.execute("SELECT COUNT(id) FROM rules", (), all=False)[0]
-        urllib.request.urlopen(f"{BEACON_URL}?p={p}&g={g}&f={f}")
+        urllib.request.urlopen(f"{BEACON_URL}/{BEACON_KEY}/{p}/{g}/{f}")
         last_beacon = time.time()
 
 #============
@@ -288,10 +289,11 @@ if __name__ == '__main__':
 
     if "loop" in CONFIG and "beacon" in CONFIG['loop']:
         ISBEACON = CONFIG['loop']['beacon']
-        if "beacon-url" in CONFIG['loop']:
-            BEACON_URL = CONFIG['loop']['beacon-url']
-        if "beacon-interval" in CONFIG['loop']:
-            BEACON_INTERVAL = int(CONFIG['loop']['beacon-interval'])
+        if "url" in CONFIG['beacon']:
+            BEACON_URL = CONFIG['beacon']['url']
+            BEACON_KEY = CONFIG['beacon']['key']
+        if "interval" in CONFIG['beacon']:
+            BEACON_INTERVAL = int(CONFIG['beacon']['interval'])
         else:
             BEACON_INTERVAL = 3600
 

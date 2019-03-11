@@ -55,11 +55,21 @@ create table rules(
 	c_name varchar(20) not null --so that other matching ips can be blocked in future
 );
 
-drop table if exists blocked_ips cascade;;
+drop table if exists blocked_ips cascade;
 create table blocked_ips(
 	id SERIAL primary key,
 	ip varchar(15) not null,
 	rule integer not null references rules on delete cascade
+);
+
+drop table if exists beacon;
+create table beacon(
+	id SERIAL primary key,
+	source varchar(15) not null,
+	packets integer not null,
+	geodata integer not null,
+	firewall integer not null,
+	time timestamp default current_timestamp
 );
 
 --store simplified profiles of devices: Name, time, destination company, traffic

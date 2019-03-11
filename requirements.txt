@@ -1,8 +1,0 @@
-psycopg2-binary
-pandas
-sklearn
-Pyshark
-libxml
-requests
-flask
-flask_restful
