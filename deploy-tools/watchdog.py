@@ -23,8 +23,11 @@ packets_now = DB_MANAGER.execute("SELECT COUNT(id) FROM packets", (), all=False)
 packets_past = int(CONFIG['watchdog']['packets'])
 if packets_past == packets_now:
     restart = True
-    urllib.request.urlopen(f"{BEACON_URL}/{BEACON_KEY}/error/capture")
-    logging.warning("no change in packet count since last pass - reset queued and beacon sent")
+    try:
+        urllib.request.urlopen(f"{CONFIG['beacon']['url']}/{CONFIG['beacon']['key']}/error/capture")
+        logging.warning("no change in packet count since last pass - reset queued and beacon sent")
+    except:
+        logging.warning("no change in packet count since last pass - reset queued but error sending beacon")
 else:
     CONFIG['watchdog']['packets'] = str(packets_now)
     logging.info("data capture ok")
@@ -36,8 +39,11 @@ try:
     logging.info("ipdata api access ok")
 except:
     restart = True
-    urllib.request.urlopen(f"{BEACON_URL}/{BEACON_KEY}/error/ipdata")
-    logging.warning("cannot access ipdata api - reset queued and beacon sent")
+    try:
+        urllib.request.urlopen(f"{BEACON_URL}/{BEACON_KEY}/error/ipdata")
+        logging.warning("cannot access ipdata api - reset queued and beacon sent")
+    except:
+        logging.warning("cannot access ipdata api - reset queued but error sending beacon")
 
 # mitigate angular problems
 if datetime.datetime.now().hour > 2 and datetime.datetime.now().hour < 4:
@@ -46,6 +52,7 @@ if datetime.datetime.now().hour > 2 and datetime.datetime.now().hour < 4:
 
 # restart if required
 if restart:
+    logging.info("restart scheduled")
     subprocess.run(["sudo", "systemctl", "restart", "iotreifne"])
     logging.info("restart completed")
 else:
