@@ -13,6 +13,7 @@ deploy-tools/__pycache__/
 *node_modules*
 
 config/config.cfg
+config/log.txt
 service/daemon.sh
 service/iotrefine.service
 
