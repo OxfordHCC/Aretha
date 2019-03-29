@@ -65,7 +65,7 @@ create table blocked_ips(
 drop table if exists beacon;
 create table beacon(
 	id SERIAL primary key,
-	source varchar(15) not null,
+	source int not null,
 	packets integer not null,
 	geodata integer not null,
 	firewall integer not null,

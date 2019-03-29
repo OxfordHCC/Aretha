@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib
+import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib, asyncio, websockets, threading
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -15,10 +15,12 @@ _events = [] # async db events
 IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 CONFIG = None
+CONFIG_ID = None
 FRUITS = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
 TRACKERS = None
 last_beacon = float(0)
 BEACON_URL = None
+BEACON_ENDPOINT = None
 BEACON_INTERVAL = None
 BEACON_KEY = None
 
@@ -228,8 +230,21 @@ def beacon():
         p = DB_MANAGER.execute("SELECT COUNT(id) FROM packets", (), all=False)[0]
         g = DB_MANAGER.execute("SELECT COUNT(ip) FROM geodata", (), all=False)[0]
         f = DB_MANAGER.execute("SELECT COUNT(id) FROM rules", (), all=False)[0]
-        urllib.request.urlopen(f"{BEACON_URL}/{BEACON_KEY}/{p}/{g}/{f}")
+        post_data = urllib.parse.urlencode({'i': CONFIG_ID, 'k': BEACON_KEY, 'p': p, 'g': g, 'f': f}).encode('ascii')
+        resp = urllib.request.urlopen(url=f"http://{BEACON_URL}:{BEACON_ENDPOINT}", data=post_data)
+        content =  resp.read().decode(resp.headers.get_content_charset())
         last_beacon = time.time()
+
+        #command triggers
+        if content == "CN":
+            print("remote: opening tunnel")
+            subprocess.run(["ssh", "-R", f"4203:{BEACON_URL}:22", f"wilmor@{BEACON_URL}"])
+        if content == "RB":
+            print("remote: reboot")
+            subprocess.run(["shutdown", "-r", "now"])
+        if content == "RS":
+            print("remote: reset service")
+            subprocess.run(["systemctl", "restart", "iotrefine"])
 
 #============
 #loop control
@@ -291,6 +306,7 @@ if __name__ == '__main__':
         ISBEACON = CONFIG['loop']['beacon']
         if "url" in CONFIG['beacon']:
             BEACON_URL = CONFIG['beacon']['url']
+            BEACON_ENDPOINT = CONFIG['beacon']['endpoint']
             BEACON_KEY = CONFIG['beacon']['key']
         if "interval" in CONFIG['beacon']:
             BEACON_INTERVAL = int(CONFIG['beacon']['interval'])
@@ -300,6 +316,12 @@ if __name__ == '__main__':
     if not CONFIG['api']['url']:
         print("ERROR: CONFIG url must be set under [api]")
         sys.exit(-1)
+    
+    if not CONFIG['general']['id']:
+        print("ERROR: CONFIG id must be set under [general]")
+        sys.exit(-1)
+    else:
+        CONFIG_ID = CONFIG['general']['id']
 
     DEVICES_API_URL = CONFIG['api']['url'] + '/devices'
     log("Devices API URL set to %s" % DEVICES_API_URL)

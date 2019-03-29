@@ -20,8 +20,9 @@ term()
 trap 'term' INT
 trap 'term' QUIT
 
-#move to working directory
+#move to working directory and update
 cd $LOCATION
+git pull
 cd scripts
 
 #start the wifi hotspot
