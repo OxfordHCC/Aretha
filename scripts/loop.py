@@ -226,14 +226,18 @@ def process_firewall():
 
 def beacon():
     global last_beacon
+    content = ""
     if time.time() - last_beacon > BEACON_INTERVAL:
         p = DB_MANAGER.execute("SELECT COUNT(id) FROM packets", (), all=False)[0]
         g = DB_MANAGER.execute("SELECT COUNT(ip) FROM geodata", (), all=False)[0]
         f = DB_MANAGER.execute("SELECT COUNT(id) FROM rules", (), all=False)[0]
         post_data = urllib.parse.urlencode({'i': CONFIG_ID, 'k': BEACON_KEY, 'p': p, 'g': g, 'f': f}).encode('ascii')
-        resp = urllib.request.urlopen(url=f"http://{BEACON_URL}:{BEACON_ENDPOINT}", data=post_data)
-        content =  resp.read().decode(resp.headers.get_content_charset())
-        last_beacon = time.time()
+        try:
+            resp = urllib.request.urlopen(url=f"http://{BEACON_URL}:{BEACON_ENDPOINT}", data=post_data)
+            content =  resp.read().decode(resp.headers.get_content_charset())
+            last_beacon = time.time()
+        except:
+            print("Error contacting beacon server")
 
         #command triggers
         if content == "CN":
@@ -245,6 +249,13 @@ def beacon():
         if content == "RS":
             print("remote: reset service")
             subprocess.run(["systemctl", "restart", "iotrefine"])
+        if content.startswith("EX"):
+            content = content.strip("EX")
+            content = content.split(";")
+            key = content[0]
+            value = content[1]
+            print(f"remote: set {key} to {value}")
+            DB_MANAGER.execute("UPDATE experiment SET value = %s WHERE name = %s", (key, value))
 
 #============
 #loop control

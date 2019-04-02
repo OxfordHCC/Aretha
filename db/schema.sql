@@ -55,6 +55,7 @@ create table rules(
 	c_name varchar(20) not null --so that other matching ips can be blocked in future
 );
 
+--ip addresses blocked by aretha
 drop table if exists blocked_ips cascade;
 create table blocked_ips(
 	id SERIAL primary key,
@@ -62,6 +63,7 @@ create table blocked_ips(
 	rule integer not null references rules on delete cascade
 );
 
+--beacon responses received from deployed research equipment
 drop table if exists beacon;
 create table beacon(
 	id SERIAL primary key,
@@ -72,16 +74,31 @@ create table beacon(
 	time timestamp default current_timestamp
 );
 
---store simplified profiles of devices: Name, time, destination company, traffic
---drop table if exists models cascade;
---create table models (
---	id SERIAL primary key,
---	device varchar(17) not null, --device mac address
---	time timestamp not null, --time the model was made
---	destination varchar(20) not null, --name of the company data was sent to
---	location varchar(2) not null, --country the company is based in
---	impact real not null --amount of traffic in mb
---);
+--questions to ask during studies
+drop table if exists questions;
+create table questions(
+	id SERIAL primary key,
+	concept varchar(200) not null,
+	explanation varchar(500) not null,
+	question varchar(200) not null,
+	answer varchar(500),
+	correct boolean,
+	time timestamp default current_timestamp
+);
+
+--load questions
+insert into questions(id, concept, explanation, question) values(
+	1, 'Internet Trackers', 'A description', 'A question' --sample for now
+);
+
+drop table if exists experiment;
+create table experiment(
+	name varchar(10) primary key,
+	value varchar(100) not null
+);
+
+--load initial values
+insert into experiment(name, value) values('stage', 1);
 
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
