@@ -1,0 +1,12 @@
+psycopg2-binary
+scapy
+pandas
+sklearn
+ipdata
+Pyshark
+libxml
+requests
+ipwhois
+flask
+flask_restful
+
