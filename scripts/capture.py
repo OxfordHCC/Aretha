@@ -30,13 +30,15 @@ def DatabaseInsert(packets):
         dst = ''
         proto = ''
 
+        if not 'ip' in packet: continue
+
         try:
-            src = packet['ip'].src
-            dst = packet['ip'].dst
-        except KeyError as ke:
+            src = packet.ip.src
+            dst = packet.ip.dst
+        except AttributeError as ke:
             src = ''
             dst = ''
-            print("error", ke)
+            print("Error", ke, packet)
             continue
 
         if rutils.is_multicast_v4(src) or rutils.is_multicast_v4(dst) or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
@@ -130,7 +132,7 @@ if __name__=='__main__':
 
     log("Setting capture interval ", COMMIT_INTERVAL)
     print(f"Setting up to capture from {INTERFACE}")    
-    capture = pyshark.LiveCapture(interface=INTERFACE)
+    capture = pyshark.LiveCapture(interface=INTERFACE, bpf_filter='udp or tcp')
 
     if DEBUG:
         capture.set_debug()

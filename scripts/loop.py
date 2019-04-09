@@ -338,7 +338,12 @@ if __name__ == '__main__':
     log("Devices API URL set to %s" % DEVICES_API_URL)
 
     running = [True]
-    listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
+
+    # note that this creates a *second* datbaseconnection
+    listener_thread_stopper = databaseBursts.dbManager().listen('db_notifications', lambda payload:_events.append(payload))
+    
+    # Thread unsafe: 
+    # listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
 
     sys.stdout.write("Loading trackers file...")
     try:
