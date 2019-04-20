@@ -9,4 +9,5 @@ requests
 ipwhois
 flask
 flask_restful
+gunicorn
 
