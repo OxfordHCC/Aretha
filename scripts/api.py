@@ -307,3 +307,10 @@ def init():
     DB_MANAGER = databaseBursts.dbManager()
     listenManager = databaseBursts.dbManager()
     listenManager.listen('db_notifications', lambda payload:_events.append(payload))
+
+## This is run using Flask
+## export FLASK_APP=apy
+## export FLASK_DEBUG=1
+## export FLASK_PORT=X
+## flask run
+
