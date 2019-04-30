@@ -44,7 +44,8 @@ create table geodata(
 	lat real not null,
 	lon real not null,
 	c_code varchar(2) not null,
-	c_name varchar(20) not null
+	c_name varchar(20) not null,
+	domain varchar(30) not null
 );
 
 --firewall rules created by aretha

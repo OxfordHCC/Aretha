@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib, asyncio, websockets, threading
+import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib, asyncio, websockets, threading, socket, dns.resolver, tldextract
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
 import databaseBursts, rutils, predictions
@@ -119,34 +119,61 @@ def burstPrediction(devices):
         # Update the burst with the name of the new category, packets already have a reference to the burst
         DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
+#gathers data about newly seen ip addresses
 def processGeos():
-    global RAW_IPS
 
+    #to save us querying the whole packet table every loop
+    global RAW_IPS
     if not RAW_IPS:
         log("Preloading RAW_IPS")
         RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
         log(" Done ", len(RAW_IPS), " known ips ")
-        
+    
+    #get a list of ip addresses we've already looked up
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
     known_ips = []
-
     for row in raw_geos:
         known_ips.append(row[0])
 
+    #go through and enrich the rest
     for ip in RAW_IPS:
         if LOCAL_IP_MASK.match(ip) is not None:
             # local ip, so skip
             continue
+        
         if ip not in known_ips:
+            lat = '00'
+            lon = '00'
+            country = 'XX'
+            orgname = 'unknown'
+            domain = 'unknown'
+
+            #get company info from ipdata
             data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
             if data.status_code==200 and data.json()['latitude'] is not '':
                 data = data.json()
                 orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], orgname[:20] or 'unknown'))
-            else:
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
-            known_ips.append(ip)
+                lat = data['latitude']
+                lon = data['longitude']
+                country = data['country_code'] or data['continent_code']
 
+            #make reverse dns call to get the domain
+            res = dns.resolver.Resolver()
+            res.nameservers = ['8.8.8.8', '8.8.4.4']
+            try:
+                dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+                raw_domain = str(dns_ans[0])
+                print(raw_domain)
+                domain = tldextract.extract(raw_domain).registered_domain
+                print(domain)
+            except:
+                print("DNS ERROR")
+
+            #commit the extra info to the database
+            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
+
+            #bookkeeping
+            known_ips.append(ip)
             log("Adding to known IPs ", ip)
 
 def processMacs():
