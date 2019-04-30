@@ -2,8 +2,7 @@
 
 import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib, asyncio, websockets, threading, socket, dns.resolver, tldextract
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-import databaseBursts, rutils, predictions
+import databaseBursts, rutils
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = None
@@ -23,101 +22,6 @@ BEACON_URL = None
 BEACON_ENDPOINT = None
 BEACON_INTERVAL = None
 BEACON_KEY = None
-
-# TODO move to config
-modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
-
-
-def packetBurstification(devices):
-    unBinned = DB_MANAGER.getNoBurst()
-
-    allBursts = []  # List of list of ids
-    allIds = set()  # Set of ids considered already
-    nextBurst = []  # Ids to go in next burst
-    burstPacketNoCutoff = 0
-
-    # Get ids of all the packets we want in bursts
-    for counter, row in enumerate(unBinned):
-        id = row[0]
-        mac = row[4]
-        burstTimeInterval = int(modelDefaults["burstTimeIntervals"]["Unknown"])
-        burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"]["Unknown"])
-        try:
-            burstTimeInterval = int(modelDefaults["burstTimeIntervals"][devices[mac]])
-        except KeyError:
-            pass
-        try:
-            burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"][devices[mac]])
-        except KeyError:
-            pass
-        
-        if id not in allIds:
-            nextBurst = [id]
-            allIds.add(id)
-            currentTime = row[1]
-
-            try:
-                for otherRow in unBinned[counter+1:]:
-                    if otherRow[0] not in allIds:
-                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - currentTime).total_seconds():
-                            # If less than TIME_INTERVAL away, add to this burst
-                            nextBurst.append(otherRow[0])
-                            # Don't need to look at this one again, it's in this potential burst
-                            allIds.add(otherRow[0])
-                            currentTime = otherRow[1]
-
-                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - currentTime).total_seconds():
-                            if len(nextBurst) > burstPacketNoCutoff:
-                                allBursts.append(nextBurst)
-                            # If same device, but too far away, we can stop, there won't be another burst here
-                            break
-                            # Can't add to considered, might be the start of the next burst
-
-                        elif otherRow[4] != mac:
-                            continue
-                            # If it's a different device, we can't say anything at this point
-            except IndexError:
-                continue     
-
-        else:
-            # If we've considered it we know it was within interval of another packet and so
-            # it's either a valid burst or part of one that is too short
-            continue
-    if len(nextBurst) > burstPacketNoCutoff:
-        allBursts.append(nextBurst)
-
-    # Add each new burst, and add all the packet rows to it
-    for burst in allBursts:
-        newBurstId = DB_MANAGER.insertNewBurst()
-        DB_MANAGER.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
-
-def burstPrediction(devices):
-    unCat = DB_MANAGER.getNoCat()
-    cutoffs = modelDefaults["burstNumberCutoffs"]
-    predictor = predictions.Predictor()
-
-    for burst in unCat:
-        rows = DB_MANAGER.getRowsWithBurst(burst[0])
-
-        if len(rows) == 0:
-            continue
-
-        device = devices[rows[0][4]]
-
-        if "Echo" in device and len(rows) > cutoffs["Echo"]:
-            category = predictor.predictEcho(rows)
-        elif "Google" in device:
-            category = predictor.predictGoogle(rows)
-        elif device == "Philips Hue Bridge" and len(rows) > cutoffs[device]:
-            category = predictor.predictHue(rows)
-        else:
-            category = predictor.predictOther(rows)
-
-        # Get the id of this category, and add if necessary
-        newCategoryId = DB_MANAGER.addOrGetCategoryNumber(category)
-
-        # Update the burst with the name of the new category, packets already have a reference to the burst
-        DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
 
 #gathers data about newly seen ip addresses
 def processGeos():
@@ -176,6 +80,7 @@ def processGeos():
             known_ips.append(ip)
             log("Adding to known IPs ", ip)
 
+#gets manufacturers of new devices and inserts into the database
 def processMacs():
     raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
     known_macs = DB_MANAGER.execute("SELECT mac FROM devices", ())
@@ -192,6 +97,7 @@ def processMacs():
             else:
                 DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', %s)", (mac[0], deviceName))
 
+#updates RAP_IPS (see processGeos)
 def processEvents():
     global _events
     log("processEvents has ", len(_events), " waiting in queue")
@@ -205,6 +111,7 @@ def processEvents():
         pass
     log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
 
+#uses the config tracker list to determine whether an ip address is from a tracker
 def istracker(ip):
     if TRACKERS is None:
         return False
@@ -216,6 +123,7 @@ def istracker(ip):
         return False
     return False
 
+#checks to see if any new iptables rules need to be made
 def process_firewall():
     fw = DB_MANAGER.execute("SELECT r.id, r.c_name, b.ip, r.device FROM rules as r LEFT JOIN blocked_ips as b ON r.id = b.rule", ())
     gd = DB_MANAGER.execute("SELECT c_name, ip FROM geodata", ())
@@ -251,6 +159,7 @@ def process_firewall():
             else:
                 print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 
+#phone home and check for commands
 def beacon():
     global last_beacon
     content = ""
@@ -291,15 +200,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s " % CONFIG_PATH)    
     parser.add_argument('--interval', dest="interval", type=float, help="Specify loop interval in sec (can be fractions)")
-    parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
-    parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
     parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
     args = parser.parse_args()
-
-    # if args.localip is not None:
-    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-    #     print("Using local IP mask %s" % localipmask)    
-    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
 
     DEBUG = args.debug    
     CONFIG_PATH = args.config if args.config else CONFIG_PATH
@@ -309,8 +211,6 @@ if __name__ == '__main__':
     CONFIG.read(CONFIG_PATH)
     DB_MANAGER = databaseBursts.dbManager()
     INTERVAL = None
-    ISBURST = None
-    ISPREDICT = None
     ISBEACON = False
     
     if args.interval is not None:
@@ -322,24 +222,6 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(-1)
     
-    if args.burst is not None:
-        ISBURST = args.burst
-    elif "loop" in CONFIG and "burstify" in CONFIG['loop']:
-        ISBURST = CONFIG['loop']['burstify']
-    else:
-        print("Error with [loop]/burstify parameter.")         
-        parser.print_help()
-        sys.exit(-1)
-    
-    if args.predict is not None:
-        ISPREDICT = args.predict
-    elif "loop" in CONFIG and "predict" in CONFIG['loop']:
-        ISPREDICT = CONFIG['loop']['predict']
-    else:
-        print('Error with [loop]/predict parameter')
-        parser.print_help()
-        sys.exit(-1)
-
     if "loop" in CONFIG and "beacon" in CONFIG['loop']:
         ISBEACON = CONFIG['loop']['beacon']
         if "url" in CONFIG['beacon']:
@@ -369,9 +251,6 @@ if __name__ == '__main__':
     # note that this creates a *second* datbaseconnection
     listener_thread_stopper = databaseBursts.dbManager().listen('db_notifications', lambda payload:_events.append(payload))
     
-    # Thread unsafe: 
-    # listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
-
     sys.stdout.write("Loading trackers file...")
     try:
         with open(IOTR_BASE + CONFIG['loop']['trackers']) as trackers_file:
@@ -397,17 +276,9 @@ if __name__ == '__main__':
             processGeos()
         if running[0]:             
             processMacs()        
-        if running[0] and ISBURST:
-            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
-            print("Doing burstification")
-            packetBurstification(devices)
-        if running[0] and ISPREDICT:
-            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
-            print("Doing prediction")
-            burstPrediction(devices)
         if running[0]:
             process_firewall()
-        if running[0] and ISBEACON:
+        if ISBEACON == True and running[0]:
             beacon()
         if running[0]:             
             log("sleeping zzzz ", INTERVAL);
