@@ -24,12 +24,10 @@ geos = dict() #for building and caching geo data
 def refine(start, end, delta):
     global DB_MANAGER
     try:
-        #sanitise inputs
+        #sanitise inputs, clip start and end
         start = datetime.fromtimestamp(int(start))
         end = datetime.fromtimestamp(int(end))
         delta = timedelta(seconds=abs(int(delta)))
-        
-        #clip start and end
         start = start if start >= datetime.fromtimestamp(0) else datetime.fromtimestamp(0)
         end = end if end < datetime.now() else datetime.now()
 
@@ -44,23 +42,25 @@ def refine(start, end, delta):
         #process impacts per bucket
         for i in range(len(buckets) - 1):
             #get all of the packets in the bucket
-            packets = DB_MANAGER.execute("SELECT * FROM packets WHERE time < timestamp %s AND time > timestamp %s", (buckets[i].isoformat(), buckets[i+1].isoformat()))
+            packets = DB_MANAGER.execute("SELECT time, src, dst, mac, len FROM packets WHERE time < timestamp %s AND time > timestamp %s", (buckets[i].isoformat(), buckets[i+1].isoformat()))
             bucket_impacts = dict()
             
             #calculate impacts per ip per device
             for packet in packets:
-                time = packet[1]
-                ip = get_external_address(packet[2], packet[3])
-                mac = packet[4]
+                time = packet[0]
+                ip = get_external_address(packet[1], packet[2])
+                mac = packet[3]
                 if ip not in bucket_impacts:
                     bucket_impacts[ip] = dict()
                 if mac not in bucket_impacts[ip]:
                     bucket_impacts[ip][mac] = 0
-                bucket_impacts[ip][mac] += packet[5]
+                bucket_impacts[ip][mac] += packet[4]
                 packets.remove(packet)
             impacts[str(buckets[i].isoformat())] = bucket_impacts
 
-        response = make_response(jsonify(impacts))
+        geos = get_geodata()
+
+        response = make_response(jsonify(impacts, geos))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
@@ -69,10 +69,10 @@ def refine(start, end, delta):
         sys.exit(-1)                    
 
 # get the mac address, manufacturer, and custom name of every device
-@app.route('/api/devices')
-def devices():
-    global DB_MANAGER
-    return jsonify({"macMan": MacMan(), "manDev": ManDev()})
+#@app.route('/api/devices')
+#def devices():
+#    global DB_MANAGER
+#    return jsonify({"macMan": MacMan(), "manDev": ManDev()})
 
 # set the custom name of a device with a given mac
 @app.route('/api/devices/set/<mac>/<name>')
@@ -181,33 +181,30 @@ def get_external_address(pkt_src, pkt_dst):
         return pkt_src
 
 #return a dictionary of mac addresses to manufacturers
-def MacMan():
-    macMan = dict()
-    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-    for device in devices:
-        mac,manufacturer,_ = device
-        macMan[mac] = manufacturer
-    return macMan
+#def MacMan():
+#    macMan = dict()
+#    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+#    for device in devices:
+#        mac,manufacturer,_ = device
+#        macMan[mac] = manufacturer
+#    return macMan
 
 #return a dictionary of mac addresses to custom device names
-def ManDev():
-    manDev = dict()
-    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-    for device in devices:
-        mac,_,name = device
-        manDev[mac] = name
-    return manDev
+#def ManDev():
+#    manDev = dict()
+#    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+#    for device in devices:
+#        mac,_,name = device
+#        manDev[mac] = name
+#    return manDev
 
 #get geo data for an ip
-def GetGeo(ip):
-    #print("Get Geo ", ip)
-    try:
-        lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
-        geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "companyName": c_name}
-        return geo
-    except:
-        geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "companyName": 'unknown'}
-        return geo
+def get_geodata():
+    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
+    records = []
+    for geo in geos:
+        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "companyName": geo[4]})
+    return records
 
 def GetCounterexample(question):
     options = []
@@ -222,16 +219,15 @@ def GetCounterexample(question):
     return False
 
 #setter method for impacts
-def _update_impact(impacts, mac, ip, impact):
-    if mac in impacts:
-        if ip in impacts[mac]:
-            impacts[mac][ip] += impact
-        else:
-            impacts[mac][ip] = impact #impact did not exist
-    else:
-        impacts[mac] = dict()
-        impacts[mac][ip] = impact #impact did not exist
-
+#def _update_impact(impacts, mac, ip, impact):
+#    if mac in impacts:
+#        if ip in impacts[mac]:
+#            impacts[mac][ip] += impact
+#        else:
+#            impacts[mac][ip] = impact #impact did not exist
+#    else:
+#        impacts[mac] = dict()
+#        impacts[mac][ip] = impact #impact did not exist
 
 #def packet_to_impact(impacts, packet):
 #    global geos
