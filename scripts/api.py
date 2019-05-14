@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
 from flask import Flask, request, jsonify, make_response, Response
-import json, re, sys, os, traceback, copy, argparse, subprocess
-from datetime import datetime
+import json, re, sys, os, traceback, copy, argparse, subprocess, time
+from datetime import datetime, timedelta
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts, rutils
 
@@ -18,13 +18,49 @@ geos = dict() #for building and caching geo data
 # api endpoints #
 #################
 
-# return aggregated data for the given time period (in minutes, called by refine)
-@app.route('/api/refine/<n>')
-def refine(n):
+# return impacts per <delta> from <start> to <end>
+# delta in seconds, <start>/<end> as unix timestamps
+@app.route('/api/impacts/<start>/<end>/<delta>')
+def refine(start, end, delta):
     global DB_MANAGER
     try:
-        response = make_response(jsonify({"bursts": GetBursts(n), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(n), "usage": GenerateUsage()}))
+        #sanitise inputs
+        start = datetime.fromtimestamp(int(start))
+        end = datetime.fromtimestamp(int(end))
+        delta = timedelta(seconds=abs(int(delta)))
+        
+        #clip start and end
+        start = start if start >= datetime.fromtimestamp(0) else datetime.fromtimestamp(0)
+        end = end if end < datetime.now() else datetime.now()
+
+        #get all packets between <start> and <end>
+        impacts = dict()
+
+        #get a list of buckets to aggregate impacts into
+        buckets = generate_buckets(start, end, delta)
+        impacts = dict()
+        print(buckets)
+
+        #process impacts per bucket
+        for i in range(len(buckets) - 1):
+            #get all of the packets in the bucket
+            packets = DB_MANAGER.execute("SELECT * FROM packets WHERE time < timestamp %s AND time > timestamp %s", (buckets[i].isoformat(), buckets[i+1].isoformat()))
+            bucket_impacts = dict()
             
+            #calculate impacts per ip per device
+            for packet in packets:
+                time = packet[1]
+                ip = get_external_address(packet[2], packet[3])
+                mac = packet[4]
+                if ip not in bucket_impacts:
+                    bucket_impacts[ip] = dict()
+                if mac not in bucket_impacts[ip]:
+                    bucket_impacts[ip][mac] = 0
+                bucket_impacts[ip][mac] += packet[5]
+                packets.remove(packet)
+            impacts[str(buckets[i].isoformat())] = bucket_impacts
+
+        response = make_response(jsonify(impacts))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
@@ -120,6 +156,30 @@ def stream():
 # internal methods #
 ####################
 
+#generate a list of buckets from a start, end, and delta
+def generate_buckets(start, end, delta):
+    buckets = []
+    buckets.append(end)
+
+    #loop through making <delta> sized buckets until we've accounted for the whole period
+    while end > start:
+        end = end - delta if (end - delta) > start else start
+        buckets.append(end)
+
+    return buckets
+
+def get_external_address(pkt_src, pkt_dst):
+
+    #get the mask and apply it to both addresses
+    local_ip_mask = rutils.make_localip_mask() 
+    ip_src = local_ip_mask.match(pkt_src) is not None
+    ip_dst = local_ip_mask.match(pkt_dst) is not None
+    
+    if ip_src:
+        return pkt_dst
+    else:
+        return pkt_src
+
 #return a dictionary of mac addresses to manufacturers
 def MacMan():
     macMan = dict()
@@ -149,18 +209,6 @@ def GetGeo(ip):
         geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "companyName": 'unknown'}
         return geo
 
-#get bursts for the given time period (in days)
-def GetBursts(n, units="MINUTES"):
-    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(n) + " " + units + "'",)) #  " DAY'",))
-    result = []
-    epoch = datetime(1970, 1, 1, 0, 0)
-    for burst in bursts:
-        unixTime = int((burst[0] - epoch).total_seconds() * 1000.0)
-        device = burst[1]
-        category = burst[3]
-        result.append({"value": unixTime, "category": category, "device": device })
-    return result
-
 def GetCounterexample(question):
     options = []
     if int(question) == 1:
@@ -185,78 +233,63 @@ def _update_impact(impacts, mac, ip, impact):
         impacts[mac][ip] = impact #impact did not exist
 
 
-def packet_to_impact(impacts, packet):
-    global geos
-    #determine if the src or dst is the external ip address
-    pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet["id"], packet.get('time'), packet["src"], packet["dst"], packet["mac"], packet["len"], packet.get("proto"), packet.get("burst")
-    
-    local_ip_mask = rutils.make_localip_mask() #so we can filter for local ip addresses
-    ip_src = local_ip_mask.match(pkt_src) is not None
-    ip_dst = local_ip_mask.match(pkt_dst) is not None
-    ext_ip = None
-    
-    if (ip_src and ip_dst) or (not ip_src and not ip_dst):
-        return #shouldn't happen, either 0 or 2 internal hosts
-    
-    #remember which ip address was external
-    elif ip_src:
-        ext_ip = pkt_dst
-    else:
-        ext_ip = pkt_src
-    
-    #make sure we have geo data, then update the impact
-    if ext_ip not in geos:
-        geos[ext_ip] = GetGeo(ext_ip)
+#def packet_to_impact(impacts, packet):
+#    global geos
+#    #determine if the src or dst is the external ip address
+#    pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet["id"], packet.get('time'), packet["src"], packet["dst"], packet["mac"], packet["len"], packet.get("proto"), packet.get("burst")
+#    
+#    local_ip_mask = rutils.make_localip_mask() #so we can filter for local ip addresses
+#    ip_src = local_ip_mask.match(pkt_src) is not None
+#    ip_dst = local_ip_mask.match(pkt_dst) is not None
+#    ext_ip = None
+#    
+#    if (ip_src and ip_dst) or (not ip_src and not ip_dst):
+#        return #shouldn't happen, either 0 or 2 internal hosts
+#    
+#    #remember which ip address was external
+#    elif ip_src:
+#        ext_ip = pkt_dst
+#    else:
+#        ext_ip = pkt_src
+#    
+#    #make sure we have geo data, then update the impact
+#    if ext_ip not in geos:
+#        geos[ext_ip] = GetGeo(ext_ip)
+#
+#    _update_impact(impacts, pkt_mac, ext_ip, pkt_len)
+#
+#def CompileImpacts(impacts, packets):
+#    # first run packet_to_impact
+#    [packet_to_impact(impacts, packet) for packet in packets]
+#
+#    result = []
+#    for mmac, ipimpacts in impacts.items():
+#        for ip, impact in ipimpacts.items():
+#            item = geos.get(ip, None)
+#            if item is None:  # we might have just killed the key 
+#                continue
+#            item = item.copy() 
+#            # note: geos[ip] should never be none because the invariant is that packet_to_impact has been
+#            # called BEFORE this point, and that populates the geos. Yeah, ugly huh. I didn't write this
+#            # code, don't blame me!
+#            item['impact'] = impact
+#            item['companyid'] = ip
+#            item['appid'] = mmac
+#            if item['impact'] > 0:
+#                result.append(item)
+#            pass
+#    return result
 
-    _update_impact(impacts, pkt_mac, ext_ip, pkt_len)
-
-def CompileImpacts(impacts, packets):
-    # first run packet_to_impact
-    [packet_to_impact(impacts, packet) for packet in packets]
-
-    result = []
-    for mmac, ipimpacts in impacts.items():
-        for ip, impact in ipimpacts.items():
-            item = geos.get(ip, None)
-            if item is None:  # we might have just killed the key 
-                continue
-            item = item.copy() 
-            # note: geos[ip] should never be none because the invariant is that packet_to_impact has been
-            # called BEFORE this point, and that populates the geos. Yeah, ugly huh. I didn't write this
-            # code, don't blame me!
-            item['impact'] = impact
-            item['companyid'] = ip
-            item['appid'] = mmac
-            if item['impact'] > 0:
-                result.append(item)
-            pass
-    return result
-
-def GetImpacts(n, units="MINUTES"):
-    global geos
-    #print("GetImpacts: ::", n, ' ', units)
-    #we can only keep the cache if we're looking at the same packets as the previous request
-
-    impacts = dict() # copy.deepcopy(_impact_cache) 
-    # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
-    packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
-    #print("got ", len(packets), "packets")
-
-    result = CompileImpacts(impacts, packets)
-    return result #shipit
-
-# Generate fake usage for devices (a hack so they show up in refine)
-def GenerateUsage():
-    usage = []
-    counter = 1
-    for mac in MacMan():
-        usage.append({"appid": mac, "mins": counter})
-        counter += 1
-    return usage
+#def GetImpacts(n, units="MINUTES"):
+#    global geos
+#    impacts = dict() 
+#    # get relevant packets from the database 
+#    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
+#    packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
+#    result = CompileImpacts(impacts, packets)
+#    return result #shipit
 
 _events = []
-
 def event_stream():
     import time
 
