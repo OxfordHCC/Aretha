@@ -22,8 +22,7 @@ create table packets (
 	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
 	proto varchar(10) not null, --protocol if known, otherwise port number
-	burst integer references bursts --optional,
-	--company integer references companies --optional, assumes table of companies (stolen from refine)
+	ext varchar(15) not null --external ip address (either src or dst)
 );
 
 -- create two indexes on src and dst to speed up lookups by these cols by loop.py
@@ -152,7 +151,7 @@ FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'src',
   'dst',
   'len',
-  'burst'
+  'ext'
 );
 
 drop trigger if exists device_notify on devices;
@@ -172,3 +171,11 @@ FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'c_code',
   'c_name'
 );
+
+drop view if exists impacts;
+create materialized view impacts as
+	select mac, ext, round(extract(epoch from time)/60) as mins, sum(len) 
+	from packets
+	group by mac, ext, mins
+	order by mins
+with data;

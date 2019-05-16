@@ -24,43 +24,43 @@ geos = dict() #for building and caching geo data
 def refine(start, end, delta):
     global DB_MANAGER
     try:
-        #sanitise inputs, clip start and end
-        start = datetime.fromtimestamp(int(start))
-        end = datetime.fromtimestamp(int(end))
-        delta = timedelta(seconds=abs(int(delta)))
-        start = start if start >= datetime.fromtimestamp(0) else datetime.fromtimestamp(0)
-        end = end if end < datetime.now() else datetime.now()
+        #convert inputs to minutes
+        start = round(int(start)/60)
+        end = round(int(end)/60)
+        delta = abs(round(int(delta)))
 
-        #get all packets between <start> and <end>
-        impacts = dict()
-
-        #get a list of buckets to aggregate impacts into
-        buckets = generate_buckets(start, end, delta)
-        impacts = dict()
-        print(buckets)
+        #refresh view and get per minute impacts from <start> to <end>
+        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins > %s AND mins < %s", (start, end))
 
         #process impacts per bucket
-        for i in range(len(buckets) - 1):
-            #get all of the packets in the bucket
-            packets = DB_MANAGER.execute("SELECT time, src, dst, mac, len FROM packets WHERE time < timestamp %s AND time > timestamp %s", (buckets[i].isoformat(), buckets[i+1].isoformat()))
-            bucket_impacts = dict()
+        impacts = dict()
+        bucket_impacts = dict()
+        pointer = start
             
-            #calculate impacts per ip per device
-            for packet in packets:
-                time = packet[0]
-                ip = get_external_address(packet[1], packet[2])
-                mac = packet[3]
-                if ip not in bucket_impacts:
-                    bucket_impacts[ip] = dict()
-                if mac not in bucket_impacts[ip]:
-                    bucket_impacts[ip][mac] = 0
-                bucket_impacts[ip][mac] += packet[4]
-                packets.remove(packet)
-            impacts[str(buckets[i].isoformat())] = bucket_impacts
+        for impact in raw_impacts:
+            mac = impact[0]
+            ip = impact[1]
+            mins = impact[2]
+            total = impact[3]
 
+            #fast forward to correct bucket
+            while  mins > pointer + delta:
+                impacts[str(pointer)] = bucket_impacts
+                pointer += delta
+
+            #add impacts
+            if ip not in bucket_impacts:
+                bucket_impacts[ip] = dict()
+            if mac not in bucket_impacts[ip]:
+                bucket_impacts[ip][mac] = 0
+            bucket_impacts[ip][mac] += total
+        impacts[str(pointer)] = bucket_impacts
+
+        #add geo and device data
         geos = get_geodata()
+        devices = get_device_info()
 
-        response = make_response(jsonify(impacts, geos))
+        response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
@@ -68,11 +68,15 @@ def refine(start, end, delta):
         traceback.print_exc()
         sys.exit(-1)                    
 
-# get the mac address, manufacturer, and custom name of every device
-#@app.route('/api/devices')
-#def devices():
-#    global DB_MANAGER
-#    return jsonify({"macMan": MacMan(), "manDev": ManDev()})
+#get the mac address, manufacturer, and custom name of every device
+@app.route('/api/devices')
+def devices():
+    return jsonify({"devices": get_device_info()})
+
+#get geodata about all known ips
+@app.route('/api/geodata')
+def geodata():
+    return jsonify({"geodata": get_geodata()})
 
 # set the custom name of a device with a given mac
 @app.route('/api/devices/set/<mac>/<name>')
@@ -146,7 +150,7 @@ def unenforce_dest_dev(destination, device):
     return jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
 
 # open an event stream for database updates
-@app.route('/stream')
+@app.route('/api/stream')
 def stream():
     response = Response(event_stream(), mimetype="text/event-stream")
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -156,54 +160,21 @@ def stream():
 # internal methods #
 ####################
 
-#generate a list of buckets from a start, end, and delta
-def generate_buckets(start, end, delta):
-    buckets = []
-    buckets.append(end)
+#return a dictionary of mac addresses to manufacturers and names
+def get_device_info():
+    devices = dict()
+    raw_devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+    for device in raw_devices:
+        mac, manufacturer, name = device
+        devices[mac] = {"manufacturer": manufacturer, "name": name}
+    return devices
 
-    #loop through making <delta> sized buckets until we've accounted for the whole period
-    while end > start:
-        end = end - delta if (end - delta) > start else start
-        buckets.append(end)
-
-    return buckets
-
-def get_external_address(pkt_src, pkt_dst):
-
-    #get the mask and apply it to both addresses
-    local_ip_mask = rutils.make_localip_mask() 
-    ip_src = local_ip_mask.match(pkt_src) is not None
-    ip_dst = local_ip_mask.match(pkt_dst) is not None
-    
-    if ip_src:
-        return pkt_dst
-    else:
-        return pkt_src
-
-#return a dictionary of mac addresses to manufacturers
-#def MacMan():
-#    macMan = dict()
-#    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-#    for device in devices:
-#        mac,manufacturer,_ = device
-#        macMan[mac] = manufacturer
-#    return macMan
-
-#return a dictionary of mac addresses to custom device names
-#def ManDev():
-#    manDev = dict()
-#    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-#    for device in devices:
-#        mac,_,name = device
-#        manDev[mac] = name
-#    return manDev
-
-#get geo data for an ip
+#get geo data for all ips
 def get_geodata():
     geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
-    records = []
+    records = dict()
     for geo in geos:
-        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "companyName": geo[4]})
+        records[geo[0]] = ({"latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "companyName": geo[4]})
     return records
 
 def GetCounterexample(question):
@@ -218,110 +189,63 @@ def GetCounterexample(question):
 
     return False
 
-#setter method for impacts
-#def _update_impact(impacts, mac, ip, impact):
-#    if mac in impacts:
-#        if ip in impacts[mac]:
-#            impacts[mac][ip] += impact
-#        else:
-#            impacts[mac][ip] = impact #impact did not exist
-#    else:
-#        impacts[mac] = dict()
-#        impacts[mac][ip] = impact #impact did not exist
+@app.before_first_request
+def init():
+    global DB_MANAGER
+    DB_MANAGER = databaseBursts.dbManager()
+    listenManager = databaseBursts.dbManager()
+    listenManager.listen('db_notifications', lambda payload:event_queue.append(payload))
 
-#def packet_to_impact(impacts, packet):
-#    global geos
-#    #determine if the src or dst is the external ip address
-#    pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet["id"], packet.get('time'), packet["src"], packet["dst"], packet["mac"], packet["len"], packet.get("proto"), packet.get("burst")
-#    
-#    local_ip_mask = rutils.make_localip_mask() #so we can filter for local ip addresses
-#    ip_src = local_ip_mask.match(pkt_src) is not None
-#    ip_dst = local_ip_mask.match(pkt_dst) is not None
-#    ext_ip = None
-#    
-#    if (ip_src and ip_dst) or (not ip_src and not ip_dst):
-#        return #shouldn't happen, either 0 or 2 internal hosts
-#    
-#    #remember which ip address was external
-#    elif ip_src:
-#        ext_ip = pkt_dst
-#    else:
-#        ext_ip = pkt_src
-#    
-#    #make sure we have geo data, then update the impact
-#    if ext_ip not in geos:
-#        geos[ext_ip] = GetGeo(ext_ip)
-#
-#    _update_impact(impacts, pkt_mac, ext_ip, pkt_len)
-#
-#def CompileImpacts(impacts, packets):
-#    # first run packet_to_impact
-#    [packet_to_impact(impacts, packet) for packet in packets]
-#
-#    result = []
-#    for mmac, ipimpacts in impacts.items():
-#        for ip, impact in ipimpacts.items():
-#            item = geos.get(ip, None)
-#            if item is None:  # we might have just killed the key 
-#                continue
-#            item = item.copy() 
-#            # note: geos[ip] should never be none because the invariant is that packet_to_impact has been
-#            # called BEFORE this point, and that populates the geos. Yeah, ugly huh. I didn't write this
-#            # code, don't blame me!
-#            item['impact'] = impact
-#            item['companyid'] = ip
-#            item['appid'] = mmac
-#            if item['impact'] > 0:
-#                result.append(item)
-#            pass
-#    return result
+################
+# event stream #
+################
 
-#def GetImpacts(n, units="MINUTES"):
-#    global geos
-#    impacts = dict() 
-#    # get relevant packets from the database 
-#    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
-#    packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
-#    result = CompileImpacts(impacts, packets)
-#    return result #shipit
-
-_events = []
+event_queue = []
 def event_stream():
     import time
 
-    def packets_insert_to_impact(packets):        
-        impacts = CompileImpacts(dict(),packets)
-        #print("packets insert to pitt ", len(packets), " resulting impacts len ~ ", len(impacts))
-        return impacts
-    
     try:
         while True:
-            time.sleep(0.5)
-            insert_buf = []
-            geo_updates = []
-            device_updates = []
+            time.sleep(60)
+            packet_buf = []
+            geo_buf = []
+            device_buf = []
 
-            while len(_events) > 0:
-                event_str = _events.pop(0)
+            while len(event_queue) > 0:
+                event_str = event_queue.pop(0)
                 event = json.loads(event_str)
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'packets':
                     event['data']['len'] = int(event['data'].get('len'))
-                    insert_buf.append(event["data"])
+                    packet_buf.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'geodata':
-                    #print("Geodata update", event["data"])
-                    geo_updates.append(event["data"])
+                    geo_buf.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'devices':
-                    #print("Device update", event["data"])                    
-                    device_updates.append(event["data"])
+                    device_buf.append(event["data"])
 
-            if len(insert_buf) > 0: 
-                yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
-            if len(geo_updates) > 0:
-                #print("Got a geo updates for %s, must reset GEO cache." % [u["ip"] for u in geo_updates])
-                [geos.pop(u["ip"], None) for u in geo_updates]
-                yield "data: %s\n\n" % json.dumps({"type":'geodata'})
-            if len(device_updates) > 0: 
-                yield "data: %s\n\n" % json.dumps({"type":'device', "data": packets_insert_to_impact(insert_buf)})
+            if len(packet_buf) > 0: 
+                impacts = dict()
+            
+                for packet in packet_buf:
+                    mac = packet['mac']
+                    ip = packet['ext']
+                    impact = packet['len']
+
+                    if ip not in impacts:
+                        impacts[ip] = dict()
+                    if mac not in impacts[ip]:
+                        impacts[ip][mac] = 0
+                    impacts[ip][mac] += impact
+
+                yield "%s\n\n" % json.dumps({"type": "impact", "time": round(time.time()/60)-1, "data": impacts})
+
+            if len(geo_buf) > 0:
+                [geos.pop(geo["ip"], None) for geo in geo_buf]
+                for geo in geo_buf:
+                    yield "%s\n\n" % json.dumps({"type":"geodata", "data": geo})
+
+            if len(device_buf) > 0: 
+                for device in device_buf:
+                    yield "data: %s\n\n" % json.dumps({"type":'device', "data": device})
 
     except GeneratorExit:
         return;
@@ -329,13 +253,6 @@ def event_stream():
         print("Unexpected error:", sys.exc_info())
         traceback.print_exc()                
         return
-
-@app.before_first_request
-def init():
-    global DB_MANAGER
-    DB_MANAGER = databaseBursts.dbManager()
-    listenManager = databaseBursts.dbManager()
-    listenManager.listen('db_notifications', lambda payload:_events.append(payload))
 
 ## This is run using Flask
 ## export FLASK_APP=apy

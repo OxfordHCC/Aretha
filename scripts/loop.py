@@ -53,13 +53,16 @@ def processGeos():
             domain = 'unknown'
 
             #get company info from ipdata
-            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
-            if data.status_code==200 and data.json()['latitude'] is not '':
-                data = data.json()
-                orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
-                lat = data['latitude']
-                lon = data['longitude']
-                country = data['country_code'] or data['continent_code']
+            try:
+                data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
+                if data.status_code==200 and data.json()['latitude'] is not '':
+                    data = data.json()
+                    orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
+                    lat = data['latitude']
+                    lon = data['longitude']
+                    country = data['country_code'] or data['continent_code']
+            except:
+                pass
 
             #make reverse dns call to get the domain
             res = dns.resolver.Resolver()
@@ -67,11 +70,9 @@ def processGeos():
             try:
                 dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
                 raw_domain = str(dns_ans[0])
-                print(raw_domain)
                 domain = tldextract.extract(raw_domain).registered_domain
-                print(domain)
             except:
-                print("DNS ERROR")
+                pass
 
             #commit the extra info to the database
             DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
@@ -272,14 +273,14 @@ if __name__ == '__main__':
     while(running[0]):
         log("Awake!");
         processEvents()
-        if running[0]:             
+        if running[0]:
             processGeos()
-        if running[0]:             
-            processMacs()        
+        if running[0]:
+            processMacs()
         if running[0]:
             process_firewall()
         if ISBEACON == True and running[0]:
             beacon()
-        if running[0]:             
+        if running[0]:
             log("sleeping zzzz ", INTERVAL);
             time.sleep(INTERVAL)

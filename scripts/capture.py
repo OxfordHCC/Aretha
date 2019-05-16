@@ -29,6 +29,7 @@ def DatabaseInsert(packets):
         src = ''
         dst = ''
         proto = ''
+        ext = ''
 
         if not 'ip' in packet: continue
 
@@ -51,8 +52,10 @@ def DatabaseInsert(packets):
             continue #internal packet that we don't care about, or no local host (should never happen)
         elif not dstLocal:
             mac = packet['eth'].src
+            ext = packet.ip.dst
         else:
             mac = packet['eth'].dst
+            ext = packet.ip.src
 
         if len(packet.highest_layer) > 10:
             proto = packet.highest_layer[:10]
@@ -61,7 +64,7 @@ def DatabaseInsert(packets):
 
         #insert packets into table
         try:
-            cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto) VALUES (%s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto))
+            cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES (%s, %s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto, ext))
         except:
             print("Unexpected error on insert:", sys.exc_info())
             traceback.print_exc()
