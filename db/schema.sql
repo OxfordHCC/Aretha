@@ -100,6 +100,14 @@ create table experiment(
 --load initial values
 insert into experiment(name, value) values('stage', 1);
 
+drop materialized view if exists impacts;
+create materialized view impacts as
+	select mac, ext, round(extract(epoch from time)/60) as mins, sum(len) as impact
+	from packets
+	group by mac, ext, mins
+	order by mins
+with data;
+
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
 DECLARE
@@ -144,15 +152,13 @@ END;
 $trigger$ LANGUAGE plpgsql;
 
 drop trigger if exists packets_notify on packets;
-CREATE TRIGGER packets_notify AFTER INSERT OR UPDATE OR DELETE ON packets
-FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
-  'id',
+create trigger packets_notify after insert or update or delete on packets
+for each row execute procedure notify_trigger(
   'mac',
-  'src',
-  'dst',
-  'len',
-  'ext'
+  'ext',
+  'len'
 );
+
 
 drop trigger if exists device_notify on devices;
 CREATE TRIGGER device_notify AFTER INSERT OR UPDATE OR DELETE ON devices
@@ -172,10 +178,3 @@ FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'c_name'
 );
 
-drop view if exists impacts;
-create materialized view impacts as
-	select mac, ext, round(extract(epoch from time)/60) as mins, sum(len) 
-	from packets
-	group by mac, ext, mins
-	order by mins
-with data;

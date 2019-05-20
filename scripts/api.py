@@ -206,7 +206,7 @@ def event_stream():
 
     try:
         while True:
-            time.sleep(60)
+            time.sleep(0.1)
             packet_buf = []
             geo_buf = []
             device_buf = []
