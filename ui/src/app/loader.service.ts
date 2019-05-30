@@ -6,23 +6,33 @@ import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
-import { AppImpact, AppDevice } from './refinebar/refinebar.component';
-
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
 
-// export const API_ENDPOINT = 'http://localhost:8118/api';
 export const API_ENDPOINT = 'https://negi.io/api';
 export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
-export const IOT_API_ENDPOINT='http://localhost:4201';
+export const IOTR_ENDPOINT='http://localhost:4201/api';
 
-export interface App2Hosts { [app: string]: string[] }
 export interface Host2PITypes { [host: string]: PI_TYPES[] }
 export interface String2String { [host: string]: string }
 
 export interface AppSubstitutions { [app: string]: string[] };
 
 let zone = new NgZone({ enableLongStackTrace: false });
+
+
+export interface DeviceImpact {
+	minute: number;
+	device: string;
+	company: string;
+  	impact: number;
+};
+
+export interface Device {
+	[mac : string]: string;
+	manufacturer: string;
+	name: string;
+}
 
 export class GeoIPInfo {
   host?: string;
@@ -38,6 +48,15 @@ export class GeoIPInfo {
   longitude?: number;
   metro_code?: number;  
 };
+
+//refinebar
+ export class GeoData {
+  	[ip: string]: string;
+  	country_name: string;
+  	country_code: string;
+  	latitude: string;
+  	longitude: string;
+  };
 
 export class PacketUpdateInfo {
   id: string;
@@ -87,19 +106,6 @@ export let memoize = (f: (...args: any[]) => string) => {
     };
   };
 }
-
-// export class CachingSubscription<T> {
-//   private dataSubject: ReplaySubject<T> = new ReplaySubject<T>();
-//   data$: Observable<T> = this.dataSubject.asObservable();
-//   resolved = false;
-//   constructor(private obs: Observable<T>) {    
-//     this.obs.subscribe(result => {
-//       this.resolved = true;
-//       this.dataSubject.next(result);
-//     });    
-//   }
-//   getObservable() { return this.data$;  }
-// }
 
 export class CompanyDB {
   emoji_table = {
@@ -180,10 +186,9 @@ export class CompanyInfo {
 }
 
 export class IoTDataBundle {
-  usage: any;
   impacts: any;
-  manDev: any;
-  bursts: any;
+  geodata: any;
+  devices: any;
 }
 
 export class APIAppInfo {
@@ -251,13 +256,6 @@ export class LoaderService {
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
-  }
-
-  @cache
-  getAppToHosts(): Promise<App2Hosts> {
-    return this.http.get('assets/data/host_by_app.json').toPromise().then(response => {
-      return mapValues(response.json(), ((hvobj) => keys(hvobj))) as { [app: string]: string[] };
-    });
   }
 
   @cache  
@@ -354,22 +352,6 @@ export class LoaderService {
       .then((results: string[]) => results.map(result => this.sanitiser.bypassSecurityTrustResourceUrl(result)));
   }
 
-  // @memoize((company) => company.id)  
-  // findApps(query: string): Promise<APIAppInfo[]> {
-  //   // var headers = new Headers();
-  //   // headers.set('Accept', 'application/json');
-  //   query = query && query.trim();
-  //   if (!query) { return Promise.resolve([]); }
-  //   return this.http.get(API_ENDPOINT + `/apps?isFull=true&limit=120&startsWith=${query.trim()}`).toPromise()
-  //     .then(response => response.json() as APIAppInfo[])
-  //     .then((appinfos: APIAppInfo[]) => {
-  //       if (!appinfos) {
-  //         throw new Error('null returned from endpoint ' + query);
-  //       } 
-  //       return Promise.all(appinfos.map(appinfo => this._prepareAppInfo(appinfo, false, false)));
-  //     });
-  // }
-  
   /**
    * Parses JSON Object into a URL param options object and then Turns that to a
    * string. 
@@ -431,17 +413,6 @@ export class LoaderService {
     let body = this.parseFetchAppParams(options);    
     let appData: APIAppInfo[];
 
-    // // this makes me want to stab my eyes out -> 
-    // return new CachingSubscription(this.http.get('http://localhost:8118/api/apps?' + body).map((data) => {
-    //   const res = data.json() as APIAppInfo[];
-    //   return Observable.fromPromise(Promise.all(res.map((app: APIAppInfo) => {
-    //     if (!app) {
-    //       throw new Error('null returned from endpoint ' + body);
-    //     } 
-    //     return this._prepareAppInfo(app);
-    //    })));
-    // })).getObservable();
-
     return this.http.get(API_ENDPOINT + '/apps?' + body).toPromise().then((data) => {
       const result = (data.json() as APIAppInfo[]);
       if (!result || result === null) {
@@ -466,31 +437,13 @@ export class LoaderService {
     return this.apps[appid];
   }
 
-  // connectToAsyncDBUpdates() : void {
-  //     this.updateObservable = Observable.create(observer => {
-  //       const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
-  //       eventSource.onopen = thing => {
-  //         console.info('EventSource Open', thing);
-  //       };
-  //       eventSource.onmessage = score => {
-  //         // console.info("EventSource onMessage", score, score.data);
-  //         let incoming = <DBUpdate>JSON.parse(score.data);
-  //         zone.run(() => observer.next(incoming));
-  //       };
-  //       eventSource.onerror = error => {
-  //         // console.error("eventSource onerror", error);
-  //         zone.run(() => observer.error(error));
-  //       };
-  //       return () => eventSource.close();
-  //   });        
-  // }
   connectToAsyncDBUpdates() : void {
     let observers = [], eventSource; 
 
     this.updateObservable = Observable.create(observer => {
       observers.push(observer);
       if (observers.length === 1 && eventSource === undefined) {       
-        eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
+        eventSource = new EventSource(IOTR_ENDPOINT+`/stream`);
         eventSource.onopen = thing => {
           console.info('EventSource Open', thing);
         };
@@ -509,12 +462,12 @@ export class LoaderService {
 }
 
 
-  asyncAppImpactChanges(): Observable<AppImpact[]> {
+  asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
     return Observable.create(observer => {
       this.updateObservable.subscribe({
         next(x) {           
           if (x.type === 'impact') {
-            observer.next(<AppImpact[]>x.data);
+            observer.next(<DeviceImpact[]>x.data);
             return true;
           } 
           return false;
@@ -537,12 +490,12 @@ export class LoaderService {
       });
     });
   }
-  asyncDeviceChanges(): Observable<AppDevice[]> {
+  asyncDeviceChanges(): Observable<Device[]> {
     return Observable.create(observer => {
       this.updateObservable.subscribe({
         next(x) {           
           if (x.type === 'device') {
-            observer.next(<AppDevice[]>x.data);
+            observer.next(<Device[]>x.data);
             return true;
           } 
           return false;
@@ -553,28 +506,28 @@ export class LoaderService {
   }
 
 
-  // todo; move this out to loader
-  // @memoize(x => 'iotdata')
-  getIoTData(): Promise<IoTDataBundle> {
-    return this.http.get(IOT_API_ENDPOINT + '/api/refine/5').toPromise().then(response2 => {
-      let resp = response2.json(),
-        impacts = resp.impacts,
-        manDev = resp.manDev,
-        bursts = resp.bursts;
+  	// @memoize(x => 'iotdata')
+	getIoTData(): Promise<IoTDataBundle> {
+		return this.http.get(IOTR_ENDPOINT + '/impacts/1558958863/1558978863').toPromise().then(response2 => {
+      		let resp = response2.json(),
+        		impacts = resp.impacts,
+        		geodata = resp.geodata,
+				devices = resp.devices;
 
-      // impacts.forEach(function(impact){
-      //   if (manDev[impact.appid] !== "unknown") {
-      //     impact.appid = manDev[impact.appid];
-      //   }
-      // });
-      bursts.forEach(function(burst){
-        if (manDev[burst.device] !== "unknown") {
-          burst.device = manDev[burst.device];
-        }
-      });
-      return resp;
-    });
-  }
+			return resp;
+    	});
+  	}
+	
+	getIoTDataAggregated(): Promise<IoTDataBundle> {
+		return this.http.get(IOTR_ENDPOINT + '/impacts/1558958863/1558978863').toPromise().then(response2 => {
+      	let resp = response2.json(),
+        	impacts = resp.impacts,
+        	geodata = resp.geodata,
+			devices = resp.devices;
+
+			return resp;
+    	});
+  	}
   
   @memoize((appid: string): string => appid)
   getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {
@@ -598,7 +551,6 @@ export class LoaderService {
 
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {
-    // return this.http.get('assets/110m.json').toPromise().then((result) => result.json());
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());
   }
 

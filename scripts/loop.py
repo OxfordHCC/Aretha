@@ -107,8 +107,14 @@ def processEvents():
     for evt in cur_events:
         evt = json.loads(evt)
         if RAW_IPS and evt["operation"] in ['UPDATE','INSERT'] and evt["table"] == 'packets':
-            RAW_IPS.add(evt["data"]["src"])
-            RAW_IPS.add(evt["data"]["dst"])
+            try:
+                RAW_IPS.add(evt["data"]["src"])
+            except:
+                pass
+            try:
+                RAW_IPS.add(evt["data"]["dst"])
+            except:
+                pass
         pass
     log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
 

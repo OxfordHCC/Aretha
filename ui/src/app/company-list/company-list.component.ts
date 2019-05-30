@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, CompanyDB, CompanyInfo, Host2PITypes } from '../loader.service';
+import { LoaderService, String2String, CompanyDB, CompanyInfo, Host2PITypes } from '../loader.service';
 import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 
@@ -9,7 +9,6 @@ import { HostUtilsService } from 'app/host-utils.service';
   styleUrls: ['./company-list.component.scss']
 })
 export class CompanyListComponent implements OnInit, OnChanges {
-  app2hosts: App2Hosts;
   host2companyid: String2String;
   companyid2info: CompanyDB;
   host2short: String2String;

@@ -108,6 +108,13 @@ create materialized view impacts as
 	order by mins
 with data;
 
+drop materialized view if exists impacts_aggregated;
+create materialized view impacts_aggregated as
+	select mac, ext, sum(len) as impact
+	from packets
+	group by mac, ext
+with data;
+
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
 DECLARE

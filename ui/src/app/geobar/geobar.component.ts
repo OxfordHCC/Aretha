@@ -1,6 +1,6 @@
 
 import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo, GeoIPInfo } from '../loader.service';
+import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
@@ -10,278 +10,215 @@ import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
-import { AppImpact } from '../refinebar/refinebar.component';
-
-interface AppImpactGeo {
-  appid: string;
-  impact: number;
-  country?: string;
-  country_code?: string;
-};
+import { DeviceImpact, Device, GeoData } from '../loader.service';
 
 @Component({
-  selector: 'app-geobar',
-  templateUrl: './geobar.component.html',
-  styleUrls: ['./geobar.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  	selector: 'app-geobar',
+	templateUrl: './geobar.component.html',
+	styleUrls: ['./geobar.component.scss'],
+	encapsulation: ViewEncapsulation.None
 })
 
 export class GeobarComponent implements AfterViewInit, OnChanges {
 
-  // still in use!
-  companyid2info: CompanyDB;
+	// still in use!
+  	companyid2info: CompanyDB;
 
-  @Input() impactChanges : Observable<any>;
-  private _impact_listener : Subscription;
-  @Input('impacts') impacts_in : AppImpact[];
+  	@Input() impactChanges : Observable<any>;
+  	private _impact_listener : Subscription;
+	@Input() impacts: DeviceImpact[];
+	@Input() geodata: GeoData[];
+  	private init: Promise<any>;
 
-  @Input('appusage') usage: AppUsage[];
-  private impacts: AppImpactGeo[];
-  private init: Promise<any>;
+  	lastMax = 0;
+  	normaliseImpacts = false;
 
-  lastMax = 0;
-  // _byTime = 'yes';
-  normaliseImpacts = false;
+  	// incoming attribute
+  	@Input() showModes = true;
+  	@Input() highlightApp: APIAppInfo;
+  	@Input() showLegend = true;
+  	@Input() showTypesLegend = true;
+  	@Input() showXAxis = true;
 
-  apps: string[]; // keeps app ordering between renders
+  	@Input() scale = false;
+  	vbox = { width: 700, height: 1024 };
+  	highlightColour = '#FF066A';
 
-  // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
+  	_companyHovering: CompanyInfo;
+  	_hoveringApp: string;
+  	_ignoredApps: string[];
 
-  // incoming attribute
-  // @Input('appusage') usage_in: AppUsage[];
-  @Input() showModes = true;
-  @Input() highlightApp: APIAppInfo;
-  @Input() showLegend = true;
-  @Input() showTypesLegend = true;
-  @Input() showXAxis = true;
+	constructor(private httpM: HttpModule, 
+    	private http: Http, 
+    	private el: ElementRef,
+    	private loader: LoaderService,
+    	private hostutils: HostUtilsService,
+    	private focus: FocusService,
+    	private hover: HoverService,
+    	private zone :NgZone) {
+    	
+		this.init = Promise.all([
+      		this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
+    	]);
+		
+		hover.HoverChanged$.subscribe((target) => {
+      		if (target !== this._hoveringApp) {
+        		this._hoveringApp = target ? target as string : undefined;
+        		this.render();
+      		}
+    	});
+		
+		this._ignoredApps = new Array();
 
-  @Input() scale = false;
-  vbox = { width: 700, height: 1024 };
-  highlightColour = '#FF066A';
-
-  _companyHovering: CompanyInfo;
-  _hoveringApp: string;
-  _ignoredApps: string[];
-
-  constructor(private httpM: HttpModule, 
-    private http: Http, 
-    private el: ElementRef,
-    private loader: LoaderService,
-    private hostutils: HostUtilsService,
-    private focus: FocusService,
-    private hover: HoverService,
-    private zone :NgZone) {
-    this.init = Promise.all([
-      this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
-    ]);
-    hover.HoverChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as string : undefined;
-        this.render();
-      }
-    });
-    this._ignoredApps = new Array();
-
-    focus.focusChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._ignoredApps) {
-        this._ignoredApps = target ? target as string[] : [];
-        this.render();
-      }
-    });
+    	focus.focusChanged$.subscribe((target) => {
+      		if (target !== this._ignoredApps) {
+        		this._ignoredApps = target ? target as string[] : [];
+        		this.render();
+      		}
+		});
+	}
     
-    // this.getIoTData();
-    // (<any>window)._rb = this;
-  }
-  // getIoTData(): void {
-  //   this.loader.getIoTData().then(bundle => {
-  //     this.usage = bundle.usage;
-  //     this.impacts = bundle.impacts.map(impact => ({ appid: impact.appid, country: impact.country_code !== 'XX' ? impact.country_code : 'Unknown', country_code: impact.country_code, impact: impact.impact }))
-  //     this.render()
-  //   });
-  // }
+  	getSVGElement() {
+    	const nE: HTMLElement = this.el.nativeElement;
+    	return Array.from(nE.getElementsByTagName('svg'))[0];
+  	}
+	
+	// this gets called when this.usage_in changes
+  	ngOnChanges(changes: SimpleChanges): void {
+    	var this_ = this;
+		if (this.impactChanges && this._impact_listener === undefined) {
+			this._impact_listener = this.impactChanges.subscribe(target => {        
+				this.zone.run(() => this_.render());
+			});
+			if (this.impacts) {
+				this_.render();
+			}
+		}
+		this.init.then(() => { this.render(); });
+  	}
 
-  getSVGElement() {
-    const nE: HTMLElement = this.el.nativeElement;
-    return Array.from(nE.getElementsByTagName('svg'))[0];
-  }
-  // this gets called when this.usage_in changes
-  ngOnChanges(changes: SimpleChanges): void {
+  	ngAfterViewInit(): void { this.init.then(() => this.render()); }
 
-    let convert_in = () => {
-      if (this.impacts_in) { 
-        this.impacts = this.impacts_in.map(impact => ({ ...impact, appid: impact.appid, country: (<any>impact).country_code !== 'XX' ? (<any>impact).country_code : 'Unknown', country_code: (<any>impact).country_code, impact: impact.impact }));
-        // console.log('geobar impacts ', this.impacts);
-        this.zone.run(() => this.render());
-      }
-    };
-    // if (!this.usage_in) { return; }
+	//combines impacts, geodata, and devices into impacts per device per location
+	private compileImpacts(): any {
+		var result = [];
+		if (this.impacts) {
+			this.impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ).map((imp) => {
+				if (this.geodata.filter((x) => x.ip === imp.company).length > 0) {
+					result.push({
+						"ip": imp.company,
+						"device": imp.device,
+						"impact": Math.log(imp.impact),
+						"country": this.geodata.filter((geo) => geo.ip === imp.company)[0].country_code,
+						"lat": this.geodata.filter((geo) => geo.ip === imp.company)[0].latitude,
+						"lon": this.geodata.filter((geo) => geo.ip === imp.company)[0].longitude
+					});
+				}
+			});
+		}
+		return result;
+	}
+	
+	render() {
+    	const svgel = this.getSVGElement();
+    	if (!svgel || !this.impacts) { return; }
 
-    if (this.impactChanges && this._impact_listener === undefined) {
-      this._impact_listener = this.impactChanges.subscribe(convert_in);
-    }
-    // this.init.then(convert_in);
-  }
+		let rect = svgel.getBoundingClientRect(),
+    		width_svgel = Math.round(rect.width - 5),
+      		height_svgel = Math.round(rect.height - 5),
+      		svg = d3.select(svgel);
 
-  ngAfterViewInit(): void { this.init.then(() => this.render()); }
+    	if (!this.scale) {
+    		svg.attr('width', width_svgel)
+        		.attr('height', height_svgel);
+    	} else {
+    		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
+    			.attr('virtualWidth', this.vbox.width)
+        		.attr('virtualHeight', this.vbox.height)
+        		.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+      		width_svgel = this.vbox.width;
+      		height_svgel = this.vbox.height;
+    	}
 
-  private _getApp(appid: string): Promise<APIAppInfo> {
-    return this.loader.getCachedAppInfo(appid) && Promise.resolve(this.loader.getCachedAppInfo(appid))
-      || this.loader.getFullAppInfo(appid);
-  }
+    	svg.selectAll('*').remove();
 
-  // compileImpacts(usage: AppUsage[]): Promise<AppImpactGeo[]> {
-  //   // folds privacy impact in simply by doing a weighted sum over hosts
-  //   // usage has to be in a standard unit: days, minutes
-  //   // first, normalise usage
+    	const impacts = this.compileImpacts();
+		const devices = _.uniq(this.impacts.map((x) => x.device));	
+      	const countries = _.uniq(this.geodata.map((x) => x.country_code)),
+			
+		get_impact = (country, device) => {
+        	const t = impacts.filter((imp) => imp.country === country && imp.device === device);
+        	const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+	        return t !== undefined ? t.reduce(reducer, 0) : 0;
+      	}
+			
+		let by_country = countries.map((country) => ({
+        	country: country,
+        	total: devices.reduce((total, mac) => total += get_impact(country, mac), 0),
+        	..._.fromPairs(devices.map((mac) => [mac, get_impact(country, mac)]))
+     	 }));
 
-  //   const timebased = this.byTime === 'yes',
-  //     total = _.reduce(usage, (tot, appusage): number => tot + (timebased ? appusage.mins : 1.0), 0),
-  //     impacts = usage.map((u) => ({ ...u, impact: (timebased ? u.mins : 1.0) / (1.0 * (this.normaliseImpacts ? total : 1.0)) }));
+		by_country.sort((c1, c2) => c2.total - c1.total); 
 
-  //   return Promise.all(impacts.map((usg): Promise<AppImpactGeo[]> => {
+		let margin = { top: 20, right: 20, bottom: this.showXAxis ? 70 : 0, left: 40 },
+    		width = width_svgel - margin.left - margin.right, 
+			height = height_svgel - margin.top - margin.bottom; 
 
-  //     return this._getApp(usg.appid).then(app => {
-  //       const hosts = app.hosts, geos = app.host_locations;
-  //       if (!hosts || !geos) { console.warn('No hosts found for app ', usg.appid); return []; }
-  //       return geos.map(geo => ({ appid: usg.appid, country: geo.country_name !== '' ? geo.country_name : 'Unknown', country_code: geo.country_code, impact: usg.impact }));
-  //     });
-  //   })).then((nested_impacts: AppImpactGeo[][]): AppImpactGeo[] => _.flatten(_.flatten(nested_impacts)));
-  // }
+    	if (width < 50 || height < 50) { return; }
 
+		let g = svg.append('g')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+		
+		let x = d3.scaleBand()
+        	.rangeRound([0, width]).paddingInner(0.05).align(0.1)
+        	.domain(countries)
+    
+		let d3maxx = d3.max(by_country, function (d) { return d.total; }) || 0,
+    		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
+    		this_ = this;
 
-  // accessors for .byTime 
-  // set byTime(val) {
-  //   this.lastMax = 0;
-  //   this._byTime = val;
-  //   this.init.then(x => this.compileImpacts(this.usage).then(impacts => {
-  //     this.impacts = impacts;
-  //     this.render();
-  //   }));
-  // }
-  // get byTime() { return this._byTime; }
+    	if (d3maxx < 0.7 * ymaxx) {
+    		ymaxx = 1.1 * d3maxx;
+    	}
+		
+		let y = d3.scaleLinear()
+      		.rangeRound([height, 0])
+      		.domain([0, ymaxx]).nice()
+			
+		let z = d3.scaleOrdinal(d3.schemeCategory20).domain(devices);
 
-  render() {
-    // console.log(':: render usage:', this.usage && this.usage.length);
-    const svgel = this.getSVGElement();
-    if (!svgel || !this.usage || !this.impacts) { return; }
-    // console.log('refinebar render! getSVGElement > ', svgel);
+    	// main rects
+		const f = (selection, first, last) => {
+      		return selection.selectAll('rect')
+        		.data((d) => d)
+        		.enter().append('rect')
+        		.attr('class', 'bar')
+        		.attr('x', (d) => x(d.data.country))
+        		.attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
+        		.attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
+        		.attr('width', x.bandwidth())
+        		.on('mouseenter', function (d) {
+          			if (this.parentElement && this.parentElement.__data__) {
+            			this_.hover.hoverChanged(this.parentElement.__data__.key);
+          			}
+        		})
+        		.on('mouseleave', (d) => this_.hover.hoverChanged(undefined));
+    	};
 
-    let rect = svgel.getBoundingClientRect(),
-      width_svgel = Math.round(rect.width - 5),
-      height_svgel = Math.round(rect.height - 5),
-      svg = d3.select(svgel);
-
-    if (!this.scale) {
-      svg.attr('width', width_svgel)
-        .attr('height', height_svgel);
-    } else {
-      svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
-        .attr('virtualWidth', this.vbox.width)
-        .attr('virtualHeight', this.vbox.height)
-        .attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
-      width_svgel = this.vbox.width;
-      height_svgel = this.vbox.height;
-    }
-
-    svg.selectAll('*').remove();
-
-    const usage = this.usage.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
-      impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 );
-
-    let apps = _.uniq(impacts.map((x) => x.appid)),
-      countries = _.uniq(impacts.map((x) => x.country)),
-      get_impact = (cid, aid) => {
-        const t = impacts.filter((imp) => imp.country === cid && imp.appid === aid);
-        const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
-        return t !== undefined ? t.reduce(reducer, 0) : 0;
-      },
-      by_country = countries.map((countryname) => ({
-        country: countryname,
-        total: apps.reduce((total, appid) => total += get_impact(countryname, appid), 0),
-        ..._.fromPairs(apps.map((appid) => [appid, get_impact(countryname, appid)]))
-      }));
-
-    if (this.apps === undefined) {
-      // sort apps
-      // TODO: this is crashing:
-      apps.sort();
-      // apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-      this.apps = apps;
-    } else {
-      apps = this.apps;
-    }
-    by_country.sort((c1, c2) => c2.total - c1.total); // apps.reduce((total, app) => total += c2[app], 0) - apps.reduce((total, app) => total += c1[app], 0));
-
-    // re-order companies
-    countries = by_country.map((bc) => bc.country);
-
-    // console.log(by_country)
-
-    let margin = { top: 20, right: 20, bottom: this.showXAxis ? 70 : 0, left: 40 },
-      width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
-      height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom,
-
-    if (width < 50 || height < 50) { return; }
-
-    let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
-      x = d3.scaleBand()
-        .rangeRound([0, width]).paddingInner(0.05).align(0.1)
-        .domain(countries),
-      d3maxx = d3.max(by_country, function (d) { return d.total; }) || 0,
-      ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
-      this_ = this;
-
-    if (d3maxx < 0.7 * ymaxx) {
-      ymaxx = 1.1 * d3maxx;
-    }
-    let y = d3.scaleLinear()
-      .rangeRound([height, 0])
-      .domain([0, ymaxx]).nice(),
-      z = d3.scaleOrdinal(d3.schemeCategory20).domain(apps);
-
-    // main rects
-    const f = (selection, first, last) => {
-      return selection.selectAll('rect')
-        .data((d) => d)
-        .enter().append('rect')
-        .attr('class', 'bar')
-        .attr('x', (d) => x(d.data.country))
-        .attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
-        .attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
-        .attr('width', x.bandwidth())
-        .on('click', function (d) {
-          if (this.parentElement && this.parentElement.__data__) {
-            /*this_.focus.focusChanged(this_.loader.getCachedAppInfo(this.parentElement.__data__.key));*/
-          }
-        })
-        .on('mouseenter', function (d) {
-          if (this.parentElement && this.parentElement.__data__) {
-            this_.hover.hoverChanged(this.parentElement.__data__.key);
-          }
-        })
-        .on('mouseleave', (d) => this_.hover.hoverChanged(undefined));
-      // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
-      // .on('mouseenter', (d) => this._companyHover(this.companyid2info.get(d.data.company), true))
-      // .on("mouseleave", (d) => this._companyHover(this.companyid2info.get(d.data.company), false));
-    };
-
-    g.append('g')
-      .selectAll('g')
-      .data(d3.stack().keys(apps)(by_country))
-      .enter().append('g')
-      .attr('fill', (d) => {
-        // highlightApp comes in from @Input() attribute, set using compare
-        // _apphover comes in from hovering service, namely usagetable hover
-        let highApp = this.highlightApp || this._hoveringApp;
-        // console.log('geo zkey ', d.key, z(d.key));
-        if (highApp) {
-          return d.key === highApp ? z(d.key) : 'rgba(200,200,200,0.2)';
-        }
-        return z(d.key);
-      })
-      .call(f);
+    	g.append('g')
+      		.selectAll('g')
+      		.data(d3.stack().keys(devices)(by_country))
+      		.enter().append('g')
+      		.attr('fill', (d) => {
+        		// highlightApp comes in from @Input() attribute, set using compare
+        		// _apphover comes in from hovering service, namely usagetable hover
+        		let highApp = this.highlightApp || this._hoveringApp;
+        		if (highApp) {
+          			return d.key === highApp ? z(d.key) : 'rgba(200,200,200,0.2)';
+        		}
+        		return z(d.key);
+      		})
+      		.call(f);
 
     // x axis
     g.append('g')
@@ -302,7 +239,6 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       svg.selectAll('g.axis.x g.tick')
         .filter(function (d) { return d; })
         .attr('class', (d) => d.country)
-        /*.on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d)))*/;
     }
 
     g.append('g')
@@ -321,15 +257,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         .attr('class', 'legend')
         .attr('transform', 'translate(0,10)')
         .selectAll('g')
-        .data(apps.slice().reverse())
+        .data(devices.slice().reverse())
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
         .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        /*.on('click', (d) => {
-          this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        })*/;
 
       legend.append('rect')
         .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
@@ -343,23 +276,24 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         .attr('dy', '0.32em')
         .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d);
 
-    }
+    	}
 
+	}
+	
+	@HostListener('window:resize')
+	onResize() {
+		// call our matchHeight function here
+	   	this.render();
+	}
+	
+	@HostListener('mouseenter')
+	mouseEnter() {
+   		// this.actlog.log('mouseenter', 'geobar');
+	}
 
-  }
-  @HostListener('window:resize')
-  onResize() {
-    // call our matchHeight function here
-    this.render();
-  }
-  @HostListener('mouseenter')
-  mouseEnter() {
-    // this.actlog.log('mouseenter', 'geobar');
-  }
-
-  @HostListener('mouseleave')
-  mouseLv() {
-    // this.actlog.log('mouseleave', 'geobar');
-  }  
+	@HostListener('mouseleave')
+	mouseLv() {
+   		// this.actlog.log('mouseleave', 'geobar');
+	}  
 
 }

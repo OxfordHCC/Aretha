@@ -1,5 +1,5 @@
 import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, Host2PITypes, AppSubstitutions, APIAppInfo } from '../loader.service';
+import { LoaderService, String2String, Host2PITypes, AppSubstitutions, APIAppInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as _ from 'lodash';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';

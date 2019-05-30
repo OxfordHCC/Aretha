@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
+import { LoaderService, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
@@ -110,7 +110,7 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
 
 getIoTData(): void {
     this.loader.getIoTData().then( bundle => {
-        this.data = bundle.bursts;
+		//this.data = bundle.bursts;
         console.log('refinecat.component data is ', this.data);
         this.render('','timeseries'.toString(),this.data,false);
     });

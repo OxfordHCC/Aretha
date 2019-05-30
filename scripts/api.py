@@ -21,7 +21,7 @@ geos = dict() #for building and caching geo data
 # return impacts per <delta> from <start> to <end>
 # delta in seconds, <start>/<end> as unix timestamps
 @app.route('/api/impacts/<start>/<end>/<delta>')
-def refine(start, end, delta):
+def impacts(start, end, delta):
     global DB_MANAGER
     try:
         #convert inputs to minutes
@@ -41,7 +41,7 @@ def refine(start, end, delta):
             mac = impact[0]
             ip = impact[1]
             mins = impact[2]
-            total = impact[3]
+            total = int(impact[3])
 
             #fast forward to correct bucket
             while  mins > pointer + delta:
@@ -61,6 +61,49 @@ def refine(start, end, delta):
         devices = get_device_info()
 
         response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    except:
+        print("Unexpected error:", sys.exc_info())
+        traceback.print_exc()
+        sys.exit(-1)                    
+
+# return aggregated impacts from <start> to <end>
+# <start>/<end> as unix timestamps
+@app.route('/api/impacts/<start>/<end>')
+def impacts_aggregated(start, end):
+    global DB_MANAGER
+    try:
+        #convert inputs to minutes
+        start = round(int(start)/60)
+        end = round(int(end)/60)
+
+        #refresh view and get per minute impacts from <start> to <end>
+        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT mac, ext, sum(impact) FROM impacts WHERE mins > %s AND mins < %s group by mac, ext", (start, end))
+
+        impacts = dict()
+
+        for impact in raw_impacts:
+            mac = impact[0]
+            ip = impact[1]
+            total = int(impact[2])
+
+            if ip not in impacts:
+                impacts[ip] = dict()
+            if mac not in impacts[ip]:
+                impacts[ip][mac] = 0
+            impacts[ip][mac] += total
+       
+        result = []
+        for ip in impacts:
+            for mac in impacts[ip]:
+                result.append({"company": ip, "impact": impacts[ip][mac], "device": mac})
+
+        #add geo and device data
+        geos = get_geodata()
+        devices = get_device_info()
+
+        response = make_response(jsonify({"impacts": result, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
@@ -152,6 +195,7 @@ def unenforce_dest_dev(destination, device):
 # open an event stream for database updates
 @app.route('/api/stream')
 def stream():
+    print("Starting event stream")
     response = Response(event_stream(), mimetype="text/event-stream")
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
@@ -172,9 +216,9 @@ def get_device_info():
 #get geo data for all ips
 def get_geodata():
     geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
-    records = dict()
+    records = []
     for geo in geos:
-        records[geo[0]] = ({"latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "companyName": geo[4]})
+        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4]})
     return records
 
 def GetCounterexample(question):
@@ -248,6 +292,7 @@ def event_stream():
                     yield "data: %s\n\n" % json.dumps({"type":'device', "data": device})
 
     except GeneratorExit:
+        print("=>generator exit")
         return;
     except:
         print("Unexpected error:", sys.exc_info())

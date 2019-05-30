@@ -1,10 +1,10 @@
 <div class="root">
     <!-- basic configuration: full grid -->
-    <app-refinebar [impacts]="impacts" [impactChanges]="impactChanges" class='gridleft' [devices]='devices'></app-refinebar>
+    <app-refinebar [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" class='gridleft' [devices]='devices'></app-refinebar>
 
     <div *ngIf='!mode' class="gridright">
         <!-- <app-refinecat [showLegend]='false'></app-refinecat> -->
-        <app-geomap [impacts]="impacts" [impactChanges]="impactChanges" [appusage]="usage" [showLegend]='false'></app-geomap>
-        <app-geobar class="geobar" [impacts]="impacts" [impactChanges]="impactChanges" [appusage]="usage" [showLegend]='false'></app-geobar>
+        <app-geomap [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" [showLegend]='false'></app-geomap>
+        <app-geobar class="geobar" [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" [showLegend]='false'></app-geobar>
     </div>
 </div>

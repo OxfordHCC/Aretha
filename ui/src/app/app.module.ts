@@ -11,7 +11,6 @@ import { RouterModule, Routes } from '@angular/router';
 // import { FoobarComponent } from './foobar/foobar.component';
 import { ErrorComponent } from './error/error.component';
 import { UsageConnectorService } from './usage-connector.service';
-import { CompanybarComponent } from './companybar/companybar.component';
 import { Ng2CompleterModule } from 'ng2-completer';
 
 // no longer used with IoTRefine => 
@@ -53,7 +52,6 @@ const appRoutes: Routes = [
     // SingleDisplayComponent,
     // TiledDisplayComponent,    
     ErrorComponent,
-    CompanybarComponent,
     CompanyListComponent,
     // not used with IoT Refine >>
     // UsagetableComponent,
