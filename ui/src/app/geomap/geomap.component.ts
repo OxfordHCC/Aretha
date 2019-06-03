@@ -1,6 +1,6 @@
 
 import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
-import { LoaderService, String2String, CompanyInfo, CompanyDB, APIAppInfo, GeoIPInfo, GeoData } from '../loader.service';
+import { LoaderService, String2String, CompanyInfo, CompanyDB, APIAppInfo, GeoData, DeviceImpact } from '../loader.service';
 import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
@@ -11,7 +11,6 @@ import { HoverService, HoverTarget } from "app/hover.service";
 import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
 import * as colorbrewer from 'colorbrewer';
 import { Observable } from '../../../node_modules/rxjs/Observable';
-import { DeviceImpact, Device } from '../loader.service';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 
 @Component({

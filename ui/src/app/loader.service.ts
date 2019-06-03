@@ -34,38 +34,13 @@ export interface Device {
 	name: string;
 }
 
-export class GeoIPInfo {
-  host?: string;
-  ip: string;
-  country_code?: string;
-  country_name?: string;
-  region_code?: string;
-  region_name?: string;
-  city?: string;
-  zip_code?: string;
-  time_zone?: string;
-  latitude?: number;
-  longitude?: number;
-  metro_code?: number;  
-};
-
-//refinebar
- export class GeoData {
-  	[ip: string]: string;
+export class GeoData {
+	[ip: string]: string;
   	country_name: string;
   	country_code: string;
   	latitude: string;
   	longitude: string;
-  };
-
-export class PacketUpdateInfo {
-  id: string;
-  dst: string;
-  src: string;
-  burst?: string;
-  mac: string;
-  len: string;
-}
+};
 
 export class DBUpdate {
   type: string;
@@ -151,16 +126,6 @@ export class CompanyDB {
   }
 }
 
-export class AppAlternative {
-  altAppTitle: string;
-  altToURL: string; // e.g. "http://alternativeto.net/software/pricealarm-net/",
-  gPlayURL: string;
-  gPlayID: string;
-  iconURL: string; // e.g. "d2.alternativeto.net/dist/icons/pricealarm-net_105112.png?width=128&height=128&mode=crop&upscale=false",
-  officialSiteURL: string; //  "http://www.PriceAlarm.net",
-  isScraped: boolean; 
-}
-
 export class CompanyInfo {
     // readonly id: string;
     // readonly company: string;
@@ -221,7 +186,7 @@ export class APIAppInfo {
     ver: string; // date string 
     screenFlags: number;
     hosts?: string[];
-    host_locations?: GeoIPInfo[];
+    host_locations?: any;
     storeinfo: { 
       title: string;
       summary: string;
@@ -297,7 +262,9 @@ export class LoaderService {
       return [API_ENDPOINT, 'icons', url.slice(1)].join('/');
     }
   }
-  _prepareAppInfo(appinfo: APIAppInfo, loadGeo=true, doCache=true):Promise<APIAppInfo> {
+	
+		/*
+	_prepareAppInfo(appinfo: APIAppInfo, loadGeo=true, doCache=true):Promise<APIAppInfo> {
     appinfo.icon = appinfo.icon && appinfo.icon !== null && appinfo.icon.trim() !== 'null' ? this.makeIconPath(appinfo.icon) : undefined;
     // console.log('appinfo icon ', appinfo.app, ' - ', appinfo.icon, typeof appinfo.icon);
 
@@ -328,18 +295,7 @@ export class LoaderService {
       return appinfo;
     });
   } 
-  @memoize((hosts) => hosts.join('::'))
-  getHostsGeos(hosts: string[]): Promise<{[host: string]: GeoIPInfo[]}> {
-
-    const hostsParam = hosts.map(x => x.trim()).join(','),
-      urlSP = new URLSearchParams(); 
-
-    urlSP.set('hosts', hostsParam);
-
-    return this.http.get(API_ENDPOINT + `/hosts?${urlSP.toString()}`).toPromise()
-      .then(response => response.json() as ({[host:string]: GeoIPInfo[]}));
-  }
-
+		 */
 
   @memoize((company) => company.id)
   getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
@@ -395,6 +351,7 @@ export class LoaderService {
    * helper function to stringify the optins into a URL acceptable string.
    * @param options JSON of param options that can be used to query the xray API.
    */
+		/*
   @memoize((options) => { 
     let key = toPairs(options).map(pair => {
       return pair.map((x) => x.toString()).join(':');
@@ -420,7 +377,7 @@ export class LoaderService {
       }
       return Promise.all(result.map(app => this._prepareAppInfo(app, loadGeo, doCache)));
     });
-  }  
+  }  */
 
   @memoize((appid: string): string => appid)
   getAlternatives(appid: string): Promise<APIAppInfo[]> {
@@ -535,7 +492,8 @@ export class LoaderService {
     .then(response => (response && response.json() as APIAppInfo[])[0] || undefined)
     .then(appinfo => {
       if (appinfo) { 
-        return this._prepareAppInfo(appinfo);
+		  //return this._prepareAppInfo(appinfo);
+		  return undefined;
       }
       return undefined;
     }).then(appinfo => {

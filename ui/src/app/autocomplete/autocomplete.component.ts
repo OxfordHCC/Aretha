@@ -64,6 +64,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
   }
 
   filter() {
+/*
     if (this.query.trim() !== '') {
       this.loadingSuggestions = true;
       let fetching = this.fetching = this.loader.findApps({title: this.query.trim(), fullInfo: true, onlyAnalyzed: true}, false, false)
@@ -74,7 +75,6 @@ export class AutocompleteComponent implements OnInit, OnChanges {
         }
         delete this.fetching;
         this.loadingSuggestions = false;
-
         // console.log('autocomplete results ', results, 'omitIDs', this._omitIDs);
 
         let qL = this.query.toLowerCase().trim(),
@@ -99,6 +99,7 @@ export class AutocompleteComponent implements OnInit, OnChanges {
       this.loadingSuggestions = false;
       this.filteredList = [];
     }
+*/
   }
 
   select(item) {    
