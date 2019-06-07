@@ -73,11 +73,10 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
     this.impactObservers.map(obs => obs.next({}));
   }  
 
-	// todo; move this out to loader
-	getIoTData(): void {	
+	getIoTData(start: number, end: number): void {	
     	let this_ = this,
       		reload = () => {
-				this_.loader.getIoTDataAggregated().then( bundle => {
+				this_.loader.getIoTDataAggregated(start, end).then( bundle => {
 					this_.impacts = bundle.impacts;
         			this_.geodata = bundle.geodata;
         			this_.devices = bundle.devices;
@@ -89,9 +88,21 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
 
     	this.loader.asyncDeviceImpactChanges().subscribe({
       		next(i: DeviceImpact[]) {  
-        		// console.log('DeviceImpact CHANGE!', i.map(x => ''+[x.companyName, x.companyid, ''+x.impact].join('_')).join(' - '))
-        		if (this_.impacts) { 
-        			this_.impacts = this_.impacts.concat(i);
+				if (this_.impacts) {
+					for (let key in i) {
+						for (let key2 in i[key]) {
+							if (this_.impacts.filter ((x) => x.company == key).length === 0) {
+								this_.impacts.push({
+									"company": key,
+									"device": key2,
+									"impact": i[key][key2],
+									"minute": 0
+								});
+							} else {
+								this_.impacts.filter ((x) => x.company == key)[0].impact += i[key][key2];
+							}
+						}
+					}
           			this_.triggerImpactsChange();
         		}
       		},
@@ -117,7 +128,11 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
     	reload();
   	}  
 
-  ngOnInit() {
-    this.getIoTData();
-  }
+	ngOnInit() {
+		//we need to pass in start and end minutes as timestamps (i.e. from the epoch)
+		//because of an upstream quirk, BST timestamps are in the database as UTC
+		//so this undoes that, but will go as soon as the upstream bug goes
+		let now = Math.floor((new Date().getTime()/1000) + 3600);
+    	this.getIoTData(now - 3600, now);
+	}
 }

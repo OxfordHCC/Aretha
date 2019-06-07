@@ -196,52 +196,14 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         }
         return 0.8;
       }).attr("r", (d) => {
-        return Math.floor(80*d.impact / minmax[1]);
+        //return Math.floor(80*d.impact / minmax[1]);
+		return 8;
 	  }).attr("fill", (d) => z(d.ip))
       .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
       .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
 
     const leading = 26;
 
-		/*
-    if (this.showLegend) {
-      let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top / 2 + ')');
-      const legend = g.append('g')
-        .attr('class', 'legend')
-        .attr('transform', 'translate(0,0)')
-        .selectAll('g')
-        .data(impacts.slice().reverse())
-        .enter()
-        .append('g')
-        .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
-        .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
-        .on('mouseout', (d) => this.hover.hoverChanged(undefined))
-        // .on('click', (d) => {
-        //  this.focus.focusChanged(this.loader.getCachedAppInfo(d));
-        // })
-        .attr('opacity', (d) => {
-          let highApp = this.highlightApp || this._hoveringApp;
-          if (highApp) {
-            return d === highApp ? 1.0 : 0.2;
-          }
-          return 1.0;
-        });
-
-      console.log('maplegend ! ', legend);
-
-      legend.append('rect')
-        .attr('x', this.showTypesLegend ? width - 140 - 19 : width - 19)
-        .attr('width', 19)
-        .attr('height', 19)
-        .attr('fill', z);
-
-      legend.append('text')
-        .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
-        .attr('y', 9.5)
-        .attr('dy', '0.32em')
-        .text((d) => this.loader.getCachedAppInfo(d) && this.loader.getCachedAppInfo(d).storeinfo.title || d);
-	}
-		 */
   	}
 	
 	@HostListener('window:resize')

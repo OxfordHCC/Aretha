@@ -27,11 +27,11 @@ BEACON_KEY = None
 def processGeos():
 
     #to save us querying the whole packet table every loop
-    global RAW_IPS
-    if not RAW_IPS:
-        log("Preloading RAW_IPS")
-        RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-        log(" Done ", len(RAW_IPS), " known ips ")
+    #global RAW_IPS
+    #if not RAW_IPS:
+    #    log("Preloading RAW_IPS")
+    RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
+    #    log(" Done ", len(RAW_IPS), " known ips ")
     
     #get a list of ip addresses we've already looked up
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())

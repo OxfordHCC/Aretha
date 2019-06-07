@@ -87,7 +87,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         	console.info(` ~ device name update ${devices.length} devices`);                
         	devices.map( d => { 
           		console.info(`adding mac::name binding ${d.mac} -> ${d.nickname}`);
-          		this._devices[d.mac] = d.nickname; 
+          		this._devices[d.mac] = d.name; 
         	});
         	this.render();
     	});  
@@ -231,41 +231,41 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		}));
 
 		devices.sort();
-    by_company.sort((c1, c2) => c2.total - c1.total); 
+    	by_company.sort((c1, c2) => c2.total - c1.total); 
 
-    // re-order companies
-    companies = by_company.map((bc) => bc.company);
+		// re-order companies
+    	companies = by_company.map((bc) => bc.company);
 
-    const stack = d3.stack(),
-      out = stack.keys(devices)(by_company),
-      margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
-      width = width_svgel - margin.left - margin.right, 
-      height = height_svgel - margin.top - margin.bottom; 
+    	const stack = d3.stack(),
+      	out = stack.keys(devices)(by_company),
+      	margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
+      	width = width_svgel - margin.left - margin.right, 
+      	height = height_svgel - margin.top - margin.bottom; 
 
-    if (height < 0 || width < 0) {
-      console.error('height ', height, 'width ', width, 'exiting ');
-      // return
-    }
+    	if (height < 0 || width < 0) {
+      		console.error('height ', height, 'width ', width, 'exiting ');
+      		// return
+    	}
     
-    let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
-      x = d3.scaleBand()
-        .rangeRound([0, width]).paddingInner(0.05).align(0.1)
-        .domain(companies),
-      d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
-      ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
-      this_ = this;
+    	let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
+			x = d3.scaleBand()
+        		.rangeRound([0, width]).paddingInner(0.05).align(0.1)
+        		.domain(companies),
+      		d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
+      		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
+      		this_ = this;
 
-    if (d3maxx < 0.7 * ymaxx) {
-      ymaxx = 1.1 * d3maxx;
-    }
+    	if (d3maxx < 0.7 * ymaxx) {
+      		ymaxx = 1.1 * d3maxx;
+    	}
 
-    let y = d3.scaleLinear()
-      .rangeRound([height, 0])
-      .domain([0, ymaxx]).nice(),
-      z = d3.scaleOrdinal(d3.schemeCategory20)
-        .domain(devices);
+		let y = d3.scaleLog()
+     		.rangeRound([height, 0])
+      		.domain([1, ymaxx]).nice(),
+      	z = d3.scaleOrdinal(d3.schemeCategory20)
+        	.domain(devices);
 
-    var self = this;
+    	var self = this;
 
     g.selectAll('rect.back')
       .data(companies)
@@ -288,8 +288,14 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .enter().append('rect')
         .attr('class', 'bar')
 		.attr('x', (d) => x(d.data.company))
-		.attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
-		.attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
+		.attr('y', (d) => d[1] > 0 ? y(d[1]) : y(1))
+		.attr('height', (d) => (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)) 
+//			if (d[0] > 0 && d[1] > 0) { 
+//				return y(d[0]) - y(d[1]);
+//			} else {
+//				return height - y(d[1]);
+//			}}
+//		)
         .attr('width', x.bandwidth())
         .on('click', function (d) {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
@@ -344,7 +350,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     g.append('g')
       .attr('class', 'axis y')
-      .call(d3.axisLeft(y).ticks(null, 's'))
+      .call(d3.axisLeft(y).ticks(null, '.0s'))
       .append('text')
 			.attr('x', 20)
       .attr('y', y(y.ticks().pop()) - 12)

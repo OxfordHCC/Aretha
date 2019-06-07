@@ -109,7 +109,7 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
   }
 
 getIoTData(): void {
-    this.loader.getIoTData().then( bundle => {
+    this.loader.getIoTData(0,0,0).then( bundle => {
 		//this.data = bundle.bursts;
         console.log('refinecat.component data is ', this.data);
         this.render('','timeseries'.toString(),this.data,false);

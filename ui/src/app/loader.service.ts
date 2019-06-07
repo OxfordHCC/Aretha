@@ -263,40 +263,6 @@ export class LoaderService {
     }
   }
 	
-		/*
-	_prepareAppInfo(appinfo: APIAppInfo, loadGeo=true, doCache=true):Promise<APIAppInfo> {
-    appinfo.icon = appinfo.icon && appinfo.icon !== null && appinfo.icon.trim() !== 'null' ? this.makeIconPath(appinfo.icon) : undefined;
-    // console.log('appinfo icon ', appinfo.app, ' - ', appinfo.icon, typeof appinfo.icon);
-
-    appinfo.hosts = uniq((appinfo.hosts || [])
-      .map((host: string): string => trim(host.trim(), '".%')))
-      .filter(host => host.length > 3 && host.indexOf('%s') < 0 && host.indexOf('.') >= 0 && host.indexOf('[') < 0 && !this._host_blacklist[host]);
-
-    if (appinfo.hosts && appinfo.hosts.length > 100) {
-      // console.error('WARNING: this app has too many hosts', appinfo.app);
-      appinfo.hosts = appinfo.hosts.slice(0, 100);
-    }
-
-    if (doCache) { this.apps[appinfo.app] = appinfo;  }    
-
-    return !loadGeo ? Promise.resolve(appinfo) : this.getHostsGeos(appinfo.hosts).then(geomap => {
-      return _.uniqBy(appinfo.hosts.map(host => {
-        var geo = geomap[host];
-        if (!geo) { 
-          // console.warn(' No geo for ', host, appinfo.app); 
-          return; 
-        }
-        return geo[0] && _.extend({}, geo[0], {host:host});
-      }).filter(x => x), (gip) => gip.ip)
-    }).then((hostgeos) => {
-      appinfo.host_locations = hostgeos || [];
-      return appinfo;
-    }).catch((e) => {
-      return appinfo;
-    });
-  } 
-		 */
-
   @memoize((company) => company.id)
   getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
     if (!company) { throw new Error('no company'); }
@@ -345,40 +311,6 @@ export class LoaderService {
     return urlParams.toString();
   }
 
-  /**
-   * Issues a get request to the xray API using the param options provied as a
-   * json parameter. the JSON is passed to 'parseFetchAppParams' that acts as a 
-   * helper function to stringify the optins into a URL acceptable string.
-   * @param options JSON of param options that can be used to query the xray API.
-   */
-		/*
-  @memoize((options) => { 
-    let key = toPairs(options).map(pair => {
-      return pair.map((x) => x.toString()).join(':');
-    }).join('--');
-    return key;
-  })
-  findApps(options: {
-      title?: string,
-      startsWith?: string, 
-      appID?: string, 
-      fullInfo?: boolean, 
-      onlyAnalyzed?: boolean, 
-      limit?: number
-    }, loadGeo=true, doCache=true): Promise<APIAppInfo[]> {
-    
-    let body = this.parseFetchAppParams(options);    
-    let appData: APIAppInfo[];
-
-    return this.http.get(API_ENDPOINT + '/apps?' + body).toPromise().then((data) => {
-      const result = (data.json() as APIAppInfo[]);
-      if (!result || result === null) {
-        return [];
-      }
-      return Promise.all(result.map(app => this._prepareAppInfo(app, loadGeo, doCache)));
-    });
-  }  */
-
   @memoize((appid: string): string => appid)
   getAlternatives(appid: string): Promise<APIAppInfo[]> {
     return this.http.get(API_ENDPOINT + `/alt/${appid}?nocache=true`).toPromise()
@@ -394,78 +326,77 @@ export class LoaderService {
     return this.apps[appid];
   }
 
-  connectToAsyncDBUpdates() : void {
-    let observers = [], eventSource; 
-
-    this.updateObservable = Observable.create(observer => {
-      observers.push(observer);
-      if (observers.length === 1 && eventSource === undefined) {       
-        eventSource = new EventSource(IOTR_ENDPOINT+`/stream`);
-        eventSource.onopen = thing => {
-          console.info('EventSource Open', thing);
-        };
-        eventSource.onmessage = score => {
-          // console.info("EventSource onMessage", score, score.data);
-          let incoming = <DBUpdate>JSON.parse(score.data);
-          zone.run(() => observers.map(obs => obs.next(incoming)))
-        };
-        eventSource.onerror = error => {
-          // console.error("eventSource onerror", error);
-          zone.run(() => observers.map(obs => obs.error(error)));
-        };              
-      }
-      return () => { if (eventSource) { eventSource.close(); } }
-  });        
-}
-
-
-  asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'impact') {
-            observer.next(<DeviceImpact[]>x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
-  asyncGeoUpdateChanges(): Observable<any[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'geodata') {
-            observer.next(x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
-  asyncDeviceChanges(): Observable<Device[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'device') {
-            observer.next(<Device[]>x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
+	connectToAsyncDBUpdates() : void {
+    	let observers = [], eventSource; 
+    	this.updateObservable = Observable.create(observer => {
+      		observers.push(observer);
+      		if (observers.length === 1 && eventSource === undefined) {       
+        		eventSource = new EventSource(IOTR_ENDPOINT + '/stream');
+        		
+				eventSource.onopen = thing => {
+          			console.info('EventSource Open', thing);
+        		};
+        		eventSource.onmessage = function (score) {
+          			let incoming = <DBUpdate>JSON.parse(score.data);
+          			zone.run(() => observers.map(obs => obs.next(incoming)))
+        		};
+        		eventSource.onerror = error => {
+          			console.error("eventSource onerror", error);
+          			zone.run(() => observers.map(obs => obs.error(error)));
+        		};              
+      		}
+      		return () => { if (eventSource) { eventSource.close(); } }
+  		});        
+	}
 
 
-  	// @memoize(x => 'iotdata')
-	getIoTData(): Promise<IoTDataBundle> {
-		return this.http.get(IOTR_ENDPOINT + '/impacts/1558958863/1558978863').toPromise().then(response2 => {
+	asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
+    	return Observable.create(observer => {
+      		this.updateObservable.subscribe({
+        		next(x) {           
+					if (x.type === 'impact') {
+            			observer.next(<DeviceImpact[]>x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+  
+	asyncGeoUpdateChanges(): Observable<any[]> {
+    	return Observable.create(observer => {
+    		this.updateObservable.subscribe({
+        		next(x) {
+          			if (x.type === 'geodata') {
+            			observer.next(x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+  
+	asyncDeviceChanges(): Observable<Device[]> {
+    	return Observable.create(observer => {
+      		this.updateObservable.subscribe({
+        		next(x) {           
+          			if (x.type === 'device') {
+            			observer.next(<Device[]>x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+
+	getIoTData(start: number, end: number, delta: number): Promise<IoTDataBundle> {
+		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end + '/' + delta).toPromise().then(response2 => {
       		let resp = response2.json(),
         		impacts = resp.impacts,
         		geodata = resp.geodata,
@@ -475,12 +406,12 @@ export class LoaderService {
     	});
   	}
 	
-	getIoTDataAggregated(): Promise<IoTDataBundle> {
-		return this.http.get(IOTR_ENDPOINT + '/impacts/1558958863/1558978863').toPromise().then(response2 => {
-      	let resp = response2.json(),
-        	impacts = resp.impacts,
-        	geodata = resp.geodata,
-			devices = resp.devices;
+	getIoTDataAggregated(start: number, end: number): Promise<IoTDataBundle> {
+		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end).toPromise().then(response2 => {
+      		let resp = response2.json(),
+        		impacts = resp.impacts,
+        		geodata = resp.geodata,
+				devices = resp.devices;
 
 			return resp;
     	});

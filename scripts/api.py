@@ -30,7 +30,7 @@ def impacts(start, end, delta):
         delta = abs(round(int(delta)))
 
         #refresh view and get per minute impacts from <start> to <end>
-        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins > %s AND mins < %s", (start, end))
+        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
 
         #process impacts per bucket
         impacts = dict()
@@ -195,7 +195,6 @@ def unenforce_dest_dev(destination, device):
 # open an event stream for database updates
 @app.route('/api/stream')
 def stream():
-    print("Starting event stream")
     response = Response(event_stream(), mimetype="text/event-stream")
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
@@ -280,19 +279,18 @@ def event_stream():
                         impacts[ip][mac] = 0
                     impacts[ip][mac] += impact
 
-                yield "%s\n\n" % json.dumps({"type": "impact", "time": round(time.time()/60)-1, "data": impacts})
+                yield "data: %s\n\n" % json.dumps({"type": "impact", "time": round(time.time()/60)-1, "data": impacts})
 
             if len(geo_buf) > 0:
                 [geos.pop(geo["ip"], None) for geo in geo_buf]
                 for geo in geo_buf:
-                    yield "%s\n\n" % json.dumps({"type":"geodata", "data": geo})
+                    yield "data: %s\n\n" % json.dumps({"type":"geodata", "data": geo})
 
             if len(device_buf) > 0: 
                 for device in device_buf:
                     yield "data: %s\n\n" % json.dumps({"type":'device', "data": device})
 
     except GeneratorExit:
-        print("=>generator exit")
         return;
     except:
         print("Unexpected error:", sys.exc_info())

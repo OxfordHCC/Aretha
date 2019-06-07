@@ -181,7 +181,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     		ymaxx = 1.1 * d3maxx;
     	}
 		
-		let y = d3.scaleLinear()
+		let y = d3.scaleSqrt()
       		.rangeRound([height, 0])
       		.domain([0, ymaxx]).nice()
 			
