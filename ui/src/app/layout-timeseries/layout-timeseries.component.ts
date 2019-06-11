@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CompanyInfo, APIAppInfo, LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
-import { FocusTarget, FocusService } from "app/focus.service";
 import { UsageListener } from "app/usage-listener/usage-listener.component";
 import { UsageConnectorService } from "app/usage-connector.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import * as _ from 'lodash';
+import { CompanyInfo, APIAppInfo, LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
+import { FocusTarget, FocusService } from "app/focus.service";
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
-import { AppUsage } from '../usagetable/usagetable.component';
-
+import * as _ from 'lodash';
+import { ActivatedRoute, Router } from "@angular/router";
 
 // target watcher watches for clicks on apps and companies
 export class TargetWatcher extends UsageListener {
@@ -33,13 +31,12 @@ export class TargetWatcher extends UsageListener {
 }
 
 @Component({
-  selector: 'app-tiled-all',
-  templateUrl: './tiled-all.component.html',
-  styleUrls: ['./tiled-all.component.scss']
+  selector: 'app-layout-timeseries',
+  templateUrl: './layout-timeseries.component.html',
+  styleUrls: ['./layout-timeseries.component.css']
 })
 
-export class TiledAllComponent extends TargetWatcher implements OnInit {
-
+export class LayoutTimeseriesComponent extends TargetWatcher implements OnInit {
 	showUsageTable = false;
 	mode: string;
 	impacts: DeviceImpact[];
@@ -73,10 +70,10 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
     this.impactObservers.map(obs => obs.next({}));
   }  
 
-	getIoTData(start: number, end: number): void {	
+	getIoTData(start: number, end: number, delta: number): void {	
     	let this_ = this,
       		reload = () => {
-				this_.loader.getIoTDataAggregated(start, end).then( bundle => {
+				this_.loader.getIoTData(start, end, delta).then( bundle => {
 					this_.impacts = bundle.impacts;
         			this_.geodata = bundle.geodata;
         			this_.devices = bundle.devices;
@@ -133,6 +130,7 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
 		//because of an upstream quirk, BST timestamps are in the database as UTC
 		//so this undoes that, but will go as soon as the upstream bug goes
 		let now = Math.floor((new Date().getTime()/1000) + 3600);
-    	this.getIoTData(now - 3600, now);
+    	this.getIoTData(now - 3600, now, 10);
 	}
 }
+

@@ -34,14 +34,14 @@ import { GeobarComponent } from './geobar/geobar.component';
 import { TiledAllComponent } from './tiled-all/tiled-all.component';
 import { FocusInfoboxComponent } from './focus-infobox/focus-infobox.component';
 import { UserStudySetupComponent } from './user-study-setup/user-study-setup.component';
+import { LayoutTimeseriesComponent } from './layout-timeseries/layout-timeseries.component';
+import { TimeseriesComponent } from './timeseries/timeseries.component';
 
 
 
 const appRoutes: Routes = [ 
-  {
-    path: '',
-    component: TiledAllComponent,
-  }
+	{path: '', 			component: LayoutTimeseriesComponent},
+	{path: 'refine',	component: TiledAllComponent}
 ];
 
 
@@ -49,8 +49,6 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     RefinebarComponent,
-    // SingleDisplayComponent,
-    // TiledDisplayComponent,    
     ErrorComponent,
     CompanyListComponent,
     // not used with IoT Refine >>
@@ -68,7 +66,9 @@ const appRoutes: Routes = [
     GeobarComponent,
     TiledAllComponent,
     FocusInfoboxComponent,
-    UserStudySetupComponent    
+    UserStudySetupComponent,
+    LayoutTimeseriesComponent,
+    TimeseriesComponent    
   ],
   imports: [
     HttpModule,

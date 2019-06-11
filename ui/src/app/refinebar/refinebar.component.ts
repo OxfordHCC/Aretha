@@ -12,9 +12,6 @@ import { Observer } from '../../../node_modules/rxjs/Observer';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import { DeviceImpact, GeoData, Device } from '../loader.service';
 
-const LOCAL_IP_MASK_16 = "192.168.";
-const LOCAL_IP_MASK_24 = "10.";
-
 @Component({
   selector: 'app-refinebar',
   templateUrl: './refinebar.component.html',
@@ -193,7 +190,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
 		const svgel = this.getSVGElement();
     	if (!svgel || this.impacts === undefined ) { 
-      		console.info('render(): impacts undefined, chilling');
+      		console.info('refinebar: impacts undefined, chilling');
       		return; 
     	}
 
@@ -216,25 +213,32 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     	svg.selectAll('*').remove();
 
-		let impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ),
-      		devices = _.uniq(impacts.map((x) => x.device)),
-			companies = _.uniq(this.geodata.map((x) => x.ip)),
-      		get_impact = (company, device) => {
-        		const t = impacts.filter((imp) => imp.company === company && imp.device === device);
-        		const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
-        		return t !== undefined ? t.reduce(reducer, 0) : 0;
-      		},
-      		by_company = companies.map((c) => ({
-        		company: c,
-        		total: devices.reduce((total, dev) => total += get_impact(c, dev), 0),
-        		..._.fromPairs(devices.map((dev) => [dev, get_impact(c, dev)]))
-      		}));
+		let compiledImpacts = []
+      	let devices = _.uniq(this.impacts.map((x) => x.device));
+		let companies = _.uniq(this.geodata.map((x) => x.company_name));
+		
+		companies.forEach((comp) => {
+			//geodata records for each ip belonging to company "comp"
+			let addresses = this.geodata.filter((c) => comp === c.company_name);
 
-		devices.sort();
-    	by_company.sort((c1, c2) => c2.total - c1.total); 
+			//impacts that are associated with an address in "addresses"
+			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) != -1);
 
-		// re-order companies
-    	companies = by_company.map((bc) => bc.company);
+			//compile per device
+			devices.forEach((dev) => {
+				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j){return i + j.impact}, 0);
+				if (total > 0) {
+					compiledImpacts.push({
+						"company": comp,
+						"device": dev,
+						"impact": total
+					});
+				}
+			});
+		});
+
+		let by_company = compiledImpacts.sort((c1, c2) => c2.impact - c1.impact); 
+		companies = by_company.map((x) => x.company);
 
     	const stack = d3.stack(),
       	out = stack.keys(devices)(by_company),
@@ -251,7 +255,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			x = d3.scaleBand()
         		.rangeRound([0, width]).paddingInner(0.05).align(0.1)
         		.domain(companies),
-      		d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
+      		d3maxx = d3.max(by_company, function (d) { return d.impact; }) || 0,
       		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
       		this_ = this;
 
@@ -281,21 +285,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     // main rects
     var self = this;
-    
+   
     const f = (selection, first, last) => {
       return selection.selectAll('rect')
         .data((d) => d)
         .enter().append('rect')
         .attr('class', 'bar')
 		.attr('x', (d) => x(d.data.company))
-		.attr('y', (d) => d[1] > 0 ? y(d[1]) : y(1))
-		.attr('height', (d) => (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)) 
-//			if (d[0] > 0 && d[1] > 0) { 
-//				return y(d[0]) - y(d[1]);
-//			} else {
-//				return height - y(d[1]);
-//			}}
-//		)
+		.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
+		.attr('height', (d) => height - y(d.data.impact)) 
         .attr('width', x.bandwidth())
         .on('click', function (d) {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
@@ -355,7 +353,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			.attr('x', 20)
       .attr('y', y(y.ticks().pop()) - 12)
       .attr('dy', '0.22em')
-      .text('Impact (mB)');
+      .text('Traffic (bytes)');
 
     // legend
     const leading = 26;

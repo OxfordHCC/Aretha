@@ -57,7 +57,8 @@ def processGeos():
                 data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
                 if data.status_code==200 and data.json()['latitude'] is not '':
                     data = data.json()
-                    orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
+                    #orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
+                    orgname = data['organisation'] 
                     lat = data['latitude']
                     lon = data['longitude']
                     country = data['country_code'] or data['continent_code']
