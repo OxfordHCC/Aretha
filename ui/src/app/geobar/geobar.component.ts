@@ -103,12 +103,12 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 	private compileImpacts(): any {
 		var result = [];
 		if (this.impacts) {
-			this.impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ).map((imp) => {
+			this.impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1).map((imp) => {
 				if (this.geodata.filter((x) => x.ip === imp.company).length > 0) {
 					result.push({
 						"ip": imp.company,
 						"device": imp.device,
-						"impact": Math.log(imp.impact),
+						"impact": imp.impact,
 						"country": this.geodata.filter((geo) => geo.ip === imp.company)[0].country_code,
 						"lat": this.geodata.filter((geo) => geo.ip === imp.company)[0].latitude,
 						"lon": this.geodata.filter((geo) => geo.ip === imp.company)[0].longitude
@@ -151,7 +151,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
         	const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
 	        return t !== undefined ? t.reduce(reducer, 0) : 0;
       	}
-			
+	
 		let by_country = countries.map((country) => ({
         	country: country,
         	total: devices.reduce((total, mac) => total += get_impact(country, mac), 0),

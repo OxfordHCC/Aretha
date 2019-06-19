@@ -1,0 +1,12 @@
+<div class="root">
+	<div [ngSwitch]="content" class="gridleft">
+    	<app-content-encryption *ngSwitchCase="'encryption'" [stage]="stage"></app-content-encryption>
+    	<p *ngSwitchDefault>
+        	No content specified!
+    	</p>
+	</div>
+	<div class="gridright">
+		<app-geomap [impacts]="impacts" [geodata]="geodata" [showLegend]='false'></app-geomap>
+		<app-example [text]="text"></app-example>
+	</div>
+</div>

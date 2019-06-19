@@ -132,17 +132,16 @@ def set_device(mac, name):
     else:
         return jsonify({"message": "Invalid mac address given"})
 
-# return a counter example to a question posed by aretha
-# 1 == trackers/advertisers
-# 2 == unencrypted http traffic (not yet implemented)
-# 3 == haveibeenpwned (not yet implemented)
-@app.route('/api/aretha/counterexample/<question>')
+# return examples to be used for educational components
+@app.route('/api/example/<question>')
 def counterexample(question):
-    ce = GetCounterexample(question)
-    if ce:
-        return jsonify({"destination": ce[0], "traffic": ce[1], "device": ce[2]})
+    example = GetExample(question)
+    if "text" in example:
+        response = make_response(jsonify({"text": example["text"], "impacts": example["impacts"], "geodata": example["geodata"], "devices": example["devices"]}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
-        return jsonify({"destination": "", "traffic": 0, "device": 0})
+        return jsonify({"message": f"Unable to find a match for requested example"})
 
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>')
@@ -220,17 +219,30 @@ def get_geodata():
         records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4]})
     return records
 
-def GetCounterexample(question):
-    options = []
-    if int(question) == 1:
-        options = DB_MANAGER.execute("select c_name, count(p.len), d.name from packets as p inner join geodata as g on p.src = g.ip inner join devices as d on p.mac = d.mac where g.c_name like '*%%' group by g.c_name, d.name order by count(p.len) desc limit 5;", ())
-   
-    blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
-    for option in options:
-        if option[0] not in blacklist:
-            return option
+def GetExample(question):
+    result = dict()
+    if question == "encryption":
+        example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
+        dest = example[0]
+        mac = example[1]
+        geo = DB_MANAGER.execute("select lat, lon, c_name, c_code from geodata where ip = %s limit 1", (dest,))[0]
+        device = DB_MANAGER.execute("select name from devices where mac = %s", (mac,))[0][0]
+        lat = geo[0]
+        lon = geo[1]
+        company = geo[2]
+        country = geo[3]
 
-    return False
+        result["text"] = f"Did you know that your {device} sends unencrypted data to {company} in {country}?"
+        result["impacts"] = [{"company": dest, "device": mac, "impact": example[2]}]
+        result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}] #, "company_name": company, "country_code", }]
+        result["devices"] = [mac]
+    return result
+        #options = DB_MANAGER.execute("select c_name, count(p.len), d.name from packets as p inner join geodata as g on p.src = g.ip inner join devices as d on p.mac = d.mac where g.c_name like '*%%' group by g.c_name, d.name order by count(p.len) desc limit 5;", ())
+   
+    #blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
+    #for option in options:
+        #if option[0] not in blacklist:
+            #return option
 
 @app.before_first_request
 def init():

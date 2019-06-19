@@ -41,6 +41,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   	@Input() showTypesLegend = false;
   	@Input() showXAxis = true;
   	@Input() scale = false;
+	@Input() maxCompanies = 20;
   	linear = false;
   	vbox = { width: 700, height: 1024 };
   	highlightColour = '#FF066A';
@@ -217,6 +218,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       	let devices = _.uniq(this.impacts.map((x) => x.device));
 		let companies = _.uniq(this.geodata.map((x) => x.company_name));
 		
+		//compile impacts for device/ip pairs into device/company pairs
 		companies.forEach((comp) => {
 			//geodata records for each ip belonging to company "comp"
 			let addresses = this.geodata.filter((c) => comp === c.company_name);
@@ -237,7 +239,22 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			});
 		});
 
-		let by_company = compiledImpacts.sort((c1, c2) => c2.impact - c1.impact); 
+		let companySorted = compiledImpacts.sort((c1, c2) => c2.impact - c1.impact); 
+		
+		//fold smaller companies into an "other" category
+		if (companySorted.length > this.maxCompanies) {
+			let cutoff = companySorted[this.maxCompanies-1].impact;
+			let companyFolded = [];
+			let otherImpact = 0;
+			companySorted.forEach((impact) => {
+				if (impact.impact >= cutoff) { companyFolded.push(impact); }
+				else { otherImpact += impact.impact; console.log("OPUSG"); }
+			});
+			companyFolded.push({"company": "Other", "device": "*", "impact": otherImpact});
+			companySorted = companyFolded;
+		}
+
+		let by_company = companySorted; 
 		companies = by_company.map((x) => x.company);
 
     	const stack = d3.stack(),

@@ -36,12 +36,16 @@ import { FocusInfoboxComponent } from './focus-infobox/focus-infobox.component';
 import { UserStudySetupComponent } from './user-study-setup/user-study-setup.component';
 import { LayoutTimeseriesComponent } from './layout-timeseries/layout-timeseries.component';
 import { TimeseriesComponent } from './timeseries/timeseries.component';
+import { LayoutEduComponent } from './layout-edu/layout-edu.component';
+import { ContentEncryptionComponent } from './content-encryption/content-encryption.component';
+import { ExampleComponent } from './example/example.component';
 
 
 
 const appRoutes: Routes = [ 
 	{path: '', 			component: LayoutTimeseriesComponent},
-	{path: 'refine',	component: TiledAllComponent}
+	{path: 'refine',	component: TiledAllComponent},
+	{path: 'edu',		component: LayoutEduComponent}
 ];
 
 
@@ -68,7 +72,10 @@ const appRoutes: Routes = [
     FocusInfoboxComponent,
     UserStudySetupComponent,
     LayoutTimeseriesComponent,
-    TimeseriesComponent    
+    TimeseriesComponent,
+    LayoutEduComponent,
+    ContentEncryptionComponent,
+    ExampleComponent    
   ],
   imports: [
     HttpModule,

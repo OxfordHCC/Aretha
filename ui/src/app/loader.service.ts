@@ -32,9 +32,9 @@ export interface Device {
 	[mac : string]: string;
 	manufacturer: string;
 	name: string;
-}
+};
 
-export class GeoData {
+export interface GeoData {
 	[ip: string]: string;
   	country_name: string;
   	country_code: string;
@@ -50,7 +50,14 @@ export class DBUpdate {
   // schema: string;
   // table: string;
   // data: PacketUpdateInfo
-}
+};
+
+export interface Example {
+	impacts: any;
+	geodata: any;
+	devices: any;
+	text: string;
+};
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
   // console.log('@cache:: ~~ ', target, propertyKey, descriptor);
@@ -401,7 +408,6 @@ export class LoaderService {
         		impacts = resp.impacts,
         		geodata = resp.geodata,
 				devices = resp.devices;
-
 			return resp;
     	});
   	}
@@ -412,10 +418,20 @@ export class LoaderService {
         		impacts = resp.impacts,
         		geodata = resp.geodata,
 				devices = resp.devices;
-
 			return resp;
     	});
   	}
+
+	getExample(question: string): Promise<Example> {
+		return this.http.get(IOTR_ENDPOINT + '/example/' + question).toPromise().then(response2 => {
+      		let resp = response2.json(),
+        		impacts = resp.impacts,
+        		geodata = resp.geodata,
+				devices = resp.devices,
+				text = resp.text;
+			return resp
+		});
+	}
   
   @memoize((appid: string): string => appid)
   getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {

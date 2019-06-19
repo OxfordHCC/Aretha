@@ -120,6 +120,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
       	let devices = this.devices;
 		let geodata = this.geodata; 
 
+		/*
 		let data = [
 			{"name": "a", "value": 100, "date": 1, "values": [-10, -20]}
 		];
@@ -165,7 +166,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
   			return map;
 		}
 
-		/*
 		const stack = d3.stack()
       		.keys(top)
       		.value((d, key) => d.get(key).value)
@@ -177,7 +177,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
         		() => new Map
       			).values()
     		));
-		*/
 
 		let stack = d3.stack()
     		.offset("silhouette")
@@ -199,7 +198,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		//plot x axis
 		svg.append("g")
       		.call(xAxis);
-
+		*/
 	}
 	
 	@HostListener('window:resize')
