@@ -76,7 +76,13 @@ def processGeos():
                 pass
 
             #commit the extra info to the database
-            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
+            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:20] or "", domain and domain[:30] or ""))
+            
+            # if orgname and domain: 
+            #     DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
+            # else:
+            #     # TODO what to do here?
+            #     log("No orgname or domain", orgname, domain)
 
             #bookkeeping
             known_ips.append(ip)
