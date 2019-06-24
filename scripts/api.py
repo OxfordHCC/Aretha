@@ -40,21 +40,27 @@ def impacts(start, end, delta):
         for impact in raw_impacts:
             mac = impact[0]
             ip = impact[1]
-            mins = impact[2]
+            mins = int(impact[2])
             total = int(impact[3])
 
             #fast forward to correct bucket
             while  mins > pointer + delta:
-                impacts[str(pointer)] = bucket_impacts
                 pointer += delta
+            
+            #load current state of that bucket
+            if str(pointer) not in impacts:
+                impacts[str(pointer)] = dict()
+            bucket_impacts = impacts[str(pointer)]
 
-            #add impacts
-            if ip not in bucket_impacts:
-                bucket_impacts[ip] = dict()
-            if mac not in bucket_impacts[ip]:
-                bucket_impacts[ip][mac] = 0
-            bucket_impacts[ip][mac] += total
-        impacts[str(pointer)] = bucket_impacts
+            #add impacts to bucket
+            if mac not in bucket_impacts:
+                bucket_impacts[mac] = dict()
+            if ip not in bucket_impacts[mac]:
+                bucket_impacts[mac][ip] = 0
+            bucket_impacts[mac][ip] += total
+
+            #save bucket state
+            impacts[str(pointer)] = bucket_impacts
 
         #add geo and device data
         geos = get_geodata()

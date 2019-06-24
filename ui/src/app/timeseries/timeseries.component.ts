@@ -88,18 +88,42 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		this.render();
   	}
 
+	wrap(text, width) {
+    	text.each(function() {
+      		var text = d3.select(this),
+          		words = text.text().split(/\s+/).reverse(),
+          		word,
+          		line = [],
+          		lineNumber = 0,
+          		lineHeight = 1.1, // ems
+          		y = text.attr("y"),
+          		dy = parseFloat(text.attr("dy")),
+          		tspan = text.text(null).append("tspan")
+          			.style('text-anchor', 'end').attr("x", 0).attr("y", y).attr("dy", dy + "em");
+      		while (word = words.pop()) {
+        		line.push(word);
+        		tspan.text(line.join(" "));
+        		if (tspan.node().getComputedTextLength() > width) {
+          			line.pop();
+          			tspan.text(line.join(" "));
+          			line = [word];
+          			tspan = text.append("tspan")
+          				.style('text-anchor', 'end').attr("x", -20).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        		}
+      		}
+    	});
+  	}
+
 	render() {
 
-		const svgel = this.svgel || this.getSVGElement();	
+		let svgel = this.svgel || this.getSVGElement();	
     	if (!svgel || this.impacts === undefined ) { 
       		console.info('timeseries: impacts undefined, chilling');
       		return; 
 		}
 
 		this.svgel = svgel;
-		// svgel
-
-
+      	const margin = { top: 20, right: 20, bottom: 160, left: 50 };
 
 		let rect = svgel.getBoundingClientRect(),
 			width_svgel = Math.round(rect.width - 5),
@@ -127,7 +151,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		svg.selectAll('*').remove();
 
 		console.info('impacts ', impacts);
-		console.info('devices', devices);
+		//console.info('devices', devices);
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
 		// a single simple arry
@@ -177,11 +201,26 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			.append("title")
 			  .text(({key}) => key);		
 
-		/*
-		//plot x axis
-		svg.append("g")
-      		.call(xAxis);
-		*/
+		svg.append('g')
+    		.attr('class', 'axis y')
+    		.call(d3.axisLeft(yscale).ticks(null, '.0s'))
+    		.append('text')
+			.attr('x', 20)
+      		.attr('y', yscale(yscale.ticks().pop()) - 12)
+      		.attr('dy', '0.22em')
+      		.text('Traffic (bytes)');
+	
+		svg.append('g')
+      		.attr('class', 'axis x')
+			.call(d3.axisBottom(xscale))
+      		.selectAll('text')
+			.style('text-anchor', 'end')
+    		.attr('y', 1)
+    		.attr('dx', '-.8em')
+    		.attr('dy', '.15em')
+    		.attr('transform', 'rotate(-90)')
+    		.call(this.wrap, margin.bottom - 10);
+
 	}
 	
 	@HostListener('window:resize')

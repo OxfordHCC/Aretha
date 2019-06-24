@@ -2,7 +2,7 @@
 drop table if exists packets cascade;
 create table packets (
 	id SERIAL primary key,
-	time timestamp not null,
+	time timestamptz not null,
 	src varchar(15) not null, --ip address of sending host
 	dst varchar(15) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
@@ -57,7 +57,7 @@ create table beacon(
 	packets integer not null,
 	geodata integer not null,
 	firewall integer not null,
-	time timestamp default current_timestamp
+	time timestamptz default localtimestamp
 );
 
 --questions to ask during studies
@@ -126,7 +126,7 @@ BEGIN
 
   -- Build the payload
   payload := json_build_object(
-    'timestamp',CURRENT_TIMESTAMP,
+    'timestamp',LOCALTIMESTAMP,
     'operation',TG_OP,
     'schema',TG_TABLE_SCHEMA,
     'table',TG_TABLE_NAME,

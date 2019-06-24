@@ -129,10 +129,7 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
   	}  
 
 	ngOnInit() {
-		//we need to pass in start and end minutes as timestamps (i.e. from the epoch)
-		//because of an upstream quirk, BST timestamps are in the database as UTC
-		//so this undoes that, but will go as soon as the upstream bug goes
-		let now = Math.floor((new Date().getTime()/1000) + 3600);
+		let now = Math.floor(new Date().getTime()/1000);
     	this.getIoTData(now - 3600, now);
 	}
 }
