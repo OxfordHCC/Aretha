@@ -10,16 +10,26 @@ export class LayoutEduComponent implements OnInit {
 
 	content: string = "encryption";
 	stage: number = 1;
-	example: any;
 	impacts: any;
 	devices: any;
 	geodata: any;
-	text: string = "Loading example...";
+	text: string;
 
 	constructor(private loader: LoaderService) { }
 
 	ngOnInit() {
-		//fetch data to use in examples and graphs
+		this.loader.getContent()
+			.then((ct) => {
+				if (ct.length > 0) {
+					let content = ct.sort((c1, c2) => Date.parse(c1[1]) - Date.parse(c2[1]));
+					this.content = content[0][0]
+			 		this.getExample();
+				}
+			});
+	}
+		
+	//fetch data to use in examples and graphs
+	getExample() {
 		this.loader.getExample(this.content)
 			.then((ex) => {
 				this.devices = ex.devices;

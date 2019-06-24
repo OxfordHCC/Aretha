@@ -198,6 +198,20 @@ def stream():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+# return a list of live but not completed content
+@app.route('/api/content')
+def content():
+    response = make_response(jsonify(DB_MANAGER.execute("select * from content where live < current_timestamp and complete = false", ())))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+@app.route('/api/content/set/<name>')
+def contentSet(name):
+    DB_MANAGER.execute("update content set complete = true where name = %s", (name,))
+    response = make_response(jsonify({"message": "Request processed", "success": "unknown"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 ####################
 # internal methods #
 ####################
@@ -232,7 +246,7 @@ def GetExample(question):
         company = geo[2]
         country = geo[3]
 
-        result["text"] = f"Did you know that your {device} sends unencrypted data to {company} in {country}?"
+        result["text"] = f"Did you know that your {device} sends unencrypted data to {company} (in {country})?"
         result["impacts"] = [{"company": dest, "device": mac, "impact": example[2]}]
         result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}] #, "company_name": company, "country_code", }]
         result["devices"] = [mac]

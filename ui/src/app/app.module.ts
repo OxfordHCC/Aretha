@@ -39,8 +39,9 @@ import { TimeseriesComponent } from './timeseries/timeseries.component';
 import { LayoutEduComponent } from './layout-edu/layout-edu.component';
 import { ContentEncryptionComponent } from './content-encryption/content-encryption.component';
 import { ExampleComponent } from './example/example.component';
-
-
+import {MatRadioModule} from '@angular/material/radio';
+import {MatButtonModule} from '@angular/material/button';
+import {MatBadgeModule} from '@angular/material/badge';
 
 const appRoutes: Routes = [ 
 	{path: '', 			component: LayoutTimeseriesComponent},
@@ -81,6 +82,9 @@ const appRoutes: Routes = [
     HttpModule,
     BrowserModule,
     FormsModule,
+	MatRadioModule,
+	MatButtonModule,
+	MatBadgeModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only

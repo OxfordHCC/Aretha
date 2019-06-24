@@ -432,6 +432,18 @@ export class LoaderService {
 			return resp
 		});
 	}
+	
+	getContent(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/content').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	setContent(name: string): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
   
   @memoize((appid: string): string => appid)
   getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {

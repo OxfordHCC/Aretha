@@ -1,4 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormControl } from "@angular/forms";
+import { LoaderService } from '../loader.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-content-encryption',
@@ -8,21 +11,39 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ContentEncryptionComponent implements OnInit {
 
 	@Input() stage: number;
-	max: number = 2;
+	max: number = 2 + 1; //+1 for the attention check at the end
+	done: boolean = false;
+	answerText: string;
+	tipText: string;
 
-	constructor() { }
+	constructor(
+		private loader: LoaderService,
+		private router: Router
+	) { }
 
 	ngOnInit() {
 	}
 
-	prev() {
-		console.log("stage down");
-		this.stage--;
-	}
+	prev() { if (this.stage > 1) { this.stage--; } }
 
 	next() {
-		console.log("stage up");
-		this.stage++;
+		if (this.stage < this.max) { this.stage++; }
+		else {
+			this.loader.setContent('encryption')
+				.then((x) => this.router.navigate(['/']));
+		}
+	}
+
+	answer(question:number) {
+		if (question === 2) {
+			this.tipText = "Correct! Encryption only stops other people from reading data you sent to/from a website.";
+			this.done = true;
+		}
+		else { 
+			this.done = false;
+			if (question === 1) { this.tipText = "Not quite. Encrypted data still needs to be labelled with where it's going, which will give away what websites you're visiting."; } 
+			else { this.tipText = "Not quite. Check the content on the previous screens again."; }
+		}
 	}
 
 }

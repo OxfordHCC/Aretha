@@ -1,17 +1,3 @@
---categories table matches readable descriptions to bursts of traffic ("this burst is a weather info request")
-drop table if exists categories cascade;
-create table categories (
-	id SERIAL primary key,
-	name varchar(40) not null -- e.g. "Alexa-time" or "Alexa-joke"
-);
-
---collates bursts of traffic and optionally assigns them a category
-drop table if exists bursts cascade;
-create table bursts (
-	id SERIAL primary key,
-	category integer references categories --primary key assumed when no column given
-);
-
 --store core packet info, and optionally which burst it is part ofi, and which company it represents
 drop table if exists packets cascade;
 create table packets (
@@ -75,20 +61,16 @@ create table beacon(
 );
 
 --questions to ask during studies
-drop table if exists questions;
-create table questions(
-	id SERIAL primary key,
-	concept varchar(200) not null,
-	explanation varchar(500) not null,
-	question varchar(200) not null,
-	answer varchar(500),
-	correct boolean,
-	time timestamp default current_timestamp
+drop table if exists content;
+create table content(
+	name varchar(20) primary key,
+	live timestamp not null,
+	complete boolean default false
 );
 
 --load questions
-insert into questions(id, concept, explanation, question) values(
-	1, 'Internet Trackers', 'A description', 'A question' --sample for now
+insert into content(name, live) values(
+	'encryption', '2019-06-01T15:14:00'
 );
 
 drop table if exists experiment;
