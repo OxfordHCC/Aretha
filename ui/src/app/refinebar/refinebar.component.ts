@@ -283,7 +283,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 		let y = d3.scaleLog()
      		.rangeRound([height, 0])
       		.domain([1, ymaxx]).nice(),
-      	z = d3.scaleOrdinal(d3.schemeCategory20)
+      	z = d3.scaleOrdinal(d3.schemeCategory10)
         	.domain(devices);
 
     	var self = this;

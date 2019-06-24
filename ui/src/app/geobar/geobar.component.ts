@@ -185,7 +185,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       		.rangeRound([height, 0])
       		.domain([0, ymaxx]).nice()
 			
-		let z = d3.scaleOrdinal(d3.schemeCategory20).domain(devices);
+		let z = d3.scaleOrdinal(d3.schemeCategory10).domain(devices);
 
     	// main rects
 		const f = (selection, first, last) => {

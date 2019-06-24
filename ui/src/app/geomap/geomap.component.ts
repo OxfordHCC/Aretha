@@ -157,7 +157,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     	let margin = { top: 20, right: 20, bottom: -200, left: 40 },
       		width = width_svgel - margin.left - margin.right, 
       		height = height_svgel - margin.top - margin.bottom, 
-			z = d3.scaleOrdinal(d3.schemeCategory20).domain(devices);
+			z = d3.scaleOrdinal(d3.schemeCategory10).domain(devices);
 
     if (width < 50 || height < 50) { return; }
 
