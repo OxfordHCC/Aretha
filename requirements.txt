@@ -11,3 +11,7 @@ flask_restful
 gunicorn
 dnspython
 tldextract
+tld
+websockets
+
+

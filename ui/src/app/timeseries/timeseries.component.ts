@@ -28,6 +28,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	vbox = { width: 700, height: 1024 };
 	scale = false;
 
+	margin = { top: 20, right: 20, bottom: 10, left: 20 };
+	svgel: any; // actually an HTMLElement	
+
 	constructor(private httpM: HttpModule, 
     	private http: Http, 
     	private el: ElementRef,
@@ -87,114 +90,94 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 	render() {
 
-		const svgel = this.getSVGElement();
+		const svgel = this.svgel || this.getSVGElement();	
     	if (!svgel || this.impacts === undefined ) { 
       		console.info('timeseries: impacts undefined, chilling');
       		return; 
-    	}
+		}
 
-    	let rect = svgel.getBoundingClientRect(),
-      		width_svgel = Math.round(rect.width - 5),
-      		height_svgel = Math.round(rect.height - 5),
-      		svg = d3.select(svgel);
+		this.svgel = svgel;
+		// svgel
 
-    	if (!this.scale) {
-      		svg.attr('width', width_svgel)
-        	.attr('height', height_svgel);
-    	} else {
-      		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
-        		.attr('virtualWidth', this.vbox.width)
-        		.attr('virtualHeight', this.vbox.height)
-        		.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
-      		width_svgel = this.vbox.width;
-      		height_svgel = this.vbox.height;
-    	}
 
-    	svg.selectAll('*').remove();
-      	
-		const margin = { top: 20, right: 20, bottom: 160, left: 50 };
-      	const width = width_svgel - margin.left - margin.right;
-      	const height = height_svgel - margin.top - margin.bottom; 
+
+		let rect = svgel.getBoundingClientRect(),
+			width_svgel = Math.round(rect.width - 5),
+			height_svgel = Math.round(rect.height - 5),
+			svg = d3.select(svgel);
+
+		if (!this.scale) {
+			svg.attr('width', width_svgel).attr('height', height_svgel);
+		} else {
+			svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
+				.attr('virtualWidth', this.vbox.width)
+				.attr('virtualHeight', this.vbox.height)
+				.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+			width_svgel = this.vbox.width;
+			height_svgel = this.vbox.height;
+		}
+
+		const width = width_svgel - this.margin.left - this.margin.right;
+		const height = height_svgel - this.margin.top - this.margin.bottom; 
 		
 		let impacts = this.impacts;
       	let devices = this.devices;
 		let geodata = this.geodata; 
 
-		/*
-		let data = [
-			{"name": "a", "value": 100, "date": 1, "values": [-10, -20]}
-		];
+		svg.selectAll('*').remove();
+
+		console.info('impacts ', impacts);
+		console.info('devices', devices);
+
+		// d3 wants an array, not an object so we unpack the times and turn them into 
+		// a single simple arry
+		let minutes = Object.keys(impacts);
+		minutes.sort();
+		const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m] })),
+			// this hellish line simply does a union over all impact keys : which is the total set of 
+			// destination IP addresses.  We do this instead of taking the first one to be ultra careful
+			// that the back end doesn't do anything sneaky like omit some hosts for certain time indexes
+			stack_keys = new Array(...impacts_arr.map(v => Object.keys(v.impacts)).reduce((a,x) => new Set<string>([...a, ...x]), new Set<string>())),
+			// now we turn this into a stack.			
+			series = d3.stack()
+				.keys(stack_keys)
+				.offset(d3.stackOffsetWiggle)
+				.order(d3.stackOrderInsideOut)
+				.value((d,key) => _.values(d.impacts[key]).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
+
+		// DEBUGGING HOOKS >> 
+		// console.info('impacts arr', impacts_arr, 'stack keys', stack_keys, 'series', series);
+		// (<any>window).d3 = d3;
+		// (<any>window)._ss = series;
+		// (<any>window)._ia = impacts_arr;
+		// (<any>window)._sk = stack_keys;			
+		// END DEBUGGING HOOKS
 		
-		//configure x axis
-		let x = d3.scaleTime()
-    		.domain(d3.extent(data, d => d.date))
-    		.range([margin.left, width - margin.right])
+		// now create scales
+		const stackscale = d3.scaleOrdinal().domain(stack_keys).range(d3.schemeCategory10),
+			xscale = d3.scaleTime()
+				.domain(d3.extent(impacts_arr, d=>d.date))
+				.range([this.margin.left, width_svgel - this.margin.right]),
+			yscale = d3.scaleLinear()
+    			.domain([d3.min(series, d => d3.min(d, dd => dd[0])), d3.max(series, d => d3.max(d, dd => dd[1]))])
+				.range([height - this.margin.bottom, this.margin.top]);
 
-		let test = [
-			d3.min(data, d => d.values[0]), 
-			d3.max(data, d => d.values[1])];
+		// single area which operates directly on the stack structure inner values
+		const area = d3.area()
+				.x((d) => xscale(d.data.date)) 
+				.y0(d => yscale(d[0]))
+    			.y1(d => yscale(d[1]));
 
-		//configure y axis
-		let y = d3.scaleLinear()
-    		.domain([d3.min(data, d => d.values[0]), d3.max(data, d => d.values[1])])
-    		.range([height - margin.bottom, margin.top])
-
-		//set x axis
-		let xAxis = g => g
-    		.attr("transform", `translate(0,${height - margin.bottom})`)
-    		.call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
-    		.call(g => g.select(".domain").remove())
-
-		//set colour
-		let color = d3.scaleOrdinal(d3.schemeCategory10).domain(data.map(d => d.name))
-
-		let area = d3.area()
-    		.curve(d3.curveStep)
-    		.x(d => x(d.date))
-    		.y0(d => y(d.values[0]))
-    		.y1(d => y(d.values[1]))
-
-		console.log(impacts);
-		console.log(geodata);
-		console.log(devices);
-
-		function multimap(entries, reducer = (p, v) => (p.push(v), p), initializer = () => []) {
-  			const map = new Map();
-			for (const [key, value] of entries) {
-    			map.set(key, reducer(map.has(key) ? map.get(key) : initializer(key), value));
-  			}
-  			return map;
-		}
-
-		const stack = d3.stack()
-      		.keys(top)
-      		.value((d, key) => d.get(key).value)
-      		.offset(d3.stackOffsetSilhouette)
-    		(Array.from(
-      			multimap(
-        		data.map(d => [+d.date, d]),
-        		(p, v) => p.set(v.name, v),
-        		() => new Map
-      			).values()
-    		));
-
-		let stack = d3.stack()
-    		.offset("silhouette")
-    		.values(function(d) { return d.values; })
-    		.x(function(d) { return d.date; })
-    		.y(function(d) { return d.value; });
-		
-		//plot graph
 		svg.append("g")
-    		.selectAll("path")
-    		//.data([...multimap(data.map(d => [d.name, d]))])
-    		.data([...data.map(d => [d.name, d.value])])
-    		.join("path")
-      			.attr("fill", ([name]) => color(name))
-      			.attr("d", ([, values]) => area(values))
-    		.append("title")
-      			.text(([name]) => name);
-  		
+			.selectAll("path")
+			.data(series)
+			.join("path") // join is only defined in d3@5 and newer
+			  .attr("fill", ({key}) => stackscale(key))
+			  .attr("d", area)
+			.append("title")
+			  .text(({key}) => key);		
+
+		/*
 		//plot x axis
 		svg.append("g")
       		.call(xAxis);
