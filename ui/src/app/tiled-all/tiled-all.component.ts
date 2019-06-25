@@ -1,11 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  LoaderService,
-  DeviceImpact,
-  GeoData,
-  Device,
-  DeviceTimeImpact
-} from "app/loader.service";
+import { CompanyInfo, APIAppInfo, LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
 import { FocusTarget, FocusService } from "app/focus.service";
 import { UsageListener } from "app/usage-listener/usage-listener.component";
 import { UsageConnectorService } from "app/usage-connector.service";
@@ -13,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from 'lodash';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
+import { AppUsage } from '../usagetable/usagetable.component';
 
 
 // target watcher watches for clicks on apps and companies
@@ -44,7 +39,9 @@ export class TargetWatcher extends UsageListener {
 })
 
 export class TiledAllComponent extends TargetWatcher implements OnInit {
-  mode: string;
+
+	showUsageTable = false;
+	mode: string;
 	impacts: DeviceImpact[];
 	geodata: GeoData[];
 	devices : Device[];
@@ -90,11 +87,24 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
     		throttledReload = _.throttle(reload, 10000);
 
     	this.loader.asyncDeviceImpactChanges().subscribe({
-      		next(i: any[]) {
-            if (this_.impacts) {
-              //TODO
-            }
-            this_.triggerImpactsChange();
+      		next(i: DeviceImpact[]) {  
+				if (this_.impacts) {
+					for (let key in i) {
+						for (let key2 in i[key]) {
+							if (this_.impacts.filter ((x) => x.company == key).length === 0) {
+								this_.impacts.push({
+									"company": key,
+									"device": key2,
+									"impact": i[key][key2],
+									"minute": Math.floor((new Date().getTime()/1000) + 3600)
+								});
+							} else {
+								this_.impacts.filter ((x) => x.company == key)[0].impact += i[key][key2];
+							}
+						}
+					}
+          			this_.triggerImpactsChange();
+        		}
       		},
       		error(err) { console.log("Listen error! ", err, err.message); },
       		complete() { console.log("Listen complete"); }

@@ -150,7 +150,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 		svg.selectAll('*').remove();
 
-		//console.info('impacts ', impacts);
+		console.info('impacts ', impacts);
 		//console.info('devices', devices);
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
@@ -176,7 +176,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// (<any>window)._ia = impacts_arr;
 		// (<any>window)._sk = stack_keys;			
 		// END DEBUGGING HOOKS
-
+		
 		// now create scales
 		const stackscale = d3.scaleOrdinal().domain(stack_keys).range(d3.schemeCategory10),
 			xscale = d3.scaleTime()
@@ -192,7 +192,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.y0(d => yscale(d[0]))
     			.y1(d => yscale(d[1]));
 
-		//main data
 		svg.append("g")
 			.selectAll("path")
 			.data(series)
@@ -202,7 +201,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			.append("title")
 			  .text(({key}) => key);		
 
-		//y axis
 		svg.append('g')
     		.attr('class', 'axis y')
     		.call(d3.axisLeft(yscale).ticks(null, '.0s'))
@@ -211,8 +209,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
       		.attr('y', yscale(yscale.ticks().pop()) - 12)
       		.attr('dy', '0.22em')
       		.text('Traffic (bytes)');
-
-		//x axis
+	
 		svg.append('g')
       		.attr('class', 'axis x')
 			.call(d3.axisBottom(xscale))

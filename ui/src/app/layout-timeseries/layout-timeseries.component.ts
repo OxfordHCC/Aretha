@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UsageListener } from "app/usage-listener/usage-listener.component";
 import { UsageConnectorService } from "app/usage-connector.service";
-import { LoaderService, DeviceImpact, GeoData, Device, DeviceTimeImpact } from "app/loader.service";
+import { CompanyInfo, APIAppInfo, LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
 import { FocusTarget, FocusService } from "app/focus.service";
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
@@ -37,8 +37,9 @@ export class TargetWatcher extends UsageListener {
 })
 
 export class LayoutTimeseriesComponent extends TargetWatcher implements OnInit {
-  mode: string;
-	impacts: DeviceTimeImpact[];
+	showUsageTable = false;
+	mode: string;
+	impacts: DeviceImpact[];
 	geodata: GeoData[];
 	devices : Device[];
 	impactChanges: Observable<any>;
@@ -70,7 +71,7 @@ export class LayoutTimeseriesComponent extends TargetWatcher implements OnInit {
   }  
 
 	getIoTData(start: number, end: number, delta: number): void {	
-    	let this_: this = this,
+    	let this_ = this,
       		reload = () => {
 				this_.loader.getIoTData(start, end, delta).then( bundle => {
 					this_.impacts = bundle.impacts;
@@ -83,26 +84,31 @@ export class LayoutTimeseriesComponent extends TargetWatcher implements OnInit {
     		throttledReload = _.throttle(reload, 10000);
 
     	this.loader.asyncDeviceImpactChanges().subscribe({
-        next: function (i: any) {
-          if (this_.impacts) {
-
-            console.log(i);
-
-            // this keeps failing silently and I don't know why :S
-            // this_.impacts.push(i);
-            console.log(this_.impacts[0]);
-
-            console.log("done");
-
-            this_.triggerImpactsChange();
-          }
-        },
+      		next(i: DeviceImpact[]) {  
+				if (this_.impacts) {
+					for (let key in i) {
+						for (let key2 in i[key]) {
+							if (this_.impacts.filter ((x) => x.company == key).length === 0) {
+								this_.impacts.push({
+									"company": key,
+									"device": key2,
+									"impact": i[key][key2],
+									"minute": Math.floor((new Date().getTime()/1000) + 3600)
+								});
+							} else {
+								this_.impacts.filter ((x) => x.company == key)[0].impact += i[key][key2];
+							}
+						}
+					}
+          			this_.triggerImpactsChange();
+        		}
+      		},
       		error(err) { console.log("Listen error! ", err, err.message); },
       		complete() { console.log("Listen complete"); }
     	});
 
     	this.loader.asyncGeoUpdateChanges().subscribe({
-      		next(a: any) {
+      		next(a: any[]) {
         		console.info(" ~ got GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
         		if (this_.impacts) { throttledReload(); }        
       		}
