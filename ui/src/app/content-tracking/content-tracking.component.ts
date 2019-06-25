@@ -4,11 +4,11 @@ import { LoaderService } from '../loader.service';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-content-encryption',
-  templateUrl: './content-encryption.component.html',
-  styleUrls: ['./content-encryption.component.css']
+  selector: 'app-content-tracking',
+  templateUrl: './content-tracking.component.html',
+  styleUrls: ['./content-tracking.component.css']
 })
-export class ContentEncryptionComponent implements OnInit {
+export class ContentTrackingComponent implements OnInit {
 
 	@Input() stage: number;
 	max: number = 2 + 1; //+1 for the attention check at the end
@@ -29,19 +29,19 @@ export class ContentEncryptionComponent implements OnInit {
 	next() {
 		if (this.stage < this.max) { this.stage++; }
 		else {
-			this.loader.setContent('encryption')
+			this.loader.setContent('tracking')
 				.then((x) => this.router.navigate(['/timeseries']));
 		}
 	}
 
 	answer(question:number) {
-		if (question === 2) {
-			this.tipText = "Correct! Encryption only stops other people from reading data you sent to/from a website.";
+		if (question === 1) {
+			this.tipText = "Correct! Trackers build complex models about you that can infer personality and behavioural traits.";
 			this.done = true;
 		}
 		else { 
 			this.done = false;
-			if (question === 1) { this.tipText = "Not quite. Encrypted data still needs to be labelled with where it's going, which will give away what websites you're visiting."; } 
+			if (question === 2) { this.tipText = "Not quite. The models that are built by modern trackers and advertisers are more complex than the simple rules in this question."; } 
 			else { this.tipText = "Not quite. Check the content on the previous screens again."; }
 		}
 	}

@@ -142,7 +142,7 @@ def set_device(mac, name):
 @app.route('/api/example/<question>')
 def counterexample(question):
     example = GetExample(question)
-    if "text" in example:
+    if example is not False:
         response = make_response(jsonify({"text": example["text"], "impacts": example["impacts"], "geodata": example["geodata"], "devices": example["devices"]}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
@@ -242,7 +242,10 @@ def get_geodata():
 def GetExample(question):
     result = dict()
     if question == "encryption":
-        example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
+        try:
+            example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
+        except:
+            return False
         dest = example[0]
         mac = example[1]
         geo = DB_MANAGER.execute("select lat, lon, c_name, c_code from geodata where ip = %s limit 1", (dest,))[0]
@@ -256,8 +259,27 @@ def GetExample(question):
         result["impacts"] = [{"company": dest, "device": mac, "impact": example[2]}]
         result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}] #, "company_name": company, "country_code", }]
         result["devices"] = [mac]
+
+    elif question == "tracking":
+        example = DB_MANAGER.execute("select d.name, count(distinct g.ip) from packets as p inner join geodata as g on p.ext = g.ip inner join devices as d on p.mac = d.mac where g.tracker = true group by d.name order by count(distinct g.ip) desc", ())
+        if len(example) < 1:
+            return False
+
+        result["impacts"] = []
+        result["geodata"] = []
+        result["devices"] = []
+
+        device = example[0][0]
+        single_tracker = example[0][1]
+        total_tracker = 0
+
+        for record in example:
+            total_tracker += record[1]
+
+        result["text"] = f"Across the devices connected to the privacy assistant there are connections to {total_tracker} different trackers. Did you know that your {device} sends data to {single_tracker} of these tracking companies?"
+
+
     return result
-        #options = DB_MANAGER.execute("select c_name, count(p.len), d.name from packets as p inner join geodata as g on p.src = g.ip inner join devices as d on p.mac = d.mac where g.c_name like '*%%' group by g.c_name, d.name order by count(p.len) desc limit 5;", ())
    
     #blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
     #for option in options:

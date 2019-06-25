@@ -51,13 +51,14 @@ def processGeos():
             country = 'XX'
             orgname = 'unknown'
             domain = 'unknown'
+            tracker = False
 
             #get company info from ipdata
             try:
                 data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
                 if data.status_code==200 and data.json()['latitude'] is not '':
                     data = data.json()
-                    #orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
+                    tracker = istracker(ip)
                     orgname = data['organisation'] 
                     lat = data['latitude']
                     lon = data['longitude']
@@ -76,7 +77,7 @@ def processGeos():
                 pass
 
             #commit the extra info to the database
-            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:20] or "", domain and domain[:30] or ""))
+            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:20] or "", domain and domain[:30] or "", tracker))
             
             # if orgname and domain: 
             #     DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))

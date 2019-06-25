@@ -8,7 +8,7 @@ import { LoaderService, Example } from '../loader.service';
 })
 export class LayoutEduComponent implements OnInit {
 
-	content: string = "encryption";
+	content: string;
 	stage: number = 1;
 	impacts: any;
 	devices: any;

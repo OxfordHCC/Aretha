@@ -1,0 +1,33 @@
+<h3>Tracking and Advertising</h3>
+
+<div [ngSwitch]="stage">
+	<p *ngSwitchCase="1">
+	Advertising is the main business model financing media production on the open web, and the drive to increase revenue by targeting ads to selected users has led to the creation of a plethora of companies dedicated to monitoring our clicks, searches, and reading habits as we move around the Internet.
+	</p>
+
+	<p *ngSwitchCase="2">
+	These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health [3]. In many cases, these models are also used to predict when you’re going through major life events, such as graduation or pregnancy, as these are when you’re most vulnerable to the creation of new shopping habits.
+	</p>
+	
+	<div *ngSwitchCase="3">
+		<mat-radio-group>
+			<mat-radio-button value="1" (click)="answer(1)">Internet trackers can use information about me to learn things that I haven't told them</mat-radio-button>
+			<div class="question-divider"></div>
+			<mat-radio-button value="2" (click)="answer(2)">Trackers and advertisers use simple bits of information about me to target advertisements</mat-radio-button>
+			<div class="question-divider"></div>
+			<mat-radio-button value="3" (click)="answer(3)">Internet trackers are able to predict what I'm going to do next before I know it myself</mat-radio-button>
+			<div class="question-divider"></div>
+		</mat-radio-group>
+		<p *ngIf="tipText">{{this.tipText}}</p>
+		<div class="question-divider"></div>
+	</div>
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button *ngIf="stage < max || done; else greybutton" class="buttonright" (click)="next()">Next</button>
+	<ng-template #greybutton>
+		<button mat-raised-button disabled class="buttonright">Next</button>
+	</ng-template>
+</div>

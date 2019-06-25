@@ -42,11 +42,12 @@ import { ExampleComponent } from './example/example.component';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatButtonModule} from '@angular/material/button';
 import {MatBadgeModule} from '@angular/material/badge';
+import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
 
 const appRoutes: Routes = [ 
-	{path: '', 			component: LayoutTimeseriesComponent},
-	{path: 'refine',	component: TiledAllComponent},
-	{path: 'edu',		component: LayoutEduComponent}
+	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
+	{path: 'refine',		component: TiledAllComponent},
+	{path: 'edu',			component: LayoutEduComponent}
 ];
 
 
@@ -76,7 +77,8 @@ const appRoutes: Routes = [
     TimeseriesComponent,
     LayoutEduComponent,
     ContentEncryptionComponent,
-    ExampleComponent    
+    ExampleComponent,
+    ContentTrackingComponent    
   ],
   imports: [
     HttpModule,

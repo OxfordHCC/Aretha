@@ -1,6 +1,7 @@
 <div class="root">
 	<div [ngSwitch]="content" class="gridleft">
     	<app-content-encryption *ngSwitchCase="'encryption'" [stage]="stage"></app-content-encryption>
+    	<app-content-tracking *ngSwitchCase="'tracking'" [stage]="stage"></app-content-tracking>
     	<p *ngSwitchDefault>
         	You're all up to date! Check back soon for more content.
     	</p>

@@ -30,7 +30,8 @@ create table geodata(
 	lon real not null,
 	c_code varchar(2) not null,
 	c_name varchar(20) not null,
-	domain varchar(30) not null
+	domain varchar(30) not null,
+	tracker boolean default false
 );
 
 --firewall rules created by aretha
@@ -69,9 +70,9 @@ create table content(
 );
 
 --load questions
-insert into content(name, live) values(
-	'encryption', '2019-06-01T15:14:00'
-);
+insert into content(name, live) values
+	('encryption', '2019-06-01T15:14:00'),
+	('tracking', '2019-06-01T15:14:00');
 
 drop table if exists experiment;
 create table experiment(
