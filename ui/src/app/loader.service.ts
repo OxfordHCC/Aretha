@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
 
-enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
+enum PI_TYPES { }
 
 export const API_ENDPOINT = 'https://negi.io/api';
 export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
@@ -26,6 +26,13 @@ export interface DeviceImpact {
 	device: string;
 	company: string;
   	impact: number;
+};
+
+export interface DeviceTimeImpact {
+  [minute: number]: {
+  [device: string] : {
+  [company: string] : {
+  impact: number}}}
 };
 
 export interface Device {
@@ -128,9 +135,6 @@ export class CompanyDB {
   getCompanyInfos(): CompanyInfo[] {
     return values(this._data);
   }
-  getIDs(): string[] {
-    return keys(this._data);
-  }
 }
 
 export class CompanyInfo {
@@ -209,12 +213,6 @@ export class APIAppInfo {
     storeSite: string;
     site: string;
 }
-
-export interface APIAppStub {
-  Title: string;
-  appid: string;
-}
-
 const host_blacklist = ['127.0.0.1','::1','localhost'];
 
 @Injectable()
@@ -248,28 +246,13 @@ export class LoaderService {
       return response.json() as String2String;
     });
   }
-  getHostToShort(): Promise<String2String> {
-    return this.http.get('assets/data/h2h_2ld.json').toPromise().then(response => {
-      return response.json() as String2String;
-    });
-  }
   @cache
   getCompanyInfo(): Promise<CompanyDB> {
     return this.http.get('assets/data/company_details.json').toPromise().then(response => {
       return new CompanyDB(response.json() as {[name: string]: CompanyInfo}, this.sanitiser);
     });
   }
-  getSubstitutions(): Promise<AppSubstitutions> {
-    return this.http.get('assets/data/app_substitutions.json').toPromise().then(response => {
-      return response.json() as AppSubstitutions;
-    });
-  }
-  makeIconPath(url: string): string {
-    if (url) {
-      return [API_ENDPOINT, 'icons', url.slice(1)].join('/');
-    }
-  }
-	
+
   @memoize((company) => company.id)
   getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
     if (!company) { throw new Error('no company'); }
@@ -279,43 +262,6 @@ export class LoaderService {
     return this.http.get(CB_SERVICE_ENDPOINT + `/cbase?${urlSP.toString()}`).toPromise()
       .then(response => response.json())
       .then((results: string[]) => results.map(result => this.sanitiser.bypassSecurityTrustResourceUrl(result)));
-  }
-
-  /**
-   * Parses JSON Object into a URL param options object and then Turns that to a
-   * string. 
-   * @param options JSON of param options that can be used to query the xray API.
-   */
-  private parseFetchAppParams(options: {
-      title?: string,
-      startsWith?: string, 
-      appID?: string, 
-      fullInfo?: boolean, 
-      onlyAnalyzed?: boolean, 
-      limit?: number
-    }): string {
-      // Initialising URL Parameters from passed in options.
-    let urlParams = new URLSearchParams();
-
-    if (options.title) {
-      urlParams.append('title', options.title);
-    }
-    if (options.startsWith) {
-      urlParams.append('startsWith', options.startsWith);
-    }
-    if (options.appID) {
-      urlParams.append('appID', options.appID);
-    }
-    if (options.fullInfo) {
-      urlParams.append('isFull',  options.fullInfo ? 'true' : 'false');
-    }
-    if (options.onlyAnalyzed) {
-      urlParams.append('onlyAnalyzed', options.onlyAnalyzed ? 'true' : 'false');
-    }
-    if (options.limit) {
-      urlParams.append('limit', options.limit.toString());
-    }
-    return urlParams.toString();
   }
 
   @memoize((appid: string): string => appid)
@@ -356,13 +302,31 @@ export class LoaderService {
   		});        
 	}
 
-
-	asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
+	// WIP
+	/*
+	asyncDeviceTimeImpactChanges(): Observable<DeviceTimeImpact> {
     	return Observable.create(observer => {
       		this.updateObservable.subscribe({
         		next(x) {           
 					if (x.type === 'impact') {
-            			observer.next(<DeviceImpact[]>x.data);
+					        console.log("loader", x.data);
+					        observer.next(x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+*/
+
+	asyncDeviceImpactChanges(): Observable<DeviceImpact> {
+    	return Observable.create(observer => {
+      		this.updateObservable.subscribe({
+        		next(x) {           
+					if (x.type === 'impact') {
+					        observer.next(<DeviceImpact[]>x.data);
             			return true;
           			} 
           			return false;

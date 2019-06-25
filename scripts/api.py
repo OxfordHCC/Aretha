@@ -142,12 +142,13 @@ def set_device(mac, name):
 @app.route('/api/example/<question>')
 def counterexample(question):
     example = GetExample(question)
-    if "text" in example:
+    if example is not False:
         response = make_response(jsonify({"text": example["text"], "impacts": example["impacts"], "geodata": example["geodata"], "devices": example["devices"]}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     else:
-        return jsonify({"message": f"Unable to find a match for requested example"})
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return make_response(jsonify({"message": f"Unable to find a match for requested example"}))
 
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>')
@@ -242,7 +243,12 @@ def get_geodata():
 def GetExample(question):
     result = dict()
     if question == "encryption":
-        example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
+        example_raw = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())
+
+        if len(example_raw) == 0:
+            return False
+        example = example_raw[0]
+
         dest = example[0]
         mac = example[1]
         geo = DB_MANAGER.execute("select lat, lon, c_name, c_code from geodata where ip = %s limit 1", (dest,))[0]
@@ -305,13 +311,13 @@ def event_stream():
                     ip = packet['ext']
                     impact = packet['len']
 
-                    if ip not in impacts:
-                        impacts[ip] = dict()
-                    if mac not in impacts[ip]:
-                        impacts[ip][mac] = 0
-                    impacts[ip][mac] += impact
+                    if mac not in impacts:
+                        impacts[mac] = dict()
+                    if ip not in impacts[mac]:
+                        impacts[mac][ip] = 0
+                    impacts[mac][ip] += impact
 
-                yield "data: %s\n\n" % json.dumps({"type": "impact", "time": round(time.time()/60)-1, "data": impacts})
+                yield "data: %s\n\n" % json.dumps({"type": "impact", "data": {round(time.time()/60)-1: impacts}})
 
             if len(geo_buf) > 0:
                 [geos.pop(geo["ip"], None) for geo in geo_buf]
