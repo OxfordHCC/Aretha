@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CompanyInfo, APIAppInfo, LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
+import { LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
 import { FocusTarget, FocusService } from "app/focus.service";
 import { UsageListener } from "app/usage-listener/usage-listener.component";
 import { UsageConnectorService } from "app/usage-connector.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
-import { AppUsage } from '../usagetable/usagetable.component';
 
 
 // target watcher watches for clicks on apps and companies
@@ -39,9 +38,7 @@ export class TargetWatcher extends UsageListener {
 })
 
 export class TiledAllComponent extends TargetWatcher implements OnInit {
-
-	showUsageTable = false;
-	mode: string;
+  mode: string;
 	impacts: DeviceImpact[];
 	geodata: GeoData[];
 	devices : Device[];

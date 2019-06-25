@@ -1,10 +1,10 @@
-import { Input, Component, OnInit, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone } from '@angular/core';
+import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone } from '@angular/core';
 import { LoaderService, DeviceImpact, GeoData, Device } from '../loader.service';
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Http, HttpModule} from '@angular/http';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
-import { HoverService, HoverTarget } from "app/hover.service";
+import { HoverService} from "app/hover.service";
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
@@ -145,13 +145,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		const height = height_svgel - this.margin.top - this.margin.bottom; 
 		
 		let impacts = this.impacts;
-      	let devices = this.devices;
+		let devices = this.devices;
 		let geodata = this.geodata; 
 
 		svg.selectAll('*').remove();
 
-		console.info('impacts ', impacts);
-		//console.info('devices', devices);
+		// console.info('impacts ', impacts);
+		// console.info('devices', devices);
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
 		// a single simple arry

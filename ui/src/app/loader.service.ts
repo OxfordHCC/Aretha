@@ -1,8 +1,8 @@
 
 import { Injectable, NgZone } from '@angular/core';
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Http, HttpModule, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
+import { mapValues, keys, values} from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
@@ -45,11 +45,6 @@ export interface GeoData {
 export class DBUpdate {
   type: string;
   data: any;
-  // timestamp: string;
-  // operation: string;
-  // schema: string;
-  // table: string;
-  // data: PacketUpdateInfo
 };
 
 export interface Example {
@@ -60,7 +55,6 @@ export interface Example {
 };
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
-  // console.log('@cache:: ~~ ', target, propertyKey, descriptor);
   let retval: { [method: string]: any } = {},
     method = descriptor.value;
 
@@ -127,9 +121,6 @@ export class CompanyDB {
   }
   getCompanyInfos(): CompanyInfo[] {
     return values(this._data);
-  }
-  getIDs(): string[] {
-    return keys(this._data);
   }
 }
 
@@ -210,11 +201,6 @@ export class APIAppInfo {
     site: string;
 }
 
-export interface APIAppStub {
-  Title: string;
-  appid: string;
-}
-
 const host_blacklist = ['127.0.0.1','::1','localhost'];
 
 @Injectable()
@@ -248,28 +234,14 @@ export class LoaderService {
       return response.json() as String2String;
     });
   }
-  getHostToShort(): Promise<String2String> {
-    return this.http.get('assets/data/h2h_2ld.json').toPromise().then(response => {
-      return response.json() as String2String;
-    });
-  }
+
   @cache
   getCompanyInfo(): Promise<CompanyDB> {
     return this.http.get('assets/data/company_details.json').toPromise().then(response => {
       return new CompanyDB(response.json() as {[name: string]: CompanyInfo}, this.sanitiser);
     });
   }
-  getSubstitutions(): Promise<AppSubstitutions> {
-    return this.http.get('assets/data/app_substitutions.json').toPromise().then(response => {
-      return response.json() as AppSubstitutions;
-    });
-  }
-  makeIconPath(url: string): string {
-    if (url) {
-      return [API_ENDPOINT, 'icons', url.slice(1)].join('/');
-    }
-  }
-	
+
   @memoize((company) => company.id)
   getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
     if (!company) { throw new Error('no company'); }
@@ -279,43 +251,6 @@ export class LoaderService {
     return this.http.get(CB_SERVICE_ENDPOINT + `/cbase?${urlSP.toString()}`).toPromise()
       .then(response => response.json())
       .then((results: string[]) => results.map(result => this.sanitiser.bypassSecurityTrustResourceUrl(result)));
-  }
-
-  /**
-   * Parses JSON Object into a URL param options object and then Turns that to a
-   * string. 
-   * @param options JSON of param options that can be used to query the xray API.
-   */
-  private parseFetchAppParams(options: {
-      title?: string,
-      startsWith?: string, 
-      appID?: string, 
-      fullInfo?: boolean, 
-      onlyAnalyzed?: boolean, 
-      limit?: number
-    }): string {
-      // Initialising URL Parameters from passed in options.
-    let urlParams = new URLSearchParams();
-
-    if (options.title) {
-      urlParams.append('title', options.title);
-    }
-    if (options.startsWith) {
-      urlParams.append('startsWith', options.startsWith);
-    }
-    if (options.appID) {
-      urlParams.append('appID', options.appID);
-    }
-    if (options.fullInfo) {
-      urlParams.append('isFull',  options.fullInfo ? 'true' : 'false');
-    }
-    if (options.onlyAnalyzed) {
-      urlParams.append('onlyAnalyzed', options.onlyAnalyzed ? 'true' : 'false');
-    }
-    if (options.limit) {
-      urlParams.append('limit', options.limit.toString());
-    }
-    return urlParams.toString();
   }
 
   @memoize((appid: string): string => appid)
@@ -404,32 +339,19 @@ export class LoaderService {
 
 	getIoTData(start: number, end: number, delta: number): Promise<IoTDataBundle> {
 		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end + '/' + delta).toPromise().then(response2 => {
-      		let resp = response2.json(),
-        		impacts = resp.impacts,
-        		geodata = resp.geodata,
-				devices = resp.devices;
-			return resp;
+      		return response2.json();
     	});
   	}
 	
 	getIoTDataAggregated(start: number, end: number): Promise<IoTDataBundle> {
 		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end).toPromise().then(response2 => {
-      		let resp = response2.json(),
-        		impacts = resp.impacts,
-        		geodata = resp.geodata,
-				devices = resp.devices;
-			return resp;
+      		return response2.json();
     	});
   	}
 
 	getExample(question: string): Promise<Example> {
 		return this.http.get(IOTR_ENDPOINT + '/example/' + question).toPromise().then(response2 => {
-      		let resp = response2.json(),
-        		impacts = resp.impacts,
-        		geodata = resp.geodata,
-				devices = resp.devices,
-				text = resp.text;
-			return resp
+      		return response2.json();
 		});
 	}
 	
