@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UsageConnectorService } from "app/usage-connector.service";
 
 export class UserEvent {
   type: string;
@@ -15,7 +14,7 @@ export class ActivityLogService {
   startTime : number;
   prefix = 'refine_actlog_';
 
-  constructor(private usage: UsageConnectorService) { 
+  constructor() {
     const lastpid = localStorage["lastpid"];
     if (lastpid) {
       this.setParticipantID(lastpid);
@@ -43,7 +42,6 @@ export class ActivityLogService {
     if (!this.pid) {
       throw new Error('Error no participant ID set');
     }
-    this.usage.usageChanged([]);
     this.startTime = new Date().valueOf();
     return this.log('start', this.pid);
   }

@@ -4,28 +4,15 @@ import { LoaderService } from './loader.service';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { RefinebarComponent } from './refinebar/refinebar.component';
-// import { UsageListenerComponent } from './usage-listener/usage-listener.component';
-// import { UsagetableComponent } from './usagetable/usagetable.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-// import { FoobarComponent } from './foobar/foobar.component';
 import { ErrorComponent } from './error/error.component';
-import { UsageConnectorService } from './usage-connector.service';
 import { Ng2CompleterModule } from 'ng2-completer';
-
-// no longer used with IoTRefine => 
-// import { SingleDisplayComponent } from './single-display/single-display.component';
-// import { TiledDisplayComponent } from './tiled-display/tiled-display.component';
-// import { CompareComponent } from './compare/compare.component';
-// import { CompareContainerComponent } from './compare-container/compare-container.component';
-// 
 import { CompanyListComponent } from './company-list/company-list.component';
-// import { AutocompleteComponent } from './autocomplete/autocomplete.component';
 import { HostUtilsService } from "app/host-utils.service";
 import { AppinfoComponent } from './appinfo/appinfo.component';
 import { CompanyinfoComponent } from './companyinfo/companyinfo.component';
 import { RefinecatComponent } from './refinecat/refinecat.component';
-
 import { FocusService } from "app/focus.service";
 import { HoverService } from "app/hover.service";
 import { ActivityLogService } from "app/activity-log.service";
@@ -59,14 +46,6 @@ const appRoutes: Routes = [
     RefinebarComponent,
     ErrorComponent,
     CompanyListComponent,
-    // not used with IoT Refine >>
-    // UsagetableComponent,
-    // CompareComponent,    
-    // UsageListenerComponent,
-    // CompareContainerComponent,
-    // AutocompleteComponent,
-    // not ever used:
-    // FoobarComponent,    
     AppinfoComponent,
     CompanyinfoComponent,
     RefinecatComponent,
@@ -97,7 +76,7 @@ const appRoutes: Routes = [
     ),
     Ng2CompleterModule
   ],
-  providers: [LoaderService, UsageConnectorService, HostUtilsService, FocusService, HoverService, ActivityLogService],
+  providers: [LoaderService, HostUtilsService, FocusService, HoverService, ActivityLogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

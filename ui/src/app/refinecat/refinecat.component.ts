@@ -1,13 +1,12 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
-import { LoaderService, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
-import { AppUsage } from '../usagetable/usagetable.component';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
-import { HoverService, HoverTarget } from "app/hover.service";
+import { HoverService} from "app/hover.service";
 import * as moment from 'moment';
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Http, HttpModule} from '@angular/http';
 
 interface AppImpactCat {
   appid: string;

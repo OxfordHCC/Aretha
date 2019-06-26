@@ -1,35 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
-import { FocusTarget, FocusService } from "app/focus.service";
-import { UsageListener } from "app/usage-listener/usage-listener.component";
-import { UsageConnectorService } from "app/usage-connector.service";
+import { FocusService } from "app/focus.service";
 import { ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
 import { Observable } from '../../../node_modules/rxjs/Observable';
 import { Observer } from '../../../node_modules/rxjs/Observer';
-
-
-// target watcher watches for clicks on apps and companies
-export class TargetWatcher extends UsageListener {
- 
-  target : FocusTarget;
-  targettype : string;
-
-  constructor(private focus: FocusService, connector: UsageConnectorService) {     
-    super(connector);
-    this.focus.focusChanged$.subscribe((target: FocusTarget) => { 
-      
-      if (!target) { 
-        delete this.target;
-        delete this.targettype;
-        return;
-      }
-      this.target = target; 
-      delete this.targettype;
-    });
-  }
-
-}
 
 @Component({
   selector: 'app-tiled-all',
@@ -37,7 +12,7 @@ export class TargetWatcher extends UsageListener {
   styleUrls: ['./tiled-all.component.scss']
 })
 
-export class TiledAllComponent extends TargetWatcher implements OnInit {
+export class TiledAllComponent implements OnInit {
   mode: string;
 	impacts: DeviceImpact[];
 	geodata: GeoData[];
@@ -46,9 +21,8 @@ export class TiledAllComponent extends TargetWatcher implements OnInit {
 	_last_load_time: Date;
 	private impactObservers: Observer<any>[] = [];
    
-	constructor(focus: FocusService, connector: UsageConnectorService, private route: ActivatedRoute, private loader: LoaderService) {
-    	super(focus, connector);
-    	this.route.params.subscribe(params => { 
+	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
+    	this.route.params.subscribe(params => {
       		console.log("SETTING MODE", params.mode);
       		this.mode = params.mode; 
     	});

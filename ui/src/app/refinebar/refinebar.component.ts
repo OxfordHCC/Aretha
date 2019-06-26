@@ -1,14 +1,12 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, ViewEncapsulation, HostListener, NgZone } from '@angular/core';
 import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
-import { AppUsage } from '../usagetable/usagetable.component';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
-import { HoverService, HoverTarget } from "app/hover.service";
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { HoverService} from "app/hover.service";
+import { Http, HttpModule} from '@angular/http';
 import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Observer } from '../../../node_modules/rxjs/Observer';
 import { Subscription } from '../../../node_modules/rxjs/Subscription';
 import { DeviceImpact, GeoData, Device } from '../loader.service';
 
