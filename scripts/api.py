@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 from flask import Flask, request, jsonify, make_response, Response
-import json, re, sys, os, traceback, copy, argparse, subprocess, time
+import json, re, sys, os, traceback, copy, argparse, subprocess, time, urllib
 from datetime import datetime, timedelta
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts, rutils
@@ -241,6 +241,11 @@ def get_geodata():
 
 def GetExample(question):
     result = dict()
+    result["text"] = []
+    result["impacts"] = []
+    result["geodata"] = []
+    result["devices"] = []
+
     if question == "encryption":
         try:
             example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
@@ -254,38 +259,46 @@ def GetExample(question):
         lon = geo[1]
         company = geo[2]
         country = geo[3]
-
         result["text"] = f"Did you know that your {device} sends unencrypted data to {company} (in {country})?"
         result["impacts"] = [{"company": dest, "device": mac, "impact": example[2]}]
-        result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}] #, "company_name": company, "country_code", }]
+        result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}]
         result["devices"] = [mac]
 
     elif question == "tracking":
         example = DB_MANAGER.execute("select d.name, count(distinct g.ip) from packets as p inner join geodata as g on p.ext = g.ip inner join devices as d on p.mac = d.mac where g.tracker = true group by d.name order by count(distinct g.ip) desc", ())
         if len(example) < 1:
             return False
-
-        result["impacts"] = []
-        result["geodata"] = []
-        result["devices"] = []
-
         device = example[0][0]
         single_tracker = example[0][1]
         total_tracker = 0
-
         for record in example:
             total_tracker += record[1]
-
         result["text"] = f"Across the devices connected to the privacy assistant there are connections to {total_tracker} different trackers. Did you know that your {device} sends data to {single_tracker} of these tracking companies?"
 
+    elif question == "inference":
+        example1 = DB_MANAGER.execute("select count(mac) from devices", ())[0][0]
+        example2 = DB_MANAGER.execute("select count(distinct d.mac) from devices as d inner join packets as p on d.mac = p.mac inner join geodata as g on p.ext = g.ip where g.c_name = 'Google LLC'", ())[0][0]
+        result["text"] = f"Of the {example1} devices connected to Aretha, {example2} of them send data to Google"
+   
+    elif question == "breach":
+        example = DB_MANAGER.execute("select distinct g.c_name, d.name from geodata as g left join packets as p on g.ip = p.ext left join devices as d on p.mac = d.mac", ())
+        req = urllib.request.Request("https://haveibeenpwned.com/api/v2/breaches", headers={"User-Agent" : "IoT-Refine"})
+        with urllib.request.urlopen(req) as url:
+            data = json.loads(url.read().decode())
+            for company in example:
+                device = company[1]
+                for breach in data:
+                    if company[0].strip(" LLC").strip(", Inc.").strip(" Inc.") == breach["Name"]:
+                        result["text"] = f"Did you know that {company[0]} (that communicates with your {device}) was the victim of a data breach on {breach['BreachDate']} where {breach['PwnCount']} records were stolen? If you didn't know about this, you might want to change your passwords with the company."
+                        break
+        if result["text"] == "":
+            result["text"] = "Thankfully, none of your devices communicate with the breached services we checked."
+
+    else:
+        result = False
 
     return result
    
-    #blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
-    #for option in options:
-        #if option[0] not in blacklist:
-            #return option
-
 @app.before_first_request
 def init():
     global DB_MANAGER

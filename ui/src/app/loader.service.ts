@@ -6,6 +6,7 @@ import { mapValues, keys, values} from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
 import { Observable } from '../../node_modules/rxjs/Observable';
+import { Subject } from '../../node_modules/rxjs';
 
 enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
 
@@ -19,7 +20,6 @@ export interface String2String { [host: string]: string }
 export interface AppSubstitutions { [app: string]: string[] };
 
 let zone = new NgZone({ enableLongStackTrace: false });
-
 
 export interface DeviceImpact {
 	minute: number;
@@ -207,10 +207,8 @@ const host_blacklist = ['127.0.0.1','::1','localhost'];
 export class LoaderService {
 
   _host_blacklist : {[key:string]:boolean};n
-
   apps: { [id: string]: APIAppInfo } = {};
   updateObservable: Observable<DBUpdate>;
-
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
@@ -362,6 +360,7 @@ export class LoaderService {
 	}
 	
 	setContent(name: string): Promise<any> {
+		this.changeContent();
 		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name).toPromise().then(response2 => {
       		return response2.json();
 		});
@@ -392,5 +391,11 @@ export class LoaderService {
   getWorldMesh(): Promise<any> {
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());
   }
+
+	private readyContentSource = new Subject<string>();
+	contentChanged = this.readyContentSource.asObservable();
+	changeContent(): void {
+		this.readyContentSource.next("tick");
+	}
 
 }

@@ -43,6 +43,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatButtonModule} from '@angular/material/button';
 import {MatBadgeModule} from '@angular/material/badge';
 import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
+import { ContentInferenceComponent } from './content-inference/content-inference.component';
+import { ContentBreachComponent } from './content-breach/content-breach.component';
 
 const appRoutes: Routes = [ 
 	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
@@ -78,7 +80,9 @@ const appRoutes: Routes = [
     LayoutEduComponent,
     ContentEncryptionComponent,
     ExampleComponent,
-    ContentTrackingComponent    
+    ContentTrackingComponent,
+    ContentInferenceComponent,
+    ContentBreachComponent    
   ],
   imports: [
     HttpModule,

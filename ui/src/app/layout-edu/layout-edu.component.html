@@ -2,6 +2,8 @@
 	<div [ngSwitch]="content" class="gridleft">
     	<app-content-encryption *ngSwitchCase="'encryption'" [stage]="stage"></app-content-encryption>
     	<app-content-tracking *ngSwitchCase="'tracking'" [stage]="stage"></app-content-tracking>
+    	<app-content-inference *ngSwitchCase="'inference'" [stage]="stage"></app-content-inference>
+    	<app-content-breach *ngSwitchCase="'breach'" [stage]="stage"></app-content-breach>
     	<p *ngSwitchDefault>
         	You're all up to date! Check back soon for more content.
     	</p>
