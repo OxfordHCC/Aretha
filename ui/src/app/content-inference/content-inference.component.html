@@ -2,22 +2,35 @@
 
 <div [ngSwitch]="stage">
 	<p *ngSwitchCase="1">
-	There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.
+		There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.
 	</p>
 
 	<p *ngSwitchCase="2">
-	On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).
+		On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week). European data protection laws prevent companies from inferring sensitve information such as religious beliefs and sexuality without good reason.
 	</p>
 	
 	<p *ngSwitchCase="3">
-	To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%
+		In fact, the business models of many online sites and platforms is dependent on being able to buy and combine this data in order to drive digital advertising. This can be problematic as you probably didn't agree to have advertisers know these things about you, especially when they could be used to discriminate (such as ethinicity). To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%.
 	</p>
-	
+
 	<div *ngSwitchCase="4">
+		For more information, take a look at the following sources:
+
+		<p>How smartphone apps track users and share data | The Financial Times</p>
+		
+		<p><small>A peer-reviewed study of almost 1m Android apps has revealed how data from smartphones are harvested and shared, with nearly 90 per cent of apps set up to transfer information back to Google. Researchers at Oxford university analysed approximately a third of the apps available in Google’s Play Store in 2017 and found that the median app could transfer data to 10 third parties, with one in five apps able to share data with more than 20...</small></p>
+
+		<p><small><em>The Financial Times (FT) is an English-language international daily newspaper owned by Japanese company Nikkei Inc, headquartered in London, with a special emphasis on business and economic news.</em></small></p>
+
+		<img src="../../assets/ft-inference.png" width=150/>
+
+	</div>
+
+	<div *ngSwitchCase="5">
 		<mat-radio-group>
 			<mat-radio-button value="1" (click)="answer(1)">All information about me is freely available on the internet</mat-radio-button>
 			<div class="question-divider"></div>
-			<mat-radio-button value="2" (click)="answer(2)">European data protection laws prevent companies from combining data about me from multiple sources</mat-radio-button>
+			<mat-radio-button value="2" (click)="answer(2)">European data protection laws prevent companies from combining any data about me from multiple sources</mat-radio-button>
 			<div class="question-divider"></div>
 			<mat-radio-button value="3" (click)="answer(3)">Many companies combine data collected about me online and use this to infer things about me</mat-radio-button>
 			<div class="question-divider"></div>

@@ -6,10 +6,34 @@
 	</p>
 
 	<p *ngSwitchCase="2">
-	These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health [3]. In many cases, these models are also used to predict when you’re going through major life events, such as graduation or pregnancy, as these are when you’re most vulnerable to the creation of new shopping habits.
+	These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health. In many cases, these models are also used to predict when you’re going through major life events, such as graduation or pregnancy, as these are when you’re most vulnerable to the creation of new shopping habits.
 	</p>
 	
-	<div *ngSwitchCase="3">
+	<p *ngSwitchCase="3">
+		There have been some attempts to curtail online tracking on the basis that it represents a disproportionate invasion of privacy. One example of this is the "do not track" or DNT standard for web browsers. When users activate the DNT setting in their web browsers, it sends a signal to visited websites that they should refrain from tracking them. Do not track is considered a step in the right direction by privacy advocates, but a lack of legal and regulatory enforcement means that many companies do not honor DNT signals.
+	</p>
+	
+	<div *ngSwitchCase="4">
+		For more information, take a look at the following sources:
+
+		<p>Do Not Track | The Electronic Frontier Foundation</p>
+		
+		<p><small>Do Not Track (DNT) is a way to keep users’ online behavior from being followed across the Internet by behavioral advertisers, analytics companies, and social media sites. It combines both technology (a way to let users signal whether they want to be tracked) as well as a policy framework for how companies should respond to that signal.</small></p>
+
+		<p><small><em>The Electronic Frontier Foundation (EFF) is an international non-profit digital rights group based in San Francisco, California. The foundation was formed in July 1990.</em></small></p>
+
+		<img src="../../assets/eff-track.png" width=150/>
+
+		<p>How Companies Learn Your Secrets | New York Times</p>
+
+		<p><small>Andrew Pole had just started working as a statistician for Target in 2002, when two colleagues from the marketing department stopped by his desk to ask an odd question: "If we wanted to figure out if a customer is pregnant, even if she didn’t want us to know, can you do that?"...</small></p>
+
+		<p><small><em>The New York Times (NYT or NYTimes) is an American newspaper based in New York City with worldwide influence and readership. The paper was founded in 1851, and is owned by the New York Times Company which is publicly traded.</em></small></p>
+		
+		<img src="../../assets/nyt-shop.png" width=150/>
+	</div>
+
+	<div *ngSwitchCase="5">
 		<mat-radio-group>
 			<mat-radio-button value="1" (click)="answer(1)">Internet trackers can use information about me to learn things that I haven't told them</mat-radio-button>
 			<div class="question-divider"></div>

@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 export class ContentTrackingComponent implements OnInit {
 
 	@Input() stage: number;
-	max: number = 2 + 1; //+1 for the attention check at the end
+	max: number = 4 + 1; //+1 for the attention check at the end
 	done: boolean = false;
 	answerText: string;
 	tipText: string;
