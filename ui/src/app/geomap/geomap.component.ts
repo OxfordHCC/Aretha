@@ -1,15 +1,23 @@
-
-import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, ViewEncapsulation, HostListener, NgZone } from '@angular/core';
-import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo, GeoData, DeviceImpact } from '../loader.service';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Input,
+  NgZone,
+  OnChanges,
+  SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
+import {APIAppInfo, CompanyDB, CompanyInfo, DeviceImpact, GeoData, LoaderService} from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import * as topojson from 'topojson';
-import { HostUtilsService } from 'app/host-utils.service';
-import { FocusService } from 'app/focus.service';
-import { HoverService} from "app/hover.service";
-import { Http, HttpModule} from '@angular/http';
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import {HostUtilsService} from 'app/host-utils.service';
+import {FocusService} from 'app/focus.service';
+import {HoverService} from "app/hover.service";
+import {Http, HttpModule} from '@angular/http';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
 	selector: 'app-geomap',
@@ -31,10 +39,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 	@Input() geodata: GeoData[];
   
   	private init: Promise<any>;
-  	lastMax = 0;
-  	normaliseImpacts = false;
-
-  	apps: string[]; // keeps app ordering between renders
+    apps: string[]; // keeps app ordering between renders
 
   	// @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
   	// incoming attribute
@@ -46,9 +51,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 
   	@Input() scale = false;
   	vbox = { width: 700, height: 1024 };
-  	highlightColour = '#FF066A';
-
-  	_companyHovering: CompanyInfo;
+    _companyHovering: CompanyInfo;
   	_hoveringApp: string ;
   	_ignoredApps: string[];
 
@@ -74,7 +77,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     
     	});
 		
-		this._ignoredApps = new Array();
+		this._ignoredApps = [];
 
     	focus.focusChanged$.subscribe((target) => {
       		if (target !== this._ignoredApps) {
@@ -87,7 +90,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
 	ngOnChanges(changes: SimpleChanges): void {
     	var this_ = this;
 		if (this.impactChanges && this._impact_listener === undefined) {
-			this._impact_listener = this.impactChanges.subscribe(target => {        
+			this._impact_listener = this.impactChanges.subscribe(() => {
 				this.zone.run(() => this_.render());
 			});
 			if (this.impacts) {
@@ -104,7 +107,7 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     	return Array.from(nE.getElementsByTagName('svg'))[0];
   	}
 
-	//combines impacts, geodata, and devices into impacts per device per location
+	// combines impacts, geodata, and devices into impacts per device per location
 	private compileImpacts(): any {
 		var result = [];
 		if (this.impacts) {
@@ -139,15 +142,17 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
      		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
         		.attr('virtualWidth', this.vbox.width)
         		.attr('virtualHeight', this.vbox.height)
-        		.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+        		.attr('preserveAspectRatio', 'none'); //  "xMinYMin meet")
       		width_svgel = this.vbox.width;
       		height_svgel = this.vbox.height;
     	}
 
     	svg.selectAll('*').remove();
 
-      	const impacts = this.compileImpacts(), 
-      		minmax = d3.extent(impacts.map( i => i.impact ));            
+      	const impacts = this.compileImpacts();
+
+          // optional - can use this to scale the size of the circles
+          // minmax = d3.extent(impacts.map( i => i.impact ));
 
 		let devices = _.uniq(impacts.map((x) => x.device));
 		devices.sort();    
@@ -175,17 +180,15 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     // add circles to svg
 	var datas = svg.selectAll("circle").data(impacts);
 
-	//filter out impacts that have lat/lon of 0,0 (i.e. we don't know where they are located)
-	datas.filter((d) => {(d.lat == 0 && d.lon == 0) ? 0 : 1});
+	// filter out impacts that have lat/lon of 0,0 (i.e. we don't know where they are located)
+	datas.filter((d) => {(d.lat === 0 && d.lon === 0) ? 0 : 1});
 	  
     datas.enter().append("circle")
       .attr("cx", (d) => {
-        const lat = projection([d.lon, d.lat])[0];
-        return lat;
+        return projection([d.lon, d.lat])[0];
       })
       .attr("cy", (d) => {
-        const lon = projection([d.lon, d.lat])[1];
-        return lon;
+        return projection([d.lon, d.lat])[1];
       })
       .attr('opacity', (d) => {
         let highApp = this.highlightApp || this._hoveringApp;
@@ -194,17 +197,14 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
         }
         return 0.8;
       }).attr("r", (d) => {
-        //return Math.floor(80*d.impact / minmax[1]);
+        // return Math.floor(80*d.impact / minmax[1]);
 		return 8;
 	  }).attr("fill", (d) => z(d.ip))
-      .on('mouseenter', (d) => this.hover.hoverChanged(undefined))
-      .on('mouseleave', (d) => this.hover.hoverChanged(undefined));
+      .on('mouseenter', () => this.hover.hoverChanged(undefined))
+      .on('mouseleave', () => this.hover.hoverChanged(undefined));
+  }
 
-    const leading = 26;
-
-  	}
-	
-	@HostListener('window:resize')
+  @HostListener('window:resize')
   	onResize() {
     	this.render();
   	}

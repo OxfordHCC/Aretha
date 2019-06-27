@@ -32,6 +32,7 @@ import {MatBadgeModule} from '@angular/material/badge';
 import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
 import { ContentInferenceComponent } from './content-inference/content-inference.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
+import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
 
 const appRoutes: Routes = [ 
 	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
     ExampleComponent,
     ContentTrackingComponent,
     ContentInferenceComponent,
-    ContentBreachComponent    
+    ContentBreachComponent,
+    ContentFrequencyComponent    
   ],
   imports: [
     HttpModule,

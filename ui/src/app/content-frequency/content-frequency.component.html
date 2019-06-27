@@ -1,0 +1,29 @@
+<h3>COnnection Frequency</h3>
+
+<div [ngSwitch]="stage">
+	<p *ngSwitchCase="1">
+	It’s easy to assume that smart devices only connect to the internet when we use them, but this is rarely the case. Devices like your phone remain constantly connected in order to notify you of new messages, and many other devices communicate monitoring or tracking information back to their manufacturers at regular intervals.
+	</p>
+
+	<div *ngSwitchCase="2">
+		<mat-radio-group>
+			<mat-radio-button value="1" (click)="answer(1)">Smart devices connect to the internet to transfer data all the time, regardless of whether I'm using them or not</mat-radio-button>
+			<div class="question-divider"></div>
+			<mat-radio-button value="2" (click)="answer(2)">By law smart devices need to ask my permission each time they want to send data over the internet</mat-radio-button>
+			<div class="question-divider"></div>
+			<mat-radio-button value="3" (click)="answer(3)">Smart devices only connect to the internet when I'm using them</mat-radio-button>
+			<div class="question-divider"></div>
+		</mat-radio-group>
+		<p *ngIf="tipText">{{this.tipText}}</p>
+		<div class="question-divider"></div>
+	</div>
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button *ngIf="stage < max || done; else greybutton" class="buttonright" (click)="next()">Next</button>
+	<ng-template #greybutton>
+		<button mat-raised-button disabled class="buttonright">Next</button>
+	</ng-template>
+</div>

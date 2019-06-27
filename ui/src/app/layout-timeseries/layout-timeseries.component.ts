@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
 import { FocusService } from "app/focus.service";
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Observer } from '../../../node_modules/rxjs/Observer';
+import { Observable } from 'rxjs';
+import { Observer } from 'rxjs';
 import * as _ from 'lodash';
 import { ActivatedRoute} from "@angular/router";
 
@@ -62,7 +62,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 				if (this_.impacts) {
 					for (let key in i) {
 						for (let key2 in i[key]) {
-							if (this_.impacts.filter ((x) => x.company == key).length === 0) {
+							if (this_.impacts.filter ((x) => x.company === key).length === 0) {
 								this_.impacts.push({
 									"company": key,
 									"device": key2,
@@ -70,7 +70,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 									"minute": Math.floor((new Date().getTime()/1000) + 3600)
 								});
 							} else {
-								this_.impacts.filter ((x) => x.company == key)[0].impact += i[key][key2];
+								this_.impacts.filter ((x) => x.company === key)[0].impact += i[key][key2];
 							}
 						}
 					}
@@ -82,7 +82,7 @@ export class LayoutTimeseriesComponent implements OnInit {
     	});
 
     	this.loader.asyncGeoUpdateChanges().subscribe({
-      		next(a: any[]) {
+      		next() {
         		console.info(" ~ got GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
         		if (this_.impacts) { throttledReload(); }        
       		}

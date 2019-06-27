@@ -291,8 +291,19 @@ def GetExample(question):
                     if company[0].strip(" LLC").strip(", Inc.").strip(" Inc.") == breach["Name"]:
                         result["text"] = f"Did you know that {company[0]} (that communicates with your {device}) was the victim of a data breach on {breach['BreachDate']} where {breach['PwnCount']} records were stolen? If you didn't know about this, you might want to change your passwords with the company."
                         break
-        if result["text"] == "":
-            result["text"] = "Thankfully, none of your devices communicate with the breached services we checked."
+        if result["text"] == []:
+            result["text"] = "Thankfully, none of your devices communicate with companies on our data breach list."
+
+    elif question == "frequency":
+        example1 = DB_MANAGER.execute("select d.mac, d.name, count(p.id) from packets as p inner join devices as d on p.mac = d.mac group by d.mac order by count(id) desc limit 1", ())
+        if len(example1) == 0:
+            return False
+        example2 = DB_MANAGER.execute("select time from packets where mac = %s order by time asc limit 1", (example1[0][0],))
+        example3 = DB_MANAGER.execute("select time from packets where mac = %s order by time desc limit 1", (example1[0][0],))
+        _, device, count = example1[0]
+        start = datetime.fromisoformat(str(example2[0][0]))
+        end = datetime.fromisoformat(str(example3[0][0]))
+        result["text"] = f"Your {device} has sent {'{:,}'.format(count)} 'packets' of data in the last {(end - start).days} days. On average, that's once every {((end - start) / count).seconds}.{((end - start) / count).microseconds} seconds."
 
     else:
         result = False

@@ -7,8 +7,8 @@ import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService} from "app/hover.service";
 import { Http, HttpModule} from '@angular/http';
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DeviceImpact, GeoData } from '../loader.service';
 
 @Component({
@@ -30,7 +30,6 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   	private init: Promise<any>;
 
   	lastMax = 0;
-  	normaliseImpacts = false;
 
   	// incoming attribute
   	@Input() showModes = true;
@@ -41,7 +40,6 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
   	@Input() scale = false;
   	vbox = { width: 700, height: 1024 };
-  	highlightColour = '#FF066A';
 
   	_companyHovering: CompanyInfo;
   	_hoveringApp: string;
@@ -67,7 +65,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
       		}
     	});
 		
-		this._ignoredApps = new Array();
+		this._ignoredApps = [];
 
     	focus.focusChanged$.subscribe((target) => {
       		if (target !== this._ignoredApps) {
@@ -86,7 +84,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
   	ngOnChanges(changes: SimpleChanges): void {
     	var this_ = this;
 		if (this.impactChanges && this._impact_listener === undefined) {
-			this._impact_listener = this.impactChanges.subscribe(target => {        
+			this._impact_listener = this.impactChanges.subscribe(() => {
 				this.zone.run(() => this_.render());
 			});
 			if (this.impacts) {
@@ -98,7 +96,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
   	ngAfterViewInit(): void { this.init.then(() => this.render()); }
 
-	//combines impacts, geodata, and devices into impacts per device per location
+	// combines impacts, geodata, and devices into impacts per device per location
 	private compileImpacts(): any {
 		var result = [];
 		if (this.impacts) {
@@ -134,7 +132,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
     			.attr('virtualWidth', this.vbox.width)
         		.attr('virtualHeight', this.vbox.height)
-        		.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+        		.attr('preserveAspectRatio', 'none'); //  "xMinYMin meet")
       		width_svgel = this.vbox.width;
       		height_svgel = this.vbox.height;
     	}
@@ -142,14 +140,14 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     	svg.selectAll('*').remove();
 
     	const impacts = this.compileImpacts();
-		const devices = _.uniq(this.impacts.map((x) => x.device));	
-      	const countries = _.uniq(this.geodata.map((x) => x.country_code)),
+		  const devices = _.uniq(this.impacts.map((imp) => imp.device));
+		  const countries = _.uniq(this.geodata.map((imp) => imp.country_code)),
 			
 		get_impact = (country, device) => {
         	const t = impacts.filter((imp) => imp.country === country && imp.device === device);
         	const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
 	        return t !== undefined ? t.reduce(reducer, 0) : 0;
-      	}
+      	};
 	
 		let by_country = countries.map((country) => ({
         	country: country,
@@ -166,11 +164,11 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     	if (width < 50 || height < 50) { return; }
 
 		let g = svg.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 		
 		let x = d3.scaleBand()
         	.rangeRound([0, width]).paddingInner(0.05).align(0.1)
-        	.domain(countries)
+        	.domain(countries);
     
 		let d3maxx = d3.max(by_country, function (d) { return d.total; }) || 0,
     		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
@@ -182,7 +180,7 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 		
 		let y = d3.scaleSqrt()
       		.rangeRound([height, 0])
-      		.domain([0, ymaxx]).nice()
+      		.domain([0, ymaxx]).nice();
 			
 		let z = d3.scaleOrdinal(d3.schemeCategory10).domain(devices);
 
