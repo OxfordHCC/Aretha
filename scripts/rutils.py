@@ -24,6 +24,10 @@ def is_multicast_v4(ipv4):
 
 def get_local_ip():
     import socket
-    x =  [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] 
+    x = None
+    try:
+        x =  [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] 
+    except : 
+        pass
     y = [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]
     return x or y
