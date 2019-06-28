@@ -72,9 +72,9 @@ create table content(
 --load questions
 insert into content(name, live) values
 	('encryption', '2019-06-01T15:14:00'),
-	('tracking', '2019-06-01T15:14:00');
-	('breach', '2019-06-01T15:14:00');
-	('inference', '2019-06-01T15:14:00');
+	('tracking', '2019-06-01T15:14:00'),
+	('breach', '2019-06-01T15:14:00'),
+	('inference', '2019-06-01T15:14:00'),
 	('frequency', '2019-06-01T15:14:00');
 
 drop table if exists experiment;
