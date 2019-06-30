@@ -17,10 +17,10 @@ import * as _ from 'lodash';
 
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
-	@Input() impacts: DeviceImpact[];
+	@Input() impacts;
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
-  	@Input('devices') devices :Device[];
+  	@Input() devices :Device[];
   	
 	_hoveringApp: string;
   	_ignoredApps: string[];
@@ -78,16 +78,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		console.info('time:: ngOnChanges ', changes);
 		var this_ = this;
     	if (this.impactChanges && this._impact_listener === undefined) { 
-			console.info("time:: subscribing");
       		this._impact_listener = this.impactChanges.subscribe(target => {
-				console.info('time:: impactChanges, rendering ');
         		this.zone.run(() => this_.render());
       		});	
 			if (this.impacts) {
         		this_.render();
       		}
-    	} else {
-			console.info('time:: no impactchanges');
 		}
     	if (this.devices) { this.devices = Object.assign({}, this.devices);}	
 		this.render();
@@ -160,9 +156,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
 		// a single simple arry
-		let minutes = Object.keys(impacts);
+		let minutes = Object.keys(impacts).map(x => +x);
 		minutes.sort();
-		const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m] })),
+		const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] })),
 			// this hellish line simply does a union over all impact keys : which is the total set of 
 			// destination IP addresses.  We do this instead of taking the first one to be ultra careful
 			// that the back end doesn't do anything sneaky like omit some hosts for certain time indexes

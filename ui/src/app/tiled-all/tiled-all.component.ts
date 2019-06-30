@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
+import { LoaderService, DeviceImpact, GeoData, Device, ImpactSet } from "app/loader.service";
 import { FocusService } from "app/focus.service";
 import { ActivatedRoute} from "@angular/router";
 import * as _ from 'lodash';
@@ -58,22 +58,24 @@ export class TiledAllComponent implements OnInit {
     		throttledReload = _.throttle(reload, 10000);
 
     	this.loader.asyncDeviceImpactChanges().subscribe({
-      		next(i: DeviceImpact[]) {  
+      		next(incoming: ImpactSet) {  
 				if (this_.impacts) {
-					for (let key in i) {
-						for (let key2 in i[key]) {
-							if (this_.impacts.filter ((x) => x.company === key).length === 0) {
-								this_.impacts.push({
-									"company": key,
-									"device": key2,
-									"impact": i[key][key2],
-									"minute": Math.floor((new Date().getTime()/1000) + 3600)
-								});
-							} else {
-								this_.impacts.filter ((x) => x.company === key)[0].impact += i[key][key2];
+					try { 
+						for (const key of Object.keys(incoming)) {
+							for (const key2 in Object.keys(incoming[key])) {
+								if (this_.impacts.filter ((x) => x.company === key).length === 0) {
+									this_.impacts.push({
+										"company": key,
+										"device": key2,
+										"impact": incoming[key][key2],
+										"minute": Math.floor((new Date().getTime()/1000) + 3600)
+									});
+								} else {
+									this_.impacts.filter ((x) => x.company === key)[0].impact += incoming[key][key2];
+								}
 							}
 						}
-					}
+					} catch(e) { console.error(e); }
           			this_.triggerImpactsChange();
         		}
       		},

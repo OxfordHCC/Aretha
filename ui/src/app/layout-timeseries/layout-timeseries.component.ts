@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoaderService, DeviceImpact, GeoData, Device } from "app/loader.service";
+import { LoaderService, DeviceImpact, GeoData, Device, BucketedImpacts, ImpactSet } from "app/loader.service";
 import { FocusService } from "app/focus.service";
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs';
@@ -14,12 +14,13 @@ import { ActivatedRoute} from "@angular/router";
 
 export class LayoutTimeseriesComponent implements OnInit {
   mode: string;
-	impacts: DeviceImpact[];
+	impacts: BucketedImpacts; 
 	geodata: GeoData[];
 	devices : Device[];
 	impactChanges: Observable<any>;
 	_last_load_time: Date;
 	private impactObservers: Observer<any>[] = [];
+	deviceimpactchangesubscription: any;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.route.params.subscribe(params => { 
@@ -44,6 +45,8 @@ export class LayoutTimeseriesComponent implements OnInit {
     this.impactObservers.map(obs => obs.next({}));
   }  
 
+  
+
 	getIoTData(start: number, end: number, delta: number): void {	
 		console.info('getIoTData ((', start, '::', new Date(start*1000), ' - ', end, '::', new Date(end*1000), ' delta ', delta, '))');
     	let this_ = this,
@@ -60,34 +63,58 @@ export class LayoutTimeseriesComponent implements OnInit {
     		}, 
     		throttledReload = _.throttle(reload, 10000);
 
-		console.info("SUBSCRIBING TO ASYNCDEVICEIMPACTHANGES");
-		(<any>window)._l = this.loader;
-		(<any>window)._g = this;
-    	this.loader.asyncDeviceImpactChanges().subscribe({
-      		next(i: DeviceImpact[]) {  
-				console.info('asyncDeviceImpacts :: incoming ', i);
-				if (this_.impacts) {
-					for (const key of Object.keys(i)) {
-						for (const key2 of Object.keys(i[key])) {
-							const rows = this_.impacts.filter((x) => x.company === key);
-							if (rows.length === 0) {
-								this_.impacts.push({
-									"company": key,
-									"device": key2,
-									"impact": i[key][key2],
-									"minute": Math.floor((new Date().getTime()/1000) + 3600)
-								});
-							} else {
-								rows[0].impact += i[key][key2];
+		// console.info("SUBSCRIBING TO ASYNCDEVICEIMPACTHANGES");
+		// (<any>window)._l = this.loader;
+		// (<any>window)._g = this;
+		
+		const resubscribe = () => {
+			this.deviceimpactchangesubscription = this.loader.asyncDeviceImpactChanges().subscribe({
+				next(incoming: ImpactSet) {  
+					console.info('asyncDeviceImpacts :: incoming ', incoming);
+					try { 
+						let cur_min = Math.floor((new Date().getTime())/(60000));
+						if (this_.impacts) {
+							for (const dst of Object.keys(incoming)) {
+								for (const mac of Object.keys(incoming[dst])) {
+
+									const bucket = this_.impacts[cur_min] || {},
+										val = incoming[dst][mac];
+
+									bucket[mac] = bucket[mac] || {};
+									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;
+									this_.impacts[cur_min] = bucket;
+
+									// original broken code >> 
+									// const rows = this_.impacts.filter((x) => x.company === key);
+									// if (rows.length === 0) {
+									// 	this_.impacts.push({
+									// 		"company": key,
+									// 		"device": key2,
+									// 		"impact": incoming[key][key2],
+									// 		"minute": Math.floor((new Date().getTime()/1000) + 3600)
+									// 	});
+									// } else {
+									// 	rows[0].impact += incoming[key][key2];
+									// }
+								}
 							}
+							console.info("updated impacts[",cur_min,"] -> ", this_.impacts);
+							this_.triggerImpactsChange();
 						}
+					} catch(error) { 
+						console.error("Error while woring on deviceimpactchange", error);
 					}
-          			this_.triggerImpactsChange();
-        		}
-      		},
-      		error(err) { console.error("Listen error! ", err, err.message); },
-      		complete() { console.info("Listen complete"); }
-    	});
+				},
+				error(err) { 
+					console.error("Listen error! ", err, err.message); 
+					// then attempt to re-subscribe because we'll now be closed! 
+					setTimeout(resubscribe, 1000);
+				},
+				complete() { console.info("Listen complete"); }
+			});
+		};
+
+		resubscribe();
 
     	this.loader.asyncGeoUpdateChanges().subscribe({
       		next() {

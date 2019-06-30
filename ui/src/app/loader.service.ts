@@ -27,6 +27,8 @@ export interface DeviceImpact {
 	company: string;
   	impact: number;
 };
+export type ImpactSet = ({[mac:string] : {[dst:string]:number}});
+export type BucketedImpacts = ({ [min_t:string]: ImpactSet});
 
 export interface Device {
 	[mac : string]: string;
@@ -268,12 +270,6 @@ export class LoaderService {
 
 	connectToAsyncDBUpdates() : void {
       let observers = [], eventSource; 
-
-      if (this.updateObservable !== undefined) {
-        console.info("ALREADY. return.");
-        return;
-      }
-      
     	this.updateObservable = Observable.create(observer => {
       		observers.push(observer);
       		if (observers.length === 1 && eventSource === undefined) {       
@@ -306,13 +302,12 @@ export class LoaderService {
   		});        
 	}
 
-	asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
+	asyncDeviceImpactChanges(): Observable<ImpactSet> {
     	return Observable.create(observer => {
       		this.updateObservable.subscribe({
         		next(x) {           
                 if (x.type === 'impact') {
-                  console.info('async update dispatch ', x, observer);
-                  observer.next(<DeviceImpact[]>x.data);
+                  observer.next(<ImpactSet>x.data);
                   return true;
                 } 
                 return false;
