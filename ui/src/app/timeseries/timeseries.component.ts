@@ -59,7 +59,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     	this.loader.asyncDeviceChanges().subscribe(devices => {
         	console.info(` ~ device name update ${devices.length} devices`);                
         	devices.map( d => { 
-          		console.info(`adding mac::name binding ${d.mac} -> ${d.nickname}`);
+          		console.info(`time:: adding mac::name binding ${d.mac} -> ${d.nickname}`);
           		this.devices[d.mac] = d.name; 
         	});
         	this.render();
@@ -73,17 +73,22 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     	return Array.from(nE.getElementsByTagName('svg'))[0];
   	}
   	
-	// this gets called when this.usage_in changes
+	// this gets called when impacts changes
   	ngOnChanges(changes: SimpleChanges): void {
+		console.info('time:: ngOnChanges ', changes);
 		var this_ = this;
     	if (this.impactChanges && this._impact_listener === undefined) { 
+			console.info("time:: subscribing");
       		this._impact_listener = this.impactChanges.subscribe(target => {
+				console.info('time:: impactChanges, rendering ');
         		this.zone.run(() => this_.render());
       		});	
 			if (this.impacts) {
         		this_.render();
       		}
-    	}
+    	} else {
+			console.info('time:: no impactchanges');
+		}
     	if (this.devices) { this.devices = Object.assign({}, this.devices);}	
 		this.render();
   	}
@@ -115,7 +120,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
   	}
 
 	render() {
-
+		console.info('timeseries.render()');
 		let svgel = this.svgel || this.getSVGElement();	
     	if (!svgel || this.impacts === undefined ) { 
       		console.info('timeseries: impacts undefined, chilling');

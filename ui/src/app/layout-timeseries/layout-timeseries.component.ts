@@ -45,9 +45,12 @@ export class LayoutTimeseriesComponent implements OnInit {
   }  
 
 	getIoTData(start: number, end: number, delta: number): void {	
+		console.info('getIoTData ((', start, '::', new Date(start*1000), ' - ', end, '::', new Date(end*1000), ' delta ', delta, '))');
     	let this_ = this,
       		reload = () => {
+				console.info('time:: reload() ');
 				this_.loader.getIoTData(start, end, delta).then( bundle => {
+					console.info('time:: assigning impacts ', bundle.impacts);
 					this_.impacts = bundle.impacts;
         			this_.geodata = bundle.geodata;
         			this_.devices = bundle.devices;
@@ -57,12 +60,17 @@ export class LayoutTimeseriesComponent implements OnInit {
     		}, 
     		throttledReload = _.throttle(reload, 10000);
 
+		console.info("SUBSCRIBING TO ASYNCDEVICEIMPACTHANGES");
+		(<any>window)._l = this.loader;
+		(<any>window)._g = this;
     	this.loader.asyncDeviceImpactChanges().subscribe({
       		next(i: DeviceImpact[]) {  
+				console.info('asyncDeviceImpacts :: incoming ', i);
 				if (this_.impacts) {
-					for (let key in i) {
-						for (let key2 in i[key]) {
-							if (this_.impacts.filter ((x) => x.company === key).length === 0) {
+					for (const key of Object.keys(i)) {
+						for (const key2 of Object.keys(i[key])) {
+							const rows = this_.impacts.filter((x) => x.company === key);
+							if (rows.length === 0) {
 								this_.impacts.push({
 									"company": key,
 									"device": key2,
@@ -70,15 +78,15 @@ export class LayoutTimeseriesComponent implements OnInit {
 									"minute": Math.floor((new Date().getTime()/1000) + 3600)
 								});
 							} else {
-								this_.impacts.filter ((x) => x.company === key)[0].impact += i[key][key2];
+								rows[0].impact += i[key][key2];
 							}
 						}
 					}
           			this_.triggerImpactsChange();
         		}
       		},
-      		error(err) { console.log("Listen error! ", err, err.message); },
-      		complete() { console.log("Listen complete"); }
+      		error(err) { console.error("Listen error! ", err, err.message); },
+      		complete() { console.info("Listen complete"); }
     	});
 
     	this.loader.asyncGeoUpdateChanges().subscribe({
@@ -96,7 +104,8 @@ export class LayoutTimeseriesComponent implements OnInit {
         		reload();
       		}
     	}, 10*1000); 
-    	reload();
+		
+		reload();
   	}  
 
 	ngOnInit() {

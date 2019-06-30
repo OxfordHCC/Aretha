@@ -267,41 +267,58 @@ export class LoaderService {
   }
 
 	connectToAsyncDBUpdates() : void {
-    	let observers = [], eventSource; 
+      let observers = [], eventSource; 
+
+      if (this.updateObservable !== undefined) {
+        console.info("ALREADY. return.");
+        return;
+      }
+      
     	this.updateObservable = Observable.create(observer => {
       		observers.push(observer);
       		if (observers.length === 1 && eventSource === undefined) {       
-        		eventSource = new EventSource(IOTR_ENDPOINT + '/stream');
-        		
-				eventSource.onopen = thing => {
-          			console.info('EventSource Open', thing);
-        		};
-        		eventSource.onmessage = function (score) {
-          			let incoming = <DBUpdate>JSON.parse(score.data);
-          			zone.run(() => observers.map(obs => obs.next(incoming)))
-        		};
-        		eventSource.onerror = error => {
-          			console.error("eventSource onerror", error);
-          			zone.run(() => observers.map(obs => obs.error(error)));
-        		};              
-      		}
-      		return () => { if (eventSource) { eventSource.close(); } }
+        		eventSource = new EventSource(IOTR_ENDPOINT + '/stream');                
+            eventSource.onopen = thing => {
+                console.info('EventSource Open', thing);
+            };
+            eventSource.onmessage = function (score) {
+                let incoming = <DBUpdate>JSON.parse(score.data);
+                zone.run(() => observers.map(obs => { 
+                  try { obs.next(incoming); } catch(e) { console.error(e); }
+                }));
+            };
+            eventSource.onerror = error => {
+                console.error("eventSource onerror", error);
+                zone.run(() => observers.map(obs => obs.error(error)));
+            };              
+          }
+          return () => { 
+            // unsubscribe this one, but do not close until all are dead
+            if (observers.indexOf(observer) >= 0) { 
+              observers.splice(observers.indexOf(observer), 1);
+            }
+            if (eventSource && observers.length === 0) { 
+              console.info('closing event source');
+              eventSource.close(); 
+              eventSource = undefined;
+            } 
+          };
   		});        
 	}
-
 
 	asyncDeviceImpactChanges(): Observable<DeviceImpact[]> {
     	return Observable.create(observer => {
       		this.updateObservable.subscribe({
         		next(x) {           
-					if (x.type === 'impact') {
-            			observer.next(<DeviceImpact[]>x.data);
-            			return true;
-          			} 
-          			return false;
-        		},
-        		error(e) { observer.error(e); }
-      		});
+                if (x.type === 'impact') {
+                  console.info('async update dispatch ', x, observer);
+                  observer.next(<DeviceImpact[]>x.data);
+                  return true;
+                } 
+                return false;
+              },
+              error(e) { observer.error(e); }
+          });
     	});
   	}
   

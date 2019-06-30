@@ -29,8 +29,12 @@ def impacts(start, end, delta):
         end = round(int(end)/60)
         delta = abs(round(int(delta)))
 
+        print("start / end / delta ", start, end, delta);
+
         #refresh view and get per minute impacts from <start> to <end>
         raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
+
+        print("raw impacts", raw_impacts);
 
         #process impacts per bucket
         impacts = dict()
@@ -43,9 +47,14 @@ def impacts(start, end, delta):
             mins = int(impact[2])
             total = int(impact[3])
 
+            print(" mins, pointer, delta ", mins, pointer, delta);
+            #      p+d        mins|
+            # mins|      p+d
             #fast forward to correct bucket
             while  mins > pointer + delta:
                 pointer += delta
+            
+            print(" done fast forarding  ", mins, pointer, delta);
             
             #load current state of that bucket
             if str(pointer) not in impacts:
@@ -61,10 +70,14 @@ def impacts(start, end, delta):
 
             #save bucket state
             impacts[str(pointer)] = bucket_impacts
+        
+        print("done for getting geodata");
 
         #add geo and device data
         geos = get_geodata()
+        print("done geodata, getting devinfo");
         devices = get_device_info()
+        print("done devinfo, making response");
 
         response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'
