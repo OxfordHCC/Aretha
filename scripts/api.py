@@ -68,10 +68,14 @@ def impacts(start, end, delta):
 
             # save bucket state
             impacts[str(pointer)] = bucket_impacts
+        
+        print("done for getting geodata");
 
         # add geo and device data
         geos = get_geodata()
+        print("done geodata, getting devinfo");
         devices = get_device_info()
+        print("done devinfo, making response");
 
         response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'

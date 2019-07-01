@@ -17,10 +17,10 @@ import * as _ from 'lodash';
 
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
-	@Input() impacts: DeviceImpact[];
+	@Input() impacts;
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
-  	@Input('devices') devices :Device[];
+  	@Input() devices :Device[];
   	
 	_hoveringApp: string;
   	_ignoredApps: string[];
@@ -59,7 +59,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     	this.loader.asyncDeviceChanges().subscribe(devices => {
         	console.info(` ~ device name update ${devices.length} devices`);                
         	devices.map( d => { 
-          		console.info(`adding mac::name binding ${d.mac} -> ${d.nickname}`);
+          		console.info(`time:: adding mac::name binding ${d.mac} -> ${d.nickname}`);
           		this.devices[d.mac] = d.name; 
         	});
         	this.render();
@@ -73,8 +73,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     	return Array.from(nE.getElementsByTagName('svg'))[0];
   	}
   	
-	// this gets called when this.usage_in changes
+	// this gets called when impacts changes
   	ngOnChanges(changes: SimpleChanges): void {
+		console.info('time:: ngOnChanges ', changes);
 		var this_ = this;
     	if (this.impactChanges && this._impact_listener === undefined) { 
       		this._impact_listener = this.impactChanges.subscribe(target => {
@@ -83,7 +84,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			if (this.impacts) {
         		this_.render();
       		}
-    	}
+		}
     	if (this.devices) { this.devices = Object.assign({}, this.devices);}	
 		this.render();
   	}
@@ -115,7 +116,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
   	}
 
 	render() {
-
+		console.info('timeseries.render()');
 		let svgel = this.svgel || this.getSVGElement();	
     	if (!svgel || this.impacts === undefined ) { 
       		console.info('timeseries: impacts undefined, chilling');
@@ -155,9 +156,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
 		// a single simple arry
-		let minutes = Object.keys(impacts);
+		let minutes = Object.keys(impacts).map(x => +x);
 		minutes.sort();
-		const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m] })),
+		const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] })),
 			// this hellish line simply does a union over all impact keys : which is the total set of 
 			// destination IP addresses.  We do this instead of taking the first one to be ultra careful
 			// that the back end doesn't do anything sneaky like omit some hosts for certain time indexes
@@ -165,9 +166,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// now we turn this into a stack.			
 			series = d3.stack()
 				.keys(stack_keys)
-				.offset(d3.stackOffsetWiggle)
+				.offset(d3.stackOffsetSilhouette)
+				// .offset(d3.stackOffsetWiggle)
 				.order(d3.stackOrderInsideOut)
-				.value((d,key) => _.values(d.impacts[key]).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
+				.value((d,key) => _.values(d.impacts[key]||{}).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
 
 		// DEBUGGING HOOKS >> 
 		// console.info('impacts arr', impacts_arr, 'stack keys', stack_keys, 'series', series);
@@ -189,17 +191,18 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// single area which operates directly on the stack structure inner values
 		const area = d3.area()
 				.x((d) => xscale(d.data.date)) 
-				.y0(d => yscale(d[0]))
-    			.y1(d => yscale(d[1]));
+				.y0(d => yscale(d[0])) // + 100*(Math.random()-0.5))
+    			.y1(d => yscale(d[1])) // + 100*(Math.random()-0.5));
 
 		svg.append("g")
 			.selectAll("path")
+			.attr("class", "stream")
 			.data(series)
 			.join("path") // join is only defined in d3@5 and newer
 			  .attr("fill", ({key}) => stackscale(key))
-			  .attr("d", area)
-			.append("title")
-			  .text(({key}) => key);		
+			  .attr("d", area);
+			// .append("title")
+			//   .text(({key}) => key);		
 
 		svg.append('g')
     		.attr('class', 'axis y')
@@ -218,8 +221,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     		.attr('y', 1)
     		.attr('dx', '-.8em')
     		.attr('dy', '.15em')
-    		.attr('transform', 'rotate(-90)')
-    		.call(this.wrap, margin.bottom - 10);
+    		.attr('transform', 'rotate(-90)');
+    		// .call(this.wrap, margin.bottom - 10);
 
 	}
 	
