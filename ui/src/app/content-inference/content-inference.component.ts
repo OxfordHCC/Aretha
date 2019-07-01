@@ -11,10 +11,9 @@ import {Router} from '@angular/router';
 export class ContentInferenceComponent implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4 + 1; // +1 for the attention check at the end
-	done: boolean = false;
-	answerText: string;
-	tipText: string;
+	max: number = 4 + 2; // +2 for the intial and final text fields
+	preResponse: string;
+	postResponse: string;
 
 	constructor(
 		private loader: LoaderService,
@@ -29,21 +28,8 @@ export class ContentInferenceComponent implements OnInit {
 	next() {
 		if (this.stage < this.max) { this.stage++; }
 		else {
-			this.loader.setContent('inference')
+			this.loader.setContent('tracking', this.preResponse, this.postResponse)
 				.then((x) => this.router.navigate(['/timeseries']));
 		}
 	}
-
-	answer(question:number) {
-		if (question === 3) {
-			this.tipText = "Correct! The business models of many major companies depend on being able to collate data about users from multiple sources.";
-			this.done = true;
-		}
-		else { 
-			this.done = false;
-			if (question === 2) { this.tipText = "Not quite. European data protection laws only prevent companies from inferring certain types of sensitve information without your consent."; } 
-			else { this.tipText = "Not quite. Check the content on the previous screens again."; }
-		}
-	}
-
 }

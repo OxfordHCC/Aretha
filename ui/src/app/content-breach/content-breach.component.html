@@ -1,19 +1,28 @@
 <h3>Data Breaches</h3>
 
 <div [ngSwitch]="stage">
-	<p *ngSwitchCase="1">
+	
+	<div *ngSwitchCase="1">
+		<p>Have you ever had a strange or unpleasant experience with tracking and advertising online?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="preResponse"></textarea>
+		</mat-form-field>
+	</div>
+	
+	<p *ngSwitchCase="2">
 	Data breaches, where customer information is stolen from companies, frequently make the news. It might seem like negligence on their part, but perfect security is impossible to achieve in reality - there is a small chance that any company could be the victim of a data breach, no matter how good their security practices are. This data that is stolen most often includes email addresses and credit card numbers, but might also include other information you gave the company, or even information about you that has been collected by your devices.
 	</p>
 
-	<p *ngSwitchCase="2">
+	<p *ngSwitchCase="3">
 	Hackers will often collect lists of email addresses, usernames, and passwords from data breaches and try these credentials on other sites. If you use the same password in several different places, then this makes it easy for them to take over multiple accounts as soon as one is compromised. If your email address is compromised, for example, then you might lose your way of recovering other accounts that you own (i.e. where the recovery process involves sending you an email).
 	</p>
 	
-	<p *ngSwitchCase="3">
+	<p *ngSwitchCase="4">
 Services like "haveibeenpwned" collate information on data breaches and let you check if any of your account details have been disclosed as part of a data breach. This is what we use to check the services accessed by your devices (see sidebar). If you sign up with your email address, then haveibeenpwned will let you know whenever it appears in a breach in the future, giving you valuable time to change your passwords.
 	</p>
 	
-	<div *ngSwitchCase="4">
+	<div *ngSwitchCase="5">
 		For more information, take a look at the following sources:
 
 		<p>HIBP Frequently Asked Questions | Haveibeenpwned</p>
@@ -33,25 +42,17 @@ Services like "haveibeenpwned" collate information on data breaches and let you 
 		<img src="../../assets/ncsc-tips.png" width=150/>
 	</div>
 
-	<div *ngSwitchCase="5">
-		<mat-radio-group>
-			<mat-radio-button value="1" (click)="answer(1)">Only companies with bad security are subject to data breaches</mat-radio-button>
-			<div class="question-divider"></div>
-			<mat-radio-button value="2" (click)="answer(2)">Data breaches can happen to any company, so the best defence is to use different passwords when signing up for accounts</mat-radio-button>
-			<div class="question-divider"></div>
-			<mat-radio-button value="3" (click)="answer(3)">Data breaches only happen to people who choose weak passwords</mat-radio-button>
-			<div class="question-divider"></div>
-		</mat-radio-group>
-		<p *ngIf="tipText">{{this.tipText}}</p>
-		<div class="question-divider"></div>
+	<div *ngSwitchCase="6">
+		<p>Do you think about online tracking and advertising any differently now?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="postResponse"></textarea>
+		</mat-form-field>
 	</div>
 </div>
 
 <div class="progress">
 	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
 	{{stage}} / {{max}}
-	<button mat-raised-button *ngIf="stage < max || done; else greybutton" class="buttonright" (click)="next()">Next</button>
-	<ng-template #greybutton>
-		<button mat-raised-button disabled class="buttonright">Next</button>
-	</ng-template>
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
 </div>

@@ -230,11 +230,12 @@ def content():
     return response
 
 
-@app.route('/api/content/set/<name>')
-def contentSet(name):
-    DB_MANAGER.execute("update content set complete = true where name = %s", (name,))
+@app.route('/api/content/set/<name>/<pre>/<post>')
+def contentSet(name, pre, post):
+    DB_MANAGER.execute("update content set complete = true, pre = %s, post = %s where name = %s", (pre[:200], post[:200], name))
     response = make_response(jsonify({"message": "Request processed", "success": "unknown"}))
     response.headers['Access-Control-Allow-Origin'] = '*'
+    print(pre, post)
     return response
 
 

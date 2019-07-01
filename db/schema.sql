@@ -66,7 +66,9 @@ drop table if exists content;
 create table content(
 	name varchar(20) primary key,
 	live timestamp not null,
-	complete boolean default false
+	complete boolean default false,
+	pre varchar(200),
+	post varchar(200)
 );
 
 --load questions

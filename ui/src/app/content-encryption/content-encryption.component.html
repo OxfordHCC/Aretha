@@ -1,15 +1,23 @@
 <h3>Encryption</h3>
 
 <div [ngSwitch]="stage">
-	<p *ngSwitchCase="1">
+	<div *ngSwitchCase="1">
+		<p>Have you ever had a strange or unpleasant experience with encryption online?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="preResponse"></textarea>
+		</mat-form-field>
+	</div>
+	
+	<p *ngSwitchCase="2">
 	For modern devices, using encryption prevents others from reading it by encoding it before sending it across the internet (this is what the padlock in your browser indicates when visiting https websites). Despite this, it is still possible to know where that data is going - this is actually how the study software can determine where your devices are sending data, even though it’s encrypted.
 	</p>
 
-	<p *ngSwitchCase="2">
+	<p *ngSwitchCase="3">
 	Many cheap, low quality smart devices don't use these techniques though, and send data over the internet in a way that anyone can read it. The lack of security often extends to other areas, with thousands of devices often having the same default passwords making them easy pickings for hackers.
 	</p>
 
-	<div *ngSwitchCase="3">
+	<div *ngSwitchCase="4">
 		For more information, take a look at the following sources:
 
 		<p>Easy-to-hack smart devices targeted by government | Which?</p>
@@ -21,25 +29,17 @@
 		<img src="../../assets/which-hack.png" width=150/>
 	</div>
 	
-	<div *ngSwitchCase="4">
-		<mat-radio-group>
-			<mat-radio-button value="1" (click)="answer(1)">Encryption stops other people knowing which websites I visit online</mat-radio-button>
-			<div class="question-divider"></div>
-			<mat-radio-button value="2" (click)="answer(2)">Encryption protects the data I send to a website from being read by others</mat-radio-button>
-			<div class="question-divider"></div>
-			<mat-radio-button value="3" (click)="answer(3)">Encryption keeps my computer safe from online viruses</mat-radio-button>
-			<div class="question-divider"></div>
-		</mat-radio-group>
-		<p *ngIf="tipText">{{this.tipText}}</p>
-		<div class="question-divider"></div>
+	<div *ngSwitchCase="5">
+		<p>Do you think about online encryption  any differently now?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="postResponse"></textarea>
+		</mat-form-field>
 	</div>
 </div>
 
 <div class="progress">
 	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
 	{{stage}} / {{max}}
-	<button mat-raised-button *ngIf="stage < max || done; else greybutton" class="buttonright" (click)="next()">Next</button>
-	<ng-template #greybutton>
-		<button mat-raised-button disabled class="buttonright">Next</button>
-	</ng-template>
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
 </div>

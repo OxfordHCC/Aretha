@@ -359,9 +359,9 @@ export class LoaderService {
 		});
 	}
 	
-	setContent(name: string): Promise<any> {
+	setContent(name: string, pre: string, post: string): Promise<any> {
 		this.changeContent();
-		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name).toPromise().then(response2 => {
+		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + pre + '/' + post).toPromise().then(response2 => {
       		return response2.json();
 		});
 	}

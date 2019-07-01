@@ -26,15 +26,15 @@ import { TimeseriesComponent } from './timeseries/timeseries.component';
 import { LayoutEduComponent } from './layout-edu/layout-edu.component';
 import { ContentEncryptionComponent } from './content-encryption/content-encryption.component';
 import { ExampleComponent } from './example/example.component';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatButtonModule} from '@angular/material/button';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatRadioModule, MatInputModule, MatButtonModule, MatBadgeModule, MatFormFieldModule} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
 import { ContentInferenceComponent } from './content-inference/content-inference.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
 import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
 
-const appRoutes: Routes = [ 
+const appRoutes: Routes = [
+	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
 	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
 	{path: 'refine',		component: TiledAllComponent},
 	{path: 'edu',			component: LayoutEduComponent}
@@ -72,6 +72,9 @@ const appRoutes: Routes = [
 	MatRadioModule,
 	MatButtonModule,
 	MatBadgeModule,
+	MatFormFieldModule,
+	MatInputModule,
+	BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
