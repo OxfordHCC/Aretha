@@ -26,12 +26,13 @@ import { TimeseriesComponent } from './timeseries/timeseries.component';
 import { LayoutEduComponent } from './layout-edu/layout-edu.component';
 import { ContentEncryptionComponent } from './content-encryption/content-encryption.component';
 import { ExampleComponent } from './example/example.component';
-import { MatRadioModule, MatInputModule, MatButtonModule, MatBadgeModule, MatFormFieldModule} from '@angular/material';
+import { MatRadioModule, MatInputModule, MatButtonModule, MatBadgeModule, MatFormFieldModule, MatSelectModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
 import { ContentInferenceComponent } from './content-inference/content-inference.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
 import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
+import { NamedeviceComponent } from './namedevice/namedevice.component';
 
 const appRoutes: Routes = [
 	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
@@ -63,7 +64,8 @@ const appRoutes: Routes = [
     ContentTrackingComponent,
     ContentInferenceComponent,
     ContentBreachComponent,
-    ContentFrequencyComponent    
+    ContentFrequencyComponent,
+    NamedeviceComponent    
   ],
   imports: [
     HttpModule,
@@ -74,6 +76,7 @@ const appRoutes: Routes = [
 	MatBadgeModule,
 	MatFormFieldModule,
 	MatInputModule,
+	MatSelectModule,
 	BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,

@@ -133,8 +133,9 @@ def impacts_aggregated(start, end):
 # get the mac address, manufacturer, and custom name of every device
 @app.route('/api/devices')
 def devices():
-    return jsonify({"devices": get_device_info()})
-
+    response =  make_response(jsonify({"devices": get_device_info()}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 # get geodata about all known ips
 @app.route('/api/geodata')
@@ -149,7 +150,9 @@ def set_device(mac, name):
     mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
     if mac_format.match(mac) is not None:
         DB_MANAGER.execute("UPDATE devices SET name=%s WHERE mac=%s", (name, mac))
-        return jsonify({"message": "Device with mac " + mac + " now has name " + name})
+        response = make_response(jsonify({"message": "Device with mac " + mac + " now has name " + name}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         return jsonify({"message": "Invalid mac address given"})
 
