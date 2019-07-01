@@ -166,9 +166,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// now we turn this into a stack.			
 			series = d3.stack()
 				.keys(stack_keys)
-				.offset(d3.stackOffsetWiggle)
+				.offset(d3.stackOffsetSilhouette)
+				// .offset(d3.stackOffsetWiggle)
 				.order(d3.stackOrderInsideOut)
-				.value((d,key) => _.values(d.impacts[key]).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
+				.value((d,key) => _.values(d.impacts[key]||{}).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
 
 		// DEBUGGING HOOKS >> 
 		// console.info('impacts arr', impacts_arr, 'stack keys', stack_keys, 'series', series);
@@ -190,17 +191,18 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// single area which operates directly on the stack structure inner values
 		const area = d3.area()
 				.x((d) => xscale(d.data.date)) 
-				.y0(d => yscale(d[0]))
-    			.y1(d => yscale(d[1]));
+				.y0(d => yscale(d[0])) // + 100*(Math.random()-0.5))
+    			.y1(d => yscale(d[1])) // + 100*(Math.random()-0.5));
 
 		svg.append("g")
 			.selectAll("path")
+			.attr("class", "stream")
 			.data(series)
 			.join("path") // join is only defined in d3@5 and newer
 			  .attr("fill", ({key}) => stackscale(key))
-			  .attr("d", area)
-			.append("title")
-			  .text(({key}) => key);		
+			  .attr("d", area);
+			// .append("title")
+			//   .text(({key}) => key);		
 
 		svg.append('g')
     		.attr('class', 'axis y')
@@ -219,8 +221,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     		.attr('y', 1)
     		.attr('dx', '-.8em')
     		.attr('dy', '.15em')
-    		.attr('transform', 'rotate(-90)')
-    		.call(this.wrap, margin.bottom - 10);
+    		.attr('transform', 'rotate(-90)');
+    		// .call(this.wrap, margin.bottom - 10);
 
 	}
 	

@@ -102,7 +102,8 @@ export class TiledAllComponent implements OnInit {
   	}  
 
 	ngOnInit() {
-		let now = Math.floor(new Date().getTime()/1000);
-    	this.getIoTData(now - 3600, now);
+		let now = Math.floor(new Date().getTime()/1000); // seconds since the epoch
+		// this.getIoTData(now - 3600, now); // 
+		this.getIoTData(0, now);
 	}
 }
