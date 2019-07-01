@@ -6,7 +6,7 @@ IoT Refine captures meta data about the network traffic of devices connected to 
 ## Install
 1. Install package dependcies: PostgreSQL, NodeJS, Node Package Manager (npm), Python3, Wireshark CLI (sometimes called tshark)
 
-2. Install python3 dependencies: `pip3 install psycopg2-binary pandas sklearn Pyshark flask gunicorn`
+2. Install python3 dependencies: `pip3 install -r requirements.txt`
 
 3. Install NodeJS dependency angular: `cd ui/ && npm install && npm install -g @angular/cli`
 
