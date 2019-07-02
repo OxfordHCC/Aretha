@@ -31,6 +31,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	margin = { top: 20, right: 20, bottom: 10, left: 20 };
 	svgel: any; // actually an HTMLElement	
 
+	// for debug visualisation
+	debug_impacts_arr : any;
+	// debug_macs: string[] = [];
+	// debug_
+
+
 	constructor(private httpM: HttpModule, 
     	private http: Http, 
     	private el: ElementRef,
@@ -153,6 +159,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 		// console.info('impacts ', impacts);
 		// console.info('devices', devices);
+		// debug
+		
+
 
 		// d3 wants an array, not an object so we unpack the times and turn them into 
 		// a single simple arry
@@ -177,6 +186,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// (<any>window)._ss = series;
 		// (<any>window)._ia = impacts_arr;
 		// (<any>window)._sk = stack_keys;			
+		this.debug_impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), m:m, impacts: impacts[m+""] }));
 		// END DEBUGGING HOOKS
 		
 		// now create scales
@@ -222,8 +232,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     		.attr('dx', '-.8em')
     		.attr('dy', '.15em')
     		.attr('transform', 'rotate(-90)');
-    		// .call(this.wrap, margin.bottom - 10);
-
+			// .call(this.wrap, margin.bottom - 10);
+			
+		console.info('end draw');
 	}
 	
 	@HostListener('window:resize')

@@ -1,3 +1,12 @@
 <div class="main">
     <svg #thing></svg>
+    <div class="debug" *ngFor="let tt of debug_impacts_arr">
+        {{ tt.date }} -- 
+        <div class="macs" *ngFor="let impact of tt.impacts | keyvalue">
+            {{ impact.key }} 
+            <div class="ips" *ngFor="let ip of impact.value | keyvalue">
+                {{ ip.key }} :: <b>{{ ip.value }}</b>
+            </div>
+        </div>
+    </div>
 </div>
