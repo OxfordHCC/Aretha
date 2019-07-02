@@ -51,8 +51,9 @@ export class LayoutTimeseriesComponent implements OnInit {
 		console.info('getIoTData ((', start, '::', new Date(start*1000), ' - ', end, '::', new Date(end*1000), ' delta ', delta, '))');
     	let this_ = this,
       		reload = () => {
+				const new_end = Math.floor((new Date()).valueOf()/1000.0);
 				console.info('time:: reload() ');
-				this_.loader.getIoTData(start, end, delta).then( bundle => {
+				this_.loader.getIoTData(start, new_end, delta).then( bundle => {
 					console.info('time:: assigning impacts ', bundle.impacts);
 					this_.impacts = bundle.impacts;
         			this_.geodata = bundle.geodata;
@@ -144,7 +145,7 @@ export class LayoutTimeseriesComponent implements OnInit {
         		console.info('WATCHDOG forcing reload of impacts ~~~~ ', msec_since_reload, 'since last reload');
         		reload();
       		}
-    	}, 10*1000); 
+    	}, 3*1000); // @TODO this should be set to a much larger value once we get bucket diffs streaming in
 		
 		reload();
   	}  
