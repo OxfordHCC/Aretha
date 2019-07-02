@@ -13,7 +13,6 @@ import {APIAppInfo, CompanyDB, CompanyInfo, DeviceImpact, GeoData, LoaderService
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 import * as topojson from 'topojson';
-import {HostUtilsService} from 'app/host-utils.service';
 import {FocusService} from 'app/focus.service';
 import {HoverService} from "app/hover.service";
 import {Http, HttpModule} from '@angular/http';
@@ -59,7 +58,6 @@ export class GeomapComponent implements AfterViewInit, OnChanges {
     	private http: Http, 
     	private el: ElementRef,
     	private loader: LoaderService,
-    	private hostutils: HostUtilsService,
     	private focus: FocusService,
     	private hover: HoverService,
     	private zone : NgZone) {

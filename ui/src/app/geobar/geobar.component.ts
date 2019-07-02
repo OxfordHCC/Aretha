@@ -3,7 +3,6 @@ import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, 
 import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService} from "app/hover.service";
 import { Http, HttpModule} from '@angular/http';
@@ -49,7 +48,6 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
     	private http: Http, 
     	private el: ElementRef,
     	private loader: LoaderService,
-    	private hostutils: HostUtilsService,
     	private focus: FocusService,
     	private hover: HoverService,
     	private zone :NgZone) {

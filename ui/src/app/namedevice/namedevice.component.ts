@@ -27,9 +27,7 @@ export class NamedeviceComponent implements OnInit {
 	getData() {
 		this.devices = [];
 		this.loader.getDevices().then((x) => {
-			console.log(x.devices);
 			for (const key of Object.keys(x.devices)) {
-				console.log(x.devices[key]);
 				this.devices.push({
 					"mac": key,
 					"manufacturer": x.devices[key].manufacturer,

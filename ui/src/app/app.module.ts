@@ -8,10 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from './error/error.component';
 import { Ng2CompleterModule } from 'ng2-completer';
-import { CompanyListComponent } from './company-list/company-list.component';
-import { HostUtilsService } from "app/host-utils.service";
 import { AppinfoComponent } from './appinfo/appinfo.component';
-import { CompanyinfoComponent } from './companyinfo/companyinfo.component';
 import { RefinecatComponent } from './refinecat/refinecat.component';
 import { FocusService } from "app/focus.service";
 import { HoverService } from "app/hover.service";
@@ -47,9 +44,7 @@ const appRoutes: Routes = [
     AppComponent,
     RefinebarComponent,
     ErrorComponent,
-    CompanyListComponent,
     AppinfoComponent,
-    CompanyinfoComponent,
     RefinecatComponent,
     GeomapComponent,
     GeobarComponent,
@@ -84,7 +79,7 @@ const appRoutes: Routes = [
     ),
     Ng2CompleterModule
   ],
-  providers: [LoaderService, HostUtilsService, FocusService, HoverService, ActivityLogService],
+  providers: [LoaderService, FocusService, HoverService, ActivityLogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

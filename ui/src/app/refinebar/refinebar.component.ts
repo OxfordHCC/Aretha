@@ -2,12 +2,11 @@ import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, 
 import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService} from "app/hover.service";
 import { Http, HttpModule} from '@angular/http';
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DeviceImpact, GeoData, Device } from '../loader.service';
 
 @Component({
@@ -29,10 +28,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   
   	private init: Promise<any>;
   	lastMax = 0;
-  	// _timeSpan = 'd';
-	normaliseImpacts = false;
 
-  	// incoming attribute
+    // incoming attribute
   	@Input() showModes = true;
   	@Input() highlightApp: APIAppInfo;
   	@Input() showLegend = true;
@@ -40,11 +37,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   	@Input() showXAxis = true;
   	@Input() scale = false;
 	@Input() maxCompanies = 20;
-  	linear = false;
-  	vbox = { width: 700, height: 1024 };
-  	highlightColour = '#FF066A';
-
-  	_hoveringType: string;
+  vbox = { width: 700, height: 1024 };
+  _hoveringType: string;
   	_companyHovering: CompanyInfo;
   	_hoveringApp: string;
   	_ignoredApps: string[];
@@ -54,7 +48,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     	private http: Http, 
     	private el: ElementRef,
     	private loader: LoaderService,
-    	private hostutils: HostUtilsService,
     	private focus: FocusService,
     	private hover: HoverService,
     	private zone:NgZone) {
@@ -70,7 +63,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		}
 		});
 
-    	this._ignoredApps = new Array();
+    	this._ignoredApps = [];
 
     	focus.focusChanged$.subscribe((target) => {
       		if (target !== this._ignoredApps) {
@@ -101,7 +94,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     	} else {
       		this._ignoredApps.push(newClick);
     	}
-    	this.render()
+    	this.render();
     	return this._ignoredApps
   	}
 
@@ -135,7 +128,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   	ngOnChanges(changes: SimpleChanges): void {
 		var this_ = this;
     	if (this.impactChanges && this._impact_listener === undefined) { 
-      		this._impact_listener = this.impactChanges.subscribe(target => {
+      		this._impact_listener = this.impactChanges.subscribe(() => {
         		this.zone.run(() => this_.render());
       		});	
 			if (this.impacts) {
@@ -148,31 +141,18 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
   	ngAfterViewInit(): void { this.init.then(() => this.render()); }
 
-	private _getApp(appid: string): Promise<APIAppInfo> {
-    	return this.loader.getCachedAppInfo(appid) && Promise.resolve(this.loader.getCachedAppInfo(appid))
-      	|| this.loader.getFullAppInfo(appid);
-  	}
-
-  	nonLinearity(v):number { return this.linear ? v : Math.max(0, 5000*Math.log(v) + 10); }
-
-	setHoveringTypeHighlight(ctype: string) {
+  	setHoveringTypeHighlight(ctype: string) {
     	let svg = this.getSVGElement();
     	this._hoveringType = ctype;
     	d3.select(svg).selectAll('rect.back').classed('reveal', false);
-    	d3.select(svg).selectAll('.ctypelegend g').classed('selected', false)
+    	d3.select(svg).selectAll('.ctypelegend g').classed('selected', false);
     	if (ctype) {
       		d3.select(svg).selectAll('rect.back.' + ctype).classed('reveal', true);
       		d3.select(svg).selectAll('.ctypelegend g.' + ctype).classed('selected', true)
-    	};
-  	}
-	
-	// this is for displaying what company you're hovering on based 
-  	// on back rects
-  	_companyHover(company: CompanyInfo, hovering: boolean) {
-    	this._companyHovering = hovering ? company : undefined;
-  	}
+      }
+    }
 
-  	@HostListener('mouseenter')
+  @HostListener('mouseenter')
   	mouseEnter() { /*this.actlog.log('mouseenter', 'refinebar'); */ }
 
 	@HostListener('mouseleave')
@@ -205,28 +185,32 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
         		.attr('virtualWidth', this.vbox.width)
         		.attr('virtualHeight', this.vbox.height)
-        		.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+        		.attr('preserveAspectRatio', 'none'); //  "xMinYMin meet")
       		width_svgel = this.vbox.width;
       		height_svgel = this.vbox.height;
     	}
 
     	svg.selectAll('*').remove();
 
-		let compiledImpacts = []
-      	let devices = _.uniq(this.impacts.map((x) => x.device));
-		let companies = _.uniq(this.geodata.map((x) => x.company_name));
+		let compiledImpacts = [];
+      	let devices = _.uniq(this.impacts.map((dev) => dev.device));
+		let companies = _.uniq(this.geodata.map((com) => com.company_name));
 		
-		//compile impacts for device/ip pairs into device/company pairs
+		// compile impacts for device/ip pairs into device/company pairs
 		companies.forEach((comp) => {
-			//geodata records for each ip belonging to company "comp"
-			let addresses = this.geodata.filter((c) => comp === c.company_name);
 
-			//impacts that are associated with an address in "addresses"
-			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) != -1);
+		  // geodata records for each ip belonging to company "comp"
+      let addresses = this.geodata.filter((c) => comp === c.company_name);
 
-			//compile per device
+			// impacts that are associated with an address in "addresses"
+			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) !== -1);
+
+			// compile per device
 			devices.forEach((dev) => {
-				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j){return i + j.impact}, 0);
+				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j) {
+				  return i + j.impact
+        }, 0);
+
 				if (total > 0) {
 					compiledImpacts.push({
 						"company": comp,
@@ -239,21 +223,24 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
 		let companySorted = compiledImpacts.sort((c1, c2) => c2.impact - c1.impact); 
 		
-		//fold smaller companies into an "other" category
+		// fold smaller companies into an "other" category
 		if (companySorted.length > this.maxCompanies) {
 			let cutoff = companySorted[this.maxCompanies-1].impact;
 			let companyFolded = [];
 			let otherImpact = 0;
 			companySorted.forEach((impact) => {
-				if (impact.impact >= cutoff) { companyFolded.push(impact); }
-				else { otherImpact += impact.impact; console.log("OPUSG"); }
+				if (impact.impact >= cutoff) {
+				  companyFolded.push(impact);
+				} else {
+				  otherImpact += impact.impact; console.log("OPUSG");
+				}
 			});
 			companyFolded.push({"company": "Other", "device": "*", "impact": otherImpact});
 			companySorted = companyFolded;
 		}
 
 		let by_company = companySorted; 
-		companies = by_company.map((x) => x.company);
+		companies = by_company.map((com) => com.company);
 
     	const stack = d3.stack(),
       	out = stack.keys(devices)(by_company),
@@ -295,13 +282,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       .attr('height', height)
 	  .attr('width', x.bandwidth())
       .on('click', (d) => this.focus.focusChanged(d)) 
-      .on('mouseenter', (d) => self.setHoveringApp(undefined)) 
-      .on("mouseleave", (d) => {return}); 
+      .on('mouseenter', () => self.setHoveringApp(undefined))
+      .on("mouseleave", () => {return});
 
     // main rects
     var self = this;
    
-    const f = (selection, first, last) => {
+    const f = (selection) => {
       return selection.selectAll('rect')
         .data((d) => d)
         .enter().append('rect')
@@ -310,13 +297,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 		.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
 		.attr('height', (d) => height - y(d.data.impact)) 
         .attr('width', x.bandwidth())
-        .on('click', function (d) {
+        .on('click', function () {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
-        .on('mouseleave', function (d) {
+        .on('mouseleave', function () {
           this_.hover.hoverChanged(undefined);
         })
-        .on('mouseenter', function (d) {
+        .on('mouseenter', function () {
           if (this.parentElement && this.parentElement.__data__) {
             this_.hover.hoverChanged(this.parentElement.__data__.key);
           } 
@@ -384,7 +371,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .on('mouseenter', (d) => {
           this.hover.hoverChanged(d)
         })
-        .on('mouseout', (d) => this.hover.hoverChanged(undefined))
+        .on('mouseout', () => this.hover.hoverChanged(undefined))
         .on('click', (d) => this.focus.focusChanged(this.addOrRemove(d)));
 
       legend.append('rect')
