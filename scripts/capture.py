@@ -6,9 +6,9 @@ import datetime
 import os
 import psycopg2
 import pyshark
-import rutils
 import sys
 import traceback
+import ipaddress
 
 # constants
 DEBUG = False
@@ -31,6 +31,7 @@ def DatabaseInsert(packets):
     conn = psycopg2.connect(f"dbname={database} user={username} password={password}")
     cur = conn.cursor()
 
+    insert = "INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES "
     for packet in packets:
         # clean up packet info before entry
         mac = ''
@@ -49,11 +50,11 @@ def DatabaseInsert(packets):
             print("Error", ke, packet)
             continue
 
-        if rutils.is_multicast(src) or rutils.is_multicast(dst) or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
+        if ipaddress.ip_address(src).is_multicast or ipaddress.ip_address(dst).is_multicast or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
             continue
 
-        srcLocal = rutils.is_private(src)
-        dstLocal = rutils.is_private(dst)
+        srcLocal = ipaddress.ip_address(src).is_private
+        dstLocal = ipaddress.ip_address(dst).is_private
 
         if srcLocal == dstLocal:
             continue  # internal packet that we don't care about, or no local host (should never happen)
@@ -71,11 +72,15 @@ def DatabaseInsert(packets):
 
         # insert packets into table
         try:
-            cur.execute("INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES (%s, %s, %s, %s, %s, %s, %s)", (packet.sniff_time, src, dst, mac, packet.length, proto, ext))
+            insert += f"('{packet.sniff_time}', '{src}', '{dst}', '{mac}', '{packet.length}', '{proto}', '{ext}'), "
         except:
             print("Unexpected error on insert:", sys.exc_info())
             traceback.print_exc()
             sys.exit(-1)
+
+    insert = insert[:-2]
+    insert += ";"
+    cur.execute(insert)
 
     # commit the new records and close db connection
     conn.commit()

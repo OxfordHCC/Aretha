@@ -14,7 +14,7 @@ import sys
 import time
 import tldextract
 import urllib
-import rutils
+import ipaddress
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts
@@ -56,7 +56,7 @@ def processGeos():
 
     # go through and enrich the rest
     for ip in RAW_IPS:
-        if rutils.is_private(ip):
+        if ipaddress.ip_address(ip).is_private:
             # local ip, so skip
             continue
         

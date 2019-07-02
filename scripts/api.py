@@ -31,6 +31,7 @@ geos = dict()  # for building and caching geo data
 @app.route('/api/impacts/<start>/<end>/<delta>')
 def impacts(start, end, delta):
     global DB_MANAGER
+    print("Serving impacts")
     try:
         # convert inputs to minutes
         start = round(int(start)/60)
@@ -81,9 +82,7 @@ def impacts(start, end, delta):
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
-        print("Unexpected error:", sys.exc_info())
-        traceback.print_exc()
-        sys.exit(-1)                    
+        return jsonify({"message": "There was an error processing the request"})
 
 
 # return aggregated impacts from <start> to <end>
@@ -91,6 +90,7 @@ def impacts(start, end, delta):
 @app.route('/api/impacts/<start>/<end>')
 def impacts_aggregated(start, end):
     global DB_MANAGER
+    print("Serving impacts 2")
     try:
         # convert inputs to minutes
         start = round(int(start)/60)
@@ -125,21 +125,22 @@ def impacts_aggregated(start, end):
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
-        print("Unexpected error:", sys.exc_info())
-        traceback.print_exc()
-        sys.exit(-1)                    
+        return jsonify({"message": "There was an error processing the request"})
 
 
 # get the mac address, manufacturer, and custom name of every device
 @app.route('/api/devices')
 def devices():
+    print("Serving devices")
     response =  make_response(jsonify({"devices": get_device_info()}))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+
 # get geodata about all known ips
 @app.route('/api/geodata')
 def geodata():
+    print("Serving geodata")
     return jsonify({"geodata": get_geodata()})
 
 
@@ -147,6 +148,7 @@ def geodata():
 @app.route('/api/devices/set/<mac>/<name>')
 def set_device(mac, name):
     global DB_MANAGER
+    print("Setting device")
     mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
     if mac_format.match(mac) is not None:
         DB_MANAGER.execute("UPDATE devices SET name=%s WHERE mac=%s", (name, mac))
