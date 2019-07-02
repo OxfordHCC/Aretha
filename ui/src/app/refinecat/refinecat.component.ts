@@ -2,7 +2,6 @@ import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, 
 import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
 import { HoverService} from "app/hover.service";
 import * as moment from 'moment';
@@ -35,13 +34,8 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
 
   private data: BurstData[];
   private init: Promise<any>;
-  lastMax = 0;
-  _byTime = 'yes';
-  normaliseImpacts = false;
 
   apps: string[]; // keeps app ordering between renders
-
-  // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
   // @Input('appusage') usage_in: AppUsage[];
@@ -52,8 +46,6 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
   @Input() showXAxis = true;
 
   @Input() scale = false;
-  vbox = { width: 700, height: 1024 };
-  highlightColour = '#FF066A';
 
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
@@ -67,7 +59,6 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
     private http: Http, 
     private el: ElementRef,
     private loader: LoaderService,
-    private hostutils: HostUtilsService,
     private focus: FocusService,
     private hover: HoverService) {
     this.init = Promise.all([

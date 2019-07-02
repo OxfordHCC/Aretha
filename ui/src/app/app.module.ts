@@ -8,10 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ErrorComponent } from './error/error.component';
 import { Ng2CompleterModule } from 'ng2-completer';
-import { CompanyListComponent } from './company-list/company-list.component';
-import { HostUtilsService } from "app/host-utils.service";
 import { AppinfoComponent } from './appinfo/appinfo.component';
-import { CompanyinfoComponent } from './companyinfo/companyinfo.component';
 import { RefinecatComponent } from './refinecat/refinecat.component';
 import { FocusService } from "app/focus.service";
 import { HoverService } from "app/hover.service";
@@ -26,15 +23,16 @@ import { TimeseriesComponent } from './timeseries/timeseries.component';
 import { LayoutEduComponent } from './layout-edu/layout-edu.component';
 import { ContentEncryptionComponent } from './content-encryption/content-encryption.component';
 import { ExampleComponent } from './example/example.component';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatButtonModule} from '@angular/material/button';
-import {MatBadgeModule} from '@angular/material/badge';
+import { MatRadioModule, MatInputModule, MatButtonModule, MatBadgeModule, MatFormFieldModule, MatSelectModule} from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ContentTrackingComponent } from './content-tracking/content-tracking.component';
 import { ContentInferenceComponent } from './content-inference/content-inference.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
 import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
+import { NamedeviceComponent } from './namedevice/namedevice.component';
 
-const appRoutes: Routes = [ 
+const appRoutes: Routes = [
+	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
 	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
 	{path: 'refine',		component: TiledAllComponent},
 	{path: 'edu',			component: LayoutEduComponent}
@@ -46,9 +44,7 @@ const appRoutes: Routes = [
     AppComponent,
     RefinebarComponent,
     ErrorComponent,
-    CompanyListComponent,
     AppinfoComponent,
-    CompanyinfoComponent,
     RefinecatComponent,
     GeomapComponent,
     GeobarComponent,
@@ -63,7 +59,8 @@ const appRoutes: Routes = [
     ContentTrackingComponent,
     ContentInferenceComponent,
     ContentBreachComponent,
-    ContentFrequencyComponent    
+    ContentFrequencyComponent,
+    NamedeviceComponent    
   ],
   imports: [
     HttpModule,
@@ -72,13 +69,17 @@ const appRoutes: Routes = [
 	MatRadioModule,
 	MatButtonModule,
 	MatBadgeModule,
+	MatFormFieldModule,
+	MatInputModule,
+	MatSelectModule,
+	BrowserAnimationsModule,
     RouterModule.forRoot(
       appRoutes,
       { enableTracing: true } // <-- debugging purposes only
     ),
     Ng2CompleterModule
   ],
-  providers: [LoaderService, HostUtilsService, FocusService, HoverService, ActivityLogService],
+  providers: [LoaderService, FocusService, HoverService, ActivityLogService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

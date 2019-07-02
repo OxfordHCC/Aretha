@@ -1,24 +1,14 @@
 
 import { Injectable, NgZone } from '@angular/core';
-import { Http, HttpModule, URLSearchParams } from '@angular/http';
+import { Http, HttpModule} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { mapValues, keys, values} from 'lodash';
+import { mapValues} from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
-import { Observable } from '../../node_modules/rxjs/Observable';
-import { Subject } from '../../node_modules/rxjs';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
-enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
-
-export const API_ENDPOINT = 'https://negi.io/api';
-export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
 export const IOTR_ENDPOINT='http://localhost:4201/api';
-
-export interface Host2PITypes { [host: string]: PI_TYPES[] }
-export interface String2String { [host: string]: string }
-
-export interface AppSubstitutions { [app: string]: string[] };
-
 let zone = new NgZone({ enableLongStackTrace: false });
 
 export interface DeviceImpact {
@@ -26,7 +16,8 @@ export interface DeviceImpact {
 	device: string;
 	company: string;
   	impact: number;
-};
+}
+
 export type ImpactSet = ({[mac:string] : {[dst:string]:number}});
 export type BucketedImpacts = ({ [min_t:string]: ImpactSet});
 
@@ -34,7 +25,7 @@ export interface Device {
 	[mac : string]: string;
 	manufacturer: string;
 	name: string;
-};
+}
 
 export interface GeoData {
 	[ip: string]: string;
@@ -42,19 +33,19 @@ export interface GeoData {
   	country_code: string;
   	latitude: string;
   	longitude: string;
-};
+}
 
 export class DBUpdate {
   type: string;
   data: any;
-};
+}
 
 export interface Example {
 	impacts: any;
 	geodata: any;
 	devices: any;
 	text: string;
-};
+}
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
   let retval: { [method: string]: any } = {},
@@ -83,7 +74,7 @@ export let memoize = (f: (...args: any[]) => string) => {
       return retval[cache_key] = method.apply(this, args);
     };
   };
-}
+};
 
 export class CompanyDB {
   emoji_table = {
@@ -112,7 +103,6 @@ export class CompanyDB {
       if (s.crunchbase_url) {
         s.crunchbase_url = this.sanitiser.bypassSecurityTrustResourceUrl(s.crunchbase_url);
       }      
-      // http://www.google.com/search?btnI=I%27m+Feeling+Lucky&ie=UTF-8&oe=UTF-8&q=
     });
   }
   get(companyid: string): CompanyInfo | undefined {
@@ -121,29 +111,17 @@ export class CompanyDB {
   add(info: CompanyInfo) {
     this._data[info.id] = info;
   }
-  getCompanyInfos(): CompanyInfo[] {
-    return values(this._data);
-  }
 }
 
 export class CompanyInfo {
-    // readonly id: string;
-    // readonly company: string;
     domains: string[];
-    founded ?: string;
-    acquired ?: string;
     type: string[];
-    // readonly typetag ?: string;
-    jurisdiction ?: string;
     jurisdiction_code ?: string;
     parent ?: string;
     parentInfo ?: CompanyInfo;
     crunchbase_url ?: string | SafeResourceUrl;
-    lucky_url ?: string | SafeResourceUrl;
-    capita ?: string;
     equity ?: string;
     size ?: string;
-    data_source ?: string;
     description ?: string;
     constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
       this.domains = domains;
@@ -159,35 +137,13 @@ export class IoTDataBundle {
 export class APIAppInfo {
     app: string;
     title: string;
-    summary: string;
-    description: string;
-    storeURL: string;
-    price: string;
-    free: boolean;
-    rating: string;
-    numReviews: number;
-    genre: string;
-    installs: { min: number, max: number};
-    developer: {
-      email: string[];
-      name: string;
-      site: string;
-      storeSite: string;
-    };
-    updated: string;
-    androidVer: string;
-    contentRating: string;
-    screenshots: string[];
+  description: string;
+  free: boolean;
+  installs: { min: number, max: number};
     video: string;
-    recentChanges: string[];
-    crawlDate: string; // date string    
     string: string; // what's this?
-    region: string; // us
-    ver: string; // date string 
-    screenFlags: number;
     hosts?: string[];
-    host_locations?: any;
-    storeinfo: { 
+    storeinfo: {
       title: string;
       summary: string;
       androidVer: string;
@@ -195,11 +151,8 @@ export class APIAppInfo {
       installs: { min: number, max: number };
       rating: number;
       updated: string;
-    }
-    icon: string;
-    emails: string[]; // author contact email
-    name: string; 
-    storeSite: string;
+    };
+    name: string;
     site: string;
 }
 
@@ -208,31 +161,14 @@ const host_blacklist = ['127.0.0.1','::1','localhost'];
 @Injectable()
 export class LoaderService {
 
-  _host_blacklist : {[key:string]:boolean};n
+  _host_blacklist : {[key:string]:boolean};
   apps: { [id: string]: APIAppInfo } = {};
   updateObservable: Observable<DBUpdate>;
+  private readyContentSource = new Subject<string>();
+  contentChanged = this.readyContentSource.asObservable();
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
-  }
-
-  @cache  
-  getHostToPITypes(): Promise<Host2PITypes> {
-    return this.http.get('assets/data/pi_by_host.json').toPromise().then(response => {
-      return response.json() as { [app: string]: string[] };
-    }).then((data: { [app: string]: string[] }) => {
-      return Promise.resolve(mapValues(data, 
-        (s: string[]): PI_TYPES[] => s.map(pis => {
-          if (PI_TYPES[pis] === undefined) { throw new Error(`undefined PI_TYPE ${pis}`);  }
-          return PI_TYPES[pis]
-        }))
-      );
-    });
-  }
-  getHostToCompany(): Promise<String2String> {
-    return this.http.get('assets/data/h2c.json').toPromise().then(response => {
-      return response.json() as String2String;
-    });
   }
 
   @cache
@@ -240,27 +176,6 @@ export class LoaderService {
     return this.http.get('assets/data/company_details.json').toPromise().then(response => {
       return new CompanyDB(response.json() as {[name: string]: CompanyInfo}, this.sanitiser);
     });
-  }
-
-  @memoize((company) => company.id)
-  getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
-    if (!company) { throw new Error('no company'); }
-    console.log('getting crunchbase url for ', company);    
-    const urlSP = new URLSearchParams(); 
-    urlSP.set('q', company.company);
-    return this.http.get(CB_SERVICE_ENDPOINT + `/cbase?${urlSP.toString()}`).toPromise()
-      .then(response => response.json())
-      .then((results: string[]) => results.map(result => this.sanitiser.bypassSecurityTrustResourceUrl(result)));
-  }
-
-  @memoize((appid: string): string => appid)
-  getAlternatives(appid: string): Promise<APIAppInfo[]> {
-    return this.http.get(API_ENDPOINT + `/alt/${appid}?nocache=true`).toPromise()
-      .then(response => {
-        if (response && response.text().toString().trim() === 'null') {  console.error('ERROR - got a null coming from the endpoint ~ ' + appid);    }
-        return response && response.text().toString().trim() !== 'null' ? response.json() as string[] : [];
-      }).then(appids => Promise.all(appids.map(id => this.getFullAppInfo(id))))
-      .then(appinfos => appinfos.filter(x => x));
   }
 
   getCachedAppInfo(appid: string): APIAppInfo | undefined {
@@ -371,41 +286,31 @@ export class LoaderService {
 		});
 	}
 	
-	setContent(name: string): Promise<any> {
+	setContent(name: string, pre: string, post: string): Promise<any> {
 		this.changeContent();
-		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name).toPromise().then(response2 => {
+		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + pre + '/' + post).toPromise().then(response2 => {
       		return response2.json();
 		});
 	}
-  
-  @memoize((appid: string): string => appid)
-  getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {
-    return this.http.get(API_ENDPOINT + `/apps?isFull=true&limit=10000&appId=${appid}`).toPromise()
-    .then(response => (response && response.json() as APIAppInfo[])[0] || undefined)
-    .then(appinfo => {
-      if (appinfo) { 
-		  //return this._prepareAppInfo(appinfo);
-		  return undefined;
-      }
-      return undefined;
-    }).then(appinfo => {
-      if (appinfo) {
-        this.apps[appid] = appinfo;
-      } else {
-        console.warn('null appinfo');
-      }
-      // console.log(appinfo);
-      return appinfo;
-    });
-  }
+	
+	getDevices(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/devices').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	setDevice(mac: string, name: string): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/devices/set/' + mac + '/' + name).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
 
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());
   }
 
-	private readyContentSource = new Subject<string>();
-	contentChanged = this.readyContentSource.asObservable();
 	changeContent(): void {
 		this.readyContentSource.next("tick");
 	}

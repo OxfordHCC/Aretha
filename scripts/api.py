@@ -1,44 +1,47 @@
 #! /usr/bin/env python3
 
-from flask import Flask, request, jsonify, make_response, Response
-import json, re, sys, os, traceback, copy, argparse, subprocess, time, urllib
-from datetime import datetime, timedelta
+import json
+import os
+import re
+import subprocess
+import sys
+import traceback
+import urllib
+from datetime import datetime
+
+from flask import Flask, jsonify, make_response, Response
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts, rutils
+import databaseBursts
 
 ####################
 # global variables #
 ####################
 
-DB_MANAGER = None #for running database queries
-app = Flask(__name__) # WSGI entry point
-geos = dict() #for building and caching geo data
+DB_MANAGER = None  # for running database queries
+app = Flask(__name__)  # WSGI entry point
+geos = dict()  # for building and caching geo data
+
 
 #################
 # api endpoints #
 #################
-
 # return impacts per <delta> from <start> to <end>
 # delta in seconds, <start>/<end> as unix timestamps
 @app.route('/api/impacts/<start>/<end>/<delta>')
 def impacts(start, end, delta):
     global DB_MANAGER
     try:
-        #convert inputs to minutes
+        # convert inputs to minutes
         start = round(int(start)/60)
         end = round(int(end)/60)
         delta = abs(round(int(delta)))
 
-        print("start / end / delta ", start, end, delta);
-
-        #refresh view and get per minute impacts from <start> to <end>
+        # refresh view and get per minute impacts from <start> to <end>
         raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
 
-        print("raw impacts", raw_impacts);
-
-        #process impacts per bucket
+        # process impacts per bucket
         impacts = dict()
-        bucket_impacts = dict()
         pointer = start
             
         for impact in raw_impacts:
@@ -47,33 +50,28 @@ def impacts(start, end, delta):
             mins = int(impact[2])
             total = int(impact[3])
 
-            print(" mins, pointer, delta ", mins, pointer, delta);
-            #      p+d        mins|
-            # mins|      p+d
-            #fast forward to correct bucket
-            while  mins > pointer + delta:
+            # fast forward to correct bucket
+            while mins > pointer + delta:
                 pointer += delta
             
-            print(" done fast forarding  ", mins, pointer, delta);
-            
-            #load current state of that bucket
+            # load current state of that bucket
             if str(pointer) not in impacts:
                 impacts[str(pointer)] = dict()
             bucket_impacts = impacts[str(pointer)]
 
-            #add impacts to bucket
+            # add impacts to bucket
             if mac not in bucket_impacts:
                 bucket_impacts[mac] = dict()
             if ip not in bucket_impacts[mac]:
                 bucket_impacts[mac][ip] = 0
             bucket_impacts[mac][ip] += total
 
-            #save bucket state
+            # save bucket state
             impacts[str(pointer)] = bucket_impacts
         
         print("done for getting geodata");
 
-        #add geo and device data
+        # add geo and device data
         geos = get_geodata()
         print("done geodata, getting devinfo");
         devices = get_device_info()
@@ -87,17 +85,18 @@ def impacts(start, end, delta):
         traceback.print_exc()
         sys.exit(-1)                    
 
+
 # return aggregated impacts from <start> to <end>
 # <start>/<end> as unix timestamps
 @app.route('/api/impacts/<start>/<end>')
 def impacts_aggregated(start, end):
     global DB_MANAGER
     try:
-        #convert inputs to minutes
+        # convert inputs to minutes
         start = round(int(start)/60)
         end = round(int(end)/60)
 
-        #refresh view and get per minute impacts from <start> to <end>
+        # refresh view and get per minute impacts from <start> to <end>
         raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT mac, ext, sum(impact) FROM impacts WHERE mins > %s AND mins < %s group by mac, ext", (start, end))
 
         impacts = dict()
@@ -118,7 +117,7 @@ def impacts_aggregated(start, end):
             for mac in impacts[ip]:
                 result.append({"company": ip, "impact": impacts[ip][mac], "device": mac})
 
-        #add geo and device data
+        # add geo and device data
         geos = get_geodata()
         devices = get_device_info()
 
@@ -130,15 +129,19 @@ def impacts_aggregated(start, end):
         traceback.print_exc()
         sys.exit(-1)                    
 
-#get the mac address, manufacturer, and custom name of every device
+
+# get the mac address, manufacturer, and custom name of every device
 @app.route('/api/devices')
 def devices():
-    return jsonify({"devices": get_device_info()})
+    response =  make_response(jsonify({"devices": get_device_info()}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
-#get geodata about all known ips
+# get geodata about all known ips
 @app.route('/api/geodata')
 def geodata():
     return jsonify({"geodata": get_geodata()})
+
 
 # set the custom name of a device with a given mac
 @app.route('/api/devices/set/<mac>/<name>')
@@ -147,9 +150,12 @@ def set_device(mac, name):
     mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
     if mac_format.match(mac) is not None:
         DB_MANAGER.execute("UPDATE devices SET name=%s WHERE mac=%s", (name, mac))
-        return jsonify({"message": "Device with mac " + mac + " now has name " + name})
+        response = make_response(jsonify({"message": "Device with mac " + mac + " now has name " + name}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         return jsonify({"message": "Invalid mac address given"})
+
 
 # return examples to be used for educational components
 @app.route('/api/example/<question>')
@@ -162,6 +168,7 @@ def counterexample(question):
     else:
         return jsonify({"message": f"Unable to find a match for requested example"})
 
+
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>')
 def enforce_dest(destination):
@@ -171,6 +178,7 @@ def enforce_dest(destination):
         return jsonify({"message": f"error while creating destination only rule for {destination}", "success": False})
     pass
 
+
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>/<device>')
 def enforce_dest_dev(destination, device):
@@ -178,6 +186,7 @@ def enforce_dest_dev(destination, device):
         return jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
     else:
         return jsonify({"message": f"error while creating device to destination rule for {device} to {destination}", "success": False})
+
 
 # remove a firewall rule as dictated by aretha
 @app.route('/api/aretha/unenforce/<destination>')
@@ -195,6 +204,7 @@ def unenforce_dest(destination):
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device IS NULL", (destination,))
     return jsonify({"message": f"rule removed for {destination}", "success": True})
 
+
 # remove a firewall rule as dictated by aretha
 @app.route('/api/aretha/unenforce/<destination>/<device>')
 def unenforce_dest_dev(destination, device):
@@ -210,12 +220,14 @@ def unenforce_dest_dev(destination, device):
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device = %s", (destination,device))
     return jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
 
+
 # open an event stream for database updates
 @app.route('/api/stream')
 def stream():
     response = Response(event_stream(), mimetype="text/event-stream")
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
+
 
 # return a list of live but not completed content
 @app.route('/api/content')
@@ -224,18 +236,20 @@ def content():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
-@app.route('/api/content/set/<name>')
-def contentSet(name):
-    DB_MANAGER.execute("update content set complete = true where name = %s", (name,))
+
+@app.route('/api/content/set/<name>/<pre>/<post>')
+def contentSet(name, pre, post):
+    DB_MANAGER.execute("update content set complete = true, pre = %s, post = %s where name = %s", (pre[:200], post[:200], name))
     response = make_response(jsonify({"message": "Request processed", "success": "unknown"}))
     response.headers['Access-Control-Allow-Origin'] = '*'
+    print(pre, post)
     return response
+
 
 ####################
 # internal methods #
 ####################
-
-#return a dictionary of mac addresses to manufacturers and names
+# return a dictionary of mac addresses to manufacturers and names
 def get_device_info():
     devices = dict()
     raw_devices = DB_MANAGER.execute("SELECT * FROM devices", ())
@@ -244,13 +258,15 @@ def get_device_info():
         devices[mac] = {"manufacturer": manufacturer, "name": name}
     return devices
 
-#get geo data for all ips
+
+# get geo data for all ips
 def get_geodata():
     geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
     records = []
     for geo in geos:
         records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4]})
     return records
+
 
 def GetExample(question):
     result = dict()
@@ -304,7 +320,7 @@ def GetExample(question):
                     if company[0].strip(" LLC").strip(", Inc.").strip(" Inc.") == breach["Name"]:
                         result["text"] = f"Did you know that {company[0]} (that communicates with your {device}) was the victim of a data breach on {breach['BreachDate']} where {breach['PwnCount']} records were stolen? If you didn't know about this, you might want to change your passwords with the company."
                         break
-        if result["text"] == []:
+        if not result["text"]:
             result["text"] = "Thankfully, none of your devices communicate with companies on our data breach list."
 
     elif question == "frequency":
@@ -322,7 +338,8 @@ def GetExample(question):
         result = False
 
     return result
-   
+
+
 @app.before_first_request
 def init():
     global DB_MANAGER
@@ -330,11 +347,13 @@ def init():
     listenManager = databaseBursts.dbManager()
     listenManager.listen('db_notifications', lambda payload:event_queue.append(payload))
 
+
 ################
 # event stream #
 ################
-
 event_queue = []
+
+
 def event_stream():
     import time
 
@@ -382,15 +401,15 @@ def event_stream():
                     yield "data: %s\n\n" % json.dumps({"type":'device', "data": device})
 
     except GeneratorExit:
-        return;
+        return
     except:
         print("Unexpected error:", sys.exc_info())
         traceback.print_exc()                
         return
 
-## This is run using Flask
-## export FLASK_APP=apy
-## export FLASK_DEBUG=1
-## export FLASK_PORT=X
-## flask run
+# This is run using Flask
+# export FLASK_APP=apy
+# export FLASK_DEBUG=1
+# export FLASK_PORT=X
+# flask run
 

@@ -11,10 +11,9 @@ import {Router} from '@angular/router';
 export class ContentTrackingComponent implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4 + 1; //+1 for the attention check at the end
-	done: boolean = false;
-	answerText: string;
-	tipText: string;
+	max: number = 4 + 2; // +2 for the intial and final text fields
+	preResponse: string;
+	postResponse: string;
 
 	constructor(
 		private loader: LoaderService,
@@ -29,21 +28,8 @@ export class ContentTrackingComponent implements OnInit {
 	next() {
 		if (this.stage < this.max) { this.stage++; }
 		else {
-			this.loader.setContent('tracking')
+			this.loader.setContent('tracking', this.preResponse, this.postResponse)
 				.then((x) => this.router.navigate(['/timeseries']));
 		}
 	}
-
-	answer(question:number) {
-		if (question === 1) {
-			this.tipText = "Correct! Trackers build complex models about you that can infer personality and behavioural traits.";
-			this.done = true;
-		}
-		else { 
-			this.done = false;
-			if (question === 2) { this.tipText = "Not quite. The models that are built by modern trackers and advertisers are more complex than the simple rules in this question."; } 
-			else { this.tipText = "Not quite. Check the content on the previous screens again."; }
-		}
-	}
-
 }

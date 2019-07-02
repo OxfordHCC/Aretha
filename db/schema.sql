@@ -3,12 +3,12 @@ drop table if exists packets cascade;
 create table packets (
 	id SERIAL primary key,
 	time timestamptz not null,
-	src varchar(15) not null, --ip address of sending host
-	dst varchar(15) not null, --ip address of receiving host
+	src varchar(45) not null, --ip address of sending host
+	dst varchar(45) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
 	proto varchar(10) not null, --protocol if known, otherwise port number
-	ext varchar(15) not null --external ip address (either src or dst)
+	ext varchar(45) not null --external ip address (either src or dst)
 );
 
 -- create two indexes on src and dst to speed up lookups by these cols by loop.py
@@ -25,7 +25,7 @@ create table devices(
 
 drop table if exists geodata cascade;
 create table geodata(
-	ip varchar(15) primary key,
+	ip varchar(45) primary key,
 	lat real not null,
 	lon real not null,
 	c_code varchar(2) not null,
@@ -46,7 +46,7 @@ create table rules(
 drop table if exists blocked_ips cascade;
 create table blocked_ips(
 	id SERIAL primary key,
-	ip varchar(15) not null,
+	ip varchar(45) not null,
 	rule integer not null references rules on delete cascade
 );
 
@@ -66,7 +66,9 @@ drop table if exists content;
 create table content(
 	name varchar(20) primary key,
 	live timestamp not null,
-	complete boolean default false
+	complete boolean default false,
+	pre varchar(200),
+	post varchar(200)
 );
 
 --load questions

@@ -26,17 +26,21 @@ export class AppComponent implements OnInit {
     	// startup loader listener
     	this.loader.connectToAsyncDBUpdates();
 
-		this.loader.contentChanged.subscribe((x) => this.content -= 1);
+		this.loader.contentChanged.subscribe(() => this.content -= 1);
   	}
-  
-	isActive(s: string): boolean {    
-    	return document.location.href.endsWith(s);
-	}
 
-	ngOnInit() {
+  	ngOnInit() {
 		this.loader.getContent().then((cn) => {
-			this.content = cn.length;
+      this.content = cn.length;
 		});
+
+		let this_ = this;
+		setInterval(function() {
+			console.log("app.component refreshing live content");
+			this_.loader.getContent().then((cn) => {
+				this_.content = cn.length;
+			});
+		}, 1000*60*15, this);
 	}
 
 }

@@ -9,7 +9,7 @@ import { ActivatedRoute} from "@angular/router";
 @Component({
   selector: 'app-layout-timeseries',
   templateUrl: './layout-timeseries.component.html',
-  styleUrls: ['./layout-timeseries.component.css']
+  styleUrls: ['./layout-timeseries.component.scss']
 })
 
 export class LayoutTimeseriesComponent implements OnInit {

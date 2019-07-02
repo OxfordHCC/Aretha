@@ -1,11 +1,10 @@
 import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone } from '@angular/core';
-import { LoaderService, DeviceImpact, GeoData, Device } from '../loader.service';
+import { LoaderService, GeoData, Device } from '../loader.service';
 import { Http, HttpModule} from '@angular/http';
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { HostUtilsService } from 'app/host-utils.service';
+import { Observable } from 'rxjs';
 import { FocusService } from 'app/focus.service';
 import { HoverService} from "app/hover.service";
-import { Subscription } from '../../../node_modules/rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
 
@@ -41,7 +40,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     	private http: Http, 
     	private el: ElementRef,
     	private loader: LoaderService,
-    	private hostutils: HostUtilsService,
     	private focus: FocusService,
     	private hover: HoverService,
     	private zone:NgZone) {
@@ -53,7 +51,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
       		}
 		});
 
-    	this._ignoredApps = new Array();
+    	this._ignoredApps = [];
 
     	focus.focusChanged$.subscribe((target) => {
       		if (target !== this._ignoredApps) {
