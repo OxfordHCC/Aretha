@@ -21,7 +21,6 @@ import databaseBursts
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = None
-LOCAL_IP_MASK = rutils.make_localip_mask() 
 DEBUG = False
 log = lambda *args: print(*args) if DEBUG else ''
 RAW_IPS = None
@@ -57,7 +56,7 @@ def processGeos():
 
     # go through and enrich the rest
     for ip in RAW_IPS:
-        if LOCAL_IP_MASK.match(ip) is not None:
+        if rutils.is_private(ip):
             # local ip, so skip
             continue
         

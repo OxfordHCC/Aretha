@@ -12,7 +12,6 @@ import traceback
 
 # constants
 DEBUG = False
-local_ip_mask = rutils.make_localip_mask()
 
 # initialise vars
 timestamp = 0
@@ -50,11 +49,11 @@ def DatabaseInsert(packets):
             print("Error", ke, packet)
             continue
 
-        if rutils.is_multicast_v4(src) or rutils.is_multicast_v4(dst) or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
+        if rutils.is_multicast(src) or rutils.is_multicast(dst) or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
             continue
 
-        srcLocal = local_ip_mask.match(src)
-        dstLocal = local_ip_mask.match(dst)
+        srcLocal = rutils.is_private(src)
+        dstLocal = rutils.is_private(dst)
 
         if srcLocal == dstLocal:
             continue  # internal packet that we don't care about, or no local host (should never happen)
