@@ -29,7 +29,7 @@ create table geodata(
 	lat real not null,
 	lon real not null,
 	c_code varchar(2) not null,
-	c_name varchar(20) not null,
+	c_name varchar(25) not null,
 	domain varchar(30) not null,
 	tracker boolean default false
 );
@@ -39,7 +39,7 @@ drop table if exists rules cascade;
 create table rules(
 	id SERIAL primary key,
 	device varchar(17), --optional device to block traffic from (otherwise all devices)
-	c_name varchar(20) not null --so that other matching ips can be blocked in future
+	c_name varchar(25) not null --so that other matching ips can be blocked in future
 );
 
 --ip addresses blocked by aretha

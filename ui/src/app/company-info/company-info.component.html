@@ -1,0 +1,12 @@
+<h3>Find Out More About a Company</h3>
+
+<mat-form-field>
+  <mat-label>Company Name</mat-label>
+  <mat-select [(ngModel)]="chosen" (selectionChange)="getDesc()">
+    <mat-option *ngFor="let company of this.companies" [value]="company">
+      {{company}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<p>{{this.description}}</p>

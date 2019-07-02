@@ -141,7 +141,9 @@ def devices():
 @app.route('/api/geodata')
 def geodata():
     print("Serving geodata")
-    return jsonify({"geodata": get_geodata()})
+    response = make_response(jsonify({"geodata": get_geodata()}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 # set the custom name of a device with a given mac

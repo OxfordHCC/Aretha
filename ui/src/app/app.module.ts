@@ -29,7 +29,8 @@ import { ContentTrackingComponent } from './content-tracking/content-tracking.co
 import { ContentInferenceComponent } from './content-inference/content-inference.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
 import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
-import { NamedeviceComponent } from './namedevice/namedevice.component';
+import { NameDeviceComponent } from './name-device/name-device.component';
+import { CompanyInfoComponent } from './company-info/company-info.component';
 
 const appRoutes: Routes = [
 	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
@@ -60,7 +61,8 @@ const appRoutes: Routes = [
     ContentInferenceComponent,
     ContentBreachComponent,
     ContentFrequencyComponent,
-    NamedeviceComponent    
+    NameDeviceComponent,
+    CompanyInfoComponent    
   ],
   imports: [
     HttpModule,

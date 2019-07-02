@@ -305,6 +305,17 @@ export class LoaderService {
 		});
 	}
 
+	getGeodata(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/geodata').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	getDescription(desc: string): Promise<any> {
+		return this.http.get('https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=' + desc).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
 
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {

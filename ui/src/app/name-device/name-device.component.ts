@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { LoaderService, Device } from 'app/loader.service'
 
 @Component({
-	selector: 'app-namedevice',
-	templateUrl: './namedevice.component.html',
-	styleUrls: ['./namedevice.component.css']
+	selector: 'app-name-device',
+	templateUrl: './name-device.component.html',
+	styleUrls: ['./name-device.component.css']
 })
-export class NamedeviceComponent implements OnInit {
+export class NameDeviceComponent implements OnInit {
 
  	devices: Device[] = [];
 	chosen: string;
