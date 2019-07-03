@@ -96,7 +96,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 									}
 									// <== END DEBUG
 									
-									bucket[mac][dst] = (bucket[mac][dst] || 0) + 10*val;
+									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;
 									this_.impacts[""+cur_min] = bucket;
 
 									// original broken code >> 
@@ -152,7 +152,9 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 	ngOnInit() {
 		let now = Math.floor(new Date().getTime()/1000);
-		this.getIoTData(now - 5*60, now, 1);
+		this.getIoTData(now - 15*60, now, 1);
+		// this.getIoTData(0, now, 1);
+		
 		
 		// seconds since the epoch
 	}
