@@ -78,9 +78,10 @@ def DatabaseInsert(packets):
             traceback.print_exc()
             sys.exit(-1)
 
-    insert = insert[:-2]
-    insert += ";"
-    cur.execute(insert)
+    if insert != "INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES ":
+        insert = insert[:-2]
+        insert += ";"
+        cur.execute(insert)
 
     # commit the new records and close db connection
     conn.commit()
