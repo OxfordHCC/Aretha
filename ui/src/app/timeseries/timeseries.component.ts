@@ -32,6 +32,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 	// for debug visualisation
 	debug_impacts_arr : any;
+	debug_series: any;
+	debug_yscale: any;
+	debug_series_scale: any;
 	// debug_macs: string[] = [];
 	// debug_
 
@@ -178,13 +181,14 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.order(d3.stackOrderInsideOut)
 				.value((d,key) => _.values(d.impacts[key]||{}).reduce((x,y)=>x+y, 0))(impacts_arr); // sum contributions from each device
 
+
+			
 		// DEBUGGING HOOKS >> 
 		// console.info('impacts arr', impacts_arr, 'stack keys', stack_keys, 'series', series);
 		// (<any>window).d3 = d3;
 		// (<any>window)._ss = series;
 		// (<any>window)._ia = impacts_arr;
 		// (<any>window)._sk = stack_keys;			
-		this.debug_impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), m:m, impacts: impacts[m+""] }));
 		// END DEBUGGING HOOKS
 		
 		// now create scales
@@ -196,6 +200,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
     			.domain([d3.min(series, d => d3.min(d, dd => dd[0])), d3.max(series, d => d3.max(d, dd => dd[1]))])
 				.range([height - this.margin.bottom, this.margin.top]);
 
+		this.debug_impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), m:m, impacts: impacts[m+""] }));
+		this.debug_series = series;
+		this.debug_series_scale = _.mapValues(series, (timeseries) => _.mapValues(timeseries, v => [yscale(v[0]), yscale(v[1])]));
+		
 		// single area which operates directly on the stack structure inner values
 		const area = d3.area()
 				.x((d) => xscale(d.data.date)) 

@@ -77,7 +77,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 							// let cur_min = Math.floor((new Date().getTime())/(60000));
 							let cur_min = Object.keys(this_.impacts).map(x => +x).sort((x,y) => y - x)[0];
 							if (!cur_min) { 
-								// cur_min = Math.floor((new Date().getTime())/(60000));
+								cur_min = Math.floor((new Date().getTime())/(60000));
 							}
 
 							for (const dst of Object.keys(incoming)) {
@@ -96,7 +96,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 									}
 									// <== END DEBUG
 									
-									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;
+									bucket[mac][dst] = (bucket[mac][dst] || 0) + 10*val;
 									this_.impacts[""+cur_min] = bucket;
 
 									// original broken code >> 

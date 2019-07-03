@@ -9,4 +9,21 @@
             </div>
         </div>
     </div>
+
+    series:
+    <div class="debug series" *ngFor="let tt of debug_series | keyvalue">
+        {{ tt.key }}
+        <div *ngFor="let times of tt.value | keyvalue">
+            {{ times.key }} :: ~~ {{ times.value }}
+        </div>
+    </div> 
+    
+    series scale: 
+    <div class="debug series" *ngFor="let tt of debug_series_scale | keyvalue">
+            {{ tt.key }}
+            <div *ngFor="let times of tt.value | keyvalue">
+                {{ times.key }} :: ~~ y0:{{ times.value[0] }} y1:{{ times.value[1] }}
+           </div>
+    </div> 
+    
 </div>
