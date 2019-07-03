@@ -6,6 +6,12 @@ import { Observer } from 'rxjs';
 import * as _ from 'lodash';
 import { ActivatedRoute} from "@angular/router";
 
+export class TimeSelection {
+	centre: Date;
+	start: Date;
+	end: Date;
+};
+
 @Component({
   selector: 'app-layout-timeseries',
   templateUrl: './layout-timeseries.component.html',
@@ -148,7 +154,11 @@ export class LayoutTimeseriesComponent implements OnInit {
     	}, 3*1000); // @TODO this should be set to a much larger value once we get bucket diffs streaming in
 		
 		reload();
-  	}  
+	  }  
+	  
+	  timeSelected(val: TimeSelection) {
+		  console.log("Got time selection", val.start, " -> ", val.end);
+	  }
 
 	ngOnInit() {
 		let now = Math.floor(new Date().getTime()/1000);

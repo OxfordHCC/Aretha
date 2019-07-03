@@ -1,4 +1,4 @@
- import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation } from '@angular/core';
+ import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { LoaderService, GeoData, Device } from '../loader.service';
 import { Http, HttpModule} from '@angular/http';
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { HoverService} from "app/hover.service";
 import { Subscription } from 'rxjs';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
 
 @Component({
 	encapsulation: ViewEncapsulation.None,
@@ -14,13 +15,14 @@ import * as _ from 'lodash';
 	templateUrl: './timeseries.component.html',
 	styleUrls: ['./timeseries.component.scss']
 })
-
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	
 	@Input() impacts;
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
+	@Input() timeSelectorWidth = 200;				
+	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	
 	_hoveringApp: string;
 	_ignoredApps: string[];
@@ -261,6 +263,11 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					let updateMouse = (xx:number) => {
 						this.mouseX = xx;
 						console.log('new time is ', xscale.invert(this.mouseX));
+						this.selectedTimeChanged.emit({
+							centre: xscale.invert(this.mouseX),
+							start: xscale.invert(this.mouseX-this.timeSelectorWidth/2),
+							end:xscale.invert(this.mouseX+this.timeSelectorWidth/2)
+						});
 						this.render();
 					};
 					svg.on("mousedown", dd => {
@@ -273,13 +280,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					svg.on("mouseup", dd => { this.mouseDown = false; });
 				}
 				// enter selection
-				const enters = svg.selectAll('g.dragwindow').data([0]).enter().append('g').attr('class', 'dragwindow'),
-				boxW = 200;
+				const enters = svg.selectAll('g.dragwindow').data([0]).enter().append('g').attr('class', 'dragwindow');
 				
 				enters.append('rect').attr('class','timebox')
-				.attr('x',() => this.mouseX-(boxW/2))
+				.attr('x',() => this.mouseX-(this.timeSelectorWidth/2))
 				.attr('y', margin.top)
-				.attr('width', boxW)
+				.attr('width', this.timeSelectorWidth)
 				.attr('height', height);
 				
 				enters.append('line')
@@ -292,12 +298,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				// <========================
 				
 				d3.select('svg').selectAll('rect.timebox')
-				.attr('x',this.mouseX-(boxW/2))
+				.attr('x',this.mouseX-(this.timeSelectorWidth/2))
 				.attr('y', margin.top)
 				// .attr('fill','none')
 				// .attr('stroke','#000')
 				// .attr('stroke-width','1px')
-				.attr('width', boxW)
+				.attr('width', this.timeSelectorWidth)
 				.attr('height', height);        
 				
 				d3.select('svg').selectAll('line.timeline')            

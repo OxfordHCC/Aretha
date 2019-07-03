@@ -1,5 +1,5 @@
 <div class="root">
-	<app-timeseries [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" class='gridleft' [devices]='devices' [showtimeselector]="true"></app-timeseries>
+	<app-timeseries [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" class='gridleft' [devices]='devices' [showtimeselector]="true" (selectedTimeChanged)="timeSelected($event)"></app-timeseries>
 	<div class="gridright">
 		<app-name-device></app-name-device>
 		<app-company-info></app-company-info>
