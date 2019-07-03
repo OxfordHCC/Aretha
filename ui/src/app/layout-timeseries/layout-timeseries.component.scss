@@ -32,7 +32,7 @@
     flex-direction:row;
     align-items:stretch;
     .gridleft {
-        flex-grow: 0.4;
+        flex-grow: 1;
         flex-basis: 50%;
     }
     .gridright {
@@ -41,7 +41,7 @@
         height: 100%;
         // display: flex;
         // flex-direction: column;
-        flex-grow: 0.5;
+        flex-grow: 0;
         align-items: stretch;
         // app-refinecat /deep/ div.main,
         app-geomap {

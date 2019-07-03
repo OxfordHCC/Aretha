@@ -1,5 +1,8 @@
 <div class="root">
-	<app-timeseries [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" class='gridleft' [devices]='devices' [showtimeselector]="true" (selectedTimeChanged)="timeSelected($event)"></app-timeseries>
+	<div class="gridleft">
+		<app-timeseries [impacts]="zoomed_impacts" [geodata]="geodata" class='zoomed' [devices]='devices' [showtimeselector]="false"></app-timeseries>
+		<app-timeseries [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" [devices]='devices' [showtimeselector]="true" (selectedTimeChanged)="timeSelected($event)"></app-timeseries>
+	</div>
 	<div class="gridright">
 		<app-name-device></app-name-device>
 		<app-company-info></app-company-info>

@@ -20,6 +20,7 @@ export class TimeSelection {
 
 export class LayoutTimeseriesComponent implements OnInit {
   mode: string;
+  	zoomed_impacts: BucketedImpacts; 	
 	impacts: BucketedImpacts; 
 	geodata: GeoData[];
 	devices : Device[];
@@ -155,9 +156,19 @@ export class LayoutTimeseriesComponent implements OnInit {
 		
 		reload();
 	  }  
+
+	  dateToMinutes(input:Date): number {
+		  return Math.floor(input.getTime()/(1000*60));
+	  }
 	  
 	  timeSelected(val: TimeSelection) {
 		  console.log("Got time selection", val.start, " -> ", val.end);
+
+		  // now we want to filter our impacts and update local impacts
+		  if (this.impacts) { 
+			const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
+			this.zoomed_impacts = _.pickBy(this.impacts, (macip, time) => +time >= st_mins && +time <= st_end);
+		  }
 	  }
 
 	ngOnInit() {
