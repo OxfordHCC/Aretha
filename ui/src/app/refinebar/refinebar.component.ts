@@ -198,9 +198,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 		
 		// compile impacts for device/ip pairs into device/company pairs
 		companies.forEach((comp) => {
-
-		  // geodata records for each ip belonging to company "comp"
-      let addresses = this.geodata.filter((c) => comp === c.company_name);
+			// geodata records for each ip belonging to company "comp"
+    		let addresses = this.geodata.filter((c) => comp === c.company_name);
 
 			// impacts that are associated with an address in "addresses"
 			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) !== -1);
@@ -209,7 +208,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			devices.forEach((dev) => {
 				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j) {
 				  return i + j.impact
-        }, 0);
+        		}, 0);
 
 				if (total > 0) {
 					compiledImpacts.push({

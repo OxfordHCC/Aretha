@@ -96,20 +96,46 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
 	// combines impacts, geodata, and devices into impacts per device per location
 	private compileImpacts(): any {
+		var intermediate = [];
 		var result = [];
+			
+		// first pass: aggregate impacts across 
 		if (this.impacts) {
-			this.impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1).map((imp) => {
-				if (this.geodata.filter((x) => x.ip === imp.company).length > 0) {
-					result.push({
-						"ip": imp.company,
-						"device": imp.device,
-						"impact": imp.impact,
-						"country": this.geodata.filter((geo) => geo.ip === imp.company)[0].country_code,
-						"lat": this.geodata.filter((geo) => geo.ip === imp.company)[0].latitude,
-						"lon": this.geodata.filter((geo) => geo.ip === imp.company)[0].longitude
-					});
+			this.impacts.map((i) => {
+
+				if (i.impact === i.impact) {
+					if (i.company in intermediate) {
+						if (i.device in intermediate[i.company]) {
+							intermediate[i.company][i.device] += i.impact;
+						} else {
+							intermediate[i.company][i.device] = i.impact;
+						}
+					} else {
+						intermediate[i.company] = [];
+						intermediate[i.company][i.device] = i.impact;
+					}
+				} else {
+					console.log("got record:");
+					console.log(i);
 				}
 			});
+
+			for (var company in intermediate) {
+				let geo = this.geodata.filter((g) => g.ip === company)[0];
+				
+				if (typeof(geo) === "undefined") { continue; }
+			
+				for (var device in intermediate[company]) {
+					result.push({
+						"ip": company,
+						"device": device,
+						"impact": intermediate[company][device],
+						"country": geo.country_code,
+						"lat": geo.latitude,
+						"lon": geo.longitude
+					});
+				}
+			}
 		}
 		return result;
 	}
@@ -137,16 +163,16 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 
     	svg.selectAll('*').remove();
 
+		const countries = _.uniq(this.geodata.map((imp) => imp.country_code));
+		const devices = _.uniq(this.impacts.map((imp) => imp.device));
     	const impacts = this.compileImpacts();
-		  const devices = _.uniq(this.impacts.map((imp) => imp.device));
-		  const countries = _.uniq(this.geodata.map((imp) => imp.country_code)),
-			
-		get_impact = (country, device) => {
+		
+		let get_impact = (country, device) => {
         	const t = impacts.filter((imp) => imp.country === country && imp.device === device);
         	const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
 	        return t !== undefined ? t.reduce(reducer, 0) : 0;
       	};
-	
+
 		let by_country = countries.map((country) => ({
         	country: country,
         	total: devices.reduce((total, mac) => total += get_impact(country, mac), 0),

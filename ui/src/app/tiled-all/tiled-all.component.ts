@@ -14,7 +14,7 @@ import { Observer } from 'rxjs';
 
 export class TiledAllComponent implements OnInit {
   mode: string;
-	impacts: DeviceImpact[];
+	impacts: any;
 	geodata: GeoData[];
 	devices : Device[];
 	impactChanges: Observable<any>;
@@ -60,18 +60,24 @@ export class TiledAllComponent implements OnInit {
     	this.loader.asyncDeviceImpactChanges().subscribe({
       		next(incoming: ImpactSet) {  
 				if (this_.impacts) {
-					try { 
-						for (const key of Object.keys(incoming)) {
-							for (const key2 in Object.keys(incoming[key])) {
-								if (this_.impacts.filter ((x) => x.company === key).length === 0) {
+					console.log("incoming!");
+					try {
+						console.log(this_.impacts);
+						for (var key in incoming) {
+							for (var key2 in incoming[key]) {
+								if (this_.impacts.filter ((x) => x.company === key && x.device === key2).length === 0) {
 									this_.impacts.push({
 										"company": key,
 										"device": key2,
-										"impact": incoming[key][key2],
-										"minute": Math.floor((new Date().getTime()/1000) + 3600)
+										"impact": incoming[key][key2]
 									});
 								} else {
-									this_.impacts.filter ((x) => x.company === key)[0].impact += incoming[key][key2];
+									for (var key3 in this_.impacts) {
+										if (this_.impacts[key3].company === key && this_.impacts[key3].device === key2) {
+											this_.impacts[key3].impact += incoming[key][key2];
+											break;
+										}
+									}
 								}
 							}
 						}
