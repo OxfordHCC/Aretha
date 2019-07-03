@@ -1,17 +1,19 @@
 svg {
     width:100%;
     height:500px;
+    border: 1px solid pink;
 }
-rect.timebox {
+g.dragwindow rect {
     stroke:#000;
     fill:none;
     stroke-width:1px;
 }
-line.timeline {
+g.dragwindow line {
     stroke:red;
     fill:none;
     stroke-width:1px;
 }
+
 .debug {
     width:100%;
     border:1px solid #eee;
