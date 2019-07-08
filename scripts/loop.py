@@ -228,6 +228,10 @@ def beacon():
             DB_MANAGER.execute("UPDATE experiment SET value = %s WHERE name = %s", (key, value))
 
 
+def refreshView():
+    DB_MANAGER.execute("refresh materialized view impacts with data", ());
+
+
 ################
 # loop control #
 ################
@@ -307,7 +311,10 @@ if __name__ == '__main__':
     # loop through categorisation tasks
     while(running[0]):
         log("Awake!");
-        processEvents()
+        if running[0]:
+            processEvents()
+        if running[0]:
+            refreshView()
         if running[0]:
             processGeos()
         if running[0]:

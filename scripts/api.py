@@ -39,7 +39,7 @@ def impacts(start, end, delta):
         delta = abs(round(int(delta)))
 
         # refresh view and get per minute impacts from <start> to <end>
-        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
+        raw_impacts = DB_MANAGER.execute("SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
 
         # process impacts per bucket
         impacts = dict()
@@ -97,7 +97,7 @@ def impacts_aggregated(start, end):
         end = round(int(end)/60)
 
         # refresh view and get per minute impacts from <start> to <end>
-        raw_impacts = DB_MANAGER.execute("REFRESH MATERIALIZED VIEW impacts; SELECT mac, ext, sum(impact) FROM impacts WHERE mins > %s AND mins < %s group by mac, ext", (start, end))
+        raw_impacts = DB_MANAGER.execute("SELECT mac, ext, sum(impact) FROM impacts WHERE mins > %s AND mins < %s group by mac, ext", (start, end))
 
         impacts = dict()
 

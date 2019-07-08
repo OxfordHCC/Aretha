@@ -114,9 +114,6 @@ export class GeobarComponent implements AfterViewInit, OnChanges {
 						intermediate[i.company] = [];
 						intermediate[i.company][i.device] = i.impact;
 					}
-				} else {
-					console.log("got record:");
-					console.log(i);
 				}
 			});
 

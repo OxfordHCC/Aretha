@@ -60,9 +60,7 @@ export class TiledAllComponent implements OnInit {
     	this.loader.asyncDeviceImpactChanges().subscribe({
       		next(incoming: ImpactSet) {  
 				if (this_.impacts) {
-					console.log("incoming!");
 					try {
-						console.log(this_.impacts);
 						for (var key in incoming) {
 							for (var key2 in incoming[key]) {
 								if (this_.impacts.filter ((x) => x.company === key && x.device === key2).length === 0) {
