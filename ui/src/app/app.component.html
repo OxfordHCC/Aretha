@@ -1,7 +1,8 @@
 <nav>
 	<a routerLink="/timeseries" routerLinkActive="active">Time Series</a>
-	<a routerLink="/refine" routerLinkActive="active">Refinebar</a>
+	<a routerLink="/refine" routerLinkActive="active">By Company</a>
 	<a matBadge="{{this.content}}" matBadgePosition="below after" matBadgeColor="warn" matBadgeHidden="{{this.content == 0}}" routerLink="/edu" routerLinkActive="active">Learn</a>
+	<a routerLink="/review" routerLinkActive="active">Review Data</a>
 </nav>
 
 <router-outlet></router-outlet>

@@ -249,6 +249,24 @@ def contentSet(name, pre, post):
     print(pre, post)
     return response
 
+# return records for the redaction interface
+@app.route('/api/redact')
+def getRedact():
+    response = make_response(jsonify(DB_MANAGER.execute("select distinct c_name from geodata", ())))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+# remove records for the redaction interface
+@app.route('/api/redact/set/<company>')
+def setRedact(company):
+    ips = DB_MANAGER.execute("select ip from geodata where c_name = %s", (company,));
+    for ip in ips:
+        DB_MANAGER.execute("delete from packets where ext = %s", (ip[0],))
+        DB_MANAGER.execute("delete from geodata where ip = %s", (ip[0],))
+    response = make_response(jsonify({"message": "operation successful"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 
 ####################
 # internal methods #

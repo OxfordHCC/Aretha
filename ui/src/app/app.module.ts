@@ -31,14 +31,15 @@ import { ContentBreachComponent } from './content-breach/content-breach.componen
 import { ContentFrequencyComponent } from './content-frequency/content-frequency.component';
 import { NameDeviceComponent } from './name-device/name-device.component';
 import { CompanyInfoComponent } from './company-info/company-info.component';
+import { RedactionComponent } from './redaction/redaction.component';
 
 const appRoutes: Routes = [
 	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
 	{path: 'timeseries', 	component: LayoutTimeseriesComponent},
 	{path: 'refine',		component: TiledAllComponent},
-	{path: 'edu',			component: LayoutEduComponent}
+	{path: 'edu',			component: LayoutEduComponent},
+	{path: 'review',		component: RedactionComponent}
 ];
-
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ const appRoutes: Routes = [
     ContentBreachComponent,
     ContentFrequencyComponent,
     NameDeviceComponent,
-    CompanyInfoComponent    
+    CompanyInfoComponent,
+    RedactionComponent    
   ],
   imports: [
     HttpModule,
