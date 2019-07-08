@@ -30,7 +30,7 @@ def beacon():
 @app.route('/admin/connect/<gid>', methods=['GET', 'POST'])
 def connect(gid):
     global KEY
-    print(f"CN for {gid}, open secure connection")
+    print("CN for " + gid + ", open secure connection")
     k = request.form.get("k")
     if KEY == k:
         if not gid in queue:
@@ -43,7 +43,7 @@ def connect(gid):
 @app.route('/admin/restart/<gid>', methods=['GET', 'POST'])
 def restart(gid):
     global KEY
-    print(f"RB for {gid}, reboot NUC")
+    print("RB for " + gid + ", reboot NUC")
     k = request.form.get("k")
     if KEY == k:
         if not gid in queue:
@@ -56,7 +56,7 @@ def restart(gid):
 @app.route('/admin/reset/<gid>', methods=['GET', 'POST'])
 def reset(gid):
     global KEY
-    print(f"RS for {gid}, reset IoT Refine")
+    print("RS for " + gid + ", reset IoT Refine")
     k = request.form.get("k")
     if KEY == k:
         if not gid in queue:
@@ -69,7 +69,7 @@ def reset(gid):
 @app.route('/admin/expr/<gid>', methods=['GET', 'POST'])
 def stage(gid):
     global KEY
-    print(f"EX for {gid}, update {name} to {value}")
+    print("EX for " + gid + ", update " + name + " to " + value)
     
     k = request.form.get("k")
     name = request.form.get("n")
@@ -77,7 +77,7 @@ def stage(gid):
     if KEY == k:
         if not gid in queue:
             queue[gid] = []
-        queue[gid].append(f"EX{name};{value}")
+        queue[gid].append("EX " + name "; " + value)
         return "Request handled successfully"
     else:
         return "Request handled unsuccessfully", 403
