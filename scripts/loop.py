@@ -73,7 +73,7 @@ def processGeos():
             # get company info from ipdata
             try:
                 data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
-                if data.status_code==200 and data.json()['latitude'] is not '':
+                if data.status_code==200 and data.json()['latitude'] is not None:
                     data = data.json()
                     tracker = istracker(ip)
                     orgname = data['organisation'] 
