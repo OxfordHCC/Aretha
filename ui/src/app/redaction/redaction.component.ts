@@ -22,9 +22,10 @@ export class RedactionComponent implements OnInit {
 	}
 
 	redact(company: string) {
-		console.log(company);
-		this.records = this.records.filter((x) => x !== company);
-		this.loader.setRedact(company);
+		if(confirm("Are you sure to delete all records of" + company + "?")) {
+			this.records = this.records.filter((x) => x !== company);
+			this.loader.setRedact(company);
+		}
 	}
 
 }
