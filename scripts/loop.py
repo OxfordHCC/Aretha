@@ -24,7 +24,8 @@ FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = None
 DEBUG = False
 log = lambda *args: print(*args) if DEBUG else ''
-RAW_IPS = None
+RAW_IPS = set()
+RAW_IPS_ID = 0
 _events = []  # async db events
 IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
@@ -42,13 +43,17 @@ LAST_VIEW_REFRESH = 0
 
 # gathers data about newly seen ip addresses
 def processGeos():
+    global RAW_IPS
+    global RAW_IPS_ID
 
-    # to save us querying the whole packet table every loop
-    # global RAW_IPS
-    # if not RAW_IPS:
-    #    log("Preloading RAW_IPS")
-    RAW_IPS = set([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-    #    log(" Done ", len(RAW_IPS), " known ips ")
+    # update the list of known ips from where we left off last time
+    # new id is gathered before other ops to ensure that no packets are missed
+    new_id = DB_MANAGER.execute("select id from packets order by id desc limit 1", ())[0][0]
+    for r in DB_MANAGER.execute("select distinct src, id from packets where id > %s", (RAW_IPS_ID,)):
+        RAW_IPS.add(r[0])
+    for r in DB_MANAGER.execute("select distinct dst, id from packets where id > %s", (RAW_IPS_ID,)):
+        RAW_IPS.add(r[0])
+    RAW_IPS_ID = new_id
     
     # get a list of ip addresses we've already looked up
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
