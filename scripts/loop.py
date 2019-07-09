@@ -12,6 +12,7 @@ import socket
 import subprocess
 import sys
 import time
+from datetime import datetime
 import tldextract
 import urllib
 import ipaddress
@@ -36,6 +37,7 @@ BEACON_URL = None
 BEACON_ENDPOINT = None
 BEACON_INTERVAL = None
 BEACON_KEY = None
+LAST_VIEW_REFRESH = 0
 
 
 # gathers data about newly seen ip addresses
@@ -229,7 +231,11 @@ def beacon():
 
 
 def refreshView():
-    DB_MANAGER.execute("refresh materialized view impacts with data", ());
+    global LAST_VIEW_REFRESH
+    if LAST_VIEW_REFRESH != datetime.now().minute:
+        DB_MANAGER.execute("refresh materialized view impacts with data", ());
+        LAST_VIEW_REFRESH = datetime.now().minute
+        print("Refreshed material view")
 
 
 ################
