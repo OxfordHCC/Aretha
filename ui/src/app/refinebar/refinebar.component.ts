@@ -192,10 +192,12 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     	svg.selectAll('*').remove();
 
-		let compiledImpacts = [];
       	let devices = _.uniq(this.impacts.map((dev) => dev.device));
 		let companies = _.uniq(this.geodata.map((com) => com.company_name));
 		
+		console.log(this.impacts);
+		let compiled_impacts = [];
+
 		// compile impacts for device/ip pairs into device/company pairs
 		companies.forEach((comp) => {
 			// geodata records for each ip belonging to company "comp"
@@ -211,7 +213,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         		}, 0);
 
 				if (total > 0) {
-					compiledImpacts.push({
+					compiled_impacts.push({
 						"company": comp,
 						"device": dev,
 						"impact": total
@@ -220,25 +222,45 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			});
 		});
 
-		let companySorted = compiledImpacts.sort((c1, c2) => c2.impact - c1.impact); 
-		
+		console.log(compiled_impacts);
+
+		let impacts = compiled_impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ),
+      		//devices = _.uniq(compiled_impacts.map((x) => x.device)),
+			//companies = _.uniq(this.geodata.map((x) => x.)),
+      		get_impact = (company, device) => {
+        		const t = compiled_impacts.filter((imp) => imp.company === company && imp.device === device);
+        		const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+        		return t !== undefined ? t.reduce(reducer, 0) : 0;
+      		},
+      		by_company = companies.map((c) => ({
+        		company: c,
+        		total: devices.reduce((total, dev) => total += get_impact(c, dev), 0),
+        		..._.fromPairs(devices.map((dev) => [dev, get_impact(c, dev)]))
+      		}));
+
+		devices.sort();
+    	by_company.sort((c1, c2) => c2.total - c1.total);
+
+		console.log(by_company);
+
 		// fold smaller companies into an "other" category
-		if (companySorted.length > this.maxCompanies) {
-			let cutoff = companySorted[this.maxCompanies-1].impact;
+		if (by_company.length > this.maxCompanies) {
+			let cutoff = by_company[this.maxCompanies-1].total;
 			let companyFolded = [];
-			let otherImpact = 0;
-			companySorted.forEach((impact) => {
-				if (impact.impact >= cutoff) {
+			let otherTotal = 0;
+			by_company.forEach((impact) => {
+				if (impact.total >= cutoff) {
 				  companyFolded.push(impact);
 				} else {
-				  otherImpact += impact.impact; console.log("OPUSG");
+				  otherTotal += impact.total; console.log("OPUSG");
 				}
 			});
-			companyFolded.push({"company": "Other", "device": "*", "impact": otherImpact});
-			companySorted = companyFolded;
+			companyFolded.push({"company": "Other", "total": otherTotal, "30:35:ad:d3:2c:f2": 0, "aa:aa:aa:aa:aa:aa": otherTotal});
+			by_company = companyFolded;
+			console.log(by_company);
 		}
 
-		let by_company = companySorted; 
+		// update companies to reflect the reduced company list
 		companies = by_company.map((com) => com.company);
 
     	const stack = d3.stack(),
@@ -256,7 +278,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			x = d3.scaleBand()
         		.rangeRound([0, width]).paddingInner(0.05).align(0.1)
         		.domain(companies),
-      		d3maxx = d3.max(by_company, function (d) { return d.impact; }) || 0,
+      		d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
       		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
       		this_ = this;
 
@@ -286,15 +308,20 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     // main rects
     var self = this;
-   
+  
+	// step 1 is making all the bars draw
+	// step 2 is making the stacked bar split not be log()
     const f = (selection) => {
       return selection.selectAll('rect')
         .data((d) => d)
         .enter().append('rect')
         .attr('class', 'bar')
 		.attr('x', (d) => x(d.data.company))
-		.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
-		.attr('height', (d) => height - y(d.data.impact)) 
+		//.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
+		.attr('y', (d) => y(d[0]) > 0 ? y(d[0]) : y(1))
+		//.attr('height', (d) => height - y(d.data.impact)) 
+		//.attr('height', (d) => { console.log(d); return (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)})
+		.attr('height', (d) => { console.log(d); return y(d[0]) - y(d[1]) <= 0 ? 0 : y(d[0]) - y(d[1]); })
         .attr('width', x.bandwidth())
         .on('click', function () {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
