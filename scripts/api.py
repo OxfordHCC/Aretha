@@ -225,7 +225,6 @@ def unenforce_dest_dev(destination, device):
 def stream():
     response = Response(event_stream(), mimetype="text/event-stream")
     response.headers['Access-Control-Allow-Origin'] = '*'
-    print("Serving stream")
     return response
 
 
