@@ -319,10 +319,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 		.attr('x', (d) => x(d.data.company))
 		//.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
 		.attr('y', (d) => y(d[0]) > 0 ? y(d[0]) : y(1))
+		// .attr('y', (d) => d[0] > 0 ? y(d[0]) : 0)
 		//.attr('height', (d) => height - y(d.data.impact)) 
 		//.attr('height', (d) => { console.log(d); return (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)})
 		.attr('height', (d) => { console.log(d); return y(d[0]) - y(d[1]) <= 0 ? 0 : y(d[0]) - y(d[1]); })
-        .attr('width', x.bandwidth())
+		// .attr('height', (d) => { 
+		// 	const result = d[1] - d[0],
+		// 		scaled = result > 0 ? y(d[1])-y(d[0]) : 0;
+		// 	return scaled;})
+		.attr('width', x.bandwidth())
         .on('click', function () {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
@@ -336,9 +341,12 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         });
     };
 
+	// Max fixd this here - what happened was that it was returning NANs in the stack..
+	const sstack = d3.stack().keys(devices).value((d,key) => d[key] || 0)(by_company);
+	
     g.append('g')
       .selectAll('g')
-      .data(d3.stack().keys(devices)(by_company))
+      .data(sstack)
       .enter().append('g')
       .attr('fill', (d) => {
         // highlightApp comes in from @Input() attribute, set using compare
