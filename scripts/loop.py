@@ -240,7 +240,6 @@ def refreshView():
     if LAST_VIEW_REFRESH != datetime.now().minute:
         DB_MANAGER.execute("refresh materialized view impacts with data", ());
         LAST_VIEW_REFRESH = datetime.now().minute
-        print("Refreshed material view")
 
 
 ################

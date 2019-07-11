@@ -37,6 +37,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   	@Input() showXAxis = true;
   	@Input() scale = false;
 	@Input() maxCompanies = 20;
+	popCount: number = 0;
   vbox = { width: 700, height: 1024 };
   _hoveringType: string;
   	_companyHovering: CompanyInfo;
@@ -164,6 +165,18 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		this.render();
     	}
   	}
+
+	// used by the graph controls to pop companies off the end of the graph
+	popCompany() {
+		this.popCount++;
+		this.render();
+	}
+
+	// ...and then return them later
+	pushCompany() {
+		this.popCount = Math.max(0, this.popCount - 1);
+		this.render();
+	}
 	
   	render() {
 
@@ -194,24 +207,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
       	let devices = _.uniq(this.impacts.map((dev) => dev.device));
 		let companies = _.uniq(this.geodata.map((com) => com.company_name));
-		
-		console.log(this.impacts);
 		let compiled_impacts = [];
 
 		// compile impacts for device/ip pairs into device/company pairs
 		companies.forEach((comp) => {
-			// geodata records for each ip belonging to company "comp"
     		let addresses = this.geodata.filter((c) => comp === c.company_name);
-
-			// impacts that are associated with an address in "addresses"
 			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) !== -1);
-
-			// compile per device
 			devices.forEach((dev) => {
 				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j) {
 				  return i + j.impact
         		}, 0);
-
 				if (total > 0) {
 					compiled_impacts.push({
 						"company": comp,
@@ -222,11 +227,8 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			});
 		});
 
-		console.log(compiled_impacts);
-
+		// compile the above per company (with a total and per device impact) for stacked bars
 		let impacts = compiled_impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ),
-      		//devices = _.uniq(compiled_impacts.map((x) => x.device)),
-			//companies = _.uniq(this.geodata.map((x) => x.)),
       		get_impact = (company, device) => {
         		const t = compiled_impacts.filter((imp) => imp.company === company && imp.device === device);
         		const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
@@ -241,23 +243,27 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 		devices.sort();
     	by_company.sort((c1, c2) => c2.total - c1.total);
 
-		console.log(by_company);
-
-		// fold smaller companies into an "other" category
+		// fold smaller companies into an "other" category to avoid cluttering the graph
 		if (by_company.length > this.maxCompanies) {
-			let cutoff = by_company[this.maxCompanies-1].total;
+			let cutoffIndex = Math.min(by_company.length - 1, this.maxCompanies + this.popCount - 1);
+			let cutoff = by_company[cutoffIndex].total;
 			let companyFolded = [];
 			let otherTotal = 0;
+			let popedCount = 0;
 			by_company.forEach((impact) => {
-				if (impact.total >= cutoff) {
-				  companyFolded.push(impact);
+				// we need to pop more companies
+				if (popedCount < this.popCount) {
+					popedCount++;
 				} else {
-				  otherTotal += impact.total; console.log("OPUSG");
+					if (impact.total >= cutoff) {
+				  		companyFolded.push(impact);
+					} else {
+				  		otherTotal += impact.total; console.log("OPUSG");
+					}
 				}
 			});
 			companyFolded.push({"company": "Other", "total": otherTotal, "30:35:ad:d3:2c:f2": 0, "aa:aa:aa:aa:aa:aa": otherTotal});
 			by_company = companyFolded;
-			console.log(by_company);
 		}
 
 		// update companies to reflect the reduced company list
@@ -286,7 +292,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		ymaxx = 1.1 * d3maxx;
     	}
 
-		let y = d3.scaleLog() // scaleLinear() // d3.scaleLog() will make this look very weird indeed :D
+		let y = d3.scaleLinear()
      		.rangeRound([height, 0])
       		.domain([1, ymaxx]).nice(),
       	z = d3.scaleOrdinal(d3.schemeCategory10)
@@ -309,26 +315,15 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     // main rects
     var self = this;
   
-	// step 1 is making all the bars draw
-	// step 2 is making the stacked bar split not be log()
+	// bad things happen if we try and compute y(0), which is actually ~log(0)
     const f = (selection) => {
       return selection.selectAll('rect')
         .data((d) => d)
         .enter().append('rect')
         .attr('class', 'bar')
 		.attr('x', (d) => x(d.data.company))
-		//.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
-		// wills last version >> .attr('y', (d) => y(d[0]) > 0 ? y(d[0]) : y(1)) // wills version
-		.attr('y', (d) => y(Math.max(1,d[1])))	// max set for scalelinear
-		// .attr('y', (d) => d[0] > 0 ? y(d[0]) : 0)
-		//.attr('height', (d) => height - y(d.data.impact)) 
-		//.attr('height', (d) => { console.log(d); return (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)})
-		// wills last version >> .attr('height', (d) => { console.log(d); return y(d[0]) - y(d[1]) <= 0 ? 0 : y(d[0]) - y(d[1]); }) 
-		.attr('height', (d) => y(Math.max(1,d[0])) - y(Math.max(1,d[1]))) // max for scalelinear
-		// .attr('height', (d) => { 
-		// 	const result = d[1] - d[0],
-		// 		scaled = result > 0 ? y(d[1])-y(d[0]) : 0;
-		// 	return scaled;})
+		.attr('y', (d) => y(Math.max(1,d[1])))
+		.attr('height', (d) => y(Math.max(1,d[0])) - y(Math.max(1,d[1])))
 		.attr('width', x.bandwidth())
         .on('click', function () {
 			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
@@ -343,7 +338,6 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         });
     };
 
-	// Max fixd this here - what happened was that it was returning NANs in the stack..
 	const sstack = d3.stack().keys(devices).value((d,key) => d[key] || 0)(by_company);
 	
     g.append('g')
