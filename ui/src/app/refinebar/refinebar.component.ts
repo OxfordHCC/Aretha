@@ -286,7 +286,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       		ymaxx = 1.1 * d3maxx;
     	}
 
-		let y = d3.scaleLog()
+		let y = d3.scaleLinear() // d3.scaleLog() will make this look very weird indeed :D
      		.rangeRound([height, 0])
       		.domain([1, ymaxx]).nice(),
       	z = d3.scaleOrdinal(d3.schemeCategory10)
@@ -318,11 +318,13 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
         .attr('class', 'bar')
 		.attr('x', (d) => x(d.data.company))
 		//.attr('y', (d) => d.data.impact > 0 ? y(d.data.impact) : y(1))
-		.attr('y', (d) => y(d[0]) > 0 ? y(d[0]) : y(1))
+		// wills last version >> .attr('y', (d) => y(d[0]) > 0 ? y(d[0]) : y(1)) // wills version
+		.attr('y', (d) => y(d[1]))	// max set for scalelinear
 		// .attr('y', (d) => d[0] > 0 ? y(d[0]) : 0)
 		//.attr('height', (d) => height - y(d.data.impact)) 
 		//.attr('height', (d) => { console.log(d); return (d[1] > 0 && height - y(d[1]) > 0) ? height - y(d[1]) : height - y(1)})
-		.attr('height', (d) => { console.log(d); return y(d[0]) - y(d[1]) <= 0 ? 0 : y(d[0]) - y(d[1]); })
+		// wills last version >> .attr('height', (d) => { console.log(d); return y(d[0]) - y(d[1]) <= 0 ? 0 : y(d[0]) - y(d[1]); }) 
+		.attr('height', (d) => y(d[0]) - y(d[1])) // max for scalelinear
 		// .attr('height', (d) => { 
 		// 	const result = d[1] - d[0],
 		// 		scaled = result > 0 ? y(d[1])-y(d[0]) : 0;
