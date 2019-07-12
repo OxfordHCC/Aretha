@@ -79,14 +79,14 @@ insert into content(name, live) values
 	('inference', '2019-06-01T15:14:00'),
 	('frequency', '2019-06-01T15:14:00');
 
-drop table if exists experiment;
-create table experiment(
-	name varchar(10) primary key,
-	value varchar(100) not null
+drop table if exists activity;
+create table activity(
+	id SERIAL primary key,
+	time timestamptz default localtimestamp,
+	pid varchar(5) not null,
+	category varchar(50) not null,
+	description varchar(50) not null
 );
-
---load initial values
-insert into experiment(name, value) values('stage', 1);
 
 drop materialized view if exists impacts;
 create materialized view impacts as

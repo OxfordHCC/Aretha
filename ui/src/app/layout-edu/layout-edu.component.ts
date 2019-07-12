@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService, Example } from '../loader.service';
+import {ActivityLogService} from "../activity-log.service";
 
 @Component({
   selector: 'app-layout-edu',
@@ -15,7 +16,9 @@ export class LayoutEduComponent implements OnInit {
 	geodata: any;
 	text: string;
 
-	constructor(private loader: LoaderService) { }
+	constructor(
+	  private loader: LoaderService,
+    private  actlog: ActivityLogService) { }
 
 	ngOnInit() {
 		this.loader.getContent()
@@ -24,11 +27,12 @@ export class LayoutEduComponent implements OnInit {
 					let content = ct.sort((c1, c2) => Date.parse(c1[1]) - Date.parse(c2[1]));
 					this.content = content[0][0]
 			 		this.getExample();
+					this.actlog.log("edu-load", this.content);
 				}
 			});
 	}
 		
-	//fetch data to use in examples and graphs
+	// fetch data to use in examples and graphs
 	getExample() {
 		this.loader.getExample(this.content)
 			.then((ex) => {

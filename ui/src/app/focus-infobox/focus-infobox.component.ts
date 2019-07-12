@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { FocusTarget, FocusService } from "app/focus.service";
 import { LoaderService } from '../loader.service';
 import { ActivityLogService } from "app/activity-log.service";
@@ -43,12 +43,12 @@ export class FocusInfoboxComponent implements OnInit {
 
   @HostListener('mouseenter')
   mouseEnter() {
-    this.actlog.log('mouseenter', 'focus', this.target);
+    // this.actlog.log('mouseenter', 'focus', this.target);
   }
 
   @HostListener('mouseleave')
   mouseLv() {
-    this.actlog.log('mouseleave', 'focus', this.target);
+    // this.actlog.log('mouseleave', 'focus', this.target);
   }  
   
 }

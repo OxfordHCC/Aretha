@@ -7,8 +7,8 @@ import subprocess
 import sys
 import traceback
 import urllib
+import configparser
 from datetime import datetime
-
 from flask import Flask, jsonify, make_response, Response
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
@@ -21,6 +21,9 @@ import databaseBursts
 DB_MANAGER = None  # for running database queries
 app = Flask(__name__)  # WSGI entry point
 geos = dict()  # for building and caching geo data
+IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
+CONFIG = None
 
 
 #################
@@ -69,14 +72,9 @@ def impacts(start, end, delta):
             # save bucket state
             impacts[str(pointer)] = bucket_impacts
         
-        print("done for getting geodata");
-
         # add geo and device data
         geos = get_geodata()
-        print("done geodata, getting devinfo");
         devices = get_device_info()
-        print("done devinfo, making response");
-
         response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
@@ -241,8 +239,8 @@ def contentSet(name, pre, post):
     DB_MANAGER.execute("update content set complete = true, pre = %s, post = %s where name = %s", (pre[:200], post[:200], name))
     response = make_response(jsonify({"message": "Request processed", "success": "unknown"}))
     response.headers['Access-Control-Allow-Origin'] = '*'
-    print(pre, post)
     return response
+
 
 # return records for the redaction interface
 @app.route('/api/redact')
@@ -250,6 +248,7 @@ def getRedact():
     response = make_response(jsonify(DB_MANAGER.execute("select distinct c_name from geodata", ())))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
+
 
 # remove records for the redaction interface
 @app.route('/api/redact/set/<company>')
@@ -262,6 +261,21 @@ def setRedact(company):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+
+@app.route('/api/pid')
+def getPid():
+    global CONFIG
+    if CONFIG is not None and 'general' in CONFIG and 'id' in CONFIG['general']:
+        response = make_response(jsonify({"pid": CONFIG['general']['id']}))
+    else:
+        response = make_response(jsonify({"pid": "unknown"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@app.route('/api/activity/<pid>/<category>/<action>')
+def activity(pid, category, action):
+    pass
 
 ####################
 # internal methods #
@@ -360,9 +374,21 @@ def GetExample(question):
 @app.before_first_request
 def init():
     global DB_MANAGER
+    global CONFIG
+
+    # open database connections
     DB_MANAGER = databaseBursts.dbManager()
     listenManager = databaseBursts.dbManager()
     listenManager.listen('db_notifications', lambda payload:event_queue.append(payload))
+
+    # load config from file
+    sys.stdout.write("Loading config...")
+    try:
+        CONFIG = configparser.ConfigParser()
+        CONFIG.read(CONFIG_PATH)
+        print("ok")
+    except Exception as e:
+        print("error")
 
 
 ################

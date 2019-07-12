@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoaderService, Device } from 'app/loader.service'
+import {ActivityLogService} from "../activity-log.service";
 
 @Component({
 	selector: 'app-name-device',
@@ -12,7 +13,10 @@ export class NameDeviceComponent implements OnInit {
 	chosen: string;
 	newName: string;
 
-	constructor(private loader: LoaderService) { 
+	constructor(
+	  private loader: LoaderService,
+    private actlog: ActivityLogService
+  ) {
 		this.getData();
 	}
 
@@ -21,6 +25,7 @@ export class NameDeviceComponent implements OnInit {
 
 	rename() {
 		this.loader.setDevice(this.chosen, this.newName)
+      .then(() => this.actlog.log("rename-device", this.chosen + " to " + this.newName))
 			.then(() => this.getData());
 	}
 

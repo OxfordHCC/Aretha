@@ -20,7 +20,7 @@ class dbManager():
         try:
             sys.stdout.write("Connecting to database...")
             self.connection = psycopg2.connect("dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname':dbname,'username':username,'password':password })
-            print("ok connected to database")
+            print("ok")
         except:
             print("error")
 

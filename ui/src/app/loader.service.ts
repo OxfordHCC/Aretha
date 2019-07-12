@@ -329,6 +329,16 @@ export class LoaderService {
 		});
 	}
 
+	getPid(): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/pid').toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  setAct(pid: string, type: string, action: string) {
+    this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action);
+  }
+
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());
