@@ -336,7 +336,10 @@ export class LoaderService {
   }
 
   setAct(pid: string, type: string, action: string) {
-    this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action);
+	  console.log("got activity");
+    this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action).toPromise().then(response2 => {
+		console.log("sent activity");
+	});
   }
 
   @memoize(() => 'world')

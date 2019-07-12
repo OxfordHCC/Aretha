@@ -48,7 +48,10 @@ def processGeos():
 
     # update the list of known ips from where we left off last time
     # new id is gathered before other ops to ensure that no packets are missed
-    new_id = DB_MANAGER.execute("select id from packets order by id desc limit 1", ())[0][0]
+    try:
+        new_id = DB_MANAGER.execute("select id from packets order by id desc limit 1", ())[0][0]
+    except:
+        new_id = 0
     for r in DB_MANAGER.execute("select distinct src, id from packets where id > %s", (RAW_IPS_ID,)):
         RAW_IPS.add(r[0])
     for r in DB_MANAGER.execute("select distinct dst, id from packets where id > %s", (RAW_IPS_ID,)):
