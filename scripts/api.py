@@ -276,7 +276,6 @@ def getPid():
 @app.route('/api/activity/<pid>/<category>/<action>')
 def activity(pid, category, action):
     DB_MANAGER.execute("insert into activity(pid, category, description) values(%s, %s, %s)", (pid, category, action))
-    print("activity logged", pid, category, action)
     response = make_response(jsonify({"message": "activity logged"}))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response

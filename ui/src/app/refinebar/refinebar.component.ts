@@ -252,8 +252,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			let popedCount = 0;
 			by_company.forEach((impact) => {
 				// we need to pop more companies
+				console.log("count is " + this.popCount)
 				if (popedCount < this.popCount) {
 					popedCount++;
+					console.log("skipping " + impact.company);
 				} else {
 					if (impact.total >= cutoff) {
 				  		companyFolded.push(impact);
@@ -273,7 +275,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       	out = stack.keys(devices)(by_company),
       	margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
       	width = width_svgel - margin.left - margin.right, 
-      	height = height_svgel - margin.top - margin.bottom; 
+      	height = height_svgel - margin.top - margin.bottom;
 
     	if (height < 0 || width < 0) {
       		console.error('height ', height, 'width ', width, 'exiting ');

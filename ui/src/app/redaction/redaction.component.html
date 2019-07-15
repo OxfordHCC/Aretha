@@ -6,7 +6,7 @@
 
 <table>
 	<thead>
-		<tr><td><h4>Company Name</h4></td><td><h4>Action</h4></td></tr>
+		<tr><td><h4>Company Name</h4></td><td><h4 id="actionH4">Action</h4></td></tr>
 	</thead>
 	<tbody>
 		<tr *ngFor="let company of this.records"><td>{{company}}</td><td><button mat-button (click)="redact(company);">Remove</button></td></tr>

@@ -17,6 +17,7 @@ export class RedactionComponent implements OnInit {
 			data.map((x) => {
 				this.records.push(x[0]);
 			});
+			this.records.sort();
 		});
 
 	}

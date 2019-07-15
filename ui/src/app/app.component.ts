@@ -19,7 +19,10 @@ export class AppComponent implements OnInit {
     	this.router.events.subscribe(routeEvent => {
       		if (routeEvent instanceof NavigationEnd) {
         		console.log("nav end");
-        		try { this.actlog.log('routeChange', routeEvent.url); } catch(e) { }
+				let re = /\//;
+				let route = routeEvent.url.replace(re, "");
+				if (route === "") { route = "root"; }
+        		try { this.actlog.log('routeChange', route); } catch(e) { }
       		}      
     	});
     
