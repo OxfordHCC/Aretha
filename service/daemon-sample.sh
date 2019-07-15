@@ -38,7 +38,7 @@ PID2=$!
 >&2 echo Started categorisation with PID $PID2
 
 #start the API
-sudo -u $USER gunicorn --bind 127.0.0.1:4201 --workers 2 --threads 4 --timeout 30 api:app
+sudo -u $USER gunicorn --bind 127.0.0.1:4201 --workers 2 --threads 4 --timeout 30 api:app &
 PID3=$!
 >&2 echo Started the API with PID $PID3
 
