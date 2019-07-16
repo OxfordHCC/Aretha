@@ -86,14 +86,14 @@ def DatabaseInsert(packets):
     # commit the new records and close db connection
     conn.commit()
     cur.close()
-    conn.close()
+    conn.close()    
     print("Captured " + str(len(packets)) + " packets this tick")
 
 
 def QueuedCommit(packet):
     # commit packets to the database in COMMIT_INTERVAL second intervals
 
-    now = datetime.datetime.now()
+    now = datetime.datetime.utcnow()
     global timestamp
     global queue
 

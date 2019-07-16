@@ -262,8 +262,10 @@ export class LoaderService {
     	});
   	}
 
-	getIoTData(start: number, end: number, delta: number): Promise<IoTDataBundle> {
-		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end + '/' + delta).toPromise().then(response2 => {
+	getIoTData(start: Date, end: Date, delta: number): Promise<IoTDataBundle> {
+    const st_sec = Math.floor(start.getTime()/1000), 
+      end_sec = Math.round(end.getTime()/1000);
+		return this.http.get(IOTR_ENDPOINT + '/impacts/' + st_sec + '/' + end_sec + '/' + delta).toPromise().then(response2 => {
       		return response2.json();
     	});
   	}
