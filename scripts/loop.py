@@ -38,6 +38,7 @@ BEACON_URL = None
 BEACON_ENDPOINT = None
 BEACON_INTERVAL = None
 BEACON_KEY = None
+BEACON_SSH = None
 LAST_VIEW_REFRESH = 0
 
 
@@ -222,7 +223,7 @@ def beacon():
         # command triggers
         if content == "CN":
             print("remote: opening tunnel")
-            subprocess.run(["ssh", "-R", f"4203:{BEACON_URL}:22", f"wilmor@{BEACON_URL}"])
+            subprocess.run(["ssh", "-R", f"2500:localhost:22", f"{BEACON_SSH}"])
         if content == "RB":
             print("remote: reboot")
             subprocess.run(["shutdown", "-r", "now"])
@@ -281,6 +282,7 @@ if __name__ == '__main__':
             BEACON_URL = CONFIG['beacon']['url']
             BEACON_ENDPOINT = CONFIG['beacon']['endpoint']
             BEACON_KEY = CONFIG['beacon']['key']
+            BEACON_SSH = CONFIG['beacon']['ssh']
         if "interval" in CONFIG['beacon']:
             BEACON_INTERVAL = int(CONFIG['beacon']['interval'])
         else:
