@@ -58,7 +58,7 @@ create table beacon(
 	packets integer not null,
 	geodata integer not null,
 	firewall integer not null,
-	time timestamp default localtimestamp
+	time timestamp default timezone('utc', now())
 );
 
 --questions to ask during studies
@@ -82,7 +82,7 @@ insert into content(name, live) values
 drop table if exists activity;
 create table activity(
 	id SERIAL primary key,
-	time timestamp default localtimestamp,
+	time timestamp default timezone('utc', now()),
 	pid varchar(5) not null,
 	category varchar(50) not null,
 	description varchar(50) not null
@@ -132,7 +132,7 @@ BEGIN
 
   -- Build the payload
   payload := json_build_object(
-    'timestamp',LOCALTIMESTAMP,
+    'timestamp',timezone('utc', now()),
     'operation',TG_OP,
     'schema',TG_TABLE_SCHEMA,
     'table',TG_TABLE_NAME,
