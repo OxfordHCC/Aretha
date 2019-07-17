@@ -2,7 +2,7 @@
 drop table if exists packets cascade;
 create table packets (
 	id SERIAL primary key,
-	time timestamptz not null,
+	time timestamp not null,
 	src varchar(45) not null, --ip address of sending host
 	dst varchar(45) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
@@ -58,7 +58,7 @@ create table beacon(
 	packets integer not null,
 	geodata integer not null,
 	firewall integer not null,
-	time timestamptz default localtimestamp
+	time timestamp default localtimestamp
 );
 
 --questions to ask during studies
@@ -82,7 +82,7 @@ insert into content(name, live) values
 drop table if exists activity;
 create table activity(
 	id SERIAL primary key,
-	time timestamptz default localtimestamp,
+	time timestamp default localtimestamp,
 	pid varchar(5) not null,
 	category varchar(50) not null,
 	description varchar(50) not null
