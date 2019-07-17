@@ -54,11 +54,11 @@ export class LayoutTimeseriesComponent implements OnInit {
 
   
 
-	getIoTData(start: number, end: number, delta: number): void {	
-		console.info('getIoTData ((', start, '::', new Date(start*1000), ' - ', end, '::', new Date(end*1000), ' delta ', delta, '))');
+	getIoTData(start: Date, end: Date, delta: number): void {	
+		console.info('getIoTData ((', start, '::', start, ' - ', end, '::', end, ' delta ', delta, '))');
     	let this_ = this,
       		reload = () => {
-				const new_end = Math.floor((new Date()).valueOf()/1000.0);
+				const new_end = new Date(); // Math.floor((new Date()).valueOf()/1000.0);
 				console.info('time:: reload() ');
 				this_.loader.getIoTData(start, new_end, delta).then( bundle => {
 					console.info('time:: assigning impacts ', bundle.impacts);
@@ -172,10 +172,10 @@ export class LayoutTimeseriesComponent implements OnInit {
 	  }
 
 	ngOnInit() {
-		let now = Math.floor(new Date().getTime()/1000);
-		this.getIoTData(now - 15*60, now, 1);
-		// this.getIoTData(0, now, 1);
-		
+		// let now = Math.floor(new Date().getTime()/1000);
+		// this.getIoTData(now - 15*60, now, 1);
+		this.getIoTData(new Date(new Date().getTime()-30*60000), new Date(), 1);
+		// this.getIoTDataAggregated(0
 		
 		// seconds since the epoch
 	}

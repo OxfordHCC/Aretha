@@ -240,9 +240,9 @@ def beacon():
 
 def refreshView():
     global LAST_VIEW_REFRESH
-    if LAST_VIEW_REFRESH != datetime.now().minute:
+    if LAST_VIEW_REFRESH != datetime.utcnow().minute:
         DB_MANAGER.execute("refresh materialized view impacts with data", ());
-        LAST_VIEW_REFRESH = datetime.now().minute
+        LAST_VIEW_REFRESH = datetime.utcnow().minute
 
 
 ################
