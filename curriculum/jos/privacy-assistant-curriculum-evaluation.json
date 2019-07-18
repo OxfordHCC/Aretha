@@ -1,0 +1,4153 @@
+{
+  "class": "Survey",
+  "id": 492166,
+  "internal_title": "Privacy Assistant - Curriculum Evaluation",
+  "l10n": "en_GB",
+  "runs": [
+    {
+      "class": "SurveyRun",
+      "alert_frequency": 0,
+      "alert_last_update": 0,
+      "contact_message": "<p>For questions relating to this survey, <b>please contact</b> [CONTACT-PERSON]</p>",
+      "discourage_search_engines": true,
+      "expected_responses": 100,
+      "external_title": "Privacy Assistant - Curriculum Evaluation",
+      "id": 492157,
+      "login_message": "Please sign in below using the credentials supplied to you",
+      "notification_invite_body": "Dear [EMAIL]\nAn online survey has been created for you to complete.\n\n[CUSTOM_URL]\n\n- Online surveys Team",
+      "notification_invite_subject": "You have been sent a survey to complete",
+      "notification_reminder_body": "Dear [EMAIL]\nWe have not yet detected your response to our survey.\n\n[CUSTOM_URL]\n\n- Online surveys Team",
+      "notification_reminder_subject": "Survey completion reminder",
+      "permit_back_forth": true,
+      "permit_finish_later": false,
+      "permit_response_printout": false,
+      "short_name": "privacy-assistant-curriculum-evaluation",
+      "show_completion_receipt": false,
+      "show_numbering": false,
+      "show_progress": true,
+      "timezone": 346
+    }
+  ],
+  "top_container": {
+    "class": "Container",
+    "data_question_visibility": "show",
+    "id": 39763069,
+    "label": "b39763069",
+    "mandatory": "False",
+    "children": [
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39763070,
+        "label": "b39763070",
+        "mandatory": "False",
+        "title": "Introduction",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39908883,
+            "label": "b39908883",
+            "mandatory": "False",
+            "text": "<h3 style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(67, 67, 67); font-size: 14pt; font-weight: 400;\">General Information</span></span></h3>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">The aim of this survey is to evaluate online educational content that will be used as part of another study in this research project. We (researchers at Department of Computer Science at the University of Oxford) are investigating how people think about internet-connected devices and services, and how we can develop resources to help further their understanding.</span></span></p>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">We appreciate your interest in participating in this online survey. Please read through these terms before agreeing to participate by ticking the \u2018yes\u2019 box below.</span></span></p>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">You will be given some questions to read, and then answer questions on how you feel\u00a0about your smart device. It should take about 30\u00a0minutes. No background knowledge is required. The information collected will be used to improve the material that we use as part of an ongoing research project.</span></span></p>\n\n<h3 style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(67, 67, 67); font-size: 14pt; font-weight: 400;\">Do I have to take part?</span></span></h3>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">Your participation is voluntary. You may withdraw at any point during the questionnaire for any reason, before submitting your answers, by pressing the \u2018Exit\u2019 button or\u00a0closing the browser. However, we are only able to reimburse participants who complete the full survey.</span></span></p>\n\n<h3 style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(67, 67, 67); font-size: 14pt; font-weight: 400;\">How will your data be used?</span></span></h3>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">Your answers will be completely anonymous, and we will use all reasonable endeavours to keep them confidential.</span></span></p>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">The anonymised survey responses\u00a0will be stored securely, and\u00a0responses to questions\u00a0may be published alongside\u00a0(and used\u00a0in)\u00a0academic publications. Your IP address will not be stored. All questions are optional. Research data will be stored until the end of the project, which is anticipated to be around one year.</span></span></p>\n\n<h3 style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(67, 67, 67); font-size: 14pt; font-weight: 400;\">Who will have access to your data?</span></span></h3>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">The University of Oxford is the data controller for the purposes of the Data Protection Act 1998. Your responses may be shared with </span></span><span style=\"color: rgb(0, 0, 0); font-size: 14.6667px;\">Martin Kr\u00e4mer</span><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\"> and Reuben Binns, who are\u00a0other researchers in the department\u00a0working on the project. Responsible members of the University of Oxford and funders may be given access to data for monitoring and/or audit of the study to ensure we are complying with guidelines, or as otherwise required by law.</span></span></p>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">This questionnaire is for a\u00a0DPhil project. The principal researcher is William Seymour, who is attached to the Department of Computer Science at the University of Oxford. This project is being completed under the supervision of Dr Max Van Kleek. This project has been reviewed by, and received ethics clearance through, the University of Oxford Department of Computer Science Research Ethics Committee (reference CS_C1A_19_028</span><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">).</span></span></p>\n\n<h3 style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(67, 67, 67); font-size: 14pt; font-weight: 400;\">What if there is a problem?</span></span></h3>\n\n<p style=\"border: 0px; color: rgb(64, 64, 64); font-size: 15px;\"><span style=\"border: 0px;\"><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">If you have a concern about any aspect of this project, please email the researcher at william.seymour@cs.ox.ac.uk or their supervisor at max.van.kleek@cs.ox.ac.uk, who will do their best to answer your query. The researcher should acknowledge your concern within 10 working days and give you an indication of how they intend to deal with it. If you remain unhappy or wish to make a formal complaint, please contact the Chair of the Computer Science Department Research Ethics Committee\u00a0</span><span style=\"border: 0px; color: rgb(0, 0, 0);\"><span style=\"border: 0px; font-size: 11pt;\">a</span><span style=\"border: 0px; font-size: 11pt;\">t\u00a0</span><span style=\"border: 0px; font-size: 11pt;\">ethics@cs.ox.ac.uk</span><span style=\"border: 0px; font-size: 11pt;\">,\u00a0</span><span style=\"border: 0px; font-size: 11pt;\">w</span><span style=\"border: 0px; font-size: 11pt;\">ho\u00a0</span></span><span style=\"border: 0px; color: rgb(0, 0, 0); font-size: 11pt;\">will seek to resolve the matter in a reasonably expeditious manner.</span></span></p>"
+          },
+          {
+            "class": "FreeText",
+            "data_identifier": "token",
+            "data_question_visibility": "conditional",
+            "displayOptionality": true,
+            "format": "single",
+            "id": 39832819,
+            "is_other": false,
+            "label": "b39832819",
+            "mandatory": "True",
+            "show_hints": true,
+            "size": 35,
+            "text": "Please enter your Prolific ID",
+            "q_no": "1"
+          },
+          {
+            "class": "MultipleChoice",
+            "data_question_visibility": "show",
+            "displayLegend": false,
+            "displayOptionality": true,
+            "has_logic": false,
+            "has_other": false,
+            "id": 39908891,
+            "label": "b39908891",
+            "layout": "down",
+            "mandatory": "True",
+            "text": "I am aged 18 or over",
+            "q_no": "2",
+            "options": [
+              {
+                "class": "SelectionOption",
+                "id": 97583577,
+                "is_not_applicable": false,
+                "is_other": false,
+                "screen_to_message": false,
+                "text": "Yes",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "class": "MultipleChoice",
+            "data_question_visibility": "show",
+            "displayLegend": false,
+            "displayOptionality": true,
+            "has_logic": false,
+            "has_other": false,
+            "id": 39909526,
+            "label": "b39909526",
+            "layout": "down",
+            "mandatory": "True",
+            "text": "I have read the information above and agree to participate with the understanding that the data (including any personal data) I submit will be processed accordingly.",
+            "q_no": "3",
+            "options": [
+              {
+                "class": "SelectionOption",
+                "id": 97584799,
+                "is_not_applicable": false,
+                "is_other": false,
+                "screen_to_message": false,
+                "text": "I agree",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "class": "FreeText",
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "single",
+            "id": 39842986,
+            "is_other": false,
+            "label": "b39842986",
+            "mandatory": "False",
+            "show_hints": true,
+            "size": 35,
+            "text": "How would you describe your job/occupation?",
+            "q_no": "4"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39823937,
+        "label": "b39823937",
+        "mandatory": "False",
+        "title": "How do you envision the internet?",
+        "children": [
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "single",
+            "id": 39831809,
+            "is_other": false,
+            "label": "b39831809",
+            "mandatory": "True",
+            "maxsize": 1000,
+            "rows": 3,
+            "short_title": "PRE_BASICS_INTERNET",
+            "show_hints": true,
+            "size": 35,
+            "text": "Please describe briefly what you know about the\u00a0internet and how it works.",
+            "q_no": "5"
+          },
+          {
+            "class": "Scale",
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "id": 39831843,
+            "label": "b39831843",
+            "mandatory": "True",
+            "min_number": 10,
+            "number_per_row": 1,
+            "show_headings": true,
+            "show_hints": true,
+            "text": "Please select the most appropriate option.",
+            "q_no": "6",
+            "children": [
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831844,
+                "label": "b39831844",
+                "mandatory": "False",
+                "text": "Internet",
+                "q_no": "6.1",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831845,
+                    "label": "b39831845",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.1.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388596,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388597,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388598,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388599,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388600,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831846,
+                "label": "b39831846",
+                "mandatory": "False",
+                "text": "World wide web",
+                "q_no": "6.2",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831847,
+                    "label": "b39831847",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.2.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388601,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388602,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388603,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388604,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388605,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831848,
+                "label": "b39831848",
+                "mandatory": "False",
+                "text": "Web sites",
+                "q_no": "6.3",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831849,
+                    "label": "b39831849",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.3.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388606,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388607,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388608,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388609,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388610,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831850,
+                "label": "b39831850",
+                "mandatory": "False",
+                "text": "Unique resource locator (URL)",
+                "q_no": "6.4",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831851,
+                    "label": "b39831851",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.4.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388611,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388612,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388613,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388614,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388615,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831852,
+                "label": "b39831852",
+                "mandatory": "False",
+                "text": "Hyper Text Transfer Protocol (HTTP)",
+                "q_no": "6.5",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831853,
+                    "label": "b39831853",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.5.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388616,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388617,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388618,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388619,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388620,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831854,
+                "label": "b39831854",
+                "mandatory": "False",
+                "text": "Hyper Text Markup Language (HTML)",
+                "q_no": "6.6",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831855,
+                    "label": "b39831855",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.6.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388621,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388622,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388623,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388624,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388625,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831856,
+                "label": "b39831856",
+                "mandatory": "False",
+                "text": "message exchange (e.g. HTTP requests)",
+                "q_no": "6.7",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831857,
+                    "label": "b39831857",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.7.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388626,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388627,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388628,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388629,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388630,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831858,
+                "label": "b39831858",
+                "mandatory": "False",
+                "text": "IP addresses",
+                "q_no": "6.8",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831859,
+                    "label": "b39831859",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.8.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388631,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388632,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388633,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388634,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388635,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831860,
+                "label": "b39831860",
+                "mandatory": "False",
+                "text": "cookies",
+                "q_no": "6.9",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831861,
+                    "label": "b39831861",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.9.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388636,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388637,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388638,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388639,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388640,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39831862,
+                "label": "b39831862",
+                "mandatory": "False",
+                "text": "encryption",
+                "q_no": "6.10",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39831863,
+                    "label": "b39831863",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.10.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388641,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388642,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388643,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388644,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97388645,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39844905,
+                "label": "b39844905",
+                "mandatory": "False",
+                "text": "certificates",
+                "q_no": "6.11",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39844906,
+                    "label": "b39844906",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "6.11.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97418601,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97418602,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard of this but I don\u2019t know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97418603,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97418604,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97418605,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know very well how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39763294,
+        "label": "b39763294",
+        "mandatory": "False",
+        "title": "B1: What is the internet?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39763303,
+            "label": "b39763303",
+            "mandatory": "False",
+            "text": "<p>Source: BBC Bitesize KS3 \u2013 Internet and Communication</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\">The internet has revolutionised the way we work and play. It allows us to communicate, to share data and to seek information in a matter of seconds. All this is possible through the use of computers and networks.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">The internet is a global network of computers. All computer devices (including PCs, laptops, games consoles and smartphones) that are connected to the internet form part of this network. Added together, there are billions of computers connected to the internet, all able to communicate with each other.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">Today, the internet is a massive part of our daily lives.</p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Dxcc6ycZ73M?modestbranding=1&amp;showinfo=0&amp;rel=0&amp;cc_load_policy=1&amp;iv_load_policy=3&amp;theme=light&amp;fs=0&amp;color=white&amp;controls=0&amp;disablekb=1\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832856,
+            "is_other": false,
+            "label": "b39832856",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "7"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39764025,
+        "label": "b39764025",
+        "mandatory": "False",
+        "title": "B2:  How does it work?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39763660,
+            "label": "b39763660",
+            "mandatory": "False",
+            "text": "<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\">The internet is a global network of computers, some of which are called web servers. A web server is a computer which holds websites for other computers linked to the internet to access. Holding a website is known as \u2018hosting\u2019. A web server may host one or many websites and webpages. Sending information to a web server is known as uploading. Receiving information from a web server is known as downloading.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">When you make a telephone call, a direct connection is formed between you and the person you are calling. While you are making the call, no-one else can communicate with you. A web server needs to be able to communicate with many different computers at the same time. When information is uploaded to, or downloaded from, a web server it is broken up into tiny pieces called data packets. Each packet is a very short communication between the client computer and the web server. Because each communication lasts only milliseconds, the web server can seemingly communicate with many computers at the same time. It is a bit like having several conversations at the same time, but only saying one word to each person in turn.</p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/5o8CwafCxnU?start=0&amp;end=164&amp;controls=0\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832861,
+            "is_other": false,
+            "label": "b39832861",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "8"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39763961,
+        "label": "b39763961",
+        "mandatory": "False",
+        "title": "B3: What is the world-wide-web?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39763981,
+            "label": "b39763981",
+            "mandatory": "False",
+            "text": "<p>Source: BBC Bitesize KS3 \u2013 Internet and Communication</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\">The internet is a global network of computers. The World Wide Web is the part of the internet that can be accessed through websites. Websites consist of webpages which allow you to see information.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">Websites are accessed using a web browser. A browser is a program designed to display the information held on a website. Every website has an address at which it can be found, a bit like a house address.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">A website\u2019s address is known as its URL. A website can be visited by typing its URL into a web browser. Each address contains the prefix \u2018http:\u2019 which tells the computer to use the hyper text transfer protocol for communicating with the website. The browser then connects to the internet, finds the website at its address and downloads the information stored there onto our computer for us to view.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">Websites and webpages are joined together using hyperlinks. Clicking on a hyperlink takes us to another site or page.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">\u00a0</p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/kBXQZMmiA4s?controls=0&amp;start=29&amp;end=280\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832863,
+            "is_other": false,
+            "label": "b39832863",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "9"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39766132,
+        "label": "b39766132",
+        "mandatory": "False",
+        "title": "B4: What is data encryption?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39766145,
+            "label": "b39766145",
+            "mandatory": "False",
+            "text": "<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p>\u00a0</p>\n\n<p><span style=\"background-color: rgb(255, 255, 255);\">Encryption is used to scramble information so that it can be sent safely without anyone else being able to read it. The information is encrypted with a password or key that is needed to read the information again. If you visit a website on the internet that starts with \u2018https://\u2019 then this means that all of the information you are looking at or sending is being securely encrypted. One of the oldest methods of encryption is the caesar cipher. This works by shifting each letter of the message forward a specific number of paces in the alphabet. To read the message you need to know how many places each letter was moved (this is called the key).</span></p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/kBXQZMmiA4s?start=281&amp;end=365&amp;controls=0\"></iframe></p>"
+          },
+          {
+            "class": "Section",
+            "data_question_visibility": "show",
+            "id": 39766176,
+            "label": "b39766176",
+            "mandatory": "False",
+            "title": "Example"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39766213,
+            "label": "b39766213",
+            "mandatory": "False",
+            "text": "<p><span style=\"background-color: rgb(255, 255, 255);\">Not all of the data your devices are sending or receiving is encrypted. Encryption requires a lot of computation, which can be difficult for small devices, and adds complexity to communications. This is fine when the information being sent isn't sensitive, but can cause major problems otherwise.</span></p>\n\n<p><span style=\"background-color: rgb(255, 255, 255);\">For example,\u00a0imagine a smart home hub\u00a0that sends data unencrypted to two different companies:</span></p>\n\n<ul>\n\t<li>The BBC\u00a0to get\u00a0the latest news headlines</li>\n\t<li>Nokia/Withings to store GPS data from fitness trackers</li>\n</ul>\n\n<p>The daily news stories are fine to send unencrypted - there's little danger if anyone else is able to read them - but location data from the fitness trackers reveals where you live, work, and socialise, as well as the times that you'll be at home (and thus when you are away on holiday). This information could be used to plan a burglery.</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832867,
+            "is_other": false,
+            "label": "b39832867",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "10"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39832009,
+        "label": "b39832009",
+        "mandatory": "False",
+        "title": "Review",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957289,
+            "label": "b39957289",
+            "mandatory": "False",
+            "text": "<h3>This is your previous explanation</h3>\n\n<p><span style=\"font-size: 13.6px;\">[PRE_BASICS_INTERNET]</span></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832051,
+            "is_other": false,
+            "label": "b39832051",
+            "mandatory": "False",
+            "maxsize": 1000,
+            "rows": 3,
+            "show_hints": true,
+            "text": "Would you like to comment on your initial statement?\u00a0",
+            "q_no": "11"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39832515,
+            "label": "b39832515",
+            "mandatory": "False",
+            "text": "<p><strong>What do you think about these sketches?</strong>\u00a0</p>\n\n<p><span style=\"font-size: 13.6px;\">The pictures were drawn by members of the public\u00a0who were asked to sketch and explain what they knoew bout how the internet works. We are interested in what you think about these sketches.</span></p>\n\n<p><em style=\"background-color: rgb(255, 255, 255);\"><strong>Hint:</strong></em><span style=\"background-color: rgb(255, 255, 255);\">\u00a0There are\u00a0no right or wrong answers.</span></p>\n\n<p><span style=\"background-color: rgb(255, 255, 255);\"><span style=\"font-size: 70%;\">Examples taken verbatim from:\u00a0</span></span><span style=\"font-size: 70%;\">Kang, R., Dabbish, L., Fruchter, N., &amp; Kiesler, S. (2015). \u201cMy data just goes everywhere\u201d: User mental models of the internet and implications for privacy and security. In Symposium on Usable Privacy and Security (SOUPS) 2015 (pp. 39\u201352).</span></p>"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957416,
+            "label": "b39957416",
+            "mandatory": "False",
+            "text": "<p>\u00a0</p>\n\n<p><img src=\"https://martin-kraemer.net/aretha/img/internet-1.png\" alt=\"\" style=\"width: 100%;\"></p>\n\n<p>\"So everything that I do on the Internet or that other people do on the Internet is basically asking the Internet for information, and the Internet is sending us to various places where the information is and then bringing it back.\" \u00a0</p>\n\n<p>\u00a0</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832518,
+            "is_other": false,
+            "label": "b39832518",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the internet concepts\u00a0you just read about?\u00a0(300 characters)",
+            "q_no": "12"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957421,
+            "label": "b39957421",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/internet-2.png\" alt=\"\" style=\"width: 100%;\"></p>\n\n<p>The internet as a system with different hardware devices. Users connected through an ISP to the internet who in turn connects them to the wider internet. Services like DNS work as back bone of the internet. There are a number of different servers which users can reach through a network of nodes.</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832520,
+            "is_other": false,
+            "label": "b39832520",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the internet concepts\u00a0you just read about?\u00a0(300 characters)",
+            "q_no": "13"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957431,
+            "label": "b39957431",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/internet-3.png\" alt=\"\" style=\"width: 100%;\"></p>\n\n<p>Laptops and other devices connect to the internet via an ISP. They might use WiFi or a network (LAN) connection. Their router connects them to other routers which ultimately connect with a server from which information is requested. Information is send to the server in a similar way. The picture shows such different nodes through which each request travels before reaching the server.</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832527,
+            "is_other": false,
+            "label": "b39832527",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the internet concepts\u00a0you just read about?\u00a0(300 characters)",
+            "q_no": "14"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832874,
+            "is_other": false,
+            "label": "b39832874",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "15"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39832637,
+        "label": "b39832637",
+        "mandatory": "False",
+        "title": "How is data being used?",
+        "children": [
+          {
+            "class": "FreeText",
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "single",
+            "id": 39832655,
+            "is_other": false,
+            "label": "b39832655",
+            "mandatory": "True",
+            "maxsize": 1000,
+            "short_title": "PRE_DATA_USE",
+            "show_hints": true,
+            "size": 35,
+            "text": "Please describe briefly\u00a0how you generate data online, and how you think this\u00a0data is being used (1000 characters).",
+            "q_no": "16"
+          },
+          {
+            "class": "Scale",
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "id": 39832697,
+            "label": "b39832697",
+            "mandatory": "True",
+            "min_number": 7,
+            "number_per_row": 1,
+            "show_headings": true,
+            "show_hints": true,
+            "text": "How familiar are you with the following concepts?",
+            "q_no": "17",
+            "children": [
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832698,
+                "label": "b39832698",
+                "mandatory": "False",
+                "text": "Content recommendation",
+                "q_no": "17.1",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832699,
+                    "label": "b39832699",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.1.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389827,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389828,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389829,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389830,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389831,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832700,
+                "label": "b39832700",
+                "mandatory": "False",
+                "text": "Targeted advertising online",
+                "q_no": "17.2",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832701,
+                    "label": "b39832701",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.2.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389832,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389833,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389834,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389835,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389836,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832702,
+                "label": "b39832702",
+                "mandatory": "False",
+                "text": "Behavioural modelling",
+                "q_no": "17.3",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832703,
+                    "label": "b39832703",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.3.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389837,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389838,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389839,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389840,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389841,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832704,
+                "label": "b39832704",
+                "mandatory": "False",
+                "text": "Online tracking",
+                "q_no": "17.4",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832705,
+                    "label": "b39832705",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.4.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389842,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389843,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389844,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389845,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389846,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832706,
+                "label": "b39832706",
+                "mandatory": "False",
+                "text": "Online price discrimination",
+                "q_no": "17.5",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832707,
+                    "label": "b39832707",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.5.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389847,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389848,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389849,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389850,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389851,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832708,
+                "label": "b39832708",
+                "mandatory": "False",
+                "text": "Data inference and combination",
+                "q_no": "17.6",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832709,
+                    "label": "b39832709",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.6.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389852,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389853,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389854,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389855,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389856,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "ScaleRow",
+                "data_question_visibility": "show",
+                "id": 39832710,
+                "label": "b39832710",
+                "mandatory": "False",
+                "text": "Data breaches",
+                "q_no": "17.7",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "has_other": false,
+                    "id": 39832711,
+                    "label": "b39832711",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "show_hints": true,
+                    "text": " ",
+                    "q_no": "17.7.i",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389857,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I've never heard of this.",
+                        "value": 1
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389858,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I\u2019ve heard about this (e.g. in the news), but I don't know what it is.",
+                        "value": 2
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389859,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know what this is but I don\u2019t know how it works.",
+                        "value": 3
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389860,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know generally how this works.",
+                        "value": 4
+                      },
+                      {
+                        "class": "SelectionOption",
+                        "id": 97389861,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "I know a lot about how this works.",
+                        "value": 5
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832880,
+            "is_other": false,
+            "label": "b39832880",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "18"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39774976,
+        "label": "b39774976",
+        "mandatory": "False",
+        "title": "D0: Data use",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39774987,
+            "label": "b39774987",
+            "mandatory": "False",
+            "text": "<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Watch the first video, read the following text carefully, and then watch the second video.</p>\n\n<hr>\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/_RVPj-GSOdY?controls=0\"></iframe></p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">The information smart device use and the information they collect are of particular importance to their manufacturers. There\u2019s a lot of discussion about data collection, but little about why companies might want to collect data. Here are four of the main reasons, covering a broad range of applications.</p>\n\n<ol style=\"background-color: rgb(255, 255, 255);\">\n\t<li>Service provision - the most obvious reason for collecting data is that it\u2019s needed in order to provide you with a service or to make recommendations to you (e.g. a company can\u2019t charge you for something without your bank details, or suggest films without knowing what you like to watch)</li>\n\t<li>Advertising - companies often include advertising code from other companies on their websites and apps in order to make ad revenue. This extra code often collects information about you and combines this with information from other sources in order to show you ads for products you\u2019re more likely to click on and buy</li>\n\t<li>Product analytics - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers</li>\n\t<li>Behavioural insights - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)</li>\n</ol>\n\n<p><iframe width=\"640\" height=\"360\" src=\"https://player.vimeo.com/video/334901208\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832882,
+            "is_other": false,
+            "label": "b39832882",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "19"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39766214,
+        "label": "b39766214",
+        "mandatory": "False",
+        "title": "D1: Cookies, Tracking and Advertising",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39766241,
+            "label": "b39766241",
+            "mandatory": "False",
+            "text": "<p>Source: BBC WebWise</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p><strong style=\"background-color: rgb(255, 255, 255);\">Advertising</strong><span style=\"background-color: rgb(255, 255, 255);\">\u00a0is the main business model financing media production on the open web, and the drive to increase revenue by targeting ads to selected users has led to the creation of a plethora of companies dedicated to monitoring our clicks, searches, and reading habits as we move around the Internet. These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health. In many cases, these models are also used to predict when you\u2019re going through major life events, such as graduation or pregnancy, as these are when you\u2019re most vulnerable to the creation of new shopping habits.</span></p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/6EHSlhnE6Ck?controls=0\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832886,
+            "is_other": false,
+            "label": "b39832886",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "20"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39775351,
+        "label": "b39775351",
+        "mandatory": "False",
+        "title": "D2: Inference and combination",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39775353,
+            "label": "b39775353",
+            "mandatory": "False",
+            "text": "<p>Source: BBC WebWise</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\">There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn\u2019t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%) [5].</p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">Of the\u00a0devices connected to Aretha,\u00a0of them send data to Google or Facebook.</p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/mrnXv-g4yKU?controls=0\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832892,
+            "is_other": false,
+            "label": "b39832892",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "21"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39775557,
+        "label": "b39775557",
+        "mandatory": "False",
+        "title": "D3: Data breaches",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39775559,
+            "label": "b39775559",
+            "mandatory": "False",
+            "text": "<p>\u00a0</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><span style=\"background-color: rgb(255, 255, 255);\">In reality, perfect security is impossible, and sometimes companies have customer information stolen in data breaches. This data can include information you gave them, like your name and address, but also information collected by your devices. Hackers will often collect lists of email addresses, usernames, and passwords from data breaches and try these credentials on other sites. If you use the same password in several different places, then this makes it easy for them to take over multiple accounts as soon as one is compromised. Services like\u00a0</span><a style=\"background-color: rgb(255, 255, 255); color: rgb(51, 122, 183);\" href=\"https://haveibeenpwned.com/\">https://haveibeenpwned.com/</a><span style=\"background-color: rgb(255, 255, 255);\">\u00a0collate information on data breaches and let you check if any of your account details have been disclosed as part of a data breach.</span></p>\n\n<p style=\"background-color: rgb(255, 255, 255);\">\u00a0</p>\n\n<p><iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/0kK902-ZvNM?controls=0\"></iframe></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832904,
+            "is_other": false,
+            "label": "b39832904",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "22"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39832726,
+        "label": "b39832726",
+        "mandatory": "False",
+        "title": "What other people think?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957295,
+            "label": "b39957295",
+            "mandatory": "False",
+            "text": "<h3>This is your previous explanation</h3>\n\n<p><span style=\"font-size: 13.6px;\">[PRE_DATA_USE]</span></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832727,
+            "is_other": false,
+            "label": "b39832727",
+            "mandatory": "False",
+            "maxsize": 1000,
+            "rows": 3,
+            "show_hints": true,
+            "text": "Would you like to comment on your initial statement?\u00a0",
+            "q_no": "23"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39832728,
+            "label": "b39832728",
+            "mandatory": "False",
+            "text": "<p><strong>What do you think about these sketches?</strong>\u00a0</p>\n\n<p><span style=\"font-size: 13.6px;\">The pictures were drawn by people like you and me who were asked how they understood online data collection and tracking. We are interested in what you think about these sketches. Please comment briefly (50 words) on each of them.</span>\u00a0</p>\n\n<p><em style=\"background-color: rgb(255, 255, 255);\"><strong>Hint:</strong></em><span style=\"background-color: rgb(255, 255, 255);\">\u00a0There are no right or wrong answers.</span></p>\n\n<p><span style=\"font-size: 70%;\">Examples taken verbatim from: Yao, Y., Lo Re, D., &amp; Wang, Y. (2017). Folk Models of Online Behavioral Advertising, 1957\u20131969. https://doi.org/10.1145/2998181.2998316</span></p>"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957522,
+            "label": "b39957522",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/oba-1.png\" alt=\"\" style=\"width: 100%;\"> When a user searches for a pair of shoes on Amazon, the web browser will save the search information. The web browser has contracted with Amazon. When the user visits Facebook, the browser will pull the saved infor- mation and display ads for Amazon on the user\u2019s Facebook page.\u00a0</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832729,
+            "is_other": false,
+            "label": "b39832729",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the data concepts you just read about? (300 characters)",
+            "q_no": "24"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957600,
+            "label": "b39957600",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/oba-2.png\" alt=\"\" style=\"width: 100%;\"> He searches shoes on Amazon, then the browser stores the action in the cache; later, he visits Facebook, which then goes to its advertising server, and bids ads with the cached user information using a bidding algorithm. Facebook then displays the ads on his Facebook page.\u00a0</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832730,
+            "is_other": false,
+            "label": "b39832730",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the data concepts you just read about? (300 characters)",
+            "q_no": "25"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957605,
+            "label": "b39957605",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/oba-3.png\" alt=\"\" style=\"width: 100%;\"> When she searches shoes on Amazon, Amazon saves the search information. Amazon sells the data to Facebook (indicated by a dollar sign at the bottom left of the Facebook box). Facebook then gets more money from \u201cother shoe\u201d companies (two dollar signs) to show the shoe ads on her Facebook. The CEOs of Amazon and Facebook under the sun would not share her data if it is not for money.\u00a0</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832731,
+            "is_other": false,
+            "label": "b39832731",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "\u00a0How accurately do you think this sketch depicts the data concepts you just read about? (300 characters)",
+            "q_no": "26"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957606,
+            "label": "b39957606",
+            "mandatory": "False",
+            "text": "<p><img src=\"https://martin-kraemer.net/aretha/img/oba-4.png\" alt=\"\" style=\"width: 100%;\"> When a user searches shoes on Amazon, Amazon collects the user\u2019s data and then transmits the data to an Internet space. This Internet space sends ads to Facebook, which will display the shoe ads on the user\u2019s Facebook.\u00a0</p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39832769,
+            "is_other": false,
+            "label": "b39832769",
+            "mandatory": "True",
+            "maxsize": 300,
+            "rows": 3,
+            "show_hints": true,
+            "text": "How accurately do you think this sketch depicts the data concepts you just read about? (300 characters)",
+            "q_no": "27"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832940,
+            "is_other": false,
+            "label": "b39832940",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "Is there anything on this page that we could improve?",
+            "q_no": "28"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39764125,
+        "label": "b39764125",
+        "mandatory": "False",
+        "title": "SD1: How do smart devices work?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39764127,
+            "label": "b39764127",
+            "mandatory": "False",
+            "text": "<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><em><strong>Instructions</strong></em>: Please read the following text carefully, then watch the video.</p>\n\n<hr>\n<p style=\"background-color: rgb(255, 255, 255);\"><span style=\"background-color: rgb(255, 255, 255);\">Have you ever wondered what actually happens when you talk to a device like Amazon Alexa? The video illustrates how the device processes your questions to come up with an answer.</span></p>\n\n<p><iframe width=\"560\" height=\"349\" src=\"https://player.cnbc.com/p/gZWlPC/cnbc_global?playertype=synd&amp;byGuid=3000625364\"></iframe></p>\n\n<p><span style=\"background-color: rgb(255, 255, 255);\">Alexa uses complex algorithms are used to search the web and databases for answers. Alexa sends requests to different data sources to answer your questions. This is similar to loading a web page where you might load pictures from different resources than text.</span></p>"
+          },
+          {
+            "class": "Section",
+            "data_question_visibility": "show",
+            "id": 39764615,
+            "label": "b39764615",
+            "mandatory": "False",
+            "title": "Example"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39765448,
+            "label": "b39765448",
+            "mandatory": "False",
+            "text": "<p><span style=\"background-color: rgb(255, 255, 255);\">It\u2019s actually not all that different for other smart devices. Let\u2019s look at a smart bathroom scale, for example. Let\u2019s assume the picture showed data send from the scale in red, and data requested by the scale in blue. Then let\u2019s assume the scale was sending your daily weight information to New York, some logging infomration (e.g. when you used the scale) to a place in Colorado, and the scale was requesting weather data from California and asked for software updates in Idaho. Sometimes this communication might be bi-directional. Let\u2019s assume the scale could show a monthly summary of its measurements, e.g. how your body weight changed relatively to your body fat. It would request this information from the same server where it sent the measurements.\u00a0</span></p>\n\n<p><img src=\"https://martin-kraemer.net/aretha/img/smart-scale.png\" style=\"width: 100%;\"></p>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": false,
+            "format": "multi",
+            "id": 39832969,
+            "is_other": false,
+            "label": "b39832969",
+            "mandatory": "False",
+            "rows": 3,
+            "show_hints": true,
+            "text": "\u00a0Is there anything on this page that we could improve?",
+            "q_no": "29"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39832798,
+        "label": "b39832798",
+        "mandatory": "False",
+        "title": "How does Amazon Alexa work?",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39956287,
+            "label": "b39956287",
+            "mandatory": "False",
+            "text": "<p><iframe width=\"560\" height=\"349\" src=\"https://player.cnbc.com/p/gZWlPC/cnbc_global?playertype=synd&amp;byGuid=3000625364\"></iframe></p>"
+          },
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39957299,
+            "label": "b39957299",
+            "mandatory": "False",
+            "text": "<h3>4-step explanation in the video above</h3>\n\n<p>Alexa ...</p>\n\n<ol>\n\t<li>\n\t<p>listens and converts your speech into a command</p>\n\t</li>\n\t<li>\n\t<p>figures out what you really want from random string of words</p>\n\t</li>\n\t<li>\n\t<p>scans the web and databases to find an answer to your question</p>\n\t</li>\n\t<li>\n\t<p>converts the final answer back to speech</p>\n\t</li>\n</ol>"
+          },
+          {
+            "class": "Grid",
+            "data_question_visibility": "show",
+            "id": 39955987,
+            "label": "b39955987",
+            "mandatory": "False",
+            "short_title": "SMART_DEVICES",
+            "text": "<span style=\"font-size: 150%;\">Exercise:</span> Your task is to explain how Alexa works to a friend. Which of the concepts you have learned about on previous pages would you include in your explanation per step?",
+            "q_no": "30",
+            "children": [
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990603,
+                "mandatory": "False",
+                "text": "World wide web",
+                "q_no": "30.1",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990604,
+                    "label": "b39990604",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.1.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764715,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990605,
+                    "label": "b39990605",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.1.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764716,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990606,
+                    "label": "b39990606",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.1.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764717,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990607,
+                    "label": "b39990607",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.1.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764718,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990608,
+                "label": "b39990608",
+                "mandatory": "False",
+                "text": "Web sites",
+                "q_no": "30.2",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990609,
+                    "label": "b39990609",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.2.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764719,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990610,
+                    "label": "b39990610",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.2.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764720,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990611,
+                    "label": "b39990611",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.2.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764721,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990612,
+                    "label": "b39990612",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.2.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764722,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990613,
+                "label": "b39990613",
+                "mandatory": "False",
+                "text": "Unique resource locator (URL)",
+                "q_no": "30.3",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990614,
+                    "label": "b39990614",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.3.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764723,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990615,
+                    "label": "b39990615",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.3.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764724,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990616,
+                    "label": "b39990616",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.3.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764725,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990617,
+                    "label": "b39990617",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.3.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764726,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990618,
+                "label": "b39990618",
+                "mandatory": "False",
+                "text": "Hyper Text Transfer Protocol (HTTP)",
+                "q_no": "30.4",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990619,
+                    "label": "b39990619",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.4.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764727,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990620,
+                    "label": "b39990620",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.4.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764728,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990621,
+                    "label": "b39990621",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.4.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764729,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990622,
+                    "label": "b39990622",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.4.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764730,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990623,
+                "label": "b39990623",
+                "mandatory": "False",
+                "text": "Hyper Text Markup Language (HTML)",
+                "q_no": "30.5",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990624,
+                    "label": "b39990624",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.5.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764731,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990625,
+                    "label": "b39990625",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.5.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764732,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990626,
+                    "label": "b39990626",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.5.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764733,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990627,
+                    "label": "b39990627",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.5.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764734,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990628,
+                "label": "b39990628",
+                "mandatory": "False",
+                "text": "message exchange (e.g. HTTP requests)",
+                "q_no": "30.6",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990629,
+                    "label": "b39990629",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.6.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764735,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990630,
+                    "label": "b39990630",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.6.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764736,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990631,
+                    "label": "b39990631",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.6.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764737,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990632,
+                    "label": "b39990632",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.6.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764738,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990633,
+                "label": "b39990633",
+                "mandatory": "False",
+                "text": "IP addresses",
+                "q_no": "30.7",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990634,
+                    "label": "b39990634",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.7.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764739,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990635,
+                    "label": "b39990635",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.7.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764740,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990636,
+                    "label": "b39990636",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.7.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764741,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990637,
+                    "label": "b39990637",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.7.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764742,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990638,
+                "label": "b39990638",
+                "mandatory": "False",
+                "text": "cookies",
+                "q_no": "30.8",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990639,
+                    "label": "b39990639",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.8.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764743,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990640,
+                    "label": "b39990640",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.8.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764744,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990641,
+                    "label": "b39990641",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.8.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764745,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990642,
+                    "label": "b39990642",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.8.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764746,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990643,
+                "label": "b39990643",
+                "mandatory": "False",
+                "text": "encryption",
+                "q_no": "30.9",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990644,
+                    "label": "b39990644",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.9.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764747,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990645,
+                    "label": "b39990645",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.9.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764748,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990646,
+                    "label": "b39990646",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.9.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764749,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990647,
+                    "label": "b39990647",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.9.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764750,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990648,
+                "label": "b39990648",
+                "mandatory": "False",
+                "text": "certificates",
+                "q_no": "30.10",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990649,
+                    "label": "b39990649",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.10.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764751,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990650,
+                    "label": "b39990650",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.10.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764752,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990651,
+                    "label": "b39990651",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.10.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764753,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990652,
+                    "label": "b39990652",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.10.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764754,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990653,
+                "label": "b39990653",
+                "mandatory": "False",
+                "text": "Content recommendation",
+                "q_no": "30.11",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990654,
+                    "label": "b39990654",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.11.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764755,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990655,
+                    "label": "b39990655",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.11.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764756,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990656,
+                    "label": "b39990656",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.11.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764757,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990657,
+                    "label": "b39990657",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.11.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764758,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990658,
+                "label": "b39990658",
+                "mandatory": "False",
+                "text": "Targeted advertising online",
+                "q_no": "30.12",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990659,
+                    "label": "b39990659",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.12.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764759,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990660,
+                    "label": "b39990660",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.12.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764760,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990661,
+                    "label": "b39990661",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.12.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764761,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990662,
+                    "label": "b39990662",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.12.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764762,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990663,
+                "label": "b39990663",
+                "mandatory": "False",
+                "text": "Behavioural modelling",
+                "q_no": "30.13",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990664,
+                    "label": "b39990664",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.13.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764763,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990665,
+                    "label": "b39990665",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.13.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764764,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990666,
+                    "label": "b39990666",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.13.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764765,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990667,
+                    "label": "b39990667",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.13.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764766,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990668,
+                "label": "b39990668",
+                "mandatory": "False",
+                "text": "Online tracking",
+                "q_no": "30.14",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990669,
+                    "label": "b39990669",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.14.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764767,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990670,
+                    "label": "b39990670",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.14.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764768,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990671,
+                    "label": "b39990671",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.14.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764769,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990672,
+                    "label": "b39990672",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.14.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764770,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990673,
+                "label": "b39990673",
+                "mandatory": "False",
+                "text": "Online price discrimination",
+                "q_no": "30.15",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990674,
+                    "label": "b39990674",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.15.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764771,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990675,
+                    "label": "b39990675",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.15.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764772,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990676,
+                    "label": "b39990676",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.15.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764773,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990677,
+                    "label": "b39990677",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.15.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764774,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990678,
+                "label": "b39990678",
+                "mandatory": "False",
+                "text": "Data inference and combination",
+                "q_no": "30.16",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990679,
+                    "label": "b39990679",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.16.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764775,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990680,
+                    "label": "b39990680",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.16.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764776,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990681,
+                    "label": "b39990681",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.16.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764777,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990682,
+                    "label": "b39990682",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.16.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764778,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "class": "GridRow",
+                "data_question_visibility": "show",
+                "id": 39990683,
+                "label": "b39990683",
+                "mandatory": "False",
+                "text": "Data breaches",
+                "q_no": "30.17",
+                "children": [
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990684,
+                    "label": "b39990684",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S1",
+                    "show_hints": true,
+                    "text": "step 1",
+                    "q_no": "30.17.a",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764779,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990685,
+                    "label": "b39990685",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S2",
+                    "show_hints": true,
+                    "text": "step 2",
+                    "q_no": "30.17.b",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764780,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990686,
+                    "label": "b39990686",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S3",
+                    "show_hints": true,
+                    "text": "step 3",
+                    "q_no": "30.17.c",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764781,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  },
+                  {
+                    "class": "MultipleAnswer",
+                    "data_question_visibility": "show",
+                    "displayLegend": false,
+                    "displayOptionality": false,
+                    "has_other": false,
+                    "id": 39990687,
+                    "label": "b39990687",
+                    "layout": "across",
+                    "mandatory": "False",
+                    "short_title": "S4",
+                    "show_hints": true,
+                    "text": "step 4",
+                    "q_no": "30.17.d",
+                    "options": [
+                      {
+                        "class": "SelectionOption",
+                        "id": 97764782,
+                        "is_not_applicable": false,
+                        "is_other": false,
+                        "screen_to_message": false,
+                        "text": "include",
+                        "value": 1
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39949078,
+        "label": "b39949078",
+        "mandatory": "False",
+        "title": "How does Amazon Alexa work? (continued)",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39949023,
+            "label": "b39949023",
+            "mandatory": "False",
+            "text": "<p>Please explain briefly why you consider the following concepts relevant to explain step 3 \"<em>scans the web and databases to find an answer to your question step</em>\" from the video.</p>\n\n<table style=\"border-collapse: collapse; border-color: #A3A3A3; border-style: solid; border-width: 1pt; direction: ltr;\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #F2F2F2; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\"><strong>concept</strong></p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #F2F2F2; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6069in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\"><strong>include in explanation?</strong></p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">World Wide Web</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_1_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Web sites</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_2_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Unique resource locator (URL)</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_3_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Hyper Text Transfer Protocol (HTTP)</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_4_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Hyper Text Markup Language (HTML)</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_5_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5597in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Message exchange (e.g. HTTP requests)</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.602in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_6_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">IP addresses</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_7_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">cookies</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_8_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">encryption</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6208in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_9_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">certificates</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_10_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Content recommendation</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_11_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Targeted advertising online</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_12_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Behavioural modelling</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_13_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Online tracking</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_14_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Online price discrimination</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_15_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Data inference and combination</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_16_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 2.5402in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">Data breaches</p>\n\t\t\t</td>\n\t\t\t<td style=\"background-color: #FFFEF9; border-color: #A3A3A3; border-style: solid; border-width: 1pt; width: 1.6756in;\">\n\t\t\t<p style=\"color: #444444; font-size: 10.5pt; margin: 0in;\">[SMART_DEVICES_17_S3]</p>\n\t\t\t</td>\n\t\t</tr>\n\t</tbody>\n</table>"
+          },
+          {
+            "class": "FreeText",
+            "cols": 35,
+            "data_question_visibility": "show",
+            "displayOptionality": true,
+            "format": "multi",
+            "id": 39990735,
+            "is_other": false,
+            "label": "b39990735",
+            "mandatory": "True",
+            "maxsize": 600,
+            "rows": 3,
+            "show_hints": true,
+            "text": "Your explanation (600 characters)",
+            "q_no": "31"
+          }
+        ]
+      },
+      {
+        "class": "Page",
+        "data_question_visibility": "show",
+        "id": 39763071,
+        "label": "b39763071",
+        "mandatory": "False",
+        "title": "Final page",
+        "children": [
+          {
+            "class": "Note",
+            "data_question_visibility": "show",
+            "id": 39949147,
+            "label": "b39949147",
+            "mandatory": "False",
+            "text": "<p>Thank you for completing the survey! Please click <a target=\"_blank\" href=\"https://app.prolific.ac/submissions/complete?cc=83IEQV3C\">here</a> to return to Prolific Academic. If you have any problems, the survey code is 83IEQV3C.</p>"
+          }
+        ]
+      }
+    ]
+  }
+}
