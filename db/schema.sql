@@ -67,17 +67,24 @@ create table content(
 	name varchar(20) primary key,
 	live timestamp not null,
 	complete boolean default false,
-	pre varchar(200),
-	post varchar(200)
+	pre varchar(500),
+	post varchar(500)
 );
 
 --load questions
 insert into content(name, live) values
-	('encryption', '2019-06-01T15:14:00'),
-	('tracking', '2019-06-01T15:14:00'),
-	('breach', '2019-06-01T15:14:00'),
-	('inference', '2019-06-01T15:14:00'),
-	('frequency', '2019-06-01T15:14:00');
+	('S1', '2019-06-01T15:14:00'),
+	('S2', '2019-06-01T15:14:00'),
+	('S3', '2019-06-01T15:14:00'),
+	('B1', '2019-06-01T15:14:00'),
+	('B2', '2019-06-01T15:14:00'),
+	('B3', '2019-06-01T15:14:00'),
+	('B4', '2019-06-01T15:14:00'),
+	('D1', '2019-06-01T15:14:00'),
+	('D2', '2019-06-01T15:14:00'),
+	('D3', '2019-06-01T15:14:00'),
+	('D4', '2019-06-01T15:14:00'),
+	('SD1', '2019-06-01T15:14:00');
 
 drop table if exists activity;
 create table activity(

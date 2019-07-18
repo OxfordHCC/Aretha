@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Create a .desktop file in ~/.config/autostart
+# Add the followig to /etc/xdg/autostart/aretha.desktop
 #
 #[Desktop Entry]
 #Name=IoTRefine
