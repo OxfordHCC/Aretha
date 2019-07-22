@@ -177,7 +177,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	ngOnInit() {
 		// let now = Math.floor(new Date().getTime()/1000);
 		// this.getIoTData(now - 15*60, now, 1);
-		this.getIoTData(new Date(new Date().getTime()-30*60000), new Date(), 1);
+		this.getIoTData(new Date(new Date().getTime()-24*60*60000), new Date(), 1);
 		// this.getIoTDataAggregated(0
 		
 		// seconds since the epoch

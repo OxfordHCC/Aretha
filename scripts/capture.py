@@ -78,7 +78,7 @@ def DatabaseInsert(packets):
 
         # insert packets into table
         try:
-            print("packet sniff time ", packet.sniff_time, type(packet.sniff_time), fix_sniff_tz(packet.sniff_time), src, dst)
+            # print("packet sniff time ", packet.sniff_time, type(packet.sniff_time), fix_sniff_tz(packet.sniff_time), src, dst)
             insert += f"('{fix_sniff_tz(packet.sniff_time)}', '{src}', '{dst}', '{mac}', '{packet.length}', '{proto}', '{ext}'), "
         except:
             print("Unexpected error on insert:", sys.exc_info())
