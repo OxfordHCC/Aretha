@@ -1,4 +1,4 @@
- import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+ import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation, Output, EventEmitter, ViewChild } from '@angular/core';
 import { LoaderService, GeoData, Device } from '../loader.service';
 import { Http, HttpModule} from '@angular/http';
 import { Observable } from 'rxjs';
@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
 
 @Component({
-	encapsulation: ViewEncapsulation.None,
+	// encapsulation: ViewEncapsulation.None,
 	selector: 'app-timeseries',
 	templateUrl: './timeseries.component.html',
 	styleUrls: ['./timeseries.component.scss']
@@ -34,6 +34,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	svgel: any; // actually an HTMLElement	
 	
 	@Input() showtimeselector;
+
+	@ViewChild('graphel')
+	graphEl: ElementRef;
+
 	selectedTime = -1;
 	
 	// for debug visualisation
@@ -46,6 +50,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	
 	mouseX = 0;
 	mouseDown = false;
+	elHeight: any;
+	elWidth: any;
 	
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
@@ -81,7 +87,15 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			});  
 		}
 		
-		ngAfterViewInit(): void { this.render(); }
+		ngAfterViewInit(): void { 
+			console.log('GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.parentElement.offsetWidth, this.graphEl.nativeElement.parentElement.offsetHeight);
+			(<any>window)._gel = this.graphEl;
+			try { 
+				this.elWidth = this.graphEl.nativeElement.parentElement.offsetWidth;
+				this.elHeight = this.graphEl.nativeElement.parentElement.offsetHeight;
+			} catch(E) { console.log(E); }
+			this.render(); 
+		}
 		
 		getSVGElement() {
 			const nE: HTMLElement = this.el.nativeElement;
@@ -91,6 +105,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// this gets called when impacts changes
 		ngOnChanges(changes: SimpleChanges): void {
 			console.info('time:: ngOnChanges ', changes);
+			console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
+
 			var this_ = this;
 			if (this.impactChanges && this._impact_listener === undefined) { 
 				this._impact_listener = this.impactChanges.subscribe(target => {
@@ -133,29 +149,39 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		render() {
 			console.info('timeseries.render()');
 			let svgel = this.svgel || this.getSVGElement();	
-			if (!svgel || this.impacts === undefined ) { 
+			if (!svgel || this.impacts === undefined || !this.elHeight || !this.elWidth ) { 
 				console.info('timeseries: impacts undefined, chilling');
 				return; 
 			}
 			
-			this.svgel = svgel;
-			const margin = { top: 20, right: 20, bottom: 160, left: 50 };
 			
+			this.svgel = svgel;
+			// 
+			/* origin			
+			const margin = { top: 20, right: 20, bottom: 160, left: 50 };
 			let rect = svgel.getBoundingClientRect(),
 			width_svgel = Math.round(rect.width - 5),
 			height_svgel = Math.round(rect.height - 5),
-			svg = d3.select(svgel);
-			
-			if (!this.scale) {
-				svg.attr('width', width_svgel).attr('height', height_svgel);
-			} else {
-				svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
-				.attr('virtualWidth', this.vbox.width)
-				.attr('virtualHeight', this.vbox.height)
-				.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
-				width_svgel = this.vbox.width;
-				height_svgel = this.vbox.height;
-			}
+			*/
+
+			const margin = { top: 20, right: 20, bottom: 20, left: 20 },
+				svg = d3.select(svgel),
+				width_svgel = this.elWidth,
+				height_svgel = this.elHeight;
+			// 
+			console.info('width svgel ', this.elWidth, ' ', width_svgel, 'height svgel ', this.elHeight, ' ', height_svgel);
+
+			svg.attr('width', width_svgel).attr('height', height_svgel); // .style({width:width_svgel, height:height_svgel})
+			// (<any>window).__svg = svg;
+			// 
+			// else {
+			// svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
+			// 	.attr('virtualWidth', this.vbox.width)
+			// 	.attr('virtualHeight', this.vbox.height)
+			// 	.attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
+			// 	width_svgel = this.vbox.width;
+			// 	height_svgel = this.vbox.height;
+			// }
 			
 			const width = width_svgel - this.margin.left - this.margin.right;
 			const height = height_svgel - this.margin.top - this.margin.bottom; 
@@ -319,4 +345,5 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	onResize() {
 		this.render();
 	}
+
 }
