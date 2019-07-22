@@ -2,7 +2,7 @@
 drop table if exists packets cascade;
 create table packets (
 	id SERIAL primary key,
-	time timestamp not null,
+	time timestamp with time zone not null,
 	src varchar(45) not null, --ip address of sending host
 	dst varchar(45) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
@@ -65,7 +65,7 @@ create table beacon(
 drop table if exists content;
 create table content(
 	name varchar(20) primary key,
-	live timestamp not null,
+	live timestamp with time zone not null,
 	complete boolean default false,
 	pre varchar(500),
 	post varchar(500)
@@ -89,7 +89,7 @@ insert into content(name, live) values
 drop table if exists activity;
 create table activity(
 	id SERIAL primary key,
-	time timestamp default timezone('utc', now()),
+	time timestamp with time zone default timezone('utc', now()),
 	pid varchar(5) not null,
 	category varchar(50) not null,
 	description varchar(50) not null
@@ -97,7 +97,7 @@ create table activity(
 
 drop materialized view if exists impacts;
 create materialized view impacts as
-	select mac, ext, round(extract(epoch from time)/60) as mins, sum(len) as impact
+	select mac, ext, round(extract(epoch from time at time zone 'utc')/60) as mins, sum(len) as impact
 	from packets
 	group by mac, ext, mins
 	order by mins

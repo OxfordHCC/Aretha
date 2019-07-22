@@ -277,12 +277,40 @@ if __name__ == '__main__':
         sys.exit(-1)
     
     if "loop" in CONFIG and "beacon" in CONFIG['loop']:
-        ISBEACON = CONFIG['loop']['beacon']
+        ISBEACON = CONFIG['loop']['beacon'].lower()=='true'
+    else:
+        ISBEACON = False
+
+    if ISBEACON:
+        if not "beacon" in CONFIG: 
+            print("BEACON config section missing")
+            parser.print_help()
+            sys.exit(-1)
+
         if "url" in CONFIG['beacon']:
             BEACON_URL = CONFIG['beacon']['url']
+        else:
+            print('config.BEACON missing URL')
+            sys.exit(-1)
+
+        if 'endpoint' in CONFIG['beacon']:
             BEACON_ENDPOINT = CONFIG['beacon']['endpoint']
+        else:
+            print('config.BEACON missing endpoint')
+            sys.exit(-1)
+
+        if 'key' in CONFIG['beacon']:
             BEACON_KEY = CONFIG['beacon']['key']
+        else:
+            print("config.BEACON missing key")
+            sys.exit(-1)
+        
+        if 'ssh' in CONFIG['beacon']:
             BEACON_SSH = CONFIG['beacon']['ssh']
+        else:
+            print("config.BEACON missing ssh")
+            sys.exit(-1)
+        
         if "interval" in CONFIG['beacon']:
             BEACON_INTERVAL = int(CONFIG['beacon']['interval'])
         else:

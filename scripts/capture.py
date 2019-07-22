@@ -2,7 +2,7 @@
 
 import argparse
 import configparser
-import datetime
+from datetime import datetime, timezone
 import os
 import psycopg2
 import pyshark
@@ -20,6 +20,12 @@ COMMIT_INTERVAL = None
 CONFIG_PATH = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0] + "/config/config.cfg"
 CONFIG = None
 
+def fix_sniff_tz(sniff_dt):
+    # pyshark doesn't return an aware datetime, so we misinterpret things to being non local
+    # what we need to do is figure out what timezone we captured in
+    local_tz = datetime.utcnow().astimezone().tzinfo
+    # then we need to create a new datetime with the actual timezone... cast back into UTC.
+    return datetime.combine(sniff_dt.date(),sniff_dt.time(),local_tz).astimezone(timezone.utc)
 
 def DatabaseInsert(packets):
     global timestamp
@@ -72,7 +78,8 @@ def DatabaseInsert(packets):
 
         # insert packets into table
         try:
-            insert += f"('{packet.sniff_time}', '{src}', '{dst}', '{mac}', '{packet.length}', '{proto}', '{ext}'), "
+            print("packet sniff time ", packet.sniff_time, type(packet.sniff_time), fix_sniff_tz(packet.sniff_time), src, dst)
+            insert += f"('{fix_sniff_tz(packet.sniff_time)}', '{src}', '{dst}', '{mac}', '{packet.length}', '{proto}', '{ext}'), "
         except:
             print("Unexpected error on insert:", sys.exc_info())
             traceback.print_exc()
@@ -93,7 +100,7 @@ def DatabaseInsert(packets):
 def QueuedCommit(packet):
     # commit packets to the database in COMMIT_INTERVAL second intervals
 
-    now = datetime.datetime.utcnow()
+    now = datetime.utcnow()
     global timestamp
     global queue
 
