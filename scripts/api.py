@@ -311,7 +311,7 @@ def GetExample(question):
     result["geodata"] = []
     result["devices"] = []
 
-    if question == "S1":
+    if question == "S1" or question == "S2":
         result["text"] = "Some content will be illustrated with examples from your home network. When they do, they'll appear here."
 
     elif question == "encryption":

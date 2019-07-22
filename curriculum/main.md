@@ -107,7 +107,7 @@ EVAL C   | tbd  |   | TBD
 - Manufacturers use data to provide features, monitor the device status, and for many more things.
 <iframe title="vimeo-player" src="https://player.vimeo.com/video/334901208" width="640" height="360" frameborder="0" allowfullscreen></iframe>
 
-## S3: Content: What does Aretha show?
+## S2: Content: What does Aretha show?
 The main aretha screen consists of three separate graphs:
 1) a time series chart that includes all devices
 2) a world map with dots that mark destinations (companies) with which each device communicates at a given point in time
@@ -120,10 +120,10 @@ Now, there are a number of ways you can interact with the information.
 - clicking any of the bars you can learn about the underlying data
 ![aretha](figures/aretha.png)
 
-## S2: Aretha allows you to control data flows.
+## S3: Aretha allows you to control data flows.
 - You can decide which servers your devices are allowed to communicate with (caveat: this might curtail functionality).
 
-## S2: Aretha helps you to understand your data rights!
+## S3: Aretha helps you to understand your data rights!
 Source: [Your data matters](https://ico.org.uk/your-data-matters/)
 - Your right to be informed if your personal data is being used
 - Your right to get copies of your data

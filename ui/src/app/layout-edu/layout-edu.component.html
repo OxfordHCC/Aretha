@@ -17,7 +17,7 @@
     	</p>
 	</div>
 	<div class="gridright">
-		<app-geomap [impacts]="impacts" [geodata]="geodata" [showLegend]='false'></app-geomap>
+		<app-geomap *ngIf="content === 'B3' || content === 'B4' || content === 'SD1'" [impacts]="impacts" [geodata]="geodata" [showLegend]='false'></app-geomap>
 		<app-example [text]="text"></app-example>
 	</div>
 </div>
