@@ -1,6 +1,6 @@
 .root {
     position: absolute;
-    border:5px solid green;
+    // border:5px solid green;
     left:0px; right:0px; bottom: 0px; top: 40px;
     // padding: 20px 20px 20px 20px; 
     // big left to accommodate infobox - no infobox anymore, so small
@@ -11,7 +11,9 @@
         flex-grow: 1;
         flex-basis: 70%;
 		flex-shrink: 0;
-        padding: 10px 10px 10px 10px;
+        // padding: 10px 10px 10px 10px;
+        padding:0px;
+        border-right:1px solid #eee;
         
         display:flex;
         flex-direction:column;
@@ -24,8 +26,10 @@
                 flex-grow:0;
                 flex-basis:30%;
             }            
-            border:1px solid yellow;
-            margin:0px; padding:0px;
+            // border:1px solid yellow;
+            margin:0px 0px 5px 0px; 
+            padding:0px;
+
         }
     }
     .gridright {
@@ -34,6 +38,7 @@
         height: 100%;
         flex-grow: 0;
         align-items: stretch;
-		padding: 20px 20px 20px 10px;
+        // padding: 20px 20px 20px 10px;
+        padding: 30px;
     }
 }
