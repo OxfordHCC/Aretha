@@ -51,9 +51,8 @@ export class LayoutTimeseriesComponent implements OnInit {
   }
   triggerImpactsChange(): any {
 	this.impactObservers.map(obs => obs.next({}));
-	this.timeSelected(this.lastTimeSelection);
+	if (this.lastTimeSelection) { this.timeSelected(this.lastTimeSelection); }
   }  
-
   
 
 	getIoTData(start: Date, end: Date, delta: number): void {	

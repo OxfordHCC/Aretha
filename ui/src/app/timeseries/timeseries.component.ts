@@ -105,7 +105,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		// this gets called when impacts changes
 		ngOnChanges(changes: SimpleChanges): void {
 			console.info('time:: ngOnChanges ', changes);
-			console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
+			// console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
 
 			var this_ = this;
 			if (this.impactChanges && this._impact_listener === undefined) { 
@@ -147,7 +147,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		}
 		
 		render() {
-			console.info('timeseries.render()');
+			console.info('timeseries.render[',this.showtimeselector,'] ', this.impacts);
 			let svgel = this.svgel || this.getSVGElement();	
 			if (!svgel || this.impacts === undefined || !this.elHeight || !this.elWidth ) { 
 				console.info('timeseries: impacts undefined, chilling');
@@ -288,7 +288,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// attach only once	
 					let updateMouse = (xx:number) => {
 						this.mouseX = xx;
-						console.log('new time is ', xscale.invert(this.mouseX));
+						// console.log('new time is ', xscale.invert(this.mouseX));
 						this.selectedTimeChanged.emit({
 							centre: xscale.invert(this.mouseX),
 							start: xscale.invert(this.mouseX-this.timeSelectorWidth/2),
