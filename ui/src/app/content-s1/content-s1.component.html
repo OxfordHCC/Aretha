@@ -1,0 +1,29 @@
+<h3>Introduction to the Privacy Assistant</h3>
+
+<div [ngSwitch]="stage">
+	<div *ngSwitchCase="1">
+		<h4>The privacy assistant helps you understand how data is flowing in and out of your home</h4>
+		<ul>
+			<li>Data flows from your devices whenever you do things like use an app on your smartphone, load a website on your computer, upload activities from your Fitbit, or remotely switch on the heating.</li>
+			<li>Connect devices to the privacy assistant's WiFi hotspot to start investigating your data streams.</li>
+			<li>You can review data flows as they happen by using the time series tab, or look at your overall data exposure to different companies using the overview tab.</li>
+		</ul>
+		<iframe width="560" height="315" src="https://www.youtube.com/embed/_RVPj-GSOdY?controls=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+	</div>
+
+	<div *ngSwitchCase="2">
+	<h4>The privacy assistant helps you understand how data is an integral part of smart home devices.</h4>
+	<ul>
+		<li>All of your devices send and receive data when you use them actively.</li>
+		<li>Devices might also send and receive data when they are 'waiting'.</li>
+		<li>Manufacturers use data to provide features, monitor the device status, and for many more things.</li>
+	</ul>
+	<iframe title="vimeo-player" src="https://player.vimeo.com/video/334901208" width="640" height="360" frameborder="0" allowfullscreen></iframe>
+	</div>
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

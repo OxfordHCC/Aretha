@@ -290,6 +290,8 @@ export class LoaderService {
 	
 	setContent(name: string, pre: string, post: string): Promise<any> {
 		this.changeContent();
+		if (pre === "") {pre = "Blank";}
+		if (post === "") {post = "Blank";}
 		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + pre + '/' + post).toPromise().then(response2 => {
       		return response2.json();
 		});
@@ -338,7 +340,6 @@ export class LoaderService {
   }
 
   setAct(pid: string, type: string, action: string) {
-	  console.log("got activity");
     this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action).toPromise().then(response2 => {
 		console.log("sent activity");
 	});

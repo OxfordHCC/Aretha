@@ -4,15 +4,15 @@ import {Router} from '@angular/router';
 import {ActivityLogService} from "../activity-log.service";
 
 @Component({
-  selector: 'app-content-breach',
-  templateUrl: './content-breach.component.html',
-  styleUrls: ['./content-breach.component.css']
+  selector: 'app-content-s1',
+  templateUrl: './content-s1.component.html',
+  styleUrls: ['./content-s1.component.css']
 })
-export class ContentBreachComponent implements OnInit {
+export class ContentS1Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4 + 2; // +2 for the initial and final text fields
-	keyword = "breach";
+	max: number = 2; 
+	keyword = "S1";
 	preResponse: string = "";
 	postResponse: string = "";
 
@@ -30,7 +30,7 @@ export class ContentBreachComponent implements OnInit {
 	next() {
 		if (this.stage < this.max) {
 			this.stage++;
-			this.actlog.log("edu-advance", this.keyword + " " + this.stage)
+     	 	this.actlog.log("edu-advance", this.keyword + " " + this.stage)
     	} else {
 			this.loader.setContent(this.keyword, this.preResponse, this.postResponse)
 				.then((x) => this.router.navigate(['/timeseries']));

@@ -163,7 +163,9 @@ def counterexample(question):
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     else:
-        return jsonify({"message": f"Unable to find a match for requested example"})
+        response = make_response(jsonify({"message": f"Unable to find a match for requested example"}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
 
 
 # add a firewall rule as dictated by aretha
@@ -309,7 +311,10 @@ def GetExample(question):
     result["geodata"] = []
     result["devices"] = []
 
-    if question == "encryption":
+    if question == "S1":
+        result["text"] = "Some content will be illustrated with examples from your home network. When they do, they'll appear here."
+
+    elif question == "encryption":
         try:
             example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
         except:

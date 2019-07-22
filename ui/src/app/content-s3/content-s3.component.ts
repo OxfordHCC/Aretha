@@ -4,17 +4,17 @@ import {Router} from '@angular/router';
 import {ActivityLogService} from "../activity-log.service";
 
 @Component({
-  selector: 'app-content-breach',
-  templateUrl: './content-breach.component.html',
-  styleUrls: ['./content-breach.component.css']
+  selector: 'app-content-s3',
+  templateUrl: './content-s3.component.html',
+  styleUrls: ['./content-s3.component.css']
 })
-export class ContentBreachComponent implements OnInit {
+export class ContentS3Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4 + 2; // +2 for the initial and final text fields
-	keyword = "breach";
-	preResponse: string = "";
-	postResponse: string = "";
+	max: number = 2 + 2; // +2 for the initial and final text fields
+	keyword = "S3";
+	preResponse: string;
+	postResponse: string;
 
 	constructor(
 		private loader: LoaderService,

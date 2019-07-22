@@ -3,10 +3,10 @@
 - [Intro -- What is Aretha?](#intro-what-is-aretha)
 	- [S1: Aretha allows you to understand how data is flowing into and out of your home.](#s1-aretha-allows-you-to-understand-how-data-is-flowing-into-and-out-of-your-home)
 	- [S1: Artha helps you understand how data is an integral part of smart home devices.](#s1-artha-helps-you-understand-how-data-is-an-integral-part-of-smart-home-devices)
-	- [S2: Aretha allows you to control data flows.](#s2-aretha-allows-you-to-control-data-flows)
-	- [S2: Aretha helps you to understand your data rights!](#s2-aretha-helps-you-to-understand-your-data-rights)
-	- [S3: Content: What does Aretha show?](#s3-content-what-does-aretha-show)
+	- [S2: Content: What does Aretha show?](#s2-content-what-does-aretha-show)
 		- [Example: How can I use it?](#example-how-can-i-use-it)
+	- [S3: Aretha allows you to control data flows.](#s3-aretha-allows-you-to-control-data-flows)
+	- [S3: Aretha helps you to understand your data rights!](#s3-aretha-helps-you-to-understand-your-data-rights)
 - [Learning -- Basics](#learning-basics)
 	- [B1: Content: What is the internet? {#what}](#b1-content-what-is-the-internet-what)
 		- [Video](#video)
@@ -107,6 +107,19 @@ EVAL C   | tbd  |   | TBD
 - Manufacturers use data to provide features, monitor the device status, and for many more things.
 <iframe title="vimeo-player" src="https://player.vimeo.com/video/334901208" width="640" height="360" frameborder="0" allowfullscreen></iframe>
 
+## S3: Content: What does Aretha show?
+The main aretha screen consists of three separate graphs:
+1) a time series chart that includes all devices
+2) a world map with dots that mark destinations (companies) with which each device communicates at a given point in time
+3) a bar chart that displays how much data for a specific device is being sent to or received from different locations
+
+### Example: How can I use it?
+Now, there are a number of ways you can interact with the information.
+- using the time slider, you can define the time window for the time series graph
+- clicking any of the dots on the world map will display information on the entity (company/service) which is located there
+- clicking any of the bars you can learn about the underlying data
+![aretha](figures/aretha.png)
+
 ## S2: Aretha allows you to control data flows.
 - You can decide which servers your devices are allowed to communicate with (caveat: this might curtail functionality).
 
@@ -122,20 +135,6 @@ Source: [Your data matters](https://ico.org.uk/your-data-matters/)
 - Your rights relating to decisions being made about you without human involvement
 - Your right to access information from a public body
 - Your right to raise a concern
-
-
-## S3: Content: What does Aretha show?
-The main aretha screen consists of three separate graphs:
-1) a time series chart that includes all devices
-2) a world map with dots that mark destinations (companies) with which each device communicates at a given point in time
-3) a bar chart that displays how much data for a specific device is being sent to or received from different locations
-
-### Example: How can I use it?
-Now, there are a number of ways you can interact with the information.
-- using the time slider, you can define the time window for the time series graph
-- clicking any of the dots on the world map will display information on the entity (company/service) which is located there
-- clicking any of the bars you can learn about the underlying data
-![aretha](figures/aretha.png)
 
 # Learning -- Basics
 ## B1: Content: What is the internet? {#what}

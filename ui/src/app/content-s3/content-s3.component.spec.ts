@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ContentTrackingComponent } from './content-tracking.component';
+import { ContentS3Component } from './content-s3.component';
 
-describe('ContentTrackingComponent', () => {
-  let component: ContentTrackingComponent;
-  let fixture: ComponentFixture<ContentTrackingComponent>;
+describe('ContentS3Component', () => {
+  let component: ContentS3Component;
+  let fixture: ComponentFixture<ContentS3Component>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContentTrackingComponent ]
+      declarations: [ ContentS3Component ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ContentTrackingComponent);
+    fixture = TestBed.createComponent(ContentS3Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

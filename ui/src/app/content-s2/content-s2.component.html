@@ -1,0 +1,36 @@
+<h3>What does the Privacy Assistant Show?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		The privacy assistant has a number of different tabs you can use to explore data flows in your home:
+		<ul>
+			<li>A time series that shows the amount of data sent by different devices in real time</li>
+			<li>An overview of all the internet traffic that devices in your home have sent over the internet</li>
+			<li>A content tab that lets you learn about different aspects of how data flows in your home (that's this tab!)</li>
+			<li>A review tab that lets you see and redact information collected by the privacy assistant</li>
+		</ul>
+	</div>
+
+	<div *ngSwitchCase="2">
+		<p>The time series tab has a slider you can use to see how much data devices are sending. This progresses in real time, so you can see the effect of using and connecting different devices.</p>
+		<p>There are also tools to the side of the time series that allow you to get information on different companies the privacy assitant has identified from your internet traffic, as well as renaming devices so that they're easier to spot in the interface.</p>
+
+		<img src="../../assets/ts-view.png" width="850">
+	</div>
+	
+	<div *ngSwitchCase="3">
+		<p>The overview tab contains a bar chart of all the data your devices have sent to different companies since the beginning of the study. You can add or remove devices by clicking on them in the graph legend/key.</p>
+		<p>If there are too many companies, the graph will put the smaller ones into an 'other' category. To see what's in this category, you can use the two arrows at the bottom of the graph to pop companies on and off. This is also useful if a few companies are receiving so much data that others are being drowned out.</p>
+		<p>To the right of the main visualisation, there are also two geographic charts that show you where the data sent by your devices ends up.</p>
+		
+		<img src="../../assets/rf-view.png" width="850">
+	</div>
+	
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

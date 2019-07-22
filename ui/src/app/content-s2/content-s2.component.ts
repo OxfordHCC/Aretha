@@ -4,15 +4,15 @@ import {Router} from '@angular/router';
 import {ActivityLogService} from "../activity-log.service";
 
 @Component({
-  selector: 'app-content-breach',
-  templateUrl: './content-breach.component.html',
-  styleUrls: ['./content-breach.component.css']
+  selector: 'app-content-s2',
+  templateUrl: './content-s2.component.html',
+  styleUrls: ['./content-s2.component.css']
 })
-export class ContentBreachComponent implements OnInit {
+export class ContentS2Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4 + 2; // +2 for the initial and final text fields
-	keyword = "breach";
+	max: number = 3; 
+	keyword = "S2";
 	preResponse: string = "";
 	postResponse: string = "";
 
