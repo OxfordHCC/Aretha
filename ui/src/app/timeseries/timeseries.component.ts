@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
 
 @Component({
-	// encapsulation: ViewEncapsulation.None,
+	// encapsulation: ViewEncapsulation.None, 
 	selector: 'app-timeseries',
 	templateUrl: './timeseries.component.html',
 	styleUrls: ['./timeseries.component.scss']
@@ -48,7 +48,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	// debug_macs: string[] = [];
 	// debug_
 	
-	mouseX = 0;
+	mouseX = undefined;
 	mouseDown = false;
 	elHeight: any;
 	elWidth: any;
@@ -279,10 +279,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			
 			
 			if (this.showtimeselector) { 
-				console.info('showTimeSelector is true');
-				if (this.selectedTime === -1 && minutes.length > 0) {
-					this.selectedTime = minutes[minutes.length-1];
-				}
+				// console.info('showTimeSelector is true');
+				// if (this.selectedTime === -1 && minutes.length > 0) {
+				// 	this.selectedTime = minutes[minutes.length-1];
+				// }
 				
 				if (svg.selectAll('g.dragwindow').size() === 0) {
 					// attach only once	
@@ -296,6 +296,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 						});
 						this.render();
 					};
+					if (this.mouseX === undefined) { 
+						setTimeout(() => updateMouse(width_svgel - this.margin.right - this.margin.left), 0);
+					}
 					svg.on("mousedown", dd => {
 						this.mouseDown = true;
 						updateMouse(d3.event.clientX);

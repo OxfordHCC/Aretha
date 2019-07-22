@@ -28,6 +28,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	_last_load_time: Date;
 	private impactObservers: Observer<any>[] = [];
 	deviceimpactchangesubscription: any;
+	lastTimeSelection: TimeSelection;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.route.params.subscribe(params => { 
@@ -49,7 +50,8 @@ export class LayoutTimeseriesComponent implements OnInit {
     });    
   }
   triggerImpactsChange(): any {
-    this.impactObservers.map(obs => obs.next({}));
+	this.impactObservers.map(obs => obs.next({}));
+	this.timeSelected(this.lastTimeSelection);
   }  
 
   
@@ -161,14 +163,16 @@ export class LayoutTimeseriesComponent implements OnInit {
 		  return Math.floor(input.getTime()/(1000*60));
 	  }
 	  
-	  timeSelected(val: TimeSelection) {
-		  console.log("Got time selection", val.start, " -> ", val.end);
 
+	timeSelected(val: TimeSelection) {
+		// this can be called with an undefined argument
+		  console.log("Got time selection", val.start, " -> ", val.end);
 		  // now we want to filter our impacts and update local impacts
 		  if (this.impacts) { 
 			const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
 			this.zoomed_impacts = _.pickBy(this.impacts, (macip, time) => +time >= st_mins && +time <= st_end);
 		  }
+		  this.lastTimeSelection = val;
 	  }
 
 	ngOnInit() {
