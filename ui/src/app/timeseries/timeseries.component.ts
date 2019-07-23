@@ -16,7 +16,7 @@
 	styleUrls: ['./timeseries.component.scss']
 })
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
-	
+	 
 	@Input() impacts;
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
@@ -147,6 +147,30 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			});
 		}
 		
+		rectify_impacts_arr(iarr: any): any {
+			// input: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ... ]
+			// output: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ]
+			// throw new Error("Method not implemented.");
+
+			let cc = iarr.map((el) => {
+				const ii = _.flatten(_.toPairs(el.impacts).map(macimp => {
+					const mac = macimp[0], imp = _.toPairs(macimp[1]);
+					return imp.map( ipimp => [mac, ...ipimp] )
+				})),
+				ips = ii.reduce((obj, xyz) => { 
+					const [mac, ip, imp] = xyz;
+					const impactpermac = obj[ip] || {};
+					impactpermac[mac] = imp;
+					obj[ip] = impactpermac;
+					return obj;
+				}, {});
+				return { date: el.date, impacts: ips };
+			});
+			// [mac, [[ip0, xx], ... ] -> [mac ip0 xx] [mac ip1 yy] -> ip0
+			// [ip0, [[mac, xx], ... ]
+			return cc;
+		}	
+		
 		render() {
 
 			// console.info('timeseries.render[',this.showtimeselector,'] ', this.impacts);
@@ -176,7 +200,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			let minutes = Object.keys(impacts).map(x => +x);
 			minutes.sort();
 
-			const impacts_arr = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] })),
+			const impacts_src = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] })),
+				// impacts_arr = impacts_src,
+				impacts_arr = this.byDestination ? this.rectify_impacts_arr(impacts_src) : impacts_src,
 				// this hellish line simply does a union over all impact keys : which is the total set of 
 				// destination IP addresses.  We do this instead of taking the first one to be ultra careful
 				// that the back end doesn't do anything sneaky like omit some hosts for certain time indexes
