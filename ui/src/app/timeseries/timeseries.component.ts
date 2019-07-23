@@ -157,14 +157,27 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		}   
 		
 		rectify_impacts_arr(iarr: any): any {
-			// input: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ... ]
-			// output: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ]
-			// throw new Error("Method not implemented.");
 
-			let cc = iarr.map((el) => {
+			// first step, invert 
+			// input: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ... ]
+			// output: [ { date: x, impacts: { ip : { mac0:xx ... macN:yy } } ]
+
+			let ip_to_company = _.fromPairs(this.geodata.map( x => [x.ip, x.company_name]));
+
+			let impact_by_ip = iarr.map((el) => {
 				const ii = _.flatten(_.toPairs(el.impacts).map(macimp => {
-					const mac = macimp[0], imp = _.toPairs(macimp[1]);
-					return imp.map( ipimp => [mac, ...ipimp] )
+					const mac = macimp[0], imp = _.toPairs(macimp[1]),
+						// condense to companies
+						company_impact = imp.reduce((tot, ipimp) => {
+							const [ip, impact] = ipimp,
+								company = ip_to_company[ip];
+							if (!ip) { console.info('warning couldnt find ip ', ip); return tot; }
+							tot[company] = (tot[company] || 0) + impact;
+							return tot;
+						}, {}),
+						company_impact_arr = _.toPairs(company_impact);	
+
+					return company_impact_arr.map( compimp => [mac, ...compimp] );
 				})),
 				ips = ii.reduce((obj, xyz) => { 
 					const [mac, ip, imp] = xyz;
@@ -175,9 +188,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				}, {});
 				return { date: el.date, impacts: ips };
 			});
+
 			// [mac, [[ip0, xx], ... ] -> [mac ip0 xx] [mac ip1 yy] -> ip0
 			// [ip0, [[mac, xx], ... ]
-			return cc;
+			return impact_by_ip;
 		}	
 		
 		render() {
