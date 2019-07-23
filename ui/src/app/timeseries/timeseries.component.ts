@@ -8,6 +8,7 @@
  import * as d3 from 'd3';
  import * as _ from 'lodash';
  import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
+import { persistentColor } from '../utils';
  
  @Component({
 	// encapsulation: ViewEncapsulation.None, 
@@ -53,6 +54,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	mouseDown = false;
 	elHeight: any;
 	elWidth: any;
+	 impacts_arr: any;
 	
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
@@ -62,21 +64,21 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		private hover: HoverService,
 		private zone:NgZone) {
 			
-			hover.HoverChanged$.subscribe((target) => {
-				if (target !== this._hoveringApp) {
-					this._hoveringApp = target ? target as string : undefined;
-					this.render();
-				}
-			});
+			// hover.HoverChanged$.subscribe((target) => {
+			// 	if (target !== this._hoveringApp) {
+			// 		this._hoveringApp = target ? target as string : undefined;
+			// 		this.render();
+			// 	}
+			// });
 			
-			this._ignoredApps = [];
+			// this._ignoredApps = [];
 			
-			focus.focusChanged$.subscribe((target) => {
-				if (target !== this._ignoredApps) {
-					this._ignoredApps = target ? target as string[] : [];
-					this.render();
-				}
-			});
+			// focus.focusChanged$.subscribe((target) => {
+			// 	if (target !== this._ignoredApps) {
+			// 		this._ignoredApps = target ? target as string[] : [];
+			// 		this.render();
+			// 	}
+			// });
 			
 			this.loader.asyncDeviceChanges().subscribe(devices => {
 				console.info(` ~ device name update ${devices.length} devices`);                
@@ -107,18 +109,17 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		ngOnChanges(changes: SimpleChanges): void {
 			console.info('time:: ngOnChanges ', changes);
 			// console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
-			
 			var this_ = this;
 			if (this.impactChanges && this._impact_listener === undefined) { 
 				this._impact_listener = this.impactChanges.subscribe(target => {
 					this.zone.run(() => this_.render());
 				});	
-				if (this.impacts) {
-					this_.render();
-				}
 			}
 			if (this.devices) { this.devices = Object.assign({}, this.devices);}	
-			this.render();
+			if (this.impacts) { 
+				this._process_impacts(this.impacts);
+				this.render();
+			}
 		}
 		
 		wrap(text, width) {
@@ -146,6 +147,14 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				}
 			});
 		}
+
+		_process_impacts(impacts): void {
+			// 
+			let minutes = Object.keys(impacts).map(x => +x);
+			minutes.sort();
+			const impacts_src = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] }));
+			this.impacts_arr = this.byDestination ? this.rectify_impacts_arr(impacts_src) : impacts_src;
+		}   
 		
 		rectify_impacts_arr(iarr: any): any {
 			// input: [ { date: x, impacts: { mac : { ip0:xx ... ipN:yy } } ... ]
@@ -172,13 +181,11 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		}	
 		
 		render() {
-
 			// console.info('timeseries.render[',this.showtimeselector,'] ', this.impacts);
-
 			const svgel = this.svgel || this.getSVGElement(),
 				margin = this.margin;
 
-			if (!svgel || this.impacts === undefined || !this.elHeight || !this.elWidth ) { 
+			if (!svgel || this.impacts === undefined || !this.elHeight || !this.elWidth || this.impacts_arr === undefined) { 
 				console.info('timeseries: impacts undefined, chilling');
 				return; 
 			}
@@ -193,26 +200,24 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// set width and height of svel
 			svg.attr('width', width_svgel).attr('height', height_svgel); 			
 			
-			svg.selectAll('*').remove();
-			
-			// d3 wants an array, not an object so we unpack the times and turn them into 
-			// a single simple arry
-			let minutes = Object.keys(impacts).map(x => +x);
-			minutes.sort();
-
-			const impacts_src = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] })),
-				// impacts_arr = impacts_src,
-				impacts_arr = this.byDestination ? this.rectify_impacts_arr(impacts_src) : impacts_src,
+			svg.selectAll('*').remove();			
+		
+			const impacts_arr = this.impacts_arr,			
 				// this hellish line simply does a union over all impact keys : which is the total set of 
 				// destination IP addresses.  We do this instead of taking the first one to be ultra careful
 				// that the back end doesn't do anything sneaky like omit some hosts for certain time indexes
-				stack_keys = new Array(...impacts_arr.map(v => Object.keys(v.impacts)).reduce((a,x) => new Set<string>([...a, ...x]), new Set<string>())),
-				// now we turn this into a stack.			
-				series = d3.stack()
+				stack_keys = new Array(...impacts_arr.map(v => Object.keys(v.impacts)).reduce((a,x) => new Set<string>([...a, ...x]), new Set<string>()));
+
+			stack_keys.sort();
+			if (this.byDestination) { 
+				console.info('stack keys ', stack_keys.slice(0,10));
+			}
+
+			const series = d3.stack()
 					.keys(stack_keys)
 					.offset(d3.stackOffsetSilhouette)
 					// .offset(d3.stackOffsetWiggle)
-					.order(d3.stackOrderInsideOut)
+					// .order(d3.stackOrderInsideOut)
 					.value((d,key) => _.values(d.impacts[key]||{}).reduce((x,y)=>x+y, 0))(impacts_arr),
 				// now create scales
 				stackscale = d3.scaleOrdinal().domain(stack_keys).range(d3.schemeCategory10),
@@ -241,7 +246,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr("class", "stream")
 				.data(series)
 				.join("path") // join is only defined in d3@5 and newer
-				.attr("fill", ({key}) => stackscale(key))
+				.attr("fill", ({key}) => persistentColor(key)) // // stackscale(key))
 				.attr("d", area);
 			// .append("title")
 			//   .text(({key}) => key);		

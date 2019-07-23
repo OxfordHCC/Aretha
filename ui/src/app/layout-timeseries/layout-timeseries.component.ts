@@ -121,7 +121,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 									// }
 								}
 							}
-							console.info("updated impacts[",cur_min,"] -> ", this_.impacts);
+							// console.info("updated impacts[",cur_min,"] -> ", this_.impacts);
 							this_.triggerImpactsChange();
 						}
 					} catch(error) { 
