@@ -222,22 +222,14 @@ def beacon():
 
         # command triggers
         if content == "CN":
-            print("remote: opening tunnel")
-            subprocess.run(["ssh", "-R", f"2500:localhost:22", f"{BEACON_SSH}"])
-        if content == "RB":
+            print("remote: opening secure connection")
+            subprocess.run(["ssh", "-i", "~/.ssh/aretha.pem", "-fTN", "-R", f"2500:localhost:22", f"{BEACON_SSH}"])
+        elif content == "RB":
             print("remote: reboot")
             subprocess.run(["shutdown", "-r", "now"])
-        if content == "RS":
+        elif content == "RS":
             print("remote: reset service")
             subprocess.run(["systemctl", "restart", "iotrefine"])
-        if content.startswith("EX"):
-            content = content.strip("EX")
-            content = content.split(";")
-            key = content[0]
-            value = content[1]
-            print(f"remote: set {key} to {value}")
-            DB_MANAGER.execute("UPDATE experiment SET value = %s WHERE name = %s", (key, value))
-
 
 def refreshView():
     global LAST_VIEW_REFRESH
