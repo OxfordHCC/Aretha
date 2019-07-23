@@ -264,7 +264,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 					}
 				}
 			});
-			companyFolded.push({"company": "Other", "total": otherTotal, "30:35:ad:d3:2c:f2": 0, "aa:aa:aa:aa:aa:aa": otherTotal});
+			companyFolded.push({"company": "Other", "total": otherTotal});
 			by_company = companyFolded;
 		}
 
@@ -382,7 +382,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 
     g.append('g')
       .attr('class', 'axis y')
-      .call(d3.axisLeft(y).ticks(null, '.0s'))
+      .call(d3.axisLeft(y).ticks(null, 's'))
       .append('text')
 			.attr('x', 20)
       .attr('y', y(y.ticks().pop()) - 12)
