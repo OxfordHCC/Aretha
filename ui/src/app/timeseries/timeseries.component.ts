@@ -378,9 +378,16 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.append('g')
 				.attr('class','legel')
 				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
-				.on('mouseenter', (d) => { console.info('mouseenter', d); })
-				.on('mouseout', (d) => { console.info('mouseout', d); })
-				.on('click', (d) => { console.info('click', d); });
+				.on('mouseenter', (d) => { 
+					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
+					this.hovering = d; 
+					this.render();
+					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
+				}).on('mouseout', (d) => { 
+					// console.info('mouseout', d); 
+					this.hovering = undefined;
+					this.render();
+				}).on('click', (d) => { console.info('click', d); });
 
 			legel.append('rect')
 				.attr('class','main')
@@ -402,16 +409,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('y', 9.5)
 				.attr('dy', '0.32em')
 				.text(d => this.byDestination ? d : this.devices[d].name)
-				// .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d].name || d : "Removed: " + d)
-				// .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);				
-				// .attr('opacity', (d) => {
-				// 	// let highApp = this.highlightApp || this._hoveringApp;
-				// 	// if (highApp) {
-				// 	// 	return d === highApp ? 1.0: 0.2; 
-				// 	// }
-				// 	return 1.0;
-				// });
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);	
 			
 		}
 		
