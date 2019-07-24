@@ -1,0 +1,26 @@
+div.company-info-dialog {
+    position:fixed;
+    left:20vw;
+    top:10vh;
+    width:50vw;
+    height:50vh;
+    div.title {
+        position:absolute;
+        top:0px; left:0px; right:0px; height:20px;
+        border-bottom:1px solid #eee;
+        background-color:#fefefe;
+        .close {
+            position:absolute;
+            right: 10px;
+            top: 3px;
+            height:20px;
+            width:20px;
+            border:1px solid #eee;
+        }
+    }
+    iframe {
+        position:absolute;
+        top:20px;left:0px;right:0px;bottom:0px;
+    }
+}
+

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoaderService, DeviceImpact, GeoData, Device, BucketedImpacts, ImpactSet } from "app/loader.service";
+import { LoaderService, DeviceImpact, GeoData, Device, BucketedImpacts, ImpactSet, CompanyInfo } from "app/loader.service";
 import { FocusService } from "app/focus.service";
 import { Observable } from 'rxjs';
 import { Observer } from 'rxjs';
@@ -29,6 +29,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	private impactObservers: Observer<any>[] = [];
 	deviceimpactchangesubscription: any;
 	lastTimeSelection: TimeSelection;
+	showCompanyInfo: CompanyInfo;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.route.params.subscribe(params => { 
@@ -184,5 +185,19 @@ export class LayoutTimeseriesComponent implements OnInit {
 		
 		// seconds since the epoch
 	}
+
+	closeCompanyInfo() { 
+		this.showCompanyInfo = undefined;
+	}
+
+	companySelected(c:string) { 
+		console.info('company selected ', c);
+		this.showCompanyInfo = new CompanyInfo(c, c, [], 'footags');
+	}
+
+	deviceSelected(d:string) { 
+		console.info('device selected', d);
+	}
+
 }
 

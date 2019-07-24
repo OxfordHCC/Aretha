@@ -24,6 +24,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() devices :Device[];
 	@Input() timeSelectorWidth = 200;				
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
+	@Output() legendClicked = new EventEmitter<any>();
 	
 	_hoveringApp: string;
 	_ignoredApps: string[];
@@ -277,11 +278,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// console.info('mouseout', d, this); 
 					this.hovering = undefined;					
 					this.render();
-				}).on('click', (d) => { 
-					// const b = this;
-					// console.info('click', d, this); 
-					// d3.select(this).attr("class", 'hovering');
-				});
+				}).on('click', d => { console.log('path click ', d); });
 
 			// .append("title")
 			//   .text(({key}) => key);		
@@ -378,6 +375,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.append('g')
 				.attr('class','legel')
 				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
+				.style("pointer-events","visible")
+				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
@@ -387,30 +386,38 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// console.info('mouseout', d); 
 					this.hovering = undefined;
 					this.render();
-				}).on('click', (d) => { console.info('click', d); });
+				});
 
 			legel.append('rect')
 				.attr('class','main')
 				.attr('x',0)
 				.attr('y',0)
 				.attr('width',200)
-				.attr('height', leading);
+				.attr('height', leading)
+				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
 			legel.append('rect')
-					.attr('x', 3) // width - 140 - 19)
-					.attr('y', 3)
-					.attr('width', 12)
-					.attr('height', 12)
-					.attr('fill', d => persistentColor(d))
-					.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				.attr('class', 'legsq')
+				.attr('x', 3) // width - 140 - 19)
+				.attr('y', 3)
+				.attr('width', 12)
+				.attr('height', 12)
+				.style("pointer-events","visible")				
+				.attr('fill', d => persistentColor(d))
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+				.on('click', (d) => { alert('yeet'); console.info('click ', d); this.legendClicked.emit(d)});
+
 				
 			legel.append('text')
 				.attr('x', 20) // width - 140 - 24)
 				.attr('y', 9.5)
 				.attr('dy', '0.32em')
+				.style("pointer-events","visible")				
 				.text(d => this.byDestination ? d : this.devices[d].name)
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);	
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
+			(<any>window)._dd = d3;
 		}
 		
 		@HostListener('window:resize')

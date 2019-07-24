@@ -1,9 +1,27 @@
 <div class="root">
 	<div class="gridleft">
-		<app-timeseries [byDestination]='true' [showLegend]="true" [impacts]="zoomed_impacts" [geodata]="geodata" class='zoomed' [devices]='devices' [showtimeselector]="false"></app-timeseries>
-		<app-timeseries class='overview' [showLegend]='true' [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" [devices]='devices' [showtimeselector]="true" (selectedTimeChanged)="timeSelected($event)"></app-timeseries>
+		<app-timeseries 
+			class='zoomed' 
+			[byDestination]='true' 
+			[showLegend]="true" 
+			[impacts]="zoomed_impacts" 
+			[geodata]="geodata" 
+			[devices]='devices' 
+			[showtimeselector]="false"
+			(legendClicked)="selectCompany($event)"></app-timeseries>
+		<app-timeseries 
+			class='overview' 
+			[showLegend]='true' 
+			[impacts]="impacts" 
+			[geodata]="geodata" 
+			[impactChanges]="impactChanges" 
+			[devices]='devices' 
+			[showtimeselector]="true" 
+			(selectedTimeChanged)="timeSelected($event)"
+			(legendClicked)="selectDevice($event)"></app-timeseries>
 	</div>
 	<div class="gridright">
 		<app-name-device></app-name-device>
 	</div>
+	<app-company-info-dialog *ngIf="showCompanyInfo" (close)='closeCompanyInfo()'></app-company-info-dialog>
 </div>
