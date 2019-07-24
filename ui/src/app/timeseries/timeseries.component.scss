@@ -20,6 +20,11 @@ div.tscompmain {
             fill:rgba(255,255,255,0.8);
             stroke:1px solid #222;
         }
+        /deep/ .hovering {
+            opacity:0.2;
+            stroke-width:3px;
+            stroke:pink;
+        }
     }
 }
 

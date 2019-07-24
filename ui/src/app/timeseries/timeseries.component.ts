@@ -57,6 +57,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	elHeight: any;
 	elWidth: any;
 	impacts_arr: any;
+	 hovering: any;
+	 hover_timeout: any;
 	
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
@@ -102,7 +104,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		_recomputeSizes(): void {
 			try { 
 				this.elWidth = this.graphEl.nativeElement.parentElement.offsetWidth;
-				this.elHeight = this.graphEl.nativeElement.parentElement.offsetHeight;
+				this.elHeight = this.graphEl.nativeElement.parentElement.offsetHeight-10;
 			} catch(E) { console.log(E); }
 		}
 		
@@ -267,7 +269,24 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.data(series)
 				.join("path") // join is only defined in d3@5 and newer
 				.attr("fill", ({key}) => persistentColor(key)) // // stackscale(key))
-				.attr("d", area);
+				.attr('opacity', ({key}) => this.hovering ? (this.hovering === key ? 1.0 : 0.2) : 1.0 )
+				.attr("d", area)
+				.on('mouseenter', (d) => { 
+					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
+					this.hovering = d.key; 
+					console.info('mouseenter', d, this); 
+					this.render();
+					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
+				}).on('mouseleave', (d) => { 
+					console.info('mouseout', d, this); 
+					this.hovering = undefined;					
+					this.render();
+				}).on('click', (d) => { 
+					// const b = this;
+					// console.info('click', d, this); 
+					// d3.select(this).attr("class", 'hovering');
+				});
+
 			// .append("title")
 			//   .text(({key}) => key);		
 			
@@ -362,7 +381,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.enter()
 				.append('g')
 				.attr('class','legel')
-				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading+50})`; })
+				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
 				.on('mouseenter', (d) => { console.info('mouseenter', d); })
 				.on('mouseout', (d) => { console.info('mouseout', d); })
 				.on('click', (d) => { console.info('click', d); });
@@ -380,13 +399,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					.attr('width', 12)
 					.attr('height', 12)
 					.attr('fill', d => persistentColor(d))
-					.attr('opacity', (d) => {
-						// 		let highApp = this.highlightApp || this._hoveringApp;
-						// 		if (highApp) {
-						// 			return d === highApp ? 1.0: 0.2; 
-						// 		}
-						return 1.0;
-					});
+					.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
 				
 			legel.append('text')
 				.attr('x', 20) // width - 140 - 24)
@@ -395,13 +408,14 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.text(d => d)
 				// .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d].name || d : "Removed: " + d)
 				// .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
-				.attr('opacity', (d) => {
-					// let highApp = this.highlightApp || this._hoveringApp;
-					// if (highApp) {
-					// 	return d === highApp ? 1.0: 0.2; 
-					// }
-					return 1.0;
-				});
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);				
+				// .attr('opacity', (d) => {
+				// 	// let highApp = this.highlightApp || this._hoveringApp;
+				// 	// if (highApp) {
+				// 	// 	return d === highApp ? 1.0: 0.2; 
+				// 	// }
+				// 	return 1.0;
+				// });
 			
 		}
 		
