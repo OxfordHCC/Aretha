@@ -252,15 +252,16 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
 			let popedCount = 0;
 			by_company.forEach((impact) => {
 				// we need to pop more companies
-				console.log("count is " + this.popCount)
+				// console.log("count is " + this.popCount)
 				if (popedCount < this.popCount) {
 					popedCount++;
-					console.log("skipping " + impact.company);
+					// console.log("skipping " + impact.company);
 				} else {
 					if (impact.total >= cutoff) {
 				  		companyFolded.push(impact);
 					} else {
-				  		otherTotal += impact.total; console.log("OPUSG");
+						  otherTotal += impact.total; 
+						//   console.log("OPUSG");
 					}
 				}
 			});

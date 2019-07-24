@@ -231,9 +231,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				stack_keys = new Array(...impacts_arr.map(v => Object.keys(v.impacts)).reduce((a,x) => new Set<string>([...a, ...x]), new Set<string>()));
 
 			stack_keys.sort();
-			if (this.byDestination) { 
-				console.info('stack keys ', stack_keys.slice(0,10));
-			}
 
 			const series = d3.stack()
 					.keys(stack_keys)
@@ -274,11 +271,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d.key; 
-					console.info('mouseenter', d, this); 
 					this.render();
 					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
 				}).on('mouseleave', (d) => { 
-					console.info('mouseout', d, this); 
+					// console.info('mouseout', d, this); 
 					this.hovering = undefined;					
 					this.render();
 				}).on('click', (d) => { 

@@ -165,7 +165,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 	timeSelected(val: TimeSelection) {
 		// this can be called with an undefined argument
-		  console.log("Got time selection", val.start, " -> ", val.end);
+		//   console.log("Got time selection", val.start, " -> ", val.end);
 		  // now we want to filter our impacts and update local impacts
 		  if (this.impacts) { 
 			const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
