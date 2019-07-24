@@ -401,7 +401,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('x', 20) // width - 140 - 24)
 				.attr('y', 9.5)
 				.attr('dy', '0.32em')
-				.text(d => d)
+				.text(d => this.byDestination ? d : this.devices[d].name)
 				// .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d].name || d : "Removed: " + d)
 				// .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
 				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);				
