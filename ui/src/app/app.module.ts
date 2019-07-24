@@ -24,7 +24,6 @@ import { ExampleComponent } from './example/example.component';
 import { MatRadioModule, MatInputModule, MatButtonModule, MatBadgeModule, MatFormFieldModule, MatSelectModule} from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NameDeviceComponent } from './name-device/name-device.component';
-import { CompanyInfoComponent } from './company-info/company-info.component';
 import { RedactionComponent } from './redaction/redaction.component';
 import { ContentBreachComponent } from './content-breach/content-breach.component';
 import { ContentS1Component } from './content-s1/content-s1.component';
@@ -64,7 +63,6 @@ const appRoutes: Routes = [
     LayoutEduComponent,
     ExampleComponent,
     NameDeviceComponent,
-    CompanyInfoComponent,
     RedactionComponent,
     ContentBreachComponent,
     ContentS1Component,

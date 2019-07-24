@@ -8,6 +8,7 @@ import { Http, HttpModule} from '@angular/http';
 import { Observable } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { DeviceImpact, GeoData, Device } from '../loader.service';
+import {CompanyInfoService} from "../company-info.service";
 
 @Component({
   selector: 'app-refinebar',
@@ -51,6 +52,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     	private loader: LoaderService,
     	private focus: FocusService,
     	private hover: HoverService,
+		private info: CompanyInfoService,
     	private zone:NgZone) {
   
     	this.init = Promise.all([
@@ -378,7 +380,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       svg.selectAll('g.axis.x g.tick')
         .filter(function (d) { return d; })
         .attr('class', (d) => d.typetag)
-        .on('click', (d) => this.focus.focusChanged(d));
+        .on('click', (d) => {
+          this.focus.focusChanged(d);
+          this.info.getDesc(d);
+        });
     }
 
     g.append('g')

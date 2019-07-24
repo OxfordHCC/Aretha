@@ -97,11 +97,13 @@ export class LayoutTimeseriesComponent implements OnInit {
 									bucket[mac] = bucket[mac] || {};
 									
 									// BEGIN DEBUG ==>
+									/*
 									if (bucket[mac][dst]) { 
 										console.info("IMPUD: incr ", mac, "//", dst, " :: ", bucket[mac][dst], " + ",val," => ", (bucket[mac][dst]+val));
 									} else {
 										console.info("IMPUD: add dest ", mac, "//", dst, " :: ", val);									
 									}
+									*/
 									// <== END DEBUG
 									
 									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;

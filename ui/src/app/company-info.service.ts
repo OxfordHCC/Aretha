@@ -1,18 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { LoaderService } from '../loader.service';
-import * as _ from 'lodash';
-import {ActivityLogService} from "../activity-log.service";
+import { Injectable } from '@angular/core';
+import {ActivityLogService} from "./activity-log.service";
+import {LoaderService} from './loader.service';
 
-@Component({
-	selector: 'app-company-info',
-	templateUrl: './company-info.component.html',
-	styleUrls: ['./company-info.component.css']
+@Injectable({
+  providedIn: 'root'
 })
-export class CompanyInfoComponent implements OnInit {
+export class CompanyInfoService {
 
-	chosen: string;
-	companies: string[];
-	description: string;
+  	description: string;
 
 	explanations = [
 		["Akamai International B.V.", "Akamai Technologies, Inc. is an American content delivery network (CDN) and cloud service provider headquartered in Cambridge, Massachusetts, in the United States. Akamai's content delivery network is one of the world's largest distributed computing platforms, responsible for serving between 15% and 30% of all web traffic. The company operates a network of servers around the world and rents out capacity on these servers to customers who want their websites to work faster by distributing content from locations close to the user. When a user navigates to the URL of an Akamai customer, their browser is redirected to one of Akamai's copies of the website."],
@@ -24,43 +19,37 @@ export class CompanyInfoComponent implements OnInit {
 		["Linode, LLC", "Linode, LLC is an American privately-owned company (based in Philadelphia, Pennsylvania, United States) providing virtual private servers. Linode offers multiple products and services for its clients. Its flagship products are cloud-hosting services with multiple packages at different price points."],
 		["MCI Communications Servic", "MCI Communications Corp. was an American telecommunications company that was instrumental in legal and regulatory changes that led to the breakup of the AT&T monopoly of American telephony and ushered in the competitive long-distance telephone industry. It was headquartered in Washington, D.C. Founded in 1963, it grew to be the second-largest long-distance provider in the U.S. It was purchased by WorldCom in 1998 and became MCI WorldCom, with the name afterwards being shortened to WorldCom in 2000. WorldCom's financial scandals and bankruptcy led that company to change its name in 2003 to MCI Inc."],
 		["Yahoo! UK Services Limite", "Yahoo! is an American web services provider headquartered in Sunnyvale, California, and owned by Verizon Media. The original Yahoo! company was founded by Jerry Yang and David Filo in January 1994 and was incorporated on March 2, 1995. Yahoo was one of the pioneers of the early Internet era in the 1990s. It provides or provided a Web portal, search engine Yahoo! Search, and related services, including Yahoo! Directory, Yahoo! Mail, Yahoo! News, Yahoo! Finance, Yahoo! Groups, Yahoo! Answers, advertising, online mapping, video sharing, fantasy sports, and its social media website. At its height it was one of the most popular sites in the United States. According to third-party web analytics providers Alexa and SimilarWeb, Yahoo! was the most widely read news and media website – with over 7 billion views per month – ranking as the sixth-most-visited website globally in 2016"]
-	];
+    ];
 
-	constructor(
-	  private loader: LoaderService,
-    private actlog: ActivityLogService
-  ) { }
+    constructor(
+      private loader: LoaderService,
+      private actlog: ActivityLogService) { }
 
-	ngOnInit() {
-		this.loader.getGeodata().then((gd) => {
-			this.companies = _.uniq(gd.geodata.map((x) => x.company_name)).filter((x) => x !== "unknown").sort();
-		});
-	}
-
-	getDesc() {
+	getDesc(chosen: string) {
+		console.log("=======================");
 		let matched = false;
 		this.explanations.forEach((expl) => {
-			console.log(this.chosen, expl);
-			if (expl[0] === this.chosen) {
+			if (expl[0] === chosen) {
 				this.description = expl[1];
 				matched = true;
 			}
 		});
 
 		if (matched === false) {
-			this.loader.getDescription(this.chosen).then((desc) => {
-			for (let key in desc.query.pages) {
-    		    let raw = desc.query.pages[key].extract
-        		raw = raw.split('.');
-        		this.description = raw[0] + '.' + raw[1] + '.' + raw[2] + '.' + raw[3] + '.' + raw[4] + '.';
-        		break;
-      		}
+			this.loader.getDescription(chosen).then((desc) => {
+				for (let key in desc.query.pages) {
+    		    	let raw = desc.query.pages[key].extract
+        			raw = raw.split('.');
+        			this.description = raw[0] + '.' + raw[1] + '.' + raw[2] + '.' + raw[3] + '.' + raw[4] + '.';
+        			break;
+      			}
 			})
 			.catch((e) => {
 				// TODO try again after culling the last word (+ commas)
-				this.description = "Sorry, we can't find any information on " + this.chosen + ".";
+				this.description = "Sorry, we can't find any information on " + chosen + ".";
 			});
 		}
-		this.actlog.log("company-info", this.chosen);
+		this.actlog.log("company-info", chosen);
+		alert(this.description);
 	}
 }
