@@ -1,6 +1,6 @@
 <div class="root">
 	<div class="gridleft">
-		<app-timeseries [byDestination]='true' [impacts]="zoomed_impacts" [geodata]="geodata" class='zoomed' [devices]='devices' [showtimeselector]="false"></app-timeseries>
+		<app-timeseries [byDestination]='true' [showLegend]="true" [impacts]="zoomed_impacts" [geodata]="geodata" class='zoomed' [devices]='devices' [showtimeselector]="false"></app-timeseries>
 		<app-timeseries class='overview' [impacts]="impacts" [geodata]="geodata" [impactChanges]="impactChanges" [devices]='devices' [showtimeselector]="true" (selectedTimeChanged)="timeSelected($event)"></app-timeseries>
 	</div>
 	<div class="gridright">

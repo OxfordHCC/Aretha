@@ -31,11 +31,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	vbox = { width: 700, height: 1024 };
 	scale = false;
 	
-	margin = { top: 20, right: 20, bottom: 10, left: 20 };
+	margin = { top: 20, right: 280, bottom: 10, left: 20 };
 	svgel: any; // actually an HTMLElement	
 	
 	@Input() showtimeselector: boolean;
 	@Input() byDestination: boolean;
+
+	@Input() showLegend = false;
 	
 	@ViewChild('graphel')
 	graphEl: ElementRef;
@@ -54,7 +56,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	mouseDown = false;
 	elHeight: any;
 	elWidth: any;
-	 impacts_arr: any;
+	impacts_arr: any;
 	
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
@@ -91,13 +93,17 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 		}
 		
 		ngAfterViewInit(): void { 
-			console.log('GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.parentElement.offsetWidth, this.graphEl.nativeElement.parentElement.offsetHeight);
-			(<any>window)._gel = this.graphEl;
+			// console.log('GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.parentElement.offsetWidth, this.graphEl.nativeElement.parentElement.offsetHeight);
+			// (<any>window)._gel = this.graphEl;
+			this._recomputeSizes();
+			this.render(); 
+		}
+
+		_recomputeSizes(): void {
 			try { 
 				this.elWidth = this.graphEl.nativeElement.parentElement.offsetWidth;
 				this.elHeight = this.graphEl.nativeElement.parentElement.offsetHeight;
 			} catch(E) { console.log(E); }
-			this.render(); 
 		}
 		
 		getSVGElement() {
@@ -288,6 +294,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			if (this.showtimeselector) { 
 				this.drawTimeSelector(svg, xscale, height, width_svgel, height_svgel); 
 			}
+			if (this.showLegend) { 
+				this.drawLegend(svg, width_svgel, stack_keys); 
+			}
 		}
 
 		// renders the time window dragger box
@@ -343,11 +352,63 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('x2',() => this.mouseX);
 		}			
 		
+		drawLegend(svg, width, stackkeys) {
+			// legend
+			const leading = 26;
+			const legel = svg.selectAll('g.legend').data([0]).enter().append('g')
+				.attr('class', 'legend')
+				.selectAll('g.legel')
+				.data(stackkeys)
+				.enter()
+				.append('g')
+				.attr('class','legel')
+				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading+50})`; })
+				.on('mouseenter', (d) => { console.info('mouseenter', d); })
+				.on('mouseout', (d) => { console.info('mouseout', d); })
+				.on('click', (d) => { console.info('click', d); });
+
+			legel.append('rect')
+				.attr('class','main')
+				.attr('x',0)
+				.attr('y',0)
+				.attr('width',200)
+				.attr('height', leading);
+			
+			legel.append('rect')
+					.attr('x', 3) // width - 140 - 19)
+					.attr('y', 3)
+					.attr('width', 12)
+					.attr('height', 12)
+					.attr('fill', d => persistentColor(d))
+					.attr('opacity', (d) => {
+						// 		let highApp = this.highlightApp || this._hoveringApp;
+						// 		if (highApp) {
+						// 			return d === highApp ? 1.0: 0.2; 
+						// 		}
+						return 1.0;
+					});
+				
+			legel.append('text')
+				.attr('x', 20) // width - 140 - 24)
+				.attr('y', 9.5)
+				.attr('dy', '0.32em')
+				.text(d => d)
+				// .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d].name || d : "Removed: " + d)
+				// .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
+				.attr('opacity', (d) => {
+					// let highApp = this.highlightApp || this._hoveringApp;
+					// if (highApp) {
+					// 	return d === highApp ? 1.0: 0.2; 
+					// }
+					return 1.0;
+				});
+			
+		}
 		
 		@HostListener('window:resize')
 		onResize() {
+			this._recomputeSizes();
 			this.render();
 		}
 		
 	}
-	
