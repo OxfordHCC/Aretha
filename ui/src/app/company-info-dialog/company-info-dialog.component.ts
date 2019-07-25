@@ -19,6 +19,8 @@ export class CompanyInfoDialogComponent implements OnInit, OnChanges {
   loaded_company : string;
   company_cb_url : any;
 
+  loading = false;
+  error = false;
 
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
   }
@@ -29,6 +31,8 @@ export class CompanyInfoDialogComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes) {
     if (this.company !== undefined && this.loaded_company !== this.company.company) { 
+      this.loading = true;
+      this.error = false;
       const url = `${CB_SERVICE_URL}${encodeURIComponent(this.company.company)}`;
       console.info('encoded url ', url);
       return this.http.get(`${CB_SERVICE_URL}${encodeURIComponent(this.company.company)}`).toPromise().then(response => {
@@ -36,6 +40,11 @@ export class CompanyInfoDialogComponent implements OnInit, OnChanges {
         if (results.length > 0) { 
           this.company_cb_url = this.sanitiser.bypassSecurityTrustResourceUrl(results[0]);
         }
+        this.loading = false;
+      }).catch(e => {
+        console.error("Error retrieving things ", e);
+        this.loading = false;
+        this.error = true;
       });
     }
   }
