@@ -1,11 +1,7 @@
 <div class="company-info-dialog">
   <div class="title">
-    Information for company {{ company?.title }}
+    Details on {{ company?.company }}
     <div class="close" (click)="emitClose()">x</div>
   </div>
-  <p>
-    company-info-dialog works!
-  </p>
-  <!-- <iframe *ngIf="company?.crunchbase_url" [src]="company?.crunchbase_url"></iframe> -->
-  <iframe src="https://hip.cat/emax"></iframe>
+  <iframe *ngIf="company_cb_url" [src]="company_cb_url"></iframe>
 </div>

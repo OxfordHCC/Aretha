@@ -23,5 +23,5 @@
 	<div class="gridright">
 		<app-name-device></app-name-device>
 	</div>
-	<app-company-info-dialog *ngIf="showCompanyInfo" (close)='closeCompanyInfo()'></app-company-info-dialog>
+	<app-company-info-dialog *ngIf="showCompanyInfo" [company]='showCompanyInfo' (close)='closeCompanyInfo()'></app-company-info-dialog>
 </div>

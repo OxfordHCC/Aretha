@@ -11,7 +11,7 @@
 import { persistentColor } from '../utils';
  
  @Component({
-	// encapsulation: ViewEncapsulation.None, 
+	encapsulation: ViewEncapsulation.None, 
 	selector: 'app-timeseries',
 	templateUrl: './timeseries.component.html',
 	styleUrls: ['./timeseries.component.scss']
@@ -264,6 +264,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('class','plot')
 				.selectAll("path")
 				.attr("class", "stream")
+				.style("pointer-events","auto")				
 				.data(series)
 				.join("path") // join is only defined in d3@5 and newer
 				.attr("fill", ({key}) => persistentColor(key)) // // stackscale(key))
@@ -278,7 +279,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// console.info('mouseout', d, this); 
 					this.hovering = undefined;					
 					this.render();
-				}).on('click', d => { console.log('path click ', d); });
+				}).on('mousedown', d => { console.log('path click ', d); });
 
 			// .append("title")
 			//   .text(({key}) => key);		
@@ -375,15 +376,14 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.append('g')
 				.attr('class','legel')
 				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
-				.style("pointer-events","visible")
-				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
+				// .style("pointer-events","auto")
+				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
 					this.render();
 					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
 				}).on('mouseout', (d) => { 
-					// console.info('mouseout', d); 
 					this.hovering = undefined;
 					this.render();
 				});
@@ -393,8 +393,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('x',0)
 				.attr('y',0)
 				.attr('width',200)
+				// .style("pointer-events","auto")	
 				.attr('height', leading)
-				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
 			legel.append('rect')
 				.attr('class', 'legsq')
@@ -402,20 +403,20 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('y', 3)
 				.attr('width', 12)
 				.attr('height', 12)
-				.style("pointer-events","visible")				
+				.style("pointer-events","auto")				
 				.attr('fill', d => persistentColor(d))
 				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('click', (d) => { alert('yeet'); console.info('click ', d); this.legendClicked.emit(d)});
+				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 
 				
 			legel.append('text')
 				.attr('x', 20) // width - 140 - 24)
 				.attr('y', 9.5)
 				.attr('dy', '0.32em')
-				.style("pointer-events","visible")				
+				// .style("pointer-events","auto")				
 				.text(d => this.byDestination ? d : this.devices[d].name)
 				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('click', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+				.on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
 			
 			(<any>window)._dd = d3;
 		}

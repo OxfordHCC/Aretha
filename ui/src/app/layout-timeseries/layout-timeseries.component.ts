@@ -190,12 +190,12 @@ export class LayoutTimeseriesComponent implements OnInit {
 		this.showCompanyInfo = undefined;
 	}
 
-	companySelected(c:string) { 
+	selectCompany(c:string) { 
 		console.info('company selected ', c);
 		this.showCompanyInfo = new CompanyInfo(c, c, [], 'footags');
 	}
 
-	deviceSelected(d:string) { 
+	selectDevice(d:string) { 
 		console.info('device selected', d);
 	}
 
