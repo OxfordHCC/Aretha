@@ -3,7 +3,8 @@ import { CompanyInfo } from '../loader.service';
 import { HttpModule, Http } from '../../../node_modules/@angular/http';
 import { DomSanitizer } from '../../../node_modules/@angular/platform-browser';
 
-const CB_SERVICE_URL = 'http://localhost:3333/cbase?q=';
+// const CB_SERVICE_URL = 'http://localhost:3333/cbase?q=';
+const CB_SERVICE_URL = 'https://hip.cat/cbase?q=';
 
 @Component({
   selector: 'app-company-info-dialog',

@@ -1,6 +1,6 @@
 <div class="company-info-dialog">
   <div class="title">
-    Details on {{ company?.company }}
+    More information about {{ company?.company }}
     <div class="close" (click)="emitClose()">x</div>
   </div>
   <iframe *ngIf="company_cb_url" [src]="company_cb_url"></iframe>
