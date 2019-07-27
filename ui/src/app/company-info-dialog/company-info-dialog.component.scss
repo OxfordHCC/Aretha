@@ -11,10 +11,11 @@ div.company-info-dialog {
         text-align:center;
         position:absolute;
         padding-top:5px;
-        top:-30px; left:0px; right:0px; height:30px;
+        top:-30px; left:-3px; right:-3px; height:30px;
         font-size:14pt;
         border:1px solid #eee;
-        background-color:#fefefe;
+        background-color:#2af;
+        color:white;
         .close {
             cursor:pointer;
             font-size:20pt;
@@ -40,6 +41,8 @@ div.company-info-dialog {
         // right:0px;
         // bottom:0px;
     }
+    box-shadow: 5px 10px 10px #888888;
+
 }
 
 .spinner {

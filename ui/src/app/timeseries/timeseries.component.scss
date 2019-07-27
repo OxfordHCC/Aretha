@@ -11,6 +11,7 @@ div.tscompmain {
             stroke:#000;
             fill:none;
             stroke-width:1px;
+            pointer-events:visible;
         }
         /deep/ g.dragwindow line {
             stroke:red;

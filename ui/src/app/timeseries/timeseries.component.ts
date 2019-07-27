@@ -279,7 +279,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// console.info('mouseout', d, this); 
 					this.hovering = undefined;					
 					this.render();
-				}).on('mousedown', d => { console.log('path click ', d); });
+				}); // .on('mousedown', d => { console.log('path click ', d); });
 
 			// .append("title")
 			//   .text(({key}) => key);		
