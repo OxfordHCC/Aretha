@@ -10,7 +10,7 @@ div.tscompmain {
         /deep/ g.dragwindow rect {
             stroke:#000;
             fill:none;
-            stroke-width:1px;
+            stroke-width:2px;
             pointer-events:visible;
         }
         /deep/ g.dragwindow line {
@@ -27,6 +27,16 @@ div.tscompmain {
             stroke-width:3px;
             stroke:pink;
         }
+
+        /deep/ .axis.x line {
+            stroke:#eee;
+            stroke-width:1px;
+        }
+        /deep/ .axis.x text {
+            font: bold 14px sans-serif;
+            fill:#888;
+        }
+
     }
 }
 

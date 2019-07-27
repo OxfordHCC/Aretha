@@ -295,8 +295,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			
 			svg.append('g')
 				.attr('class', 'axis x')
-				.call(d3.axisBottom(xscale))
-				.selectAll('text')
+				.call(d3.axisTop(xscale)
+					.ticks(d3.timeMinute.every(60))
+					.tickPadding(20)
+					.tickFormat(d3.timeFormat("%a %B %d %H:%M"))
+					.tickSizeInner(-height_svgel)
+					.tickSizeOuter(-10)					
+				).selectAll('text')
 				.style('text-anchor', 'end')
 				.attr('y', 1)
 				.attr('dx', '-.8em')
@@ -308,7 +313,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				this.drawTimeSelector(svg, xscale, height, width_svgel, height_svgel); 
 			}
 			if (this.showLegend) { 
-				this.drawLegend(svg, width_svgel, stack_keys); 
+				this.drawLegend(svg, width_svgel, height_svgel, stack_keys); 
 			}
 		}
 
@@ -365,9 +370,15 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('x2',() => this.mouseX);
 		}			
 		
-		drawLegend(svg, width, stackkeys) {
+		drawLegend(svg, width, height, stackkeys) {
 			// legend
-			const leading = 26;
+			
+			const leading = 26,
+				colwidth = 230,
+				max_rows = Math.floor((height-40)/(leading));
+
+			// stackkeys = _.range(50).map(x => `Hello {x}!`);
+
 			const legel = svg.selectAll('g.legend').data([0]).enter().append('g')
 				.attr('class', 'legend')
 				.selectAll('g.legel')
@@ -375,9 +386,10 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.enter()
 				.append('g')
 				.attr('class','legel')
-				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
-				// .style("pointer-events","auto")
-				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
+				.attr('transform', function (d, i) { 
+					const coln = Math.floor(i / max_rows);
+					return `translate(${width-(coln+1)*colwidth},${(i%max_rows)*leading + 50 })`; 
+				}).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
@@ -386,13 +398,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				}).on('mouseout', (d) => { 
 					this.hovering = undefined;
 					this.render();
-				});
+				});	// .style("pointer-events","auto")
 
 			legel.append('rect')
 				.attr('class','main')
 				.attr('x',0)
 				.attr('y',0)
-				.attr('width',200)
+				.attr('width',colwidth)
 				// .style("pointer-events","auto")	
 				.attr('height', leading)
 				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});

@@ -7,6 +7,7 @@ div.company-info-dialog {
     width:79vw;
     height:80vh;
     padding:0px;
+    border-radius:3px;
     div.title {
         text-align:center;
         position:absolute;
@@ -27,7 +28,9 @@ div.company-info-dialog {
             width:15px;
             // border:1px solid #eee;
             font-weight:bold;
+            border-radius:2px;
         }
+        border-radius:3px;
     }
     div.loading, div.error {
         padding:50px;
