@@ -297,8 +297,24 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('class', 'axis x')
 				.call(d3.axisTop(xscale)
 					.ticks(d3.timeMinute.every(60))
-					.tickPadding(20)
+					.tickPadding(10)
 					.tickFormat(d3.timeFormat("%a %B %d %H:%M"))
+					.tickSizeInner(-height_svgel)
+					.tickSizeOuter(-10)					
+				).selectAll('text')
+				.style('text-anchor', 'end')
+				.attr('y', 1)
+				.attr('dx', '-0.4em')
+				.attr('dy', '-.4em')
+				.attr('transform', 'rotate(-90)');
+				// .call(this.wrap, margin.bottom - 10);
+
+			svg.append('g')
+				.attr('class', 'axis xlight')
+				.call(d3.axisTop(xscale)
+					.ticks(d3.timeMinute.every(5))
+					.tickPadding(20)
+					.tickFormat("")
 					.tickSizeInner(-height_svgel)
 					.tickSizeOuter(-10)					
 				).selectAll('text')
@@ -308,6 +324,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('dy', '.15em')
 				.attr('transform', 'rotate(-90)');
 				// .call(this.wrap, margin.bottom - 10);
+							
 			
 			if (this.showtimeselector) { 
 				this.drawTimeSelector(svg, xscale, height, width_svgel, height_svgel); 

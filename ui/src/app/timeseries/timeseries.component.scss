@@ -29,13 +29,22 @@ div.tscompmain {
         }
 
         /deep/ .axis.x line {
-            stroke:#eee;
+            stroke:#888;
             stroke-width:1px;
         }
         /deep/ .axis.x text {
             font: bold 14px sans-serif;
             fill:#888;
         }
+        /deep/ .axis.xlight line {
+            stroke:#eee;
+            stroke-width:1px;
+        }
+        /deep/ .axis.xlight text {
+            font: bold 14px sans-serif;
+            fill:#eee;
+        }
+
 
     }
 }
