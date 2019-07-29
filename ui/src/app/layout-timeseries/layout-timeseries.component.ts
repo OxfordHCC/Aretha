@@ -50,41 +50,42 @@ export class LayoutTimeseriesComponent implements OnInit {
       		console.log("SETTING QUERY PARAMS MODE", params.mode);
       		this.mode = params.mode; 
     	});
-    	this.impactChanges = this._make_impact_observable();
+    	this.impactChanges = this._makeImpactObservable();
 		this._last_load_time = new Date();
+
+		// debug
 		(<any>window)._d3 = d3;
+
+		// initialise date offset
 		this.setEndDateOffset(0);
   	}  
 
-  // handling propagating
-  _make_impact_observable(): Observable<any> {
-    return Observable.create( observer => {
-      this.impactObservers.push(observer);
-    });    
-  }
-  triggerImpactsChange(): any {
-	this.impactObservers.map(obs => obs.next({}));
-	if (this.lastTimeSelection) { this.timeSelected(this.lastTimeSelection); }
-  }  
-  
+	// handling propagating
+	_makeImpactObservable(): Observable<any> {
+		return Observable.create(observer => { this.impactObservers.push(observer); return; });
+	}
+	_notifyImpactObservers(): any {
+		this.impactObservers.map(obs => obs.next({}));
+		if (this.lastTimeSelection) { this.timeSelected(this.lastTimeSelection); }
+	}
 
 	getIoTData(start: Date, end: Date, delta: number): void {	
 		console.info('getIoTData ((', start, '::', start, ' - ', end, '::', end, ' delta ', delta, '))');
-    	let this_ = this,
-      		reload = () => {
-				const new_end = new Date(); // Math.floor((new Date()).valueOf()/1000.0);
-				console.info('time:: reload() ');
-				this_.loader.getIoTData(start, new_end, delta).then( bundle => {
-					console.info('time:: assigning impacts ', bundle.impacts);
-					this_.impacts = bundle.impacts;
-        			this_.geodata = bundle.geodata;
-        			this_.devices = bundle.devices;
-        			this_.triggerImpactsChange();
-        			this_._last_load_time = new Date();
-      			});
-    		}, 
-    		throttledReload = _.throttle(reload, 10000);
-
+		let this_ = this,
+		reload = () => {
+			const new_end = new Date(); // Math.floor((new Date()).valueOf()/1000.0);
+			console.info('time:: reload() ');
+			this_.loader.getIoTData(start, new_end, delta).then( bundle => {
+				console.info('time:: assigning impacts ', bundle.impacts);
+				this_.impacts = bundle.impacts;
+				this_.geodata = bundle.geodata;
+				this_.devices = bundle.devices;
+				this_._notifyImpactObservers();
+				this_._last_load_time = new Date();
+			});
+		}, 
+		throttledReload = _.throttle(reload, 10000);
+		
 		// console.info("SUBSCRIBING TO ASYNCDEVICEIMPACTHANGES");
 		// (<any>window)._l = this.loader;
 		// (<any>window)._g = this;
@@ -97,17 +98,17 @@ export class LayoutTimeseriesComponent implements OnInit {
 						if (this_.impacts) {
 							// let cur_min = Math.floor((new Date().getTime())/(60000));
 							let cur_min = Object.keys(this_.impacts).map(x => +x).sort((x,y) => y - x)[0];
-
+							
 							if (!cur_min) { 
 								cur_min = Math.floor((new Date().getTime())/(60000));
 							}
-
+							
 							for (const dst of Object.keys(incoming)) {
 								for (const mac of Object.keys(incoming[dst])) {
-
+									
 									const bucket = this_.impacts[cur_min] || {},
-										val = incoming[dst][mac];
-
+									val = incoming[dst][mac];
+									
 									bucket[mac] = bucket[mac] || {};
 									
 									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;
@@ -115,7 +116,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 								}
 							}
 							// console.info("updated impacts[",cur_min,"] -> ", this_.impacts);
-							this_.triggerImpactsChange();
+							this_._notifyImpactObservers();
 						}
 					} catch(error) { 
 						console.error("Error while woring on deviceimpactchange", error);
@@ -129,42 +130,42 @@ export class LayoutTimeseriesComponent implements OnInit {
 				complete() { console.info("Listen complete"); }
 			});
 		};
-
+		
 		resubscribe();
-
-    	this.loader.asyncGeoUpdateChanges().subscribe({
-      		next() {
-        		console.info(" ~ got GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
-        		if (this_.impacts) { throttledReload(); }        
-      		}
-    	});  
-
-    	setInterval(() => {
-      		let msec_since_reload = (new Date()).valueOf() - this_._last_load_time.valueOf();
-      		console.info('WATCHDOG checking ~~~~ ', msec_since_reload, ' msec since last reload');
-      		if (msec_since_reload > 1000*60) {
-        		console.info('WATCHDOG forcing reload of impacts ~~~~ ', msec_since_reload, 'since last reload');
-        		reload();
-      		}
-    	}, 3*1000); // @TODO this should be set to a much larger value once we get bucket diffs streaming in
+		
+		this.loader.asyncGeoUpdateChanges().subscribe({
+			next() {
+				console.info(" ~ got GEO UPDATE, NOW FLUSHING AND STARTING OVER");        
+				if (this_.impacts) { throttledReload(); }        
+			}
+		});  
+		
+		setInterval(() => {
+			let msec_since_reload = (new Date()).valueOf() - this_._last_load_time.valueOf();
+			console.info('WATCHDOG checking ~~~~ ', msec_since_reload, ' msec since last reload');
+			if (msec_since_reload > 1000*60) {
+				console.info('WATCHDOG forcing reload of impacts ~~~~ ', msec_since_reload, 'since last reload');
+				reload();
+			}
+		}, 3*1000); // @TODO this should be set to a much larger value once we get bucket diffs streaming in
 		
 		reload();
-	  }  
+	}  
 
-	  dateToMinutes(input:Date): number {
-		  return Math.floor(input.getTime()/(1000*60));
-	  }	  
+	dateToMinutes(input:Date): number {
+		return Math.floor(input.getTime()/(1000*60));
+	}	  
 
+	// this updates zoomed_impacts 
 	timeSelected(val: TimeSelection) {
 		// this can be called with an undefined argument
-		//   console.log("Got time selection", val.start, " -> ", val.end);
-		  // now we want to filter our impacts and update local impacts
-		  if (this.impacts) { 
+		// now we want to filter our impacts and update local impacts
+		if (this.impacts) { 
 			const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
 			this.zoomed_impacts = _.pickBy(this.impacts, (macip, time) => +time >= st_mins && +time <= st_end);
-		  }
-		  this.lastTimeSelection = val;
-	  }
+		}
+		this.lastTimeSelection = val;
+	}
 
 	// on init reload
 	ngOnInit() {
