@@ -19,6 +19,13 @@
 			[showtimeselector]="true" 
 			(selectedTimeChanged)="timeSelected($event)"
 			(legendClicked)="selectDevice($event)"></app-timeseries>
+		<div class="date-select-bar">
+			<div class="enders"></div>
+			<button (click)="setEndDateOffset(-overviewSpanDays)">&lt;</button>
+			<div class='datetext'>{{ startDateStr }}  - {{ endDateStr }}</div>
+			<button [disabled]='endDateToday' (click)="setEndDateOffset(+overviewSpanDays)">&gt;</button>
+			<div class="enders"></div>			
+		</div>			
 	</div>
 	<div class="gridright">
 		<app-name-device></app-name-device>

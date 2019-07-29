@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoaderService, DeviceImpact, GeoData, Device, BucketedImpacts, ImpactSet, CompanyInfo } from "app/loader.service";
 import { FocusService } from "app/focus.service";
 import { Observable } from 'rxjs';
+import * as d3 from 'd3'; 
 import { Observer } from 'rxjs';
 import * as _ from 'lodash';
 import { ActivatedRoute} from "@angular/router";
@@ -30,6 +31,15 @@ export class LayoutTimeseriesComponent implements OnInit {
 	deviceimpactchangesubscription: any;
 	lastTimeSelection: TimeSelection;
 	showCompanyInfo: CompanyInfo;
+
+	// Dayspan for overview
+	overviewSpanDays = 2;
+
+	// end date parging
+	endDate = new Date(); // 
+	endDateStr: string;
+	startDateStr: string;
+	endDateToday: boolean;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.route.params.subscribe(params => { 
@@ -41,7 +51,9 @@ export class LayoutTimeseriesComponent implements OnInit {
       		this.mode = params.mode; 
     	});
     	this.impactChanges = this._make_impact_observable();
-        this._last_load_time = new Date();
+		this._last_load_time = new Date();
+		(<any>window)._d3 = d3;
+		this.setEndDateOffset(0);
   	}  
 
   // handling propagating
@@ -85,6 +97,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 						if (this_.impacts) {
 							// let cur_min = Math.floor((new Date().getTime())/(60000));
 							let cur_min = Object.keys(this_.impacts).map(x => +x).sort((x,y) => y - x)[0];
+
 							if (!cur_min) { 
 								cur_min = Math.floor((new Date().getTime())/(60000));
 							}
@@ -97,31 +110,8 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 									bucket[mac] = bucket[mac] || {};
 									
-									// BEGIN DEBUG ==>
-									/*
-									if (bucket[mac][dst]) { 
-										console.info("IMPUD: incr ", mac, "//", dst, " :: ", bucket[mac][dst], " + ",val," => ", (bucket[mac][dst]+val));
-									} else {
-										console.info("IMPUD: add dest ", mac, "//", dst, " :: ", val);									
-									}
-									*/
-									// <== END DEBUG
-									
 									bucket[mac][dst] = (bucket[mac][dst] || 0) + val;
 									this_.impacts[""+cur_min] = bucket;
-
-									// original broken code >> 
-									// const rows = this_.impacts.filter((x) => x.company === key);
-									// if (rows.length === 0) {
-									// 	this_.impacts.push({
-									// 		"company": key,
-									// 		"device": key2,
-									// 		"impact": incoming[key][key2],
-									// 		"minute": Math.floor((new Date().getTime()/1000) + 3600)
-									// 	});
-									// } else {
-									// 	rows[0].impact += incoming[key][key2];
-									// }
 								}
 							}
 							// console.info("updated impacts[",cur_min,"] -> ", this_.impacts);
@@ -163,8 +153,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 	  dateToMinutes(input:Date): number {
 		  return Math.floor(input.getTime()/(1000*60));
-	  }
-	  
+	  }	  
 
 	timeSelected(val: TimeSelection) {
 		// this can be called with an undefined argument
@@ -177,13 +166,9 @@ export class LayoutTimeseriesComponent implements OnInit {
 		  this.lastTimeSelection = val;
 	  }
 
+	// on init reload
 	ngOnInit() {
-		// let now = Math.floor(new Date().getTime()/1000);
-		// this.getIoTData(now - 15*60, now, 1);
 		this.getIoTData(new Date(new Date().getTime()-24*60*60000), new Date(), 1);
-		// this.getIoTDataAggregated(0
-		
-		// seconds since the epoch
 	}
 
 	closeCompanyInfo() { 
@@ -197,6 +182,32 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 	selectDevice(d:string) { 
 		console.info('device selected', d);
+	}
+
+	getStartDate():Date {
+		return d3.timeDay.offset(this.endDate, -3);
+	}
+
+	dateMin(d1:Date, d2:Date):Date {
+		return d1.getDate().valueOf() < d2.getDate().valueOf() ? d1 : d2;
+	}
+	
+	isToday(d:Date):boolean {
+		const today = new Date();
+		return today.toDateString() === d.toDateString()
+	}
+
+	suffixToday(d: Date): string {
+	 	return this.isToday(d) ? `${d.toDateString()} (Today)` : d.toDateString();
+	}
+
+	setEndDateOffset(days : number): Date {
+		const now = new Date();
+		this.endDate = d3.timeSecond.offset(d3.timeDay.ceil(this.dateMin(now, d3.timeDay.offset(this.endDate, days))), -1);
+		this.endDateStr = this.suffixToday(this.endDate);
+		this.startDateStr = this.suffixToday(this.getStartDate());
+		this.endDateToday = this.isToday(this.endDate);
+		return this.endDate;
 	}
 
 }

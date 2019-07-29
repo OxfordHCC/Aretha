@@ -31,6 +31,26 @@
             padding:0px;
 
         }
+        .date-select-bar{
+            display:flex;
+            flex-direction:row;
+            padding:20px;
+            border:1px solid #aef;
+            font-size:14pt;
+            .enders {
+                flex-grow:1;
+            }
+            button {
+                border:none;
+                flex-grow:0;
+                font-size:18pt;
+            }
+            .datetext {
+                padding:10px 0px;
+                flex-grow:1;
+                text-align:center;
+            }
+        }
     }
     .gridright {
         display:none;
