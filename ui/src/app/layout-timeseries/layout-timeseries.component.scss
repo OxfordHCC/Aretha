@@ -34,7 +34,7 @@
         .date-select-bar{
             display:flex;
             flex-direction:row;
-            padding:20px;
+            padding:10px 20px;
             border:1px solid #aef;
             font-size:14pt;
             .enders {
@@ -47,7 +47,8 @@
             }
             .datetext {
                 padding:10px 0px;
-                flex-grow:1;
+                flex-grow:0;
+                min-width:500px;
                 text-align:center;
             }
         }
