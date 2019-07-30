@@ -70,13 +70,13 @@ export class LayoutTimeseriesComponent implements OnInit {
 		
 		console.info(`reload asking for ${start}-${end}`);
 		
-		this_.loader.getIoTData(start, end, delta).then( bundle => {
+		this.loader.getIoTData(start, end, 1).then( bundle => {
 			console.info('time:: assigning impacts ', bundle.impacts);
-			this_.impacts = bundle.impacts;
-			this_.geodata = bundle.geodata;
-			this_.devices = bundle.devices;
-			this_._notifyImpactObservers();
-			this_._last_load_time = new Date();
+			this.impacts = bundle.impacts;
+			this.geodata = bundle.geodata;
+			this.devices = bundle.devices;
+			this._notifyImpactObservers();
+			this._last_load_time = new Date();
 		});
 	}	
 
