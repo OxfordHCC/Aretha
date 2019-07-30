@@ -1,0 +1,15 @@
+<div class="company-info-dialog">
+  <div class="title">
+    More information about {{ company?.company }}
+    <div class="close" (click)="emitClose()">x</div>
+  </div>
+  <div class="loading" *ngIf="loading">
+    <h2>Loading...</h2>
+    <div class='spinner'></div>
+  </div>
+  <div class="error" *ngIf="error">
+    <h2> Oops! </h2>
+    <h3> Information service could not be reached. Please try again later. </h3>
+  </div>
+  <iframe *ngIf="company_cb_url && !error && !loading" [src]="company_cb_url"></iframe>
+</div>

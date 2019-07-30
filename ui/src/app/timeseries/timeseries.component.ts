@@ -8,10 +8,10 @@
  import * as d3 from 'd3';
  import * as _ from 'lodash';
  import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
-import { persistentColor } from '../utils';
+import { persistentColor, dateMin } from '../utils';
  
  @Component({
-	// encapsulation: ViewEncapsulation.None, 
+	encapsulation: ViewEncapsulation.None, 
 	selector: 'app-timeseries',
 	templateUrl: './timeseries.component.html',
 	styleUrls: ['./timeseries.component.scss']
@@ -22,8 +22,11 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
-	@Input() timeSelectorWidth = 200;				
+	@Input() timeSelectorWidth = 80;				
+	@Input() detailedTicks = false;
+
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
+	@Output() legendClicked = new EventEmitter<any>();
 	
 	_hoveringApp: string;
 	_ignoredApps: string[];
@@ -263,6 +266,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('class','plot')
 				.selectAll("path")
 				.attr("class", "stream")
+				.style("pointer-events","auto")				
 				.data(series)
 				.join("path") // join is only defined in d3@5 and newer
 				.attr("fill", ({key}) => persistentColor(key)) // // stackscale(key))
@@ -277,11 +281,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					// console.info('mouseout', d, this); 
 					this.hovering = undefined;					
 					this.render();
-				}).on('click', (d) => { 
-					// const b = this;
-					// console.info('click', d, this); 
-					// d3.select(this).attr("class", 'hovering');
-				});
+				}); // .on('mousedown', d => { console.log('path click ', d); });
 
 			// .append("title")
 			//   .text(({key}) => key);		
@@ -297,20 +297,43 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			
 			svg.append('g')
 				.attr('class', 'axis x')
-				.call(d3.axisBottom(xscale))
-				.selectAll('text')
+				.call(d3.axisTop(xscale)
+					.ticks(d3.timeMinute.every(60))
+					.tickPadding(10)
+					.tickFormat(d3.timeFormat(this.detailedTicks ? "%a %B %d %H:%M": ""))
+					.tickSizeInner(-height_svgel)
+					.tickSizeOuter(-10)					
+				).selectAll('text')
 				.style('text-anchor', 'end')
 				.attr('y', 1)
-				.attr('dx', '-.8em')
-				.attr('dy', '.15em')
+				.attr('dx', '-0.4em')
+				.attr('dy', '-.4em')
 				.attr('transform', 'rotate(-90)');
 				// .call(this.wrap, margin.bottom - 10);
+
+			if (this.detailedTicks) { 
+				svg.append('g')
+					.attr('class', 'axis xlight')
+					.call(d3.axisTop(xscale)
+						.ticks(d3.timeMinute.every(5))
+						// .tickPadding(20)
+						.tickFormat("")
+						.tickSizeInner(-height_svgel)
+						.tickSizeOuter(-height_svgel)					
+					).selectAll('text')
+					.style('text-anchor', 'end')
+					.attr('y', 1)
+					.attr('dx', '-.8em')
+					.attr('dy', '.15em')
+					.attr('transform', 'rotate(-90)');
+					// .call(this.wrap, margin.bottom - 10);
+			}				
 			
 			if (this.showtimeselector) { 
 				this.drawTimeSelector(svg, xscale, height, width_svgel, height_svgel); 
 			}
 			if (this.showLegend) { 
-				this.drawLegend(svg, width_svgel, stack_keys); 
+				this.drawLegend(svg, width_svgel, height_svgel, stack_keys); 
 			}
 		}
 
@@ -319,12 +342,17 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			if (svg.selectAll('g.dragwindow').size() === 0) {
 				// attach only once	
 				let updateMouse = (xx:number) => {
-					this.mouseX = xx;
-					// console.log('new time is ', xscale.invert(this.mouseX));
+					// this makes it impossible to drag the time selector into
+					// the future
+					const timeXX = xscale.invert(xx + this.timeSelectorWidth/2), // we want to test the max extent
+						now = d3.timeMinute.floor(new Date()),
+						maxtime = dateMin(timeXX, now);
+
+					this.mouseX = xscale(maxtime)-this.timeSelectorWidth/2;
 					this.selectedTimeChanged.emit({
-						centre: xscale.invert(this.mouseX),
-						start: xscale.invert(this.mouseX-this.timeSelectorWidth/2),
-						end:xscale.invert(this.mouseX+this.timeSelectorWidth/2)
+						centre: d3.timeMinute.floor(xscale.invert(this.mouseX)),
+						start: d3.timeMinute.floor(xscale.invert(this.mouseX-this.timeSelectorWidth/2)),
+						end:d3.timeMinute.ceil(xscale.invert(this.mouseX+this.timeSelectorWidth/2))
 					});
 					this.render();
 				};
@@ -367,9 +395,15 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('x2',() => this.mouseX);
 		}			
 		
-		drawLegend(svg, width, stackkeys) {
+		drawLegend(svg, width, height, stackkeys) {
 			// legend
-			const leading = 26;
+			
+			const leading = 26,
+				colwidth = 230,
+				max_rows = Math.floor((height-40)/(leading));
+
+			// stackkeys = _.range(50).map(x => `Hello {x}!`);
+
 			const legel = svg.selectAll('g.legend').data([0]).enter().append('g')
 				.attr('class', 'legend')
 				.selectAll('g.legel')
@@ -377,40 +411,55 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.enter()
 				.append('g')
 				.attr('class','legel')
-				.attr('transform', function (d, i) { return `translate(${width-250},${i*leading + 20 })`; })
+				.attr('transform', function (d, i) { 
+					const coln = Math.floor(i / max_rows);
+					return `translate(${width-(coln+1)*colwidth},${(i%max_rows)*leading + 50 })`; 
+				})
+				// temporarily disabled for merge into chi-prod
+				// }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
 					this.render();
 					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
 				}).on('mouseout', (d) => { 
-					// console.info('mouseout', d); 
 					this.hovering = undefined;
 					this.render();
-				}).on('click', (d) => { console.info('click', d); });
+				});	// .style("pointer-events","auto")
 
 			legel.append('rect')
 				.attr('class','main')
 				.attr('x',0)
 				.attr('y',0)
-				.attr('width',200)
-				.attr('height', leading);
+				.attr('width',colwidth)
+				// .style("pointer-events","auto")	
+				.attr('height', leading)
+				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
 			legel.append('rect')
-					.attr('x', 3) // width - 140 - 19)
-					.attr('y', 3)
-					.attr('width', 12)
-					.attr('height', 12)
-					.attr('fill', d => persistentColor(d))
-					.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				.attr('class', 'legsq')
+				.attr('x', 3) // width - 140 - 19)
+				.attr('y', 3)
+				.attr('width', 12)
+				.attr('height', 12)
+				.style("pointer-events","auto")				
+				.attr('fill', d => persistentColor(d))
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				// temporarily disabled for merge into chi-prod
+				// .on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+
 				
 			legel.append('text')
 				.attr('x', 20) // width - 140 - 24)
 				.attr('y', 9.5)
 				.attr('dy', '0.32em')
+				// .style("pointer-events","auto")				
 				.text(d => this.byDestination ? d : this.devices[d].name)
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);	
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				// temporarily disabled for merge into chi-prod
+				// .on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
 			
+			(<any>window)._dd = d3;
 		}
 		
 		@HostListener('window:resize')

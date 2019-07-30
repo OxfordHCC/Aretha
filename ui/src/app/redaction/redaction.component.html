@@ -1,14 +1,20 @@
-<h3>Review and Redact Data Collected By Aretha</h3>
+<div id="redact-left">
+	<h3>Review and Redact Data Collected By Aretha</h3>
 
-<p>Below are the companies that Aretha has identified from your network traffic. If you wish to remove one of the following companies from Aretha's logs, simply press the remove button next to it in the table.</p>
+	<p>Below are the companies that Aretha has identified from your network traffic. If you wish to remove one of the following companies from Aretha's logs, simply press the remove button next to it in the table.</p>
 
-<p>Please note that this will not stop removed companies from appearing in Aretha if you visit them again. The removal process is irreversible and reduces the value of the research data collected - please use it sparingly.</p>
+	<p>Please note that this will not stop removed companies from appearing in Aretha if you visit them again. The removal process is irreversible and reduces the value of the research data collected - please use it sparingly.</p>
 
-<table>
-	<thead>
-		<tr><td><h4>Company Name</h4></td><td><h4 id="actionH4">Action</h4></td></tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let company of this.records"><td>{{company}}</td><td><button mat-button (click)="redact(company);">Remove</button></td></tr>
-	</tbody>
-</table>
+	<table>
+		<thead>
+			<tr><td><h4>Company Name</h4></td><td><h4 id="actionH4">Action</h4></td></tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let company of this.records"><td>{{company}}</td><td><button mat-button (click)="redact(company);">Remove</button></td></tr>
+		</tbody>
+	</table>
+</div>
+
+<div id="redact-right">
+	<app-name-device></app-name-device>
+</div>
