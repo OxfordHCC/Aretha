@@ -204,7 +204,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 		console.info('device selected', d);
 	}
 	getStartDate():Date {
-		return d3.timeDay.offset(this.endDate, -3);
+		return d3.timeDay.floor(d3.timeDay.offset(this.endDate, -this.overviewSpanDays));
 	}
 	isToday(d:Date):boolean {
 		const today = new Date();
@@ -214,8 +214,13 @@ export class LayoutTimeseriesComponent implements OnInit {
 	 	return this.isToday(d) ? `${d.toDateString()} (Today)` : d.toDateString();
 	}
 	setEndDateOffset(days : number): Date {
-		const now = new Date();
-		this.endDate = d3.timeSecond.offset(d3.timeDay.ceil(dateMin(now, d3.timeDay.offset(this.endDate, days))), -1);
+		console.log(`setEndDateOffset called ${days} on ${this.endDate}`);
+		const floornow = d3.timeDay.floor(new Date()),
+			floordate = d3.timeDay.floor(d3.timeDay.offset(this.endDate, days)),
+			minDate = dateMin(floornow, floordate);
+
+		this.endDate = d3.timeSecond.offset(d3.timeDay.ceil(d3.timeSecond.offset(minDate, 1)), -1);
+		console.info('new endDate ', this.endDate);
 		this.endDateStr = this.suffixToday(this.endDate);
 		this.startDateStr = this.suffixToday(this.getStartDate());
 		this.endDateToday = this.isToday(this.endDate);
