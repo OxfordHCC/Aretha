@@ -140,6 +140,8 @@ export class LayoutTimeseriesComponent implements OnInit {
 			}
 		});  
 		
+		// watchdog interval forces reload every minute to get new updated impacts
+		// this should only happen when viewed interval is current
 		setInterval(() => {
 			let msec_since_reload = (new Date()).valueOf() - this_._last_load_time.valueOf();
 			console.info('WATCHDOG checking ~~~~ ', msec_since_reload, ' msec since last reload');
@@ -161,8 +163,15 @@ export class LayoutTimeseriesComponent implements OnInit {
 		// this can be called with an undefined argument
 		// now we want to filter our impacts and update local impacts
 		if (this.impacts) { 
-			const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
-			this.zoomed_impacts = _.pickBy(this.impacts, (macip, time) => +time >= st_mins && +time <= st_end);
+			// const st_mins = this.dateToMinutes(val.start),st_end = this.dateToMinutes(val.end);
+			// this.zoomed_impacts = _.pickBy(this.impacts, (macip, time) => +time >= st_mins && +time <= st_end);
+
+			this.zoomed_impacts = _.fromPairs(d3.timeMinute.range(val.start, val.end).map((min_date) =>  {
+				const min = this.dateToMinutes(min_date);
+				return [+min, this.impacts[+min] || {}];
+			}));
+			// ----
+			// console.log('hi');			
 		}
 		this.lastTimeSelection = val;
 	}

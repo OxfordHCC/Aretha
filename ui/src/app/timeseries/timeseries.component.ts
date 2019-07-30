@@ -8,7 +8,7 @@
  import * as d3 from 'd3';
  import * as _ from 'lodash';
  import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
-import { persistentColor } from '../utils';
+import { persistentColor, dateMin } from '../utils';
  
  @Component({
 	encapsulation: ViewEncapsulation.None, 
@@ -22,7 +22,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
-	@Input() timeSelectorWidth = 200;				
+	@Input() timeSelectorWidth = 80;				
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	@Output() legendClicked = new EventEmitter<any>();
 	
@@ -339,12 +339,17 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			if (svg.selectAll('g.dragwindow').size() === 0) {
 				// attach only once	
 				let updateMouse = (xx:number) => {
-					this.mouseX = xx;
+					const timeX = xscale.invert(xx+this.timeSelectorWidth/2),
+						now = d3.timeMinute.floor(new Date()),
+						maxtime = dateMin(timeX, now);
+
+					this.mouseX = xscale(maxtime)-this.timeSelectorWidth/2;
+
 					// console.log('new time is ', xscale.invert(this.mouseX));
 					this.selectedTimeChanged.emit({
-						centre: xscale.invert(this.mouseX),
-						start: xscale.invert(this.mouseX-this.timeSelectorWidth/2),
-						end:xscale.invert(this.mouseX+this.timeSelectorWidth/2)
+						centre: d3.timeMinute.floor(xscale.invert(this.mouseX)),
+						start: d3.timeMinute.floor(xscale.invert(this.mouseX-this.timeSelectorWidth/2)),
+						end:d3.timeMinute.ceil(xscale.invert(this.mouseX+this.timeSelectorWidth/2))
 					});
 					this.render();
 				};

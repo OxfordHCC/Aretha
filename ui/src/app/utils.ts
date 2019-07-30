@@ -4,6 +4,10 @@ import * as _ from 'lodash';
 
 // Adapted from http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 
+export function dateMin(d1: Date, d2:Date):Date { 
+    return d1.valueOf() < d2.valueOf() ? d1:d2;
+}
+
 var randomColor = (function(){
     var golden_ratio_conjugate = 0.618033988749895;
     var h = Math.random();
