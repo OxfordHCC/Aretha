@@ -18,3 +18,13 @@ h3, p {
 #actionH4 {
 	padding-left: 16px;
 }
+
+#redact-left {
+	float:left;
+	padding-right: 20px;
+}
+
+#redact-right {
+	float:left;
+	padding-left: 20px;
+}
