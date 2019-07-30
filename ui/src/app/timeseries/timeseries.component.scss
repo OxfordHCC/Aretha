@@ -27,14 +27,17 @@ div.tscompmain {
             stroke-width:3px;
             stroke:pink;
         }
+        /deep/ path.domain {
+            stroke:#888 !important;
+        }
 
         /deep/ .axis.x line {
-            stroke:#888;
+            stroke:#aaa;
             stroke-width:1px;
         }
         /deep/ .axis.x text {
             font: bold 14px sans-serif;
-            fill:#888;
+            fill:#aaa;
         }
         /deep/ .axis.xlight line {
             stroke:#eee;
