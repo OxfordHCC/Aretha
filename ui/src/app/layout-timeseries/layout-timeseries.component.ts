@@ -6,6 +6,7 @@ import * as d3 from 'd3';
 import { Observer } from 'rxjs';
 import * as _ from 'lodash';
 import { ActivatedRoute} from "@angular/router";
+import { dateMin } from '../utils';
 
 export class TimeSelection {
 	centre: Date;
@@ -20,7 +21,6 @@ export class TimeSelection {
 })
 
 export class LayoutTimeseriesComponent implements OnInit {
-  mode: string;
   	zoomed_impacts: BucketedImpacts; 	
 	impacts: BucketedImpacts; 
 	geodata: GeoData[];
@@ -42,21 +42,14 @@ export class LayoutTimeseriesComponent implements OnInit {
 	endDateToday: boolean;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
-    	this.route.params.subscribe(params => { 
-      		console.log("SETTING MODE", params.mode);
-      		this.mode = params.mode; 
-    	});
-    	this.route.queryParams.subscribe(params => { 
-      		console.log("SETTING QUERY PARAMS MODE", params.mode);
-      		this.mode = params.mode; 
-    	});
     	this.impactChanges = this._makeImpactObservable();
 		this._last_load_time = new Date();
 
 		// debug
 		(<any>window)._d3 = d3;
+		//debug
 
-		// initialise date offset
+		// initialise date pager 
 		this.setEndDateOffset(0);
   	}  
 
@@ -184,36 +177,26 @@ export class LayoutTimeseriesComponent implements OnInit {
 	closeCompanyInfo() { 
 		this.showCompanyInfo = undefined;
 	}
-
 	selectCompany(c:string) { 
 		console.info('company selected ', c);
 		this.showCompanyInfo = new CompanyInfo(c, c, [], 'footags');
 	}
-
 	selectDevice(d:string) { 
 		console.info('device selected', d);
 	}
-
 	getStartDate():Date {
 		return d3.timeDay.offset(this.endDate, -3);
 	}
-
-	dateMin(d1:Date, d2:Date):Date {
-		return d1.getDate().valueOf() < d2.getDate().valueOf() ? d1 : d2;
-	}
-	
 	isToday(d:Date):boolean {
 		const today = new Date();
 		return today.toDateString() === d.toDateString()
 	}
-
 	suffixToday(d: Date): string {
 	 	return this.isToday(d) ? `${d.toDateString()} (Today)` : d.toDateString();
 	}
-
 	setEndDateOffset(days : number): Date {
 		const now = new Date();
-		this.endDate = d3.timeSecond.offset(d3.timeDay.ceil(this.dateMin(now, d3.timeDay.offset(this.endDate, days))), -1);
+		this.endDate = d3.timeSecond.offset(d3.timeDay.ceil(dateMin(now, d3.timeDay.offset(this.endDate, days))), -1);
 		this.endDateStr = this.suffixToday(this.endDate);
 		this.startDateStr = this.suffixToday(this.getStartDate());
 		this.endDateToday = this.isToday(this.endDate);
