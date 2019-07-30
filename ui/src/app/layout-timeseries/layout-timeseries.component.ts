@@ -62,6 +62,25 @@ export class LayoutTimeseriesComponent implements OnInit {
 		if (this.lastTimeSelection) { this.timeSelected(this.lastTimeSelection); }
 	}
 
+	// reload ==================	
+	
+	reload():void {
+		const start = this.getStartDate(),
+			end = this.isToday(this.endDate) ? new Date() : this.endDate;
+		
+		console.info(`reload asking for ${start}-${end}`);
+		
+		this_.loader.getIoTData(start, end, delta).then( bundle => {
+			console.info('time:: assigning impacts ', bundle.impacts);
+			this_.impacts = bundle.impacts;
+			this_.geodata = bundle.geodata;
+			this_.devices = bundle.devices;
+			this_._notifyImpactObservers();
+			this_._last_load_time = new Date();
+		});
+	}	
+
+
 	getIoTData(start: Date, end: Date, delta: number): void {	
 		console.info('getIoTData ((', start, '::', start, ' - ', end, '::', end, ' delta ', delta, '))');
 		let this_ = this,
