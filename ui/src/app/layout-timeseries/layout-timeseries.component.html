@@ -1,5 +1,8 @@
 <div class="root">
 	<div class="gridleft">
+		<div class="loading" *ngIf="isLoading">
+			<div class='spinner'></div>
+		</div>		
 		<div class="date-select-bar">
 				<div class="enders"></div>
 				<button (click)="setEndDateOffset(-overviewSpanDays)">&lt;</button>
