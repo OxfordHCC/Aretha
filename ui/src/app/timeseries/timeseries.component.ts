@@ -339,13 +339,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			if (svg.selectAll('g.dragwindow').size() === 0) {
 				// attach only once	
 				let updateMouse = (xx:number) => {
-					const timeX = xscale.invert(xx+this.timeSelectorWidth/2),
+					// this makes it impossible to drag the time selector into
+					// the future
+					const timeXX = xscale.invert(xx + this.timeSelectorWidth/2), // we want to test the max extent
 						now = d3.timeMinute.floor(new Date()),
-						maxtime = dateMin(timeX, now);
+						maxtime = dateMin(timeXX, now);
 
 					this.mouseX = xscale(maxtime)-this.timeSelectorWidth/2;
-
-					// console.log('new time is ', xscale.invert(this.mouseX));
 					this.selectedTimeChanged.emit({
 						centre: d3.timeMinute.floor(xscale.invert(this.mouseX)),
 						start: d3.timeMinute.floor(xscale.invert(this.mouseX-this.timeSelectorWidth/2)),
