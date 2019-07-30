@@ -23,6 +23,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
 	@Input() timeSelectorWidth = 80;				
+	@Input() detailedTicks = false;
+
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	@Output() legendClicked = new EventEmitter<any>();
 	
@@ -298,7 +300,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.call(d3.axisTop(xscale)
 					.ticks(d3.timeMinute.every(60))
 					.tickPadding(10)
-					.tickFormat(d3.timeFormat("%a %B %d %H:%M"))
+					.tickFormat(d3.timeFormat(this.detailedTicks ? "%a %B %d %H:%M": ""))
 					.tickSizeInner(-height_svgel)
 					.tickSizeOuter(-10)					
 				).selectAll('text')
@@ -309,22 +311,23 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('transform', 'rotate(-90)');
 				// .call(this.wrap, margin.bottom - 10);
 
-			svg.append('g')
-				.attr('class', 'axis xlight')
-				.call(d3.axisTop(xscale)
-					.ticks(d3.timeMinute.every(5))
-					.tickPadding(20)
-					.tickFormat("")
-					.tickSizeInner(-height_svgel)
-					.tickSizeOuter(-10)					
-				).selectAll('text')
-				.style('text-anchor', 'end')
-				.attr('y', 1)
-				.attr('dx', '-.8em')
-				.attr('dy', '.15em')
-				.attr('transform', 'rotate(-90)');
-				// .call(this.wrap, margin.bottom - 10);
-							
+			if (this.detailedTicks) { 
+				svg.append('g')
+					.attr('class', 'axis xlight')
+					.call(d3.axisTop(xscale)
+						.ticks(d3.timeMinute.every(5))
+						.tickPadding(20)
+						.tickFormat("")
+						.tickSizeInner(-height_svgel)
+						.tickSizeOuter(-10)					
+					).selectAll('text')
+					.style('text-anchor', 'end')
+					.attr('y', 1)
+					.attr('dx', '-.8em')
+					.attr('dy', '.15em')
+					.attr('transform', 'rotate(-90)');
+					// .call(this.wrap, margin.bottom - 10);
+			}				
 			
 			if (this.showtimeselector) { 
 				this.drawTimeSelector(svg, xscale, height, width_svgel, height_svgel); 
