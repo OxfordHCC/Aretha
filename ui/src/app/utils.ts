@@ -1,6 +1,7 @@
 
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import { CompanyInfo, CompanyDB } from './loader.service';
 
 // Adapted from http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 
@@ -50,4 +51,33 @@ export function persistentColor(s: string): string {
         localStorage[s] = randomColor();
     }
     return localStorage[s];
+}
+
+export function matchCompanies(cdomains:{[c:string]: Set<string>}, companies : CompanyDB): {[c:string]:CompanyInfo} {
+    let clist = Object.keys(cdomains),
+        info_by_domain = companies.values().reduce( (obj, info) => {
+            info.domains.map(domain => obj[domain] = info);
+            return obj;
+        }, {});
+
+    return clist.reduce((obj,cname) => { 
+        // already done
+        if (obj[cname]) { return obj; } 
+
+        // attempt domain match
+        const company_domains = new Array(...cdomains[cname]),
+            domain_matches = company_domains.map(x => info_by_domain[x]).filter(x => x);
+        if (domain_matches.length) { 
+            obj[cname] = domain_matches[0];
+            return obj;
+        } 
+
+        // name match
+        
+        
+        return obj;        
+    }, {});
+
+    
+
 }

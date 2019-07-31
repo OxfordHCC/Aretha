@@ -32,7 +32,8 @@ export interface GeoData {
   	country_name: string;
   	country_code: string;
   	latitude: string;
-  	longitude: string;
+    longitude: string;
+    domain: string;
 }
 
 export class DBUpdate {
@@ -110,6 +111,9 @@ export class CompanyDB {
   }
   add(info: CompanyInfo) {
     this._data[info.id] = info;
+  }
+  values():CompanyInfo[] {
+    return _.values(this._data);
   }
 }
 

@@ -1,5 +1,5 @@
  import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation, Output, EventEmitter, ViewChild } from '@angular/core';
- import { LoaderService, GeoData, Device } from '../loader.service';
+ import { LoaderService, GeoData, Device, CompanyInfo, CompanyDB } from '../loader.service';
  import { Http, HttpModule} from '@angular/http';
  import { Observable } from 'rxjs';
  import { FocusService } from 'app/focus.service';
@@ -8,7 +8,7 @@
  import * as d3 from 'd3';
  import * as _ from 'lodash';
  import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
-import { persistentColor, dateMin } from '../utils';
+import { persistentColor, dateMin, matchCompanies } from '../utils';
  
  @Component({
 	encapsulation: ViewEncapsulation.None, 
@@ -17,13 +17,13 @@ import { persistentColor, dateMin } from '../utils';
 	styleUrls: ['./timeseries.component.scss']
 })
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
-	 
 	@Input() impacts;
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
 	@Input() timeSelectorWidth = 40;				
 	@Input() detailedTicks = false;
+	@Input() companyinfo;
 
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	@Output() legendClicked = new EventEmitter<any>();
@@ -46,6 +46,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	graphEl: ElementRef;
 	
 	selectedTime = -1;
+
+	company_to_info: {[c:string]:CompanyInfo};
+
 	
 	// for debug visualisation
 	debug_impacts_arr : any;
@@ -60,9 +63,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	elHeight: any;
 	elWidth: any;
 	impacts_arr: any;
-	 hovering: any;
-	 hover_timeout: any;
-	
+	hovering: any;
+	hover_timeout: any;
+
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
 		private el: ElementRef,
@@ -174,6 +177,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// output: [ { date: x, impacts: { ip : { mac0:xx ... macN:yy } } ]
 
 			let ip_to_company = _.fromPairs(this.geodata.map( x => [x.ip, x.company_name]));
+				// company_to_info: {[c:string]: CompanyInfo} = {};
+			
 
 			let impact_by_ip = iarr.map((el) => {
 				const ii = _.flatten(_.toPairs(el.impacts).map(macimp => {
@@ -202,6 +207,18 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 			// [mac, [[ip0, xx], ... ] -> [mac ip0 xx] [mac ip1 yy] -> ip0
 			// [ip0, [[mac, xx], ... ]
+			if (this.companyinfo) { 
+				const company_to_domains: {[c:string]: Set<string>} = this.geodata.reduce((obj, x) => {
+					if (!obj[x.company_name]) { obj[x.company_name] = new Set<string>(); }
+					obj[x.company_name].add(x.domain)
+					return obj;
+				},{});
+				this.company_to_info = matchCompanies(company_to_domains, this.companyinfo);
+				console.info('updated company to info ', this.company_to_info);
+			}
+		
+
+
 			return impact_by_ip;
 		}	
 		
@@ -440,6 +457,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('width',colwidth)
 				// .style("pointer-events","auto")	
 				.attr('height', leading)
+				.attr('fill', d => "#fff")
 				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
 			legel.append('rect')
