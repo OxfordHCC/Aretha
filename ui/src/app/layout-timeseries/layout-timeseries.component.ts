@@ -52,6 +52,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 		// debug
 		(<any>window)._d3 = d3;
+		(<any>window)._lts = this;
 		// debug		
   	}  
 
@@ -194,6 +195,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 		throttledReload();
 
 		this.companydb = await this.loader.getCompanyInfo();
+		// debug
 		(<any>window)._cdb = this.companydb;
 	}
 
