@@ -22,7 +22,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() geodata: GeoData[];
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
-	@Input() timeSelectorWidth = 80;				
+	@Input() timeSelectorWidth = 40;				
 	@Input() detailedTicks = false;
 
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
@@ -367,6 +367,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					if (this.mouseDown) { updateMouse(d3.event.clientX); }
 				});
 				svg.on("mouseup", dd => { this.mouseDown = false; });
+
+				svg.on('wheel.zoom', dd => {
+					console.info('mouse wheel - X:', d3.event.wheelDeltaX, ' Y:', d3.event.wheelDeltaY);
+					this.timeSelectorWidth = Math.min(320, Math.max(10, this.timeSelectorWidth + d3.event.wheelDeltaY));
+					updateMouse(this.mouseX);
+				});
 			}
 			// enter selection
 			const enters = svg.selectAll('g.dragwindow').data([0]).enter().append('g').attr('class', 'dragwindow');
