@@ -18,6 +18,9 @@ export interface DeviceImpact {
   	impact: number;
 }
 
+export interface AdHostMap {[host: string]: boolean};
+export interface AdIPHostMap {[ip: string]: string[]};
+
 export type ImpactSet = ({[mac:string] : {[dst:string]:number}});
 export type BucketedImpacts = ({ [min_t:string]: ImpactSet});
 
@@ -88,7 +91,10 @@ export class CompanyDB {
     DE: '&#x1F1E9;&#x1F1EA;'
   };
 
+  token_to_id:{ [token:string]: string } = {};
+
   constructor(private _data: { [id: string]: CompanyInfo }, private sanitiser: DomSanitizer) {
+    
     mapValues(this._data, (s) => {
       if (s && s.company && s.equity && s.equity.length) {
           let n = parseInt(s.equity, 10);
@@ -104,6 +110,7 @@ export class CompanyDB {
       if (s.crunchbase_url) {
         s.crunchbase_url = this.sanitiser.bypassSecurityTrustResourceUrl(s.crunchbase_url);
       }      
+      s.company.toLowerCase().trim().split(' ').map(t => { this.token_to_id[t] = s.id; });
     });
   }
   get(companyid: string): CompanyInfo | undefined {
@@ -112,9 +119,26 @@ export class CompanyDB {
   add(info: CompanyInfo) {
     this._data[info.id] = info;
   }
+<<<<<<< HEAD
   values():CompanyInfo[] {
     return _.values(this._data);
   }
+=======
+
+  @memoize(x => 'match-'+x)
+  match(name:string):CompanyInfo | undefined {
+    // @TODO
+    let tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => ['ltd.', 'co.'].indexOf(x) < 0);
+    const matches = tgt_tokens.filter(x => this.token_to_id[x]);
+    matches.sort((x,y) => y.length - x.length);
+    console.info('best match is ', matches[0]);
+    if (matches.length) {
+      return this.get(this.token_to_id[matches[0]]);
+    }
+    return;
+  }
+
+>>>>>>> 76704dc94b20f7cb1d060db1d1389f9eac1f1a1d
 }
 
 export class CompanyInfo {
@@ -356,6 +380,22 @@ export class LoaderService {
 
 	changeContent(): void {
 		this.readyContentSource.next("tick");
-	}
+  }
 
+  @cache
+  fetchAdHosts(): Promise<AdHostMap> {
+    return this.http.get('assets/data/ads.json').toPromise()
+        .then((x) => x.json() as AdHostMap);
+  }
+
+  @cache
+  getAdsIPtoHost():Promise<AdIPHostMap> { 
+    return this.http.get('assets/data/ads-to-ip.json').toPromise().then(hosts => {
+      const h2ip = hosts.json();
+      return Object.keys(h2ip).reduce((obj, host) => {
+        h2ip[host].map(ip => { obj[ip] = host; });
+        return obj;
+      }, {});
+    });
+  }
 }
