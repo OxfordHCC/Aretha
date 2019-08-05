@@ -436,7 +436,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('class','legel')
 				.attr('transform', function (d, i) { 
 					const coln = Math.floor(i / max_rows);
-					return `translate(${width-(coln+1)*colwidth},${(i%max_rows)*leading + 50 })`; 
+					return `translate(${width-(coln+1)*colwidth-40},${(i%max_rows)*leading + 50 })`; 
 				})
 				// temporarily disabled for merge into chi-prod
 				// }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
