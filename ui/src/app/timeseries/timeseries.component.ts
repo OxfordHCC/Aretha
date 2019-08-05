@@ -428,11 +428,21 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			legel.append('rect')
 				.attr('class','main')
 				.attr('x',0)
-				.attr('y',0)
+				.attr('y',-2)
 				.attr('width',colwidth)
 				// .style("pointer-events","auto")	
+<<<<<<< Updated upstream
 				.attr('height', leading)
 				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+=======
+				.attr('height', leading-4)
+				.attr('opacity', 1)
+				.attr('stroke', d => {
+					return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
+				 }).attr('fill', d => {
+					return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
+				 }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+>>>>>>> Stashed changes
 			
 			legel.append('rect')
 				.attr('class', 'legsq')

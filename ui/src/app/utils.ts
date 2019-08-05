@@ -51,3 +51,81 @@ export function persistentColor(s: string): string {
     }
     return localStorage[s];
 }
+
+export function matchCompanies(geodata : GeoData[], cdb : CompanyDB, ads_db: AdsDB): {[c:string]:CompanyInfo} {
+
+    const info_by_domain = cdb.values().reduce((obj, info) => {
+        info.domains.map(domain => { obj[domain] = info; });
+        return obj;
+    }, {});
+
+    return geodata.reduce((obj, geodata_entry) => {
+        const domain = geodata_entry.domain;
+        // console.info('domain', domain, 'info_by_domain[domain]', info_by_domain[domain])
+        if (domain && domain !== 'unknown' && info_by_domain[domain]) {              
+            obj[geodata_entry.company_name] = info_by_domain[domain];
+            return obj;
+        }
+
+        // next, if no domain then we try to match against ads
+        if ((!domain || domain === 'unknown') &&  ads_db.get(geodata_entry.ip)) {
+            console.info("Ad hit!", geodata_entry.ip, ads_db.get(geodata_entry.ip));
+            obj[geodata_entry.company_name] = ads_db.get(geodata_entry.ip);
+            return obj;
+        }        
+        
+        // next, try matching names
+        let mname1 = cdb.matchId(geodata_entry.company_name);
+        if (mname1 !== undefined) { 
+            console.info('iI hit ', geodata_entry.company_name, mname1);
+            obj[geodata_entry.company_name] = mname1;
+            return obj;
+        }
+
+        console.info("failure identifying information for > ", geodata_entry);
+        return obj;
+    },{});
+
+}
+
+
+        // clist = Object.keys(geodata_company_to_domains),
+
+    // return clist.reduce((obj,cname) => { 
+    //     // already done
+    //     if (obj[cname]) { return obj; } 
+
+    //     // attempt domain match
+    //     const company_domains = new Array(...geodata_company_to_domains[cname]),
+    //         domain_matches = company_domains.map(x => info_by_domain[x]).filter(x => x);
+    //     if (domain_matches.length) { 
+    //         obj[cname] = domain_matches[0];
+    //         return obj;
+    //     } 
+    //     // name match        
+    //     return obj;        
+    // }, {});
+
+
+
+    // const geodata_company_to_domains: {[c:string]: Set<string>} = geodata.reduce((obj, x) => {
+    //         if (!obj[x.company_name]) { obj[x.company_name] = new Set<string>(); }
+    //         obj[x.company_name].add(x.domain)
+    //         return obj;
+    //     },{}),
+    //     clist = Object.keys(geodata_company_to_domains),
+
+    // return clist.reduce((obj,cname) => { 
+    //     // already done
+    //     if (obj[cname]) { return obj; } 
+
+    //     // attempt domain match
+    //     const company_domains = new Array(...geodata_company_to_domains[cname]),
+    //         domain_matches = company_domains.map(x => info_by_domain[x]).filter(x => x);
+    //     if (domain_matches.length) { 
+    //         obj[cname] = domain_matches[0];
+    //         return obj;
+    //     } 
+    //     // name match        
+    //     return obj;        
+    // }, {});

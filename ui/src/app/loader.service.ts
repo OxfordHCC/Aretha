@@ -88,7 +88,11 @@ export class CompanyDB {
   };
 
   constructor(private _data: { [id: string]: CompanyInfo }, private sanitiser: DomSanitizer) {
+
+    this._data = _.mapKeys(_data, (value,key) => key.toLowerCase());
+    
     mapValues(this._data, (s) => {
+      
       if (s && s.company && s.equity && s.equity.length) {
           let n = parseInt(s.equity, 10);
           if (n > 1e6) { s.equity = Math.round(n / 1.0e5) / 10.0 + 'm'; }
@@ -106,10 +110,10 @@ export class CompanyDB {
     });
   }
   get(companyid: string): CompanyInfo | undefined {
-    return this._data[companyid];
+    return this._data[companyid.toLowerCase()];
   }
   add(info: CompanyInfo) {
-    this._data[info.id] = info;
+    this._data[info.id.toLowerCase().trim()] = info;
   }
 }
 
@@ -126,6 +130,21 @@ export class CompanyInfo {
     constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
       this.domains = domains;
     }
+    return;
+  }
+
+  @memoize(x => 'match-'+x)
+  matchId(name:string):CompanyInfo | undefined {
+    // @TODO
+    const tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => x).map(x => x.replace(/[^\w\.\s]|_/g, "")),
+      matches = tgt_tokens.filter(x => x && this.get(x));
+
+    matches.sort((x,y) => y.length - x.length);
+    if (matches.length) { return this.get(matches[0]); }
+    return;
+  }
+
+
 }
 
 export class IoTDataBundle {
@@ -354,4 +373,16 @@ export class LoaderService {
 		this.readyContentSource.next("tick");
 	}
 
+  @cache
+  getAdsInfo():Promise<AdsDB> { 
+    // return this.http.get('assets/data/ads-to-ip.json').toPromise().then(hosts => {
+    return this.http.get('assets/data/peter-ads.json').toPromise().then(hosts => {
+      const h2ip = hosts.json();
+      return new AdsDB(Object.keys(h2ip).reduce((obj, host) => {
+        h2ip[host].map(ip => { obj[ip] = host; });
+        return obj;
+      }, {}));
+    });
+  }
+  
 }
