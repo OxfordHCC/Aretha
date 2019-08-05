@@ -1,5 +1,5 @@
  import { Input, Component, OnChanges, HostListener, ElementRef, SimpleChanges, AfterViewInit, NgZone, ViewEncapsulation, Output, EventEmitter, ViewChild } from '@angular/core';
- import { LoaderService, GeoData, Device } from '../loader.service';
+ import { LoaderService, GeoData, Device, CompanyInfo, CompanyDB } from '../loader.service';
  import { Http, HttpModule} from '@angular/http';
  import { Observable } from 'rxjs';
  import { FocusService } from 'app/focus.service';
@@ -8,7 +8,7 @@
  import * as d3 from 'd3';
  import * as _ from 'lodash';
  import { TimeSelection } from '../layout-timeseries/layout-timeseries.component';
-import { persistentColor, dateMin } from '../utils';
+import { persistentColor, dateMin, matchCompanies } from '../utils';
  
  @Component({
 	encapsulation: ViewEncapsulation.None, 
@@ -17,13 +17,16 @@ import { persistentColor, dateMin } from '../utils';
 	styleUrls: ['./timeseries.component.scss']
 })
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
-	 
 	@Input() impacts;
-	@Input() geodata: GeoData[];
+	
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
-	@Input() timeSelectorWidth = 80;				
+	@Input() timeSelectorWidth = 40;				
 	@Input() detailedTicks = false;
+
+	@Input() geodata: GeoData[];
+	@Input() companydb;
+	@Input() adsdb;
 
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	@Output() legendClicked = new EventEmitter<any>();
@@ -46,6 +49,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	graphEl: ElementRef;
 	
 	selectedTime = -1;
+
+	company_to_info: {[c:string]:CompanyInfo};
 	
 	// for debug visualisation
 	debug_impacts_arr : any;
@@ -60,9 +65,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	elHeight: any;
 	elWidth: any;
 	impacts_arr: any;
-	 hovering: any;
-	 hover_timeout: any;
-	
+	hovering: any;
+	hover_timeout: any;
+
 	constructor(private httpM: HttpModule, 
 		private http: Http, 
 		private el: ElementRef,
@@ -121,6 +126,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			console.info('time:: ngOnChanges ', changes);
 			// console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
 			var this_ = this;
+			
+			if (this.company_to_info === undefined && this.companydb && this.geodata && this.adsdb) { 
+				/// we just need to do this once >> 
+				this.company_to_info = matchCompanies(this.geodata, this.companydb, this.adsdb);
+				console.info('initialised companyinfo ', this.company_to_info);
+			}
+
 			if (this.impactChanges && this._impact_listener === undefined) { 
 				this._impact_listener = this.impactChanges.subscribe(target => {
 					this.zone.run(() => this_.render());
@@ -166,6 +178,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			const impacts_src = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] }));
 			this.impacts_arr = this.byDestination ? this.rectify_impacts_arr(impacts_src) : impacts_src;
 		}   
+
 		
 		rectify_impacts_arr(iarr: any): any {
 
@@ -174,6 +187,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// output: [ { date: x, impacts: { ip : { mac0:xx ... macN:yy } } ]
 
 			let ip_to_company = _.fromPairs(this.geodata.map( x => [x.ip, x.company_name]));
+				// company_to_info: {[c:string]: CompanyInfo} = {};			
 
 			let impact_by_ip = iarr.map((el) => {
 				const ii = _.flatten(_.toPairs(el.impacts).map(macimp => {
@@ -202,6 +216,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 			// [mac, [[ip0, xx], ... ] -> [mac ip0 xx] [mac ip1 yy] -> ip0
 			// [ip0, [[mac, xx], ... ]
+		
+
+
 			return impact_by_ip;
 		}	
 		
@@ -367,6 +384,12 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 					if (this.mouseDown) { updateMouse(d3.event.clientX); }
 				});
 				svg.on("mouseup", dd => { this.mouseDown = false; });
+
+				svg.on('wheel.zoom', dd => {
+					console.info('mouse wheel - X:', d3.event.wheelDeltaX, ' Y:', d3.event.wheelDeltaY);
+					this.timeSelectorWidth = Math.min(320, Math.max(10, this.timeSelectorWidth + d3.event.wheelDeltaY));
+					updateMouse(this.mouseX);
+				});
 			}
 			// enter selection
 			const enters = svg.selectAll('g.dragwindow').data([0]).enter().append('g').attr('class', 'dragwindow');
@@ -414,7 +437,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('transform', function (d, i) { 
 					const coln = Math.floor(i / max_rows);
 					return `translate(${width-(coln+1)*colwidth},${(i%max_rows)*leading + 50 })`; 
-				}).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
+				})
+				// temporarily disabled for merge into chi-prod
+				// }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
@@ -431,10 +456,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('y',-2)
 				.attr('width',colwidth)
 				// .style("pointer-events","auto")	
-<<<<<<< Updated upstream
-				.attr('height', leading)
-				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
-=======
 				.attr('height', leading-4)
 				.attr('opacity', 1)
 				.attr('stroke', d => {
@@ -442,7 +463,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				 }).attr('fill', d => {
 					return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
 				 }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
->>>>>>> Stashed changes
 			
 			legel.append('rect')
 				.attr('class', 'legsq')
@@ -452,8 +472,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('height', 12)
 				.style("pointer-events","auto")				
 				.attr('fill', d => persistentColor(d))
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				// temporarily disabled for merge into chi-prod
+				// .on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 
 				
 			legel.append('text')
@@ -462,8 +483,9 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('dy', '0.32em')
 				// .style("pointer-events","auto")				
 				.text(d => this.byDestination ? d : this.devices[d].name)
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
+				// temporarily disabled for merge into chi-prod
+				// .on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
 			
 			(<any>window)._dd = d3;
 		}

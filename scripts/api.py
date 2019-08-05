@@ -8,6 +8,7 @@ import sys
 import traceback
 import urllib
 import configparser
+import socket
 from datetime import datetime
 from flask import Flask, jsonify, make_response, Response
 
@@ -297,10 +298,16 @@ def get_device_info():
 
 # get geo data for all ips
 def get_geodata():
-    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
-    records = []
+    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name, domain FROM geodata", ())
+    records = []    
+
     for geo in geos:
-        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4]})
+        # try:
+        #     subdomain = socket.gethostbyaddr(geo[0]) if geo[5] == 'unknown' else geo[5]
+        #     print("subdomain", geo[0], subdomain)
+        # except:
+        #     print("Unexpected error:", sys.exc_info()[0])
+        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4], "domain":geo[5]})
     return records
 
 

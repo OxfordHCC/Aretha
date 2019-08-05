@@ -1,6 +1,7 @@
 
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import { CompanyInfo, CompanyDB, AdsDB, GeoData } from './loader.service';
 
 // Adapted from http://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/
 

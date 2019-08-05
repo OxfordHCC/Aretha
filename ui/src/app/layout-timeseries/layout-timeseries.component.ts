@@ -42,6 +42,8 @@ export class LayoutTimeseriesComponent implements OnInit {
 	endDateToday: boolean;
 	throttledReload: any;
 	isLoading = false;
+	companydb: any;
+	adsdb: any;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.impactChanges = this._makeImpactObservable();
@@ -51,6 +53,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 
 		// debug
 		(<any>window)._d3 = d3;
+		(<any>window)._lts = this;
 		// debug		
   	}  
 
@@ -99,7 +102,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	// 			this_.geodata = bundle.geodata;
 	// 			this_.devices = bundle.devices;
 	// 			this_._notifyImpactObservers();
-	// 			this_._last_load_time = new Date();
+// 			this_._last_load_time = new Date();
 	// 		});
 	// 	};		
 	// }  
@@ -169,7 +172,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	}
 
 	// on init reload
-	ngOnInit() {
+	async ngOnInit() {
 		const throttledReload = _.throttle(() => this.reload(), 10000);
 		this.throttledReload = throttledReload;
 		this._subscribe_device_impacts();
@@ -191,6 +194,11 @@ export class LayoutTimeseriesComponent implements OnInit {
 			}
 		}, 60*1000); // @TODO this should be set to a much larger value once we get bucket diffs streaming in
 		throttledReload();
+
+		this.companydb = await this.loader.getCompanyInfo();
+		this.adsdb = await this.loader.getAdsInfo();
+		// debug
+		(<any>window)._cdb = this.companydb;
 	}
 
 	closeCompanyInfo() { 

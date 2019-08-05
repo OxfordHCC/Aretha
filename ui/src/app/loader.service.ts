@@ -18,6 +18,9 @@ export interface DeviceImpact {
   	impact: number;
 }
 
+export interface AdHostMap {[host: string]: boolean};
+export interface AdIPHostMap {[ip: string]: string[]};
+
 export type ImpactSet = ({[mac:string] : {[dst:string]:number}});
 export type BucketedImpacts = ({ [min_t:string]: ImpactSet});
 
@@ -28,11 +31,13 @@ export interface Device {
 }
 
 export interface GeoData {
-	[ip: string]: string;
-  	country_name: string;
-  	country_code: string;
-  	latitude: string;
-  	longitude: string;
+  ip: string;
+  company_name: string;
+  // country_name: string;
+  country_code: string;
+  latitude: string;
+  longitude: string;
+  domain: string;
 }
 
 export class DBUpdate {
@@ -76,6 +81,36 @@ export let memoize = (f: (...args: any[]) => string) => {
   };
 };
 
+export class AdsDB { 
+  constructor(private _data: {[ip:string]:string}) {
+  }
+  get(ip):CompanyInfo | undefined { 
+    if (this._data[ip]) { 
+      const domain = this._data[ip], 
+        newinfo = new CompanyInfo(domain, domain, [domain], "advertising"); 
+      newinfo.type = ['advertising'];
+      return newinfo;
+    }
+    return;
+  }
+}
+
+export class CompanyInfo {
+  domains: string[];
+  type: string[];
+  jurisdiction_code ?: string;
+  parent ?: string;
+  parentInfo ?: CompanyInfo;
+  crunchbase_url ?: string | SafeResourceUrl;
+  equity ?: string;
+  size ?: string;
+  description ?: string;
+  constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
+    this.domains = domains;
+  }
+}
+
+
 export class CompanyDB {
   emoji_table = {
     US: '&#x1F1FA;&#x1F1F8;',
@@ -86,6 +121,8 @@ export class CompanyDB {
     CA: '&#x1F1E8;&#x1F1E6;',
     DE: '&#x1F1E9;&#x1F1EA;'
   };
+
+  token_to_id:{ [token:string]: string } = {};
 
   constructor(private _data: { [id: string]: CompanyInfo }, private sanitiser: DomSanitizer) {
 
@@ -106,7 +143,10 @@ export class CompanyDB {
       }
       if (s.crunchbase_url) {
         s.crunchbase_url = this.sanitiser.bypassSecurityTrustResourceUrl(s.crunchbase_url);
-      }      
+      }  
+      
+      // cache token to id
+      s.company.toLowerCase().trim().split(' ').map(t => { this.token_to_id[t] = s.id; });
     });
   }
   get(companyid: string): CompanyInfo | undefined {
@@ -115,20 +155,19 @@ export class CompanyDB {
   add(info: CompanyInfo) {
     this._data[info.id.toLowerCase().trim()] = info;
   }
-}
+  values():CompanyInfo[] {
+    return _.values(this._data);
+  }
 
-export class CompanyInfo {
-    domains: string[];
-    type: string[];
-    jurisdiction_code ?: string;
-    parent ?: string;
-    parentInfo ?: CompanyInfo;
-    crunchbase_url ?: string | SafeResourceUrl;
-    equity ?: string;
-    size ?: string;
-    description ?: string;
-    constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
-      this.domains = domains;
+  @memoize(x => 'match-'+x)
+  matchNames(name:string):CompanyInfo | undefined {
+    // @TODO
+    let tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => x && ['ltd.', 'co.'].indexOf(x) < 0);
+    const matches = tgt_tokens.filter(x => this.token_to_id[x]);
+    matches.sort((x,y) => y.length - x.length);
+    // console.info('best match is ', matches[0]);
+    if (matches.length) {
+      return this.get(this.token_to_id[matches[0]]);
     }
     return;
   }
@@ -143,9 +182,8 @@ export class CompanyInfo {
     if (matches.length) { return this.get(matches[0]); }
     return;
   }
-
-
 }
+
 
 export class IoTDataBundle {
   impacts: any;
@@ -371,7 +409,7 @@ export class LoaderService {
 
 	changeContent(): void {
 		this.readyContentSource.next("tick");
-	}
+  }
 
   @cache
   getAdsInfo():Promise<AdsDB> { 
