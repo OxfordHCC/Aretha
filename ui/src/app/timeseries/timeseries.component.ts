@@ -18,12 +18,15 @@ import { persistentColor, dateMin, matchCompanies } from '../utils';
 })
 export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	@Input() impacts;
-	@Input() geodata: GeoData[];
+	
 	@Input() impactChanges : Observable<any>;
 	@Input() devices :Device[];
 	@Input() timeSelectorWidth = 40;				
 	@Input() detailedTicks = false;
-	@Input() companyinfo;
+
+	@Input() geodata: GeoData[];
+	@Input() companydb;
+	@Input() adsdb;
 
 	@Output() selectedTimeChanged = new EventEmitter<TimeSelection>();
 	@Output() legendClicked = new EventEmitter<any>();
@@ -48,7 +51,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 	selectedTime = -1;
 
 	company_to_info: {[c:string]:CompanyInfo};
-
 	
 	// for debug visualisation
 	debug_impacts_arr : any;
@@ -124,6 +126,13 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			console.info('time:: ngOnChanges ', changes);
 			// console.log('onchanges GRAPHEL OFFSETWIDTH', this.graphEl, this.graphEl.nativeElement.offsetWidth, this.graphEl.nativeElement.offsetHeight);
 			var this_ = this;
+			
+			if (this.company_to_info === undefined && this.companydb && this.geodata && this.adsdb) { 
+				/// we just need to do this once >> 
+				this.company_to_info = matchCompanies(this.geodata, this.companydb, this.adsdb);
+				console.info('initialised companyinfo ', this.company_to_info);
+			}
+
 			if (this.impactChanges && this._impact_listener === undefined) { 
 				this._impact_listener = this.impactChanges.subscribe(target => {
 					this.zone.run(() => this_.render());
@@ -169,6 +178,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			const impacts_src = minutes.map(m => ({ date: new Date(+m*60*1000), impacts: impacts[m+""] }));
 			this.impacts_arr = this.byDestination ? this.rectify_impacts_arr(impacts_src) : impacts_src;
 		}   
+
 		
 		rectify_impacts_arr(iarr: any): any {
 
@@ -177,8 +187,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			// output: [ { date: x, impacts: { ip : { mac0:xx ... macN:yy } } ]
 
 			let ip_to_company = _.fromPairs(this.geodata.map( x => [x.ip, x.company_name]));
-				// company_to_info: {[c:string]: CompanyInfo} = {};
-			
+				// company_to_info: {[c:string]: CompanyInfo} = {};			
 
 			let impact_by_ip = iarr.map((el) => {
 				const ii = _.flatten(_.toPairs(el.impacts).map(macimp => {
@@ -207,15 +216,6 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 
 			// [mac, [[ip0, xx], ... ] -> [mac ip0 xx] [mac ip1 yy] -> ip0
 			// [ip0, [[mac, xx], ... ]
-			if (this.companyinfo) { 
-				const company_to_domains: {[c:string]: Set<string>} = this.geodata.reduce((obj, x) => {
-					if (!obj[x.company_name]) { obj[x.company_name] = new Set<string>(); }
-					obj[x.company_name].add(x.domain)
-					return obj;
-				},{});
-				this.company_to_info = matchCompanies(company_to_domains, this.companyinfo);
-				console.info('updated company to info ', this.company_to_info);
-			}
 		
 
 

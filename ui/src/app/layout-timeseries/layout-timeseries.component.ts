@@ -43,6 +43,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 	throttledReload: any;
 	isLoading = false;
 	companydb: any;
+	adsdb: any;
    
 	constructor(focus: FocusService, private route: ActivatedRoute, private loader: LoaderService) {
     	this.impactChanges = this._makeImpactObservable();
@@ -195,6 +196,7 @@ export class LayoutTimeseriesComponent implements OnInit {
 		throttledReload();
 
 		this.companydb = await this.loader.getCompanyInfo();
+		this.adsdb = await this.loader.getAdsInfo();
 		// debug
 		(<any>window)._cdb = this.companydb;
 	}

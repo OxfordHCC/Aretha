@@ -31,12 +31,13 @@ export interface Device {
 }
 
 export interface GeoData {
-	[ip: string]: string;
-  	country_name: string;
-  	country_code: string;
-  	latitude: string;
-    longitude: string;
-    domain: string;
+  ip: string;
+  company_name: string;
+  // country_name: string;
+  country_code: string;
+  latitude: string;
+  longitude: string;
+  domain: string;
 }
 
 export class DBUpdate {
@@ -80,6 +81,36 @@ export let memoize = (f: (...args: any[]) => string) => {
   };
 };
 
+export class AdsDB { 
+  constructor(private _data: {[ip:string]:string}) {
+  }
+  get(ip):CompanyInfo | undefined { 
+    if (this._data[ip]) { 
+      const domain = this._data[ip], 
+        newinfo = new CompanyInfo(domain, domain, [domain], "advertising"); 
+      newinfo.type = ['advertising'];
+      return newinfo;
+    }
+    return;
+  }
+}
+
+export class CompanyInfo {
+  domains: string[];
+  type: string[];
+  jurisdiction_code ?: string;
+  parent ?: string;
+  parentInfo ?: CompanyInfo;
+  crunchbase_url ?: string | SafeResourceUrl;
+  equity ?: string;
+  size ?: string;
+  description ?: string;
+  constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
+    this.domains = domains;
+  }
+}
+
+
 export class CompanyDB {
   emoji_table = {
     US: '&#x1F1FA;&#x1F1F8;',
@@ -109,7 +140,9 @@ export class CompanyDB {
       }
       if (s.crunchbase_url) {
         s.crunchbase_url = this.sanitiser.bypassSecurityTrustResourceUrl(s.crunchbase_url);
-      }      
+      }  
+      
+      // cache token to id
       s.company.toLowerCase().trim().split(' ').map(t => { this.token_to_id[t] = s.id; });
     });
   }
@@ -119,42 +152,25 @@ export class CompanyDB {
   add(info: CompanyInfo) {
     this._data[info.id] = info;
   }
-<<<<<<< HEAD
   values():CompanyInfo[] {
     return _.values(this._data);
   }
-=======
 
   @memoize(x => 'match-'+x)
-  match(name:string):CompanyInfo | undefined {
+  matchNames(name:string):CompanyInfo | undefined {
     // @TODO
-    let tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => ['ltd.', 'co.'].indexOf(x) < 0);
+    let tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => x && ['ltd.', 'co.'].indexOf(x) < 0);
     const matches = tgt_tokens.filter(x => this.token_to_id[x]);
     matches.sort((x,y) => y.length - x.length);
-    console.info('best match is ', matches[0]);
+    // console.info('best match is ', matches[0]);
     if (matches.length) {
       return this.get(this.token_to_id[matches[0]]);
     }
     return;
   }
 
->>>>>>> 76704dc94b20f7cb1d060db1d1389f9eac1f1a1d
 }
 
-export class CompanyInfo {
-    domains: string[];
-    type: string[];
-    jurisdiction_code ?: string;
-    parent ?: string;
-    parentInfo ?: CompanyInfo;
-    crunchbase_url ?: string | SafeResourceUrl;
-    equity ?: string;
-    size ?: string;
-    description ?: string;
-    constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
-      this.domains = domains;
-    }
-}
 
 export class IoTDataBundle {
   impacts: any;
@@ -389,13 +405,14 @@ export class LoaderService {
   }
 
   @cache
-  getAdsIPtoHost():Promise<AdIPHostMap> { 
+  getAdsInfo():Promise<AdsDB> { 
     return this.http.get('assets/data/ads-to-ip.json').toPromise().then(hosts => {
       const h2ip = hosts.json();
-      return Object.keys(h2ip).reduce((obj, host) => {
+      return new AdsDB(Object.keys(h2ip).reduce((obj, host) => {
         h2ip[host].map(ip => { obj[ip] = host; });
         return obj;
-      }, {});
+      }, {}));
     });
   }
+  
 }

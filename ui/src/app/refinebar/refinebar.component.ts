@@ -38,9 +38,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
   	@Input() showXAxis = true;
   	@Input() scale = false;
 	@Input() maxCompanies = 20;
-	popCount: number = 0;
-  vbox = { width: 700, height: 1024 };
-  _hoveringType: string;
+	popCount = 0;
+
+  	vbox = { width: 700, height: 1024 };
+  	_hoveringType: string;
   	_companyHovering: CompanyInfo;
   	_hoveringApp: string;
   	_ignoredApps: string[];
