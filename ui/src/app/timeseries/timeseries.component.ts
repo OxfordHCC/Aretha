@@ -437,9 +437,7 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('transform', function (d, i) { 
 					const coln = Math.floor(i / max_rows);
 					return `translate(${width-(coln+1)*colwidth-40},${(i%max_rows)*leading + 50 })`; 
-				})
-				// temporarily disabled for merge into chi-prod
-				// }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
+				}).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
 				.on('mouseenter', (d) => { 
 					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
 					this.hovering = d; 
@@ -472,9 +470,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('height', 12)
 				.style("pointer-events","auto")				
 				.attr('fill', d => persistentColor(d))
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
-				// temporarily disabled for merge into chi-prod
-				// .on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 
 				
 			legel.append('text')
@@ -483,9 +480,8 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 				.attr('dy', '0.32em')
 				// .style("pointer-events","auto")				
 				.text(d => this.byDestination ? d : this.devices[d].name)
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0);
-				// temporarily disabled for merge into chi-prod
-				// .on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
+				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+				.on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
 			
 			(<any>window)._dd = d3;
 		}

@@ -321,7 +321,7 @@ def GetExample(question):
     if question == "S1" or question == "S2":
         result["text"] = "Some content will be illustrated with examples from your home network. When they do, they'll appear here."
 
-    elif question == "encryption":
+    elif question == "B4":
         try:
             example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
         except:
@@ -379,6 +379,10 @@ def GetExample(question):
         start = datetime.fromisoformat(str(example2[0][0]))
         end = datetime.fromisoformat(str(example3[0][0]))
         result["text"] = f"Your {device} has sent {'{:,}'.format(count)} 'packets' of data in the last {(end - start).days} days. On average, that's once every {((end - start) / count).seconds}.{((end - start) / count).microseconds} seconds."
+
+    elif question == "B2":
+        example = DB_MANAGER.execute("select name,c_name,ext from packets as p inner join devices as d on p.mac = d.mac inner join geodata as g on p.ext = g.ip order by time desc limit 1;", ())
+        result["text"] = f"For example, your {example[0][0]} just received a packet from {example[0][1]} which has an IP address of {example[0][2]}."
 
     else:
         result = False

@@ -349,7 +349,7 @@ export class LoaderService {
 		this.changeContent();
 		if (pre === "") {pre = "Blank";}
 		if (post === "") {post = "Blank";}
-		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + pre + '/' + post).toPromise().then(response2 => {
+		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + encodeURIComponent(pre) + '/' + encodeURIComponent(post)).toPromise().then(response2 => {
       		return response2.json();
 		});
 	}

@@ -1,3 +1,38 @@
-<p>
-  content-b4 works!
-</p>
+<h3>What is data encryption?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		<p>Do you think that your devices always use encryption? Are there any devices that you think might send ata over the internet without encryption? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+	
+	<div *ngSwitchCase="2">
+		<p>Originally, information on the internet was sent in clear text. Informaion sent like this can be tampered with or spoofed by attackers (hackers). Many modern devices and services combat this by protecting your information using encryption.</p>
+
+		<p>Secure protocols like Secure Socket Layer (SSL) or Transport Layer Security (TLS) protect your information by making it unreadable to hackers, like a secure layer wrapped around your data. This is what is happening when you see the padlock icon in your browser when acessing https:// sites.</p>
+	</div>
+
+	<div *ngSwitchCase="3">
+		<iframe height="315" src="https://www.youtube.com/embed/kBXQZMmiA4s?start=281&amp;end=365" width="560"></iframe>
+	</div>
+
+	<div *ngSwitchCase="4">
+		<p>Was anything in the text or video new to you? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+		</mat-form-field>
+	</div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>
