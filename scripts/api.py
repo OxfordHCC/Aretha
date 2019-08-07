@@ -210,6 +210,7 @@ def unenforce_dest(destination):
             if ip[1] is None:
                 subprocess.run(["sudo", "iptables", "-D", "INPUT", "-s", ip[2], "-j", "DROP"])
                 subprocess.run(["sudo", "iptables", "-D", "OUTPUT", "-d", ip[2], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
     
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device IS NULL", (destination,))
     response = jsonify({"message": f"rule removed for {destination}", "success": True})
