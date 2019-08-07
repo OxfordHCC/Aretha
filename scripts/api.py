@@ -227,6 +227,8 @@ def unenforce_dest_dev(destination, device):
         for ip in blocked_ips:
             if ip[1] is not None:
                 subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-d", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
+                subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
     
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device = %s", (destination,device))
     response = jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
