@@ -27,6 +27,6 @@
 		<tr><td><h4>Device</h4></td><td><h4>Company</h4></td><td><h4 id="actionH4">Action</h4></td></tr>
 	</thead>
 	<tbody>
-		<tr *ngFor="let rule of this.records"><td>{{rule.device}}<td>{{rule.company}}</td><td><button mat-button (click)="removeRule(rule.company, rule.mac, rule.device);">Remove</button></td></tr>
+		<tr *ngFor="let rule of this.records"><td>{{rule.device}}<td>{{rule.company}}</td><td><button mat-button (click)="removeRule(rule.company, rule.mac, rule.device);" onClick="this.disabled=true">Remove</button></td></tr>
 	</tbody>
 </table>

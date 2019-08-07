@@ -211,7 +211,7 @@ def process_firewall():
                     subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
                 subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
     else:
-        print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
+        print("ERROR: platform {sys.platform} is not linux - cannot add ip to rule rule")
 
 
 # phone home and check for commands
