@@ -202,14 +202,15 @@ def process_firewall():
     # compare the two
     if sys.platform.startswith("linux"):
         for rule, company in rule_company.items():
-            for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
-                DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
-                if rule_device[rule] is None:
-                    subprocess.run(["sudo", "iptables", "-I", "INPUT", "-s", ip, "-j", "DROP"])
-                    subprocess.run(["sudo", "iptables", "-I", "OUTPUT", "-d", ip, "-j", "DROP"])
-                else:
-                    subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
-        subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+            if len(ip in geos.get(company, set()) - rule_ips.get(rule, set())) > 0:
+                for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
+                    DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
+                    if rule_device[rule] is None:
+                        subprocess.run(["sudo", "iptables", "-I", "INPUT", "-s", ip, "-j", "DROP"])
+                        subprocess.run(["sudo", "iptables", "-I", "OUTPUT", "-d", ip, "-j", "DROP"])
+                    else:
+                        subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
     else:
         print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
 
