@@ -11,7 +11,7 @@ import {ActivityLogService} from "../activity-log.service";
 export class ContentD3Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4; 
+	max: number = 5;
 	keyword = "D3";
 	preResponse: string = "";
 	postResponse: string = "";

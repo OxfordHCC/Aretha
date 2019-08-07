@@ -11,10 +11,10 @@ import {ActivityLogService} from "../activity-log.service";
 export class ContentS3Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 2 + 2; // +2 for the initial and final text fields
+	max: number = 3; 
 	keyword = "S3";
-	preResponse: string;
-	postResponse: string;
+	preResponse: string = "";
+	postResponse: string = "";
 
 	constructor(
 		private loader: LoaderService,
@@ -30,7 +30,7 @@ export class ContentS3Component implements OnInit {
 	next() {
 		if (this.stage < this.max) {
 			this.stage++;
-			this.actlog.log("edu-advance", this.keyword + " " + this.stage)
+     	 	this.actlog.log("edu-advance", this.keyword + " " + this.stage)
     	} else {
 			this.loader.setContent(this.keyword, this.preResponse, this.postResponse)
 				.then((x) => this.router.navigate(['/timeseries']));

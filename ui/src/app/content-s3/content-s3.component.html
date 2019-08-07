@@ -1,34 +1,24 @@
-<h3>The privacy assistant can help you to control your data flows</h3>
+<h3>How Do Smart Devices Work?</h3>
 
 <div [ngSwitch]="stage">
 	
 	<div *ngSwitchCase="1">
-		<p>Which of your devices' data flows have caused the biggest surprise whilst using the privacy assistant?</p>
+		<p>Have you ever wondered what actually happens when you talk to a device like Amazon Alexa? The video illustrates how the device processes your questions to come up with an answer.</p>
 
-		<mat-form-field>
-			<textarea matInput [(ngModel)]="preResponse"></textarea>
-		</mat-form-field>
+		<iframe height="349" src="https://player.cnbc.com/p/gZWlPC/cnbc_global?playertype=synd&amp;byGuid=3000625364" width="560"></iframe>
+
+		<p>Alexa uses complex algorithms are used to search the web and databases for answers. Alexa sends requests to different data sources to answer your questions. This is similar to loading a web page where you might load pictures from different resources than text.</p>
 	</div>
 	
 	<div *ngSwitchCase="2">
-		<p>From now on, you can use the privacy assistant to stop your devices communicating with certain companies. After you finish this introduction, a new blocking tab will appear in the top bar.<p>
-
-		<p>You can either block all of your devices from interacting with a company, or just specific devices. These will then show up in the list of communication you've blocked, and you can remove these blocks at any time.</p>
-	</div>
+		<p>It’s actually not all that different for other smart devices. Consider the following example from a real smart bathroom scale. The maps shows data send from the scales in red, and data requested by the scales in blue. The scale was sending daily weight information to a server in New York, logging information (e.g. when the scales were used) to a server in Colorado, was requesting weather data from a server in California, and asked for software updates from a server in Idaho. Sometimes this communication might also be bi-directional (e.g. sending data to check for software updates, then receiving data to download them).</p>
+    <img src="https://martin-kraemer.net/aretha/img/smart-scale.png" style="width:100%" />
+  </div>
 
 	<div *ngSwitchCase="3">
-		<p>You might find that blocking a device from communicating with certain companies might cause it to behave strangely, or some of its features to stop working. In some cases, the cause for this will be obvious (e.g. you block Alexa from communicating with Amazon), but in others it may be more surprising.<p>
-
-		<p>Feel free to experiment with this - you can always remove blocks from devices in the blocking tab if things don't work out.</p>
+		<p>Great, all done! Check back soon for more.</p>
 	</div>
-	
-	<div *ngSwitchCase="4">
-		<p>Are there any devices or companies in particular that you're interested in blocking (even just to see what happens)?</p>
 
-		<mat-form-field>
-			<textarea matInput [(ngModel)]="postResponse"></textarea>
-		</mat-form-field>
-	</div>
 </div>
 
 <div class="progress">
