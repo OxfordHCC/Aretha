@@ -39,6 +39,7 @@ import { ContentD3Component } from './content-d3/content-d3.component';
 import { ContentD4Component } from './content-d4/content-d4.component';
 import { ContentSd1Component } from './content-sd1/content-sd1.component';
 import { CompanyInfoDialogComponent } from './company-info-dialog/company-info-dialog.component';
+import { FirewallComponent } from './firewall/firewall.component';
 
 const appRoutes: Routes = [
 	{path: '', redirectTo: '/timeseries', pathMatch: 'full'},
@@ -78,7 +79,8 @@ const appRoutes: Routes = [
     ContentD3Component,
     ContentD4Component,
     ContentSd1Component,
-    CompanyInfoDialogComponent    
+    CompanyInfoDialogComponent,
+    FirewallComponent    
   ],
   imports: [
     HttpModule,

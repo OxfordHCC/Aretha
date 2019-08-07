@@ -1,0 +1,20 @@
+.buttonleft {
+	float: left;
+}
+.buttonright {
+	float: right;
+}
+.progress {
+	text-align: center;
+}
+.question-divider {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.mat-form-field {
+	width: 100%;
+}
+textarea {
+	width: 100%;
+	box-sizing: border-box;
+}

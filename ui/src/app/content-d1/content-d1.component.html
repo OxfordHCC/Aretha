@@ -1,3 +1,51 @@
-<p>
-  content-d1 works!
-</p>
+<h3>Data use</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		<p>How do you think you generate data online? How is that data used? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+	
+	<div *ngSwitchCase="2">
+		<iframe height="315" src="https://www.youtube.com/embed/_RVPj-GSOdY" width="560"></iframe>
+	</div>
+
+	<div *ngSwitchCase="3">
+		<p>The information smart device use and the information they collect are of particular importance to their manufacturers. There’s a lot of discussion about data collection, but little about why companies might want to collect data. Here are four of the main reasons, covering a broad range of applications.</p>
+
+		<ul>
+			<li>Service provision - the most obvious reason for collecting data is that it’s needed in order to provide you with a service or to make recommendations to you (e.g. a company can’t charge you for something without your bank details, or suggest films without knowing what you like to watch)</li>
+
+			<li>Advertising - companies often include advertising code from other companies on their websites and apps in order to make ad revenue. This extra code often collects information about you and combines this with information from other sources in order to show you ads for products you’re more likely to click on and buy</li>
+
+			<li>Product analytics - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers</li>
+
+			<li>Behavioural insights - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)</li>
+		</ul>
+	</div>
+
+	<div *ngSwitchCase="4">
+		<iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe>
+	</div>
+
+	<div *ngSwitchCase="5">
+		<p>After watching the videos and reading the text, would you add anything to what ytou said before about how data about you online is generated and used? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>
