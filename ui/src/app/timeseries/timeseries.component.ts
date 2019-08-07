@@ -423,65 +423,111 @@ export class TimeseriesComponent implements AfterViewInit, OnChanges {
 			
 			const leading = 26,
 				colwidth = 230,
-				max_rows = Math.floor((height-40)/(leading));
+				max_rows = Math.floor((height-40)/(leading)),
+				get_company_type = d => this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag || undefined,
+				company_types = _.uniq(stackkeys.map(get_company_type).filter(x => x));
 
 			// stackkeys = _.range(50).map(x => `Hello {x}!`);
 
-			const legel = svg.selectAll('g.legend').data([0]).enter().append('g')
-				.attr('class', 'legend')
-				.selectAll('g.legel')
-				.data(stackkeys)
+			const legtype = svg.selectAll('g.legtype').data([0]).enter().append('g')
+				.attr('class', 'legtype')
+				.selectAll('g.legtypebox')
+				.data(company_types)
 				.enter()
 				.append('g')
-				.attr('class','legel')
+				.attr('class', 'legtypebox')
 				.attr('transform', function (d, i) { 
 					const coln = Math.floor(i / max_rows);
 					return `translate(${width-(coln+1)*colwidth-40},${(i%max_rows)*leading + 50 })`; 
-				}).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
-				.on('mouseenter', (d) => { 
-					if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
-					this.hovering = d; 
-					this.render();
-					this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
-				}).on('mouseout', (d) => { 
-					this.hovering = undefined;
-					this.render();
-				});	// .style("pointer-events","auto")
+				});
 
-			legel.append('rect')
-				.attr('class','main')
+			legtype.append('rect')
+				.attr('class', 'typerect')
 				.attr('x',0)
-				.attr('y',-2)
-				.attr('width',colwidth)
+				.attr('y', d => {
+					// index 
+					let idx = company_types.indexOf(d),
+						yoff = company_types.slice(0, company_types.indexOf(d)).reduce((sum, xx) => {
+							return stackkeys.filter(x => get_company_type(x) === xx).length*leading;
+						}, 0);
+					return yoff;
+				}).attr('width',colwidth)
 				// .style("pointer-events","auto")	
-				.attr('height', leading-4)
-				.attr('opacity', 1)
-				.attr('stroke', d => {
-					return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
-				 }).attr('fill', d => {
-					return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
-				 }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+				.attr('height', d => {
+					const count = stackkeys.filter(x => get_company_type(x) === d).length;
+					return count*leading;
+				}).attr('opacity', 1)
+				.attr('stroke', d => d === 'advertising' ? "rgba(255,180,180,0.4)" : "#000")
+				.attr('fill', 'none');
+
+			legtype.append('text')
+				.attr('class', 'typename')
+				.attr('x',0)
+				.attr('y', d => {
+					// index 
+					let idx = company_types.indexOf(d),
+						yoff = company_types.slice(0, company_types.indexOf(d)).reduce((sum, xx) => {
+							return stackkeys.filter(x => get_company_type(x) === xx).length*leading;
+						}, 0);
+					return yoff;
+				})
+				.text(d => d);
+
+			// const legel = svg.selectAll('g.legend').data([0]).enter().append('g')
+			// 	.attr('class', 'legend')
+			// 	.selectAll('g.legel')
+			// 	.data(stackkeys)
+			// 	.enter()
+			// 	.append('g')
+			// 	.attr('class','legel')
+			// 	.attr('transform', function (d, i) { 
+			// 		const coln = Math.floor(i / max_rows);
+			// 		return `translate(${width-(coln+1)*colwidth-40},${(i%max_rows)*leading + 50 })`; 
+			// 	}).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d); })
+			// 	.on('mouseenter', (d) => { 
+			// 		if (this.hover_timeout) { clearTimeout(this.hover_timeout); }
+			// 		this.hovering = d; 
+			// 		this.render();
+			// 		this.hover_timeout = setTimeout(() => { this.hover_timeout = undefined; this.hovering = undefined; this.render(); }, 250);
+			// 	}).on('mouseout', (d) => { 
+			// 		this.hovering = undefined;
+			// 		this.render();
+			// 	});	// .style("pointer-events","auto")
+
+			// legel.append('rect')
+			// 	.attr('class','main')
+			// 	.attr('x',0)
+			// 	.attr('y',-2)
+			// 	.attr('width',colwidth)
+			// 	// .style("pointer-events","auto")	
+			// 	.attr('height', leading-4)
+			// 	.attr('opacity', 1)
+			// 	.attr('stroke', d => {
+			// 		return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
+			// 	 }).attr('fill', d => {
+			// 		return this.company_to_info && this.company_to_info[d] && this.company_to_info[d].typetag === 'advertising' ? "rgba(255,180,180,0.4)" : "#fff";
+			// 	 }).on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 			
-			legel.append('rect')
-				.attr('class', 'legsq')
-				.attr('x', 3) // width - 140 - 19)
-				.attr('y', 3)
-				.attr('width', 12)
-				.attr('height', 12)
-				.style("pointer-events","auto")				
-				.attr('fill', d => persistentColor(d))
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
+			// legel.append('rect')
+			// 	.attr('class', 'legsq')
+			// 	.attr('x', 3) // width - 140 - 19)
+			// 	.attr('y', 3)
+			// 	.attr('width', 12)
+			// 	.attr('height', 12)
+			// 	.style("pointer-events","auto")				
+			// 	.attr('fill', d => persistentColor(d))
+			// 	.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+			// 	.on('mousedown', (d) => { console.info('click ', d); this.legendClicked.emit(d)});
 
 				
-			legel.append('text')
-				.attr('x', 20) // width - 140 - 24)
-				.attr('y', 9.5)
-				.attr('dy', '0.32em')
-				// .style("pointer-events","auto")				
-				.text(d => this.byDestination ? d : this.devices[d].name)
-				.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
-				.on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
+			// legel.append('text')
+			// 	.attr('x', 20) // width - 140 - 24)
+			// 	.attr('y', 9.5)
+			// 	.attr('dy', '0.32em')
+			// 	// .style("pointer-events","auto")				
+			// 	.text(d => this.byDestination ? d : this.devices[d].name)
+			// 	.attr('opacity', d => this.hovering ? ( this.hovering === d ? 1.0 : 0.2 ) : 1.0)
+			// 	.on('mousedown', (d) => { console.log('click text ', d); this.legendClicked.emit(d)});
 			
 			(<any>window)._dd = d3;
 		}
