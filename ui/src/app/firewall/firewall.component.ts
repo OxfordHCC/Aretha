@@ -59,6 +59,7 @@ export class FirewallComponent implements OnInit {
           this.companies.push(x.geodata[key].company_name);
         }
       }
+      this.companies.sort();
     });
 
     this.loader.getRules().then((x) => {
