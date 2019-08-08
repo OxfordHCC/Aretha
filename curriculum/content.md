@@ -107,7 +107,7 @@ In previous lessons, you have learned how your smart devices transfer data over 
 So what? Why does it matter that companies are collecting data? If it's for service provisioning or product analytics, then surely the user will benefit. If it's for advertising, then, well, we see adverts everyday anyway; and behavioural insights sound great; users could learn something interesting and improve their lives.
 
 Let's take a step back and look at _**what data actually is**_, _**how it is collected across the internet**_, _**for what other purposes it might be used**_, and _**how valuable it may be**_.
-
+![](figures/landscape-04.svg)
 ## What is data, and why does it matter?
 The fitibit will collect data about its user, e.g. heart rate, steps taken, sleep cycle, and other movements. It will use the data to gauge how fit the user is, and it might enquire via the fitbit server if the user is fitter than average. So far, so obvious to the user.
 
@@ -120,7 +120,7 @@ The information smart device use and the information they collect are of particu
 3) **Product analytics** - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers
 4) **Behavioural insights** - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)
 
-![](figures/landscape-04.svg)
+
 
 <p><iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe></p>
 
