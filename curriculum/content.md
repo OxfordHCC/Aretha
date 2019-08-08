@@ -156,17 +156,19 @@ How did you feel and react in that situation?
 ## Recap
 In the previous session, you have learned about how you can be tracked across different web sites and even different devices. You've also learned that this sometimes happens without the user noticing, and that protection against it is indeed really difficult.
 
-![](figures/landscape-06.svg)
-## It sounds a bit surreal! Does it?
+This may sound a little far fetched and theoretical to you. You might wonder how does that matter to me, how will it ever effect me. The answer is, that's really hard to tell. However, we actually learn sometimes about the practices of companies when bad practices hit the news headlines. While cases like Cambridge Analytica cause public outcries others remain far less popular.
 
+![](figures/landscape-06.svg)
+
+## It sounds a bit surreal! Does it?
 There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.
 
 On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).
 
 To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%).
 
-
 <p style="background-color:rgb(255, 255, 255)"><iframe height="315" src="https://www.youtube.com/embed/mrnXv-g4yKU?controls=0" width="560"></iframe></p>
+
 
 ## Question
 What did you learn from this page? Was anything new to you?
