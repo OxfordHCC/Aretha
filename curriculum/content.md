@@ -1,9 +1,5 @@
 # Curriculum
 
-## Question
-- how do we assess prior knowledge and understanding?
--
-
 # (1) Why do my devices communicate with different companies?
 ## Welcome!
 By now you probably have plugged in a number of different devices, and you have observed how the Aretha interface shows data flows from connected devices.
@@ -57,6 +53,11 @@ The internet is a global network of computers, some of which are called web serv
 But how do you connect to a website? When you make a telephone call, a connection is formed between you and the person you are calling that goes through different telephone exchanges. Similarly, a connection between you and a web server will go through many different computers. A web server also needs to be able to connect to many different computers at the same time (like being on the phone with five people at once). Information sent between the web server and other computers is broken up into smaller chunks called data packets. Not only is it more efficient to route these smaller packets between computers, but it also saves time if one is lost and needs to be sent again.
 
 <p><iframe height="315" src="https://www.youtube.com/embed/5o8CwafCxnU?start=0&amp;end=164&amp;controls=0" width="560"></iframe></p>
+
+## Question
+What did you learn from this page? Was anything new to you?
+
+What didn't you understand? Is anything unclear?
 
 # (3) Why do some companies have locks next to their names?
 
@@ -123,10 +124,10 @@ The information smart device use and the information they collect are of particu
 
 <p><iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe></p>
 
-<font color="red">
-## Question ??
+## Question
+What did you learn from this page? Was anything new to you?
 
-TBD</font>
+What didn't you understand? Is anything unclear?
 
 
 # (5) So, how does 'advertising' work?
@@ -151,17 +152,24 @@ How did you feel and react in that situation?
 ## Recap
 In the previous session, you have learned about how you can be tracked across different web sites and even different devices. You've also learned that this sometimes happens without the user noticing, and that protection against it is indeed really difficult.
 
-![](figures/landscape-06.svg)
-## It sounds a bit surreal! Does it?
+This may sound a little far fetched and theoretical to you. You might wonder how does that matter to me, how will it ever effect me. The answer is, that's really hard to tell. However, we actually learn sometimes about the practices of companies when bad practices hit the news headlines. While cases like Cambridge Analytica cause public outcries others remain far less popular.
 
+![](figures/landscape-06.svg)
+
+## It sounds a bit surreal! Does it?
 There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.
 
 On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).
 
 To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%).
 
-
 <p style="background-color:rgb(255, 255, 255)"><iframe height="315" src="https://www.youtube.com/embed/mrnXv-g4yKU?controls=0" width="560"></iframe></p>
+
+
+## Question
+What did you learn from this page? Was anything new to you?
+
+What didn't you understand? Is anything unclear?
 
 
 # (7) And how do data breaches fit in here?
