@@ -77,7 +77,7 @@ def stage(gid):
     if KEY == k:
         if not gid in queue:
             queue[gid] = []
-        queue[gid].append("EX " + name "; " + value)
+        queue[gid].append("EX " + name + "; " + value)
         return "Request handled successfully"
     else:
         return "Request handled unsuccessfully", 403

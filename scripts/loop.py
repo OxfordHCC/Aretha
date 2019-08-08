@@ -2,7 +2,7 @@
 
 import argparse
 import configparser
-import dns.resolver
+import dns.resolver, dns.reversename
 import json
 import os
 import random
@@ -95,12 +95,21 @@ def processGeos():
             # make reverse dns call to get the domain
             res = dns.resolver.Resolver()
             res.nameservers = ['8.8.8.8', '8.8.4.4']
+            # try:
+            #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+            #     raw_domain = str(dns_ans[0])
+            #     domain = tldextract.extract(raw_domain).registered_domain
+            # except:
+            #     pass
+
             try:
-                dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+                dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
                 raw_domain = str(dns_ans[0])
                 domain = tldextract.extract(raw_domain).registered_domain
             except:
-                pass
+               print("Error resolving ip ", ip, " - ", sys.exc_info()[0])
+               pass
+
 
             # commit the extra info to the database
             DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker))
@@ -191,17 +200,18 @@ def process_firewall():
         geos[geo[0]].add(geo[1])
 
     # compare the two
-    for rule, company in rule_company.items():
-        for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
-            DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
-            if sys.platform.startswith("linux"):
+    if sys.platform.startswith("linux"):
+        for rule, company in rule_company.items():
+            for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
+                DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
                 if rule_device[rule] is None:
-                    subprocess.run(["sudo", "iptables", "-A", "INPUT", "-s", ip, "-j", "DROP"])
-                    subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-I", "INPUT", "-s", ip, "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-I", "OUTPUT", "-d", ip, "-j", "DROP"])
                 else:
-                    subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
-            else:
-                print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
+                    subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    else:
+        pass
 
 
 # phone home and check for commands
@@ -223,13 +233,22 @@ def beacon():
         # command triggers
         if content == "CN":
             print("remote: opening secure connection")
-            subprocess.run(["ssh", "-i", "~/.ssh/aretha.pem", "-fTN", "-R", f"2500:localhost:22", f"{BEACON_SSH}"])
+            try:
+                subprocess.run(["ssh", "-i", "~/.ssh/aretha.pem", "-fTN", "-R", f"2500:localhost:22", f"{BEACON_SSH}"], timeout=3600, check=True)
+            except:
+                print("error opening connection")
         elif content == "RB":
             print("remote: reboot")
-            subprocess.run(["shutdown", "-r", "now"])
+            try:
+                subprocess.run(["shutdown", "-r", "now"], timeout=120, check=True)
+            except:
+                print("error opening connection")
         elif content == "RS":
             print("remote: reset service")
-            subprocess.run(["systemctl", "restart", "iotrefine"])
+            try:
+                subprocess.run(["systemctl", "restart", "iotrefine"], timeout=300, check=True)
+            except:
+                print("error opening connection")
 
 def refreshView():
     global LAST_VIEW_REFRESH

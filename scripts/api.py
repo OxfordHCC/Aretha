@@ -8,6 +8,7 @@ import sys
 import traceback
 import urllib
 import configparser
+import socket
 from datetime import datetime
 from flask import Flask, jsonify, make_response, Response
 
@@ -168,6 +169,16 @@ def counterexample(question):
         return response
 
 
+# return a list of firewall rules
+@app.route('/api/aretha/list')
+def list_rules():
+    fw_on = DB_MANAGER.execute("select complete from content where name = 'S3'", ())[0][0]
+    rules = DB_MANAGER.execute("select r.id, r.device, d.name, r.c_name from rules as r inner join devices as d on r.device = d.mac", ())
+    response = make_response(jsonify({"rules": rules, "enabled": fw_on}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>')
 def enforce_dest(destination):
@@ -182,7 +193,9 @@ def enforce_dest(destination):
 @app.route('/api/aretha/enforce/<destination>/<device>')
 def enforce_dest_dev(destination, device):
     if DB_MANAGER.execute('INSERT INTO rules(device, c_name) VALUES(%s, %s); SELECT id FROM rules WHERE c_name = %s AND device = %s', (device, destination, destination, device)):
-        return jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
+        response = jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         return jsonify({"message": f"error while creating device to destination rule for {device} to {destination}", "success": False})
 
@@ -192,16 +205,17 @@ def enforce_dest_dev(destination, device):
 def unenforce_dest(destination):
     blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s AND r.device IS NULL", (destination,))
 
-    for ip in blocked_ips:
-        if sys.platform.startswith("linux"):
+    if sys.platform.startswith("linux"):
+        for ip in blocked_ips:
             if ip[1] is None:
                 subprocess.run(["sudo", "iptables", "-D", "INPUT", "-s", ip[2], "-j", "DROP"])
                 subprocess.run(["sudo", "iptables", "-D", "OUTPUT", "-d", ip[2], "-j", "DROP"])
-        else:
-            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
-            return jsonify({"message": f"error removing rule for {destination}", "success": False})
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device IS NULL", (destination,))
-    return jsonify({"message": f"rule removed for {destination}", "success": True})
+    response = jsonify({"message": f"rule removed for {destination}", "success": True})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 # remove a firewall rule as dictated by aretha
@@ -209,15 +223,17 @@ def unenforce_dest(destination):
 def unenforce_dest_dev(destination, device):
     blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s and r.device = %s", (destination, device))
 
-    for ip in blocked_ips:
-        if sys.platform.startswith("linux") or True:
+    if sys.platform.startswith("linux"):
+        for ip in blocked_ips:
             if ip[1] is not None:
                 subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-d", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
-        else:
-            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
-            return jsonify({"message": f"error removing rule for {destination}/{device}", "success": False})
+                subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device = %s", (destination,device))
-    return jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
+    response = jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 # open an event stream for database updates
@@ -236,6 +252,7 @@ def content():
     return response
 
 
+# mark content as set, and record the pre and post responses
 @app.route('/api/content/set/<name>/<pre>/<post>')
 def contentSet(name, pre, post):
     DB_MANAGER.execute("update content set complete = true, pre = %s, post = %s where name = %s", (pre[:200], post[:200], name))
@@ -297,10 +314,16 @@ def get_device_info():
 
 # get geo data for all ips
 def get_geodata():
-    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name FROM geodata", ())
-    records = []
+    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name, domain FROM geodata", ())
+    records = []    
+
     for geo in geos:
-        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4]})
+        # try:
+        #     subdomain = socket.gethostbyaddr(geo[0]) if geo[5] == 'unknown' else geo[5]
+        #     print("subdomain", geo[0], subdomain)
+        # except:
+        #     print("Unexpected error:", sys.exc_info()[0])
+        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4], "domain":geo[5]})
     return records
 
 
@@ -314,7 +337,7 @@ def GetExample(question):
     if question == "S1" or question == "S2":
         result["text"] = "Some content will be illustrated with examples from your home network. When they do, they'll appear here."
 
-    elif question == "encryption":
+    elif question == "B4":
         try:
             example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
         except:
@@ -332,7 +355,7 @@ def GetExample(question):
         result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}]
         result["devices"] = [mac]
 
-    elif question == "tracking":
+    elif question == "D2":
         example = DB_MANAGER.execute("select d.name, count(distinct g.ip) from packets as p inner join geodata as g on p.ext = g.ip inner join devices as d on p.mac = d.mac where g.tracker = true group by d.name order by count(distinct g.ip) desc", ())
         if len(example) < 1:
             return False
@@ -341,14 +364,14 @@ def GetExample(question):
         total_tracker = 0
         for record in example:
             total_tracker += record[1]
-        result["text"] = f"Across the devices connected to the privacy assistant there are connections to {total_tracker} different trackers. Did you know that your {device} sends data to {single_tracker} of these tracking companies?"
+        result["text"] = f"Across the devices connected to the privacy assistant there are connections to {total_tracker} different companies that have been known to track users across the internet. Did you know that your {device} sends data to {single_tracker} of these companies?"
 
-    elif question == "inference":
+    elif question == "D3":
         example1 = DB_MANAGER.execute("select count(mac) from devices", ())[0][0]
         example2 = DB_MANAGER.execute("select count(distinct d.mac) from devices as d inner join packets as p on d.mac = p.mac inner join geodata as g on p.ext = g.ip where g.c_name = 'Google LLC'", ())[0][0]
-        result["text"] = f"Of the {example1} devices connected to Aretha, {example2} of them send data to Google"
+        result["text"] = f"Of the {example1} devices connected to Aretha, {example2} of them send data to Google."
    
-    elif question == "breach":
+    elif question == "D4":
         example = DB_MANAGER.execute("select distinct g.c_name, d.name from geodata as g left join packets as p on g.ip = p.ext left join devices as d on p.mac = d.mac", ())
         req = urllib.request.Request("https://haveibeenpwned.com/api/v2/breaches", headers={"User-Agent" : "IoT-Refine"})
         with urllib.request.urlopen(req) as url:
@@ -372,6 +395,10 @@ def GetExample(question):
         start = datetime.fromisoformat(str(example2[0][0]))
         end = datetime.fromisoformat(str(example3[0][0]))
         result["text"] = f"Your {device} has sent {'{:,}'.format(count)} 'packets' of data in the last {(end - start).days} days. On average, that's once every {((end - start) / count).seconds}.{((end - start) / count).microseconds} seconds."
+
+    elif question == "B3":
+        example = DB_MANAGER.execute("select name,c_name,ext from packets as p inner join devices as d on p.mac = d.mac inner join geodata as g on p.ext = g.ip order by time desc limit 1;", ())
+        result["text"] = f"For example, your {example[0][0]} just received a packet from {example[0][1]} which has an IP address of {example[0][2]}."
 
     else:
         result = False

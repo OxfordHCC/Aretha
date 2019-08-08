@@ -1,0 +1,32 @@
+<h3>Add a New Firewall Rule</h3>
+
+<mat-form-field>
+	<mat-label>Device</mat-label>
+  	<mat-select [(ngModel)]="chosen_d">
+    	<mat-option *ngFor="let device of this.devices" [value]="device.mac">
+    		{{device.name}}
+    	</mat-option>
+  	</mat-select>
+</mat-form-field>
+<br>
+<mat-form-field>
+  	<mat-label>Company</mat-label>
+	<mat-select [(ngModel)]="chosen_c">
+    	<mat-option *ngFor="let company of this.companies" [value]="company">
+    		{{company}}
+    	</mat-option>
+  	</mat-select>
+</mat-form-field>
+<br>
+<button mat-button (click)="addRule()">Add Rule</button>
+
+<h3>Remove an Existing Firewall Rule</h3>
+
+<table>
+	<thead>
+		<tr><td><h4>Device</h4></td><td><h4>Company</h4></td><td><h4 id="actionH4">Action</h4></td></tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let rule of this.records"><td>{{rule.device}}<td>{{rule.company}}</td><td><button mat-button (click)="removeRule(rule.company, rule.mac, rule.device);" onClick="this.disabled=true">Remove</button></td></tr>
+	</tbody>
+</table>

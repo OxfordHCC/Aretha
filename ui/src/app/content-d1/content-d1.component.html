@@ -1,3 +1,38 @@
-<p>
-  content-d1 works!
-</p>
+<h3>Why does my data matter?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+    <p>In previous sessions you saw how your smart devices transfer data over the internet, and how companies might use that data. Reasons to collect and use data by companies included (1) service provisioning, (2) advertising, (3) product analytics, and (4) behavioural insights.</p>
+
+    <p>But why does it matter that companies are collecting data? If it's for service provisioning or product analytics, then surely you'll benefit in the long run. If it's for advertising, you see adverts everyday anyway, and behavioural insights sound like something that could potentially be used to improve your life.</p>
+
+    <p>Let's take a step back and look at what data actually is, how it is collected across the internet, for what other purposes it might be used, and how valuable it may be.</p>
+	</div>
+	
+	<div *ngSwitchCase="2">
+    <iframe height="315" src="https://www.youtube.com/embed/_RVPj-GSOdY?controls=0" width="560"></iframe>
+
+    <iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe>
+	</div>
+
+	<div *ngSwitchCase="3">
+		<p>Was anything in the videos new to you? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

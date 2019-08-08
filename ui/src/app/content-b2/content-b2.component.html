@@ -1,3 +1,54 @@
-<p>
-  content-b2 works!
-</p>
+<div [ngSwitch]="stage">
+
+  <div *ngSwitchCase="1">
+    <h3>How are my devices connected to the internet?</h3>
+
+    <p>Smart devices connect to the internet in different ways. While some of them access the internet directly through your home broadband connection, others synchronise via mobile applications, and some use a central hub to connect to the internet (like the Amazon Echo or Google Home). Here are three different examples:</p>
+
+    <img src="../../assets/landscape-01.svg">
+
+    <ol>
+      <li><em>Activity tracker/sports watch (e.g. Fitbit)</em> - Activity trackers commonly use Bluetooth to connect to an app on your phone; this app requests information from your trackers and uses your smartphone's internet connection to transfer data to a remote server</li>
+
+      <li><em>Smart TV</em> - if you own a smart tv, then you probably remember connecting it to your router via WiFi or a cable. The smart TV will have different apps installed, just like your phone; and just like the apps on your phone, the apps on your smart tv will transfer data from different companies, such as Netflix, Amazon Prime, or Now TV</li>
+
+      <li><em>Smart plug</em> - when you remotely switch the plug on or off, the command to do so is (most likely) send over the internet. The plug probably connects to the internet via the WiFi on your home router. When you use the app on your phone to switch it on or off, the smart plug will receive the command via its manufacturer's server, (e.g. Belkin), and then forward this command on to the plug. This allows you to turn the plug on and off even when you're not at home.</li>
+    </ol>
+  </div>
+
+	<div *ngSwitchCase="2">
+    <h3>So why do my devices communicate with different companies?</h3>
+
+		<p>On a smart TV, you might be logged into different apps, and these apps communicate with different service providers: Amazon Prime, Netflix, Now TV, BBC iPlayer, etc. It might also share information with it's manufacturer (e.g. Samsung), to check for updates or to send error reports. If you see some ads, then these ads might be also be loaded from another company.</p>
+
+    <p>The information smart devices use and the information they collect are of particular importance to their manufacturers. There’s a lot of discussion about data collection, but little about <em>why</em> companies might want to collect data. Here are four of the main reasons, covering a broad range of applications.</p>
+
+    <ol>
+      <li><em>Service provision</em> - the most obvious reason for collecting data is that it’s needed in order to provide you with a service or to make recommendations to you (e.g. a company can’t charge you for something without your bank details, or suggest films without knowing what you like to watch)</li>
+      <li><em>Advertising</em> - companies often include advertising code from other companies on their websites and apps in order to make ad revenue. This extra code often collects information about you and combines this with information from other sources in order to show you ads for products you’re more likely to click on and buy</li>
+      <li><em>Product analytics</em> - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers</li>
+      <li><em>Behavioural insights</em> - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)</li>
+    </ol>
+	</div>
+
+
+	<div *ngSwitchCase="3">
+		<p>Choose one of the devices you've connected to the privacy assistant and take a look at the companies it communicates with. Why do you think it might communicate with each of these companies?</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>
