@@ -107,10 +107,11 @@ In previous lessons, you have learned how your smart devices transfer data over 
 So what? Why does it matter that companies are collecting data? If it's for service provisioning or product analytics, then surely the user will benefit. If it's for advertising, then, well, we see adverts everyday anyway; and behavioural insights sound great; users could learn something interesting and improve their lives.
 
 Let's take a step back and look at _**what data actually is**_, _**how it is collected across the internet**_, _**for what other purposes it might be used**_, and _**how valuable it may be**_.
-![](figures/landscape-04.svg)
-## What is data, and why does it matter?
-The fitibit will collect data about its user, e.g. heart rate, steps taken, sleep cycle, and other movements. It will use the data to gauge how fit the user is, and it might enquire via the fitbit server if the user is fitter than average. So far, so obvious to the user.
 
+The fitibit will collect data about its user, e.g. heart rate, steps taken, sleep cycle, and other movements. It will use the data to gauge how fit the user is, and it might enquire via the fitbit server if the user is fitter than average. So far, so obvious to the user.
+![](figures/landscape-04.svg)
+
+## What is data, and why does it matter?
 <p><iframe height="315" src="https://www.youtube.com/embed/_RVPj-GSOdY?controls=0" width="560"></iframe></p>
 
 The information smart device use and the information they collect are of particular importance to their manufacturers. There’s a lot of discussion about data collection, but little about why companies might want to collect data. Here are four of the main reasons, covering a broad range of applications.
@@ -119,8 +120,6 @@ The information smart device use and the information they collect are of particu
 2) **Advertising** - companies often include advertising code from other companies on their websites and apps in order to make ad revenue. This extra code often collects information about you and combines this with information from other sources in order to show you ads for products you’re more likely to click on and buy
 3) **Product analytics** - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers
 4) **Behavioural insights** - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)
-
-
 
 <p><iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe></p>
 
@@ -133,6 +132,7 @@ TBD</font>
 # (5) So, how does 'advertising' work?
 ## Recap
 Again, remember the different uses of data. One of them was advertising, and you probably have experienced some situations in which adverts felt awkwardly related to something you had searched for before. This lesson will explain how that might work in a little more detail.
+
 ![](figures/landscape-05.svg)
 
 ## How does advertising work?
