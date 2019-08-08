@@ -61,13 +61,7 @@ But how do you connect to a website? When you make a telephone call, a connectio
 # (3) Why do some companies have locks next to their names?
 
 ## Recap
-
-TBD
-
-
-context and relevance to smart devices
-
-
+Devices connect to the internet either directly through Wifi or LAN, or they are connected using smartphones or smart home hubs. The internet is not just a cloud, but a network of networks in which devices can communicate with servers by exchanging packets of data. IP addresses are to route packets through the network.
 
 ## Why do some companies have locks next to their names?
 Originally, information on the internet was sent in clear text. Informaion sent like this can be tampered with or spoofed by attackers (hackers). Many modern devices and services combat this by protecting your information using encryption.
@@ -126,14 +120,20 @@ The information smart device use and the information they collect are of particu
 3) **Product analytics** - companies often want to know which parts of their platforms are used the most. This is useful when improving the service they offer, as well as to help them market it more effectively to new customers
 4) **Behavioural insights** - used to learn more about why users take particular actions, either to develop the product, improve marketing efforts, or tailor advertisements (e.g. analysing Alexa recording to create better speech recognition models)
 
+![](figures/landscape-04.svg)
+
 <p><iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe></p>
 
+<font color="red">
 ## Question ??
+
+TBD</font>
 
 
 # (5) So, how does 'advertising' work?
 ## Recap
-Again, remember the different uses of data. One of them was advertising, and you probably have experienced some situations in which adverts felt awkwardly related to something you had searched for before.
+Again, remember the different uses of data. One of them was advertising, and you probably have experienced some situations in which adverts felt awkwardly related to something you had searched for before. This lesson will explain how that might work in a little more detail.
+![](figures/landscape-05.svg)
 
 ## How does advertising work?
 Advertising is the main business model financing media production on the open web, and the drive to increase revenue by targeting ads to selected users has led to the creation of a plethora of companies dedicated to monitoring our clicks, searches, and reading habits as we move around the Internet. These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health. In many cases, these models are also used to predict when you’re going through major life events, such as graduation or pregnancy, as these are when you’re most vulnerable to the creation of new shopping habits.
@@ -150,6 +150,7 @@ How did you feel and react in that situation?
 ## Recap
 In the previous session, you have learned about how you can be tracked across different web sites and even different devices. You've also learned that this sometimes happens without the user noticing, and that protection against it is indeed really difficult.
 
+![](figures/landscape-06.svg)
 ## It sounds a bit surreal! Does it?
 
 There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.
@@ -179,4 +180,4 @@ Services like https://haveibeenpwned.com/ collate information on data breaches a
 Recall any recent data breach you might have heard about.
 From your memory, describe what happened.
 Do you think you have been affected by a data breach? Try https://haveibeenpwned.com/ and tell us what you found out
-Are you going to take any action? 
+Are you going to take any action?
