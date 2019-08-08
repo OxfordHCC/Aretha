@@ -1,9 +1,5 @@
 # Curriculum
 
-## Question
-- how do we assess prior knowledge and understanding?
--
-
 # (1) Why do my devices communicate with different companies?
 ## Welcome!
 By now you probably have plugged in a number of different devices, and you have observed how the Aretha interface shows data flows from connected devices.
