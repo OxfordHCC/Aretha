@@ -1,9 +1,9 @@
-<h3>What is the Internet?</h3>
+<h3>Why do my devices communicate with different companies?</h3>
 
 <div [ngSwitch]="stage">
 	
 	<div *ngSwitchCase="1">
-		<p>How would you say the internet works? (200 characters)</p>
+		<p>What's the most interesting thing you've found out using the prototype so far? (200 characters)</p>
 
 		<mat-form-field>
 			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
@@ -12,27 +12,23 @@
 	</div>
 	
 	<div *ngSwitchCase="2">
-		<p>The internet has revolutionised the way we work and play. It allows us to communicate, to share data and to seek information in a matter of seconds. All this is possible through the use of computers and networks.</p>
+    <h4>Welcome!</h4>
 
-		<p>The internet is a global network of computers. All computer devices (including PCs, laptops, games consoles and smartphones) that are connected to the internet form part of this network. Added together, there are billions of computers connected to the internet, all able to communicate with each other.</p>
+		<p>By now you probably have plugged in a number of different devices, and you've seen how the privacy assistant interface shows data flows from connected devices.</p>
 
-		<p>Today, the internet is a massive part of our daily lives.</p>
+		<p>You can also click on company names in the time series to learn more about them, and the overview tab will let you see where the companies are located around the world.</p>
+
+    <img src="../../assets/aretha-annotated.png" width="1000">
+
 	</div>
 
 	<div *ngSwitchCase="3">
-		<iframe height="315" src="https://www.youtube.com/embed/Dxcc6ycZ73M?modestbranding=1&amp;showinfo=0&amp;rel=0&amp;cc_load_policy=1&amp;iv_load_policy=3&amp;theme=light&amp;fs=0&amp;color=white" width="560"></iframe>
+    <p>It's probably become apparent that many devices are sending data to more than one company. Maybe you've been wondering why that is the case, and how the receiving companies might use that data.</p>
+
+    <p>Over the next few weeks, these sessions will show a little more about how smart home devices work, how data is collected and transferred, and how that data might be used.</p>
 	</div>
 
-	<div *ngSwitchCase="4">
-		<p>After viewing the content, would you say you learnt anything new about the Internet? (200 characters)</p>
-
-		<mat-form-field>
-			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
-			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
-		</mat-form-field>
-	</div>
-
-  <div *ngSwitchCase="5">
+  <div *ngSwitchCase="4">
     <p>Great, all done! Check back soon for more.</p>
   </div>
 

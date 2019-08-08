@@ -1,30 +1,27 @@
-<h3>Data Inference and Combination</h3>
+<h3>How data is combined by advertisers</h3>
 
 <div [ngSwitch]="stage">
-	
+
 	<div *ngSwitchCase="1">
-		<p>Have you ever found that a company or an ad knows something about you that you don't remember telling them? (200 characters)</p>
+		<h4>Recap:</h4>
 
-		<mat-form-field>
-			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
-			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
-		</mat-form-field>
+    <p>In the previous session, you have saw how you can be tracked across different web sites and even different devices, and how this can be used to infer things about you that you don't explicitly disclose. You've also learned that this can happen without the you noticing, and that protection against it can be difficult.</p>
+
+		<p>This may sound a little far fetched and theoretical, or that it's unlikely to affect you personally. It's hard to tell, but sometimes we do learn about the bad practices of companies when they hit news headlines. While cases like Cambridge Analytica have maintained a high profile, smaller incidents can often slip by unnoticed.</p>
 	</div>
-	
+
 	<div *ngSwitchCase="2">
-		<p>There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.</p>
+    <p>There are many sources of data collection in modern life - your computer and smartphone generate data about what you browse online and what you do with smartphone apps. While different sites and apps collect this data, it is often sold and shared as valuable information. In this way it gets combined with other data collected about you, as well as data from other people.</p>
 
-		<p>On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).</p>
+    <p>On their own, it might seem like these pieces of data are harmless. By itself, knowing that you buy coffee at the same time every weekend doesn’t give away much, but combined information from other people might tell someone who your friends are or that you practice a certain religion (e.g. visits to a cafe near a place of worship at the same times each week).</p>
 
-		<p>To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%).</p>
+    <p>To illustrate the scale of data aggregation, Google receives data from around 90% of Android apps, and Facebook around 50%).</p>
+
+    <iframe height="315" src="https://www.youtube.com/embed/mrnXv-g4yKU" width="560"></iframe>
 	</div>
 
 	<div *ngSwitchCase="3">
-		<iframe height="315" src="https://www.youtube.com/embed/mrnXv-g4yKU?controls=0" width="560"></iframe>
-	</div>
-
-	<div *ngSwitchCase="4">
-		<p>Was anything in the text or the video new to you? (200 characters)</p>
+		<p>Was anything in the text or video new to you? (200 characters)</p>
 
 		<mat-form-field>
 			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
@@ -32,7 +29,7 @@
 		</mat-form-field>
 	</div>
 
-  <div *ngSwitchCase="5">
+  <div *ngSwitchCase="4">
     <p>Great, all done! Check back soon for more.</p>
   </div>
 
