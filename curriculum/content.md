@@ -58,6 +58,11 @@ But how do you connect to a website? When you make a telephone call, a connectio
 
 <p><iframe height="315" src="https://www.youtube.com/embed/5o8CwafCxnU?start=0&amp;end=164&amp;controls=0" width="560"></iframe></p>
 
+## Question
+What did you learn from this page? Was anything new to you?
+
+What didn't you understand? Is anything unclear?
+
 # (3) Why do some companies have locks next to their names?
 
 ## Recap
@@ -123,10 +128,10 @@ The information smart device use and the information they collect are of particu
 
 <p><iframe height="360" src="https://player.vimeo.com/video/334901208" width="640"></iframe></p>
 
-<font color="red">
-## Question ??
+## Question
+What did you learn from this page? Was anything new to you?
 
-TBD</font>
+What didn't you understand? Is anything unclear?
 
 
 # (5) So, how does 'advertising' work?
@@ -162,6 +167,11 @@ To illustrate the scale of data aggregation, Google receives data from around 90
 
 
 <p style="background-color:rgb(255, 255, 255)"><iframe height="315" src="https://www.youtube.com/embed/mrnXv-g4yKU?controls=0" width="560"></iframe></p>
+
+## Question
+What did you learn from this page? Was anything new to you?
+
+What didn't you understand? Is anything unclear?
 
 
 # (7) And how do data breaches fit in here?
