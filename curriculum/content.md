@@ -133,6 +133,7 @@ TBD</font>
 ## Recap
 Again, remember the different uses of data. One of them was advertising, and you probably have experienced some situations in which adverts felt awkwardly related to something you had searched for before. This lesson will explain how that might work in a little more detail.
 
+Imagine you watched Toy Story with your kids on Amazon Prime, and the next day you will see adverts for kids toys on your Amazon account. Maybe you've received a FitBit for christmas, and based on your exercise pattern, Amazon would offer you a discount on a Prime membership (assuming the two companies were sharing data). It could also have been the smart outlet which you received for christmas and connected with your existing Amazon Alexa. Amazon then started to offer you a smart light system.
 ![](figures/landscape-05.svg)
 
 ## How does advertising work?
