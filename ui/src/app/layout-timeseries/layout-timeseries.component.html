@@ -19,6 +19,7 @@
 			[devices]='devices' 
 			[showtimeselector]="true" 
 			(selectedTimeChanged)="timeSelected($event)"
+			legendtitle='Devices'
 			(legendClicked)="selectDevice($event)"></app-timeseries>
 		<app-timeseries 
 			class='zoomed' 
@@ -27,11 +28,12 @@
 			[impacts]="zoomed_impacts" 
 			[impactChanges]="impactChanges" 
 			[geodata]="geodata" 
-			[companydb]="companydb"
+		[companydb]="companydb"
 			[adsdb]='adsdb'
 			[devices]='devices' 
 			[showtimeselector]="false"
 			[detailedTicks]="true"
+			legendtitle='Data Controllers'
 			(legendClicked)="selectCompany($event)"></app-timeseries>
 	</div>
 	<div class="gridright">

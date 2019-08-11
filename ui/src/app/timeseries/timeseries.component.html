@@ -1,24 +1,15 @@
-<div class="tscompmain"><svg #graphel></svg></div>
-<!-- <div class="debug" *ngFor="let tt of debug_impacts_arr">
-        {{ tt.date }} -- 
-        <div class="macs" *ngFor="let impact of tt.impacts | keyvalue">
-            {{ impact.key }} 
-            <div class="ips" *ngFor="let ip of impact.value | keyvalue">
-                {{ ip.key }} :: <b>{{ ip.value }}</b>
-            </div>
-        </div>
-    </div>
-    series:
-    <div class="debug series" *ngFor="let tt of debug_series | keyvalue">
-        {{ tt.key }}
-        <div *ngFor="let times of tt.value | keyvalue">
-            {{ times.key }} :: ~~ {{ times.value }}
-        </div>
-    </div>     
-    series scale: 
-    <div class="debug series" *ngFor="let tt of debug_series_scale | keyvalue">
-            {{ tt.key }}
-            <div *ngFor="let times of tt.value | keyvalue">
-                {{ times.key }} :: ~~ y0:{{ times.value[0] }} y1:{{ times.value[1] }}
-           </div>
-</div>  -->
+<div class="tscompmain">
+    <svg #graphel></svg>
+    <app-timeseries-legend 
+        [els]="legend_els" 
+        [categories]="legend_to_cat"
+        [title]='legendtitle'
+        [colours]='legend_colours'
+        [info]='legend_to_info'
+        [namemap]='legend_to_name'
+        [hovering]='hovering'        
+        (hovered)="legendHovered($event)"
+        (clicked)="legendClicked.emit($event)"
+        >
+    </app-timeseries-legend>
+</div>
