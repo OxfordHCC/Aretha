@@ -1,14 +1,19 @@
 .htmllegend {
     // border: 1px solid #eee;
-    margin:0px; padding:0px;
-    // padding:20px;
+    // margin:20px; padding:10px;
+    padding:0px 10px;
     position:absolute;
-    right:20px; top:0px;
+    right:40px; top:-10px; // align with top
     bottom:0px;
     overflow:scroll;
-    max-width:230px;
+    max-width:210px;
 
     .title {
+        position:absolute;
+        top:10px;
+        left:20px;
+        transform-origin:100% 0%;        
+        transform: rotate(90deg);
         text-align:center;
         font-weight:bold;
         // border-bottom:1px solid #eee;
@@ -18,8 +23,7 @@
     }
     .category {
         border: 1px solid #bbb;
-
-        padding:20px 20px;
+        padding:10px 10px;
         margin:10px 0px;
         .cat_title {
             text-align:center;
@@ -31,7 +35,8 @@
         .el {
             border:1px solid #fff;
             cursor: pointer;
-            padding:8px;
+            padding:4px;
+            font-size:11pt;
             &.hoveringnot {
                 opacity:0.2;
             }
@@ -43,7 +48,7 @@
             .square {
                 position:absolute;
                 left:5px;
-                top:8px;
+                top:4px;
                 width:15px;
                 height:15px;
             }
