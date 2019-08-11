@@ -1,3 +1,49 @@
-<p>
-  content-d4 works!
-</p>
+<h3>What about data breaches</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		<p>Have you ever been the victim of a hack or data breach? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+	
+	<div *ngSwitchCase="2">
+    <h4>Recap:</h4>
+
+    <p>In the Cambridge Analytica example you saw how data from different sources was combined to infer information about people. This information was ultimately used to target people with political messages. Cambridge Analytica had used data to come to the conclusion that these people were easy to influence, and therefore could be convinced to support the Trump campaign.</p>
+	</div>
+
+	<div *ngSwitchCase="3">
+    <p>It's disputed whether Cambridge Analytica was a data breach as the previous video discussed. This seems debatable. However, data is so valuable that people, so called hackers, try to obtain it illegally.</p>
+
+    <p>In reality, perfect security is impossible, and sometimes companies have customer information stolen in data breaches. This data can include information you gave them, like your name and address, but also information collected by your devices. Hackers will often collect lists of email addresses, usernames, and passwords from data breaches and try these credentials on other sites. If you use the same password in several different places, then this makes it easy for them to take over multiple accounts as soon as one is compromised.</p>
+
+    <p>Services like https://haveibeenpwned.com/ collate information on data breaches and let you check if any of your account details have been disclosed as part of a data breach. If a site or service that you use has been breached you should change your password on that site as soon as possible. If you use the same password anywhere else, change those as well - hackers will often try the same username/password combinations on several sites.</p>
+
+    <iframe height="315" src="https://www.youtube.com/embed/0kK902-ZvNM?controls=0&end=86" width="560"></iframe>
+	</div>
+
+	<div *ngSwitchCase="4">
+		<p>Did you learn anything new about data breaches? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="5">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

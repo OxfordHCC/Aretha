@@ -11,7 +11,7 @@ import {ActivityLogService} from "../activity-log.service";
 export class ContentB1Component implements OnInit {
 
 	@Input() stage: number;
-	max: number = 4; 
+	max: number = 4;
 	keyword = "B1";
 	preResponse: string = "";
 	postResponse: string = "";

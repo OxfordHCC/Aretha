@@ -1,38 +1,40 @@
-<h3>The privacy assistant can help you to control your data flows</h3>
+<h3>Introducing the firewall</h3>
 
 <div [ngSwitch]="stage">
-	
-	<div *ngSwitchCase="1">
-		<p>Which of your devices' data flows have caused the biggest surprise whilst using the privacy assistant?</p>
 
-		<mat-form-field>
-			<textarea matInput [(ngModel)]="preResponse"></textarea>
-		</mat-form-field>
-	</div>
-	
-	<div *ngSwitchCase="2">
-		<p>From now on, you can use the privacy assistant to stop your devices communicating with certain companies. After you finish this introduction, a new blocking tab will appear in the top bar.<p>
+  <div *ngSwitchCase="1">
+    <p>Which of your devices' data flows have caused the biggest surprise whilst using the privacy assistant?</p>
 
-		<p>You can either block all of your devices from interacting with a company, or just specific devices. These will then show up in the list of communication you've blocked, and you can remove these blocks at any time.</p>
-	</div>
+    <mat-form-field>
+      <textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+      <mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+    </mat-form-field>
+  </div>
 
-	<div *ngSwitchCase="3">
-		<p>You might find that blocking a device from communicating with certain companies might cause it to behave strangely, or some of its features to stop working. In some cases, the cause for this will be obvious (e.g. you block Alexa from communicating with Amazon), but in others it may be more surprising.<p>
+  <div *ngSwitchCase="2">
+    <p>From now on, you can use the privacy assistant to stop your devices communicating with certain companies. After you finish this introduction, a new blocking tab will appear in the top bar.<p>
 
-		<p>Feel free to experiment with this - you can always remove blocks from devices in the blocking tab if things don't work out.</p>
-	</div>
-	
-	<div *ngSwitchCase="4">
-		<p>Are there any devices or companies in particular that you're interested in blocking (even just to see what happens)?</p>
+    <p>You can either block all of your devices from interacting with a company, or just specific devices. These will then show up in the list of communication you've blocked, and you can remove these blocks at any time.</p>
+  </div>
 
-		<mat-form-field>
-			<textarea matInput [(ngModel)]="postResponse"></textarea>
-		</mat-form-field>
-	</div>
+  <div *ngSwitchCase="3">
+    <p>You might find that blocking a device from communicating with certain companies might cause it to behave strangely, or some of its features to stop working. In some cases, the cause for this will be obvious (e.g. you block Alexa from communicating with Amazon), but in others it may be more surprising.<p>
+
+    <p>Feel free to experiment with this - you can always remove blocks from devices in the blocking tab if things don't work out.</p>
+  </div>
+
+  <div *ngSwitchCase="4">
+    <p>Are there any devices or companies in particular that you're interested in blocking (even just to see what happens)?</p>
+
+    <mat-form-field>
+      <textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+      <mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+    </mat-form-field>
+  </div>
 </div>
 
 <div class="progress">
-	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
-	{{stage}} / {{max}}
-	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+  <button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+  {{stage}} / {{max}}
+  <button mat-raised-button class="buttonright" (click)="next()">Next</button>
 </div>

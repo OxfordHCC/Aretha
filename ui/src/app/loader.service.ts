@@ -402,6 +402,24 @@ export class LoaderService {
 	});
   }
 
+  getRules(): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/list').toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  setRule(mac: string, company: string): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/enforce/' + company + '/' + mac).toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  removeRule(mac: string, company: string): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/unenforce/' + company + '/' + mac).toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());

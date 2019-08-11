@@ -15,6 +15,9 @@
 	</table>
 </div>
 
-<div id="redact-right">
+<div class="redact-right">
 	<app-name-device></app-name-device>
+	<div *ngIf="this.fw_on">
+    <app-firewall></app-firewall>
+  </div>
 </div>

@@ -9,6 +9,7 @@ import { LoaderService } from '../loader.service';
 export class RedactionComponent implements OnInit {
 
 	records = [];
+	fw_on = false;
 
 	constructor(private loader: LoaderService) { }
 
@@ -19,6 +20,10 @@ export class RedactionComponent implements OnInit {
 			});
 			this.records.sort();
 		});
+
+		this.loader.getRules().then((x) => {
+      this.fw_on = x.enabled;
+    })
 
 	}
 

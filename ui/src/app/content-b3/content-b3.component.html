@@ -1,35 +1,24 @@
-<h3>The World Wide Web: accessing websites</h3>
+<h3>How do devices connect to companies over the internet?</h3>
 
 <div [ngSwitch]="stage">
 	
 	<div *ngSwitchCase="1">
-		<p> Note: this content is more technical than those of the last few days. As such, it's not required as part of the study - if you wish, you can just skip through the pages and continue with the next content in a few days' time. We've included it here because we think you might find it interesting.</p>
+    <h4>Recap</h4>
+
+		<p>In the previous session, you saw why your devices communicate with different companies. You've been introduced to four main reasons for companies to collected data: (1) delivering services, (2) advertising, (3) product analytics, and (4) behavioural insights.</p>
+
+    <p>So far, we've looked at the internet as a black box. We know that transferring data from devices to companies uses the internet but we haven't looked at how that is actually accomplished. This session takes a closer look at what the internet actually is and how it works.</p>
 	</div>
 
 	<div *ngSwitchCase="2">
-		<p>What would you say was the difference between the Internet and the World Wide Web? (200 characters)</p>
+    <p>The internet is a global network of computers, some of which are called servers. A server is a computer which hosts websites and services for other computers to access over the internet. A web server may host a single website/service or many, and are what make smart devices "smart".</p>
 
-		<mat-form-field>
-			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
-			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
-		</mat-form-field>
-	</div>
-	
+    <p>So how do you connect to a website? When you make a telephone call, a connection is formed between you and the person you are calling that goes through different telephone exchanges. Similarly, a connection between a device and a server will go through many different computers. A server also needs to be able to connect to many different computers at the same time (like being on the phone with five people at once). Information sent between the server and other computers is broken up into smaller chunks called data packets. Not only is it more efficient to route these smaller packets between computers, but it also saves time if one is lost and needs to be sent again.</p>
+
+    <iframe height="315" src="https://www.youtube.com/embed/5o8CwafCxnU?start=0&end=164" width="560"></iframe>
+  </div>
+
 	<div *ngSwitchCase="3">
-		<p>The internet is a global network of computers. The World Wide Web is the part of the internet that can be accessed through websites. Websites consist of webpages which allow you to see information.</p>
-
-		<p>Websites are accessed using a web browser. A browser is a program designed to display the information held on a website. Every website has an address at which it can be found, a bit like a house address.</p>
-
-		<p>A website’s address is known as its URL. A website can be visited by typing its URL into a web browser. Each address contains the prefix ‘http:’ which tells the computer to use the hyper text transfer protocol for communicating with the website. The browser then connects to the internet, finds the website at its address and downloads the information stored there onto our computer for us to view.</p>
-
-		<p>Websites and webpages are joined together using hyperlinks. Clicking on a hyperlink takes us to another site or page.</p>
-	</div>
-
-	<div *ngSwitchCase="4">
-		<iframe height="315" src="https://www.youtube.com/embed/kBXQZMmiA4s?start=29&amp;end=280" width="560"></iframe>
-	</div>
-
-	<div *ngSwitchCase="5">
 		<p>Was anything in the text or video new to you? (200 characters)</p>
 
 		<mat-form-field>
@@ -37,6 +26,10 @@
 			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
 		</mat-form-field>
 	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
 
 </div>
 
