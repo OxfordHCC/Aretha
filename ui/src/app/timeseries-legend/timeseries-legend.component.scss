@@ -1,7 +1,7 @@
 .htmllegend {
     // border: 1px solid #eee;
     // margin:20px; padding:10px;
-    padding:0px 10px;
+    padding:0px 0px;
     position:absolute;
     right:40px; top:-10px; // align with top
     bottom:0px;
@@ -11,29 +11,33 @@
     .title {
         position:absolute;
         top:10px;
-        left:20px;
-        transform-origin:100% 0%;        
-        transform: rotate(90deg);
-        text-align:center;
-        font-weight:bold;
-        // border-bottom:1px solid #eee;
-        margin-bottom:10px;
+        // left:20px;
+        // transform-origin:100% 0%;        
+        // transform: rotate(90deg);
+        // text-align:center;
+        font-weight:baold;
+        border-bottom:1px solid #222;
+        // margin-bottom:10px;
         font-size:12pt;
-        padding-bottom:3px;
+        width:100%;
+        // padding-bottom:3px;
     }
     .category {
-        border: 1px solid #bbb;
+        // border: 1px solid #bbb;
         padding:10px 10px;
-        margin:10px 0px;
+        margin:8px 0px;
+        &:first-child { 
+            margin:40px 0px 8px 0px;
+        }
         .cat_title {
-            text-align:center;
+            // text-align:center;
             font-weight:bold;
-            // border-bottom:1px solid #eee;
+            border-bottom:1px solid #eee;
             margin-bottom:10px;
             padding-bottom:3px;
         }
         .el {
-            border:1px solid #fff;
+            border:1px solid rgba(255,255,255,0);
             cursor: pointer;
             padding:4px;
             font-size:11pt;
@@ -55,15 +59,21 @@
             padding-left:25px; 
             // height:20px;
         }
-
-        &.services { 
-            background-color:rgba(240,240,2500,0.8);
+        &.app { 
+            background-color:rgba(180,255,240,0.1);
+            // border-width:4px;
         }
         &.advertising, &.analytics { 
-            background-color:rgba(255,200,200,0.8);
+            background-color:rgba(255,100,100,0.3);
+            // border-width:4px;
         }
         &.other {
-            background-color:rgba(200,200,200,0.8);
+            background-color:rgba(200,200,200,0.3);
+            border-width:4px;
+        }
+        &.foo.title {
+            // color: pink;
+            font-size: 12pt;
         }
     }
 }

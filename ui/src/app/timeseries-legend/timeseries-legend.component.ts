@@ -20,6 +20,7 @@ export class TimeseriesLegendComponent implements OnInit, OnChanges {
 
   @Output() hovered = new EventEmitter<string>();
   @Output() clicked = new EventEmitter<string>();
+  catstyles: {};
 
   constructor() { }
 
@@ -52,7 +53,22 @@ export class TimeseriesLegendComponent implements OnInit, OnChanges {
         return obj;
       }, {});
       this.allcats = Object.keys(this.by_cat);
-      this.allcats.sort( (x,y) => this.by_cat[y].length - this.by_cat[x].length );
+      this.allcats.sort( (x,y) => this.by_cat[x].length - this.by_cat[y].length );
+      // this.stylecats = this.els.reduce((obj, el) => {
+      //   // const key = this.categories && this.categories[el] || "Other";
+      //   obj[el] = {
+      //     el: true,
+      //     hovering: this.hovering && el === this.hovering,
+      //     hoveringnot: this.hovering && el !== this.hovering,
+      //     [this.categories && this.categories[el] || "Other"]: true
+      //   };
+      //   return obj;
+      // }, {});
+
+      this.catstyles = this.allcats.reduce((obj, cat) => {
+        obj[cat] = { category: true, foo: true, [cat]: true } ; 
+        return obj;
+      }, {});
     }
   }
 }
