@@ -65,13 +65,18 @@ export function matchCompanies(geodata : GeoData[], cdb : CompanyDB, ads_db: Ads
         // console.info('domain', domain, 'info_by_domain[domain]', info_by_domain[domain])
         if (domain && domain !== 'unknown' && info_by_domain[domain]) {              
             obj[geodata_entry.company_name] = info_by_domain[domain];
-            return obj;
         }
 
         // next, if no domain then we try to match against ads
-        if ((!domain || domain === 'unknown') &&  ads_db.get(geodata_entry.ip)) {
+        if (ads_db.get(geodata_entry.ip)) {
             console.info("Ad hit!", geodata_entry.ip, ads_db.get(geodata_entry.ip));
-            obj[geodata_entry.company_name] = ads_db.get(geodata_entry.ip);
+            if (obj[geodata_entry.company_name]) { 
+                // update the tagtype
+                obj[geodata_entry.company_name].tagtype = 'advertising';
+            } else {
+                // replace wholesale
+                obj[geodata_entry.company_name] = ads_db.get(geodata_entry.ip);
+            }
             return obj;
         }        
         
@@ -83,7 +88,7 @@ export function matchCompanies(geodata : GeoData[], cdb : CompanyDB, ads_db: Ads
             return obj;
         }
 
-        console.info("failure identifying information for > ", geodata_entry);
+        // console.info("failure identifying information for > ", geodata_entry);
         return obj;
     },{});
 
