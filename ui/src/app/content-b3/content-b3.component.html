@@ -1,0 +1,40 @@
+<h3>How do devices connect to companies over the internet?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+    <h4>Recap</h4>
+
+		<p>In the previous session, you saw why your devices communicate with different companies. You've been introduced to four main reasons for companies to collected data: (1) delivering services, (2) advertising, (3) product analytics, and (4) behavioural insights.</p>
+
+    <p>So far, we've looked at the internet as a black box. We know that transferring data from devices to companies uses the internet but we haven't looked at how that is actually accomplished. This session takes a closer look at what the internet actually is and how it works.</p>
+	</div>
+
+	<div *ngSwitchCase="2">
+    <p>The internet is a global network of computers, some of which are called servers. A server is a computer which hosts websites and services for other computers to access over the internet. A web server may host a single website/service or many, and are what make smart devices "smart".</p>
+
+    <p>So how do you connect to a website? When you make a telephone call, a connection is formed between you and the person you are calling that goes through different telephone exchanges. Similarly, a connection between a device and a server will go through many different computers. A server also needs to be able to connect to many different computers at the same time (like being on the phone with five people at once). Information sent between the server and other computers is broken up into smaller chunks called data packets. Not only is it more efficient to route these smaller packets between computers, but it also saves time if one is lost and needs to be sent again.</p>
+
+    <iframe height="315" src="https://www.youtube.com/embed/5o8CwafCxnU?start=0&end=164" width="560"></iframe>
+  </div>
+
+	<div *ngSwitchCase="3">
+		<p>Was anything in the text or video new to you? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

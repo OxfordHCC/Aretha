@@ -1,4 +1,4 @@
-svg path {
+svg.geobar path {
     stroke-width: 1;
     stroke: black;
     fill: none;
@@ -14,8 +14,8 @@ div.main {
     }
 }
 
-g.legend text,
-g.ctypelegend text {
+svg.geobar g.legend text,
+svg.geobar g.ctypelegend text {
     font-family: sans-serif;
     font-size: 11pt;
     text-anchor: end;

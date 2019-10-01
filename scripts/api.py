@@ -1,42 +1,145 @@
 #! /usr/bin/env python3
 
-from flask import Flask, request, jsonify, make_response, Response
-import json, re, sys, os, traceback, copy, argparse, subprocess
+import json
+import os
+import re
+import subprocess
+import sys
+import traceback
+import urllib
+import configparser
+import socket
 from datetime import datetime
+from flask import Flask, jsonify, make_response, Response
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts, rutils
+import databaseBursts
 
 ####################
 # global variables #
 ####################
 
-DB_MANAGER = None #for running database queries
-app = Flask(__name__) # WSGI entry point
-geos = dict() #for building and caching geo data
+DB_MANAGER = None  # for running database queries
+app = Flask(__name__)  # WSGI entry point
+geos = dict()  # for building and caching geo data
+IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
+CONFIG = None
+
 
 #################
 # api endpoints #
 #################
-
-# return aggregated data for the given time period (in minutes, called by refine)
-@app.route('/api/refine/<n>')
-def refine(n):
+# return impacts per <delta> from <start> to <end>
+# delta in seconds, <start>/<end> as unix timestamps
+@app.route('/api/impacts/<start>/<end>/<delta>')
+def impacts(start, end, delta):
     global DB_MANAGER
     try:
-        response = make_response(jsonify({"bursts": GetBursts(n), "macMan": MacMan(), "manDev": ManDev(), "impacts": GetImpacts(n), "usage": GenerateUsage()}))
+        # convert inputs to minutes
+        start = round(int(start)/60)
+        end = round(int(end)/60)
+        delta = abs(round(int(delta)))
+
+        # refresh view and get per minute impacts from <start> to <end>
+        raw_impacts = DB_MANAGER.execute("SELECT * FROM impacts WHERE mins >= %s AND mins <= %s", (start, end))
+
+        # process impacts per bucket
+        impacts = dict()
+        pointer = start
             
+        for impact in raw_impacts:
+            mac = impact[0]
+            ip = impact[1]
+            mins = int(impact[2])
+            total = int(impact[3])
+
+            # fast forward to correct bucket
+            while mins > pointer + delta:
+                pointer += delta
+            
+            # load current state of that bucket
+            if str(pointer) not in impacts:
+                impacts[str(pointer)] = dict()
+            bucket_impacts = impacts[str(pointer)]
+
+            # add impacts to bucket
+            if mac not in bucket_impacts:
+                bucket_impacts[mac] = dict()
+            if ip not in bucket_impacts[mac]:
+                bucket_impacts[mac][ip] = 0
+            bucket_impacts[mac][ip] += total
+
+            # save bucket state
+            impacts[str(pointer)] = bucket_impacts
+        
+        # add geo and device data
+        geos = get_geodata()
+        devices = get_device_info()
+        response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
     except:
-        print("Unexpected error:", sys.exc_info())
-        traceback.print_exc()
-        sys.exit(-1)                    
+        return jsonify({"message": "There was an error processing the request"})
+
+
+# return aggregated impacts from <start> to <end>
+# <start>/<end> as unix timestamps
+@app.route('/api/impacts/<start>/<end>')
+def impacts_aggregated(start, end):
+    global DB_MANAGER
+    try:
+        # convert inputs to minutes
+        start = round(int(start)/60)
+        end = round(int(end)/60)
+
+        # refresh view and get per minute impacts from <start> to <end>
+        raw_impacts = DB_MANAGER.execute("SELECT mac, ext, sum(impact) FROM impacts WHERE mins > %s AND mins < %s group by mac, ext", (start, end))
+
+        impacts = dict()
+
+        for impact in raw_impacts:
+            mac = impact[0]
+            ip = impact[1]
+            total = int(impact[2])
+
+            if ip not in impacts:
+                impacts[ip] = dict()
+            if mac not in impacts[ip]:
+                impacts[ip][mac] = 0
+            impacts[ip][mac] += total
+       
+        result = []
+        for ip in impacts:
+            for mac in impacts[ip]:
+                result.append({"company": ip, "impact": impacts[ip][mac], "device": mac})
+
+        # add geo and device data
+        geos = get_geodata()
+        devices = get_device_info()
+
+        response = make_response(jsonify({"impacts": result, "geodata": geos, "devices": devices}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    except:
+        return jsonify({"message": "There was an error processing the request"})
+
 
 # get the mac address, manufacturer, and custom name of every device
 @app.route('/api/devices')
 def devices():
-    global DB_MANAGER
-    return jsonify({"macMan": MacMan(), "manDev": ManDev()})
+    response =  make_response(jsonify({"devices": get_device_info()}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+# get geodata about all known ips
+@app.route('/api/geodata')
+def geodata():
+    response = make_response(jsonify({"geodata": get_geodata()}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 
 # set the custom name of a device with a given mac
 @app.route('/api/devices/set/<mac>/<name>')
@@ -45,21 +148,36 @@ def set_device(mac, name):
     mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
     if mac_format.match(mac) is not None:
         DB_MANAGER.execute("UPDATE devices SET name=%s WHERE mac=%s", (name, mac))
-        return jsonify({"message": "Device with mac " + mac + " now has name " + name})
+        response = make_response(jsonify({"message": "Device with mac " + mac + " now has name " + name}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         return jsonify({"message": "Invalid mac address given"})
 
-# return a counter example to a question posed by aretha
-# 1 == trackers/advertisers
-# 2 == unencrypted http traffic (not yet implemented)
-# 3 == haveibeenpwned (not yet implemented)
-@app.route('/api/aretha/counterexample/<question>')
+
+# return examples to be used for educational components
+@app.route('/api/example/<question>')
 def counterexample(question):
-    ce = GetCounterexample(question)
-    if ce:
-        return jsonify({"destination": ce[0], "traffic": ce[1], "device": ce[2]})
+    example = GetExample(question)
+    if example is not False:
+        response = make_response(jsonify({"text": example["text"], "impacts": example["impacts"], "geodata": example["geodata"], "devices": example["devices"]}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
-        return jsonify({"destination": "", "traffic": 0, "device": 0})
+        response = make_response(jsonify({"message": f"Unable to find a match for requested example"}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+
+
+# return a list of firewall rules
+@app.route('/api/aretha/list')
+def list_rules():
+    fw_on = DB_MANAGER.execute("select complete from content where name = 'S3'", ())[0][0]
+    rules = DB_MANAGER.execute("select r.id, r.device, d.name, r.c_name from rules as r inner join devices as d on r.device = d.mac", ())
+    response = make_response(jsonify({"rules": rules, "enabled": fw_on}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>')
@@ -70,247 +188,306 @@ def enforce_dest(destination):
         return jsonify({"message": f"error while creating destination only rule for {destination}", "success": False})
     pass
 
+
 # add a firewall rule as dictated by aretha
 @app.route('/api/aretha/enforce/<destination>/<device>')
 def enforce_dest_dev(destination, device):
     if DB_MANAGER.execute('INSERT INTO rules(device, c_name) VALUES(%s, %s); SELECT id FROM rules WHERE c_name = %s AND device = %s', (device, destination, destination, device)):
-        return jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
+        response = jsonify({"message": f"device to destination rule added for {device} to {destination}", "success": True})
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         return jsonify({"message": f"error while creating device to destination rule for {device} to {destination}", "success": False})
+
 
 # remove a firewall rule as dictated by aretha
 @app.route('/api/aretha/unenforce/<destination>')
 def unenforce_dest(destination):
     blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s AND r.device IS NULL", (destination,))
 
-    for ip in blocked_ips:
-        if sys.platform.startswith("linux"):
+    if sys.platform.startswith("linux"):
+        for ip in blocked_ips:
             if ip[1] is None:
                 subprocess.run(["sudo", "iptables", "-D", "INPUT", "-s", ip[2], "-j", "DROP"])
                 subprocess.run(["sudo", "iptables", "-D", "OUTPUT", "-d", ip[2], "-j", "DROP"])
-        else:
-            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
-            return jsonify({"message": f"error removing rule for {destination}", "success": False})
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device IS NULL", (destination,))
-    return jsonify({"message": f"rule removed for {destination}", "success": True})
+    response = jsonify({"message": f"rule removed for {destination}", "success": True})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 
 # remove a firewall rule as dictated by aretha
 @app.route('/api/aretha/unenforce/<destination>/<device>')
 def unenforce_dest_dev(destination, device):
     blocked_ips = DB_MANAGER.execute("SELECT r.c_name, r.device, b.ip FROM rules AS r RIGHT JOIN blocked_ips AS b ON r.id = b.rule WHERE r.c_name = %s and r.device = %s", (destination, device))
 
-    for ip in blocked_ips:
-        if sys.platform.startswith("linux") or True:
+    if sys.platform.startswith("linux"):
+        for ip in blocked_ips:
             if ip[1] is not None:
                 subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-d", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
-        else:
-            print(f"ERROR: platform {sys.platform} is not linux - cannot remove block on {ip[2]}")
-            return jsonify({"message": f"error removing rule for {destination}/{device}", "success": False})
+                subprocess.run(["sudo", "iptables", "-D", "FORWARD", "-s", ip[2], "-m", "mac", "--mac-source", ip[1], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    
     DB_MANAGER.execute("DELETE FROM rules WHERE c_name = %s AND device = %s", (destination,device))
-    return jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
+    response = jsonify({"message": f"rule removed for {destination}/{device}", "success": True})
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 
 # open an event stream for database updates
-@app.route('/stream')
+@app.route('/api/stream')
 def stream():
     response = Response(event_stream(), mimetype="text/event-stream")
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+# return a list of live but not completed content
+@app.route('/api/content')
+def content():
+    response = make_response(jsonify(DB_MANAGER.execute("select * from content where live < current_timestamp and complete = false", ())))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+# mark content as set, and record the pre and post responses
+@app.route('/api/content/set/<name>/<pre>/<post>')
+def contentSet(name, pre, post):
+    DB_MANAGER.execute("update content set complete = true, pre = %s, post = %s where name = %s", (pre[:200], post[:200], name))
+    response = make_response(jsonify({"message": "Request processed", "success": "unknown"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+# return records for the redaction interface
+@app.route('/api/redact')
+def getRedact():
+    response = make_response(jsonify(DB_MANAGER.execute("select distinct c_name from geodata", ())))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+# remove records for the redaction interface
+@app.route('/api/redact/set/<company>')
+def setRedact(company):
+    ips = DB_MANAGER.execute("select ip from geodata where c_name = %s", (company,));
+    for ip in ips:
+        DB_MANAGER.execute("delete from packets where ext = %s", (ip[0],))
+        DB_MANAGER.execute("delete from geodata where ip = %s", (ip[0],))
+    response = make_response(jsonify({"message": "operation successful"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@app.route('/api/pid')
+def getPid():
+    global CONFIG
+    if CONFIG is not None and 'general' in CONFIG and 'id' in CONFIG['general']:
+        response = make_response(jsonify({"pid": CONFIG['general']['id']}))
+    else:
+        response = make_response(jsonify({"pid": "unknown"}))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+@app.route('/api/activity/<pid>/<category>/<action>')
+def activity(pid, category, action):
+    DB_MANAGER.execute("insert into activity(pid, category, description) values(%s, %s, %s)", (pid, category, action))
+    response = make_response(jsonify({"message": "activity logged"}))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
 ####################
 # internal methods #
 ####################
+# return a dictionary of mac addresses to manufacturers and names
+def get_device_info():
+    devices = dict()
+    raw_devices = DB_MANAGER.execute("SELECT * FROM devices", ())
+    for device in raw_devices:
+        mac, manufacturer, name = device
+        devices[mac] = {"manufacturer": manufacturer, "name": name}
+    return devices
 
-#return a dictionary of mac addresses to manufacturers
-def MacMan():
-    macMan = dict()
-    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-    for device in devices:
-        mac,manufacturer,_ = device
-        macMan[mac] = manufacturer
-    return macMan
 
-#return a dictionary of mac addresses to custom device names
-def ManDev():
-    manDev = dict()
-    devices = DB_MANAGER.execute("SELECT * FROM devices", ())
-    for device in devices:
-        mac,_,name = device
-        manDev[mac] = name
-    return manDev
+# get geo data for all ips
+def get_geodata():
+    geos = DB_MANAGER.execute("SELECT ip, lat, lon, c_code, c_name, domain FROM geodata", ())
+    records = []    
 
-#get geo data for an ip
-def GetGeo(ip):
-    #print("Get Geo ", ip)
-    try:
-        lat,lon,c_code,c_name = DB_MANAGER.execute("SELECT lat, lon, c_code, c_name FROM geodata WHERE ip=%s LIMIT 1", (ip,), False)
-        geo = {"latitude": lat, "longitude": lon, "country_code": c_code, "companyName": c_name}
-        return geo
-    except:
-        geo = {"latitude": 0, "longitude": 0, "country_code": 'XX', "companyName": 'unknown'}
-        return geo
+    for geo in geos:
+        # try:
+        #     subdomain = socket.gethostbyaddr(geo[0]) if geo[5] == 'unknown' else geo[5]
+        #     print("subdomain", geo[0], subdomain)
+        # except:
+        #     print("Unexpected error:", sys.exc_info()[0])
+        records.append({"ip": geo[0], "latitude": geo[1], "longitude": geo[2], "country_code": geo[3], "company_name": geo[4], "domain":geo[5]})
+    return records
 
-#get bursts for the given time period (in days)
-def GetBursts(n, units="MINUTES"):
-    bursts = DB_MANAGER.execute("SELECT MIN(time), MIN(mac), burst, MIN(categories.name) FROM packets JOIN bursts ON bursts.id = packets.burst JOIN categories ON categories.id = bursts.category WHERE time > (NOW() - INTERVAL %s) GROUP BY burst ORDER BY burst", ("'" + str(n) + " " + units + "'",)) #  " DAY'",))
-    result = []
-    epoch = datetime(1970, 1, 1, 0, 0)
-    for burst in bursts:
-        unixTime = int((burst[0] - epoch).total_seconds() * 1000.0)
-        device = burst[1]
-        category = burst[3]
-        result.append({"value": unixTime, "category": category, "device": device })
-    return result
 
-def GetCounterexample(question):
-    options = []
-    if int(question) == 1:
-        options = DB_MANAGER.execute("select c_name, count(p.len), d.name from packets as p inner join geodata as g on p.src = g.ip inner join devices as d on p.mac = d.mac where g.c_name like '*%%' group by g.c_name, d.name order by count(p.len) desc limit 5;", ())
+def GetExample(question):
+    result = dict()
+    result["text"] = []
+    result["impacts"] = []
+    result["geodata"] = []
+    result["devices"] = []
+
+    if question == "S1" or question == "S2":
+        result["text"] = "Some content will be illustrated with examples from your home network. When they do, they'll appear here."
+
+    elif question == "B4":
+        try:
+            example = DB_MANAGER.execute("select ext, mac, sum(len) from packets where proto = 'HTTP' group by ext, mac order by sum(len) desc limit 1;", ())[0]
+        except:
+            return False
+        dest = example[0]
+        mac = example[1]
+        geo = DB_MANAGER.execute("select lat, lon, c_name, c_code from geodata where ip = %s limit 1", (dest,))[0]
+        device = DB_MANAGER.execute("select name from devices where mac = %s", (mac,))[0][0]
+        lat = geo[0]
+        lon = geo[1]
+        company = geo[2]
+        country = geo[3]
+        result["text"] = f"Did you know that your {device} sends unencrypted data to {company} (in {country})?"
+        result["impacts"] = [{"company": dest, "device": mac, "impact": example[2]}]
+        result["geodata"] = [{"latitude": lat, "longitude": lon, "ip": dest}]
+        result["devices"] = [mac]
+
+    elif question == "D2":
+        example = DB_MANAGER.execute("select d.name, count(distinct g.ip) from packets as p inner join geodata as g on p.ext = g.ip inner join devices as d on p.mac = d.mac where g.tracker = true group by d.name order by count(distinct g.ip) desc", ())
+        if len(example) < 1:
+            return False
+        device = example[0][0]
+        single_tracker = example[0][1]
+        total_tracker = 0
+        for record in example:
+            total_tracker += record[1]
+        result["text"] = f"Across the devices connected to the privacy assistant there are connections to {total_tracker} different companies that have been known to track users across the internet. Did you know that your {device} sends data to {single_tracker} of these companies?"
+
+    elif question == "D3":
+        example1 = DB_MANAGER.execute("select count(mac) from devices", ())[0][0]
+        example2 = DB_MANAGER.execute("select count(distinct d.mac) from devices as d inner join packets as p on d.mac = p.mac inner join geodata as g on p.ext = g.ip where g.c_name = 'Google LLC'", ())[0][0]
+        result["text"] = f"Of the {example1} devices connected to Aretha, {example2} of them send data to Google."
    
-    blacklist = ["*Amazon.com, Inc.", "*Google LLC", "*Facebook, Inc."]
-    for option in options:
-        if option[0] not in blacklist:
-            return option
+    elif question == "D4":
+        example = DB_MANAGER.execute("select distinct g.c_name, d.name from geodata as g left join packets as p on g.ip = p.ext left join devices as d on p.mac = d.mac", ())
+        req = urllib.request.Request("https://haveibeenpwned.com/api/v2/breaches", headers={"User-Agent" : "IoT-Refine"})
+        with urllib.request.urlopen(req) as url:
+            data = json.loads(url.read().decode())
+            for company in example:
+                device = company[1]
+                for breach in data:
+                    if company[0].strip(" LLC").strip(", Inc.").strip(" Inc.") == breach["Name"]:
+                        result["text"] = f"Did you know that {company[0]} (that communicates with your {device}) was the victim of a data breach on {breach['BreachDate']} where {breach['PwnCount']} records were stolen? If you didn't know about this, you might want to change your passwords with the company."
+                        break
+        if not result["text"]:
+            result["text"] = "Thankfully, none of your devices communicate with companies on our data breach list."
 
-    return False
+    elif question == "frequency":
+        example1 = DB_MANAGER.execute("select d.mac, d.name, count(p.id) from packets as p inner join devices as d on p.mac = d.mac group by d.mac order by count(id) desc limit 1", ())
+        if len(example1) == 0:
+            return False
+        example2 = DB_MANAGER.execute("select time from packets where mac = %s order by time asc limit 1", (example1[0][0],))
+        example3 = DB_MANAGER.execute("select time from packets where mac = %s order by time desc limit 1", (example1[0][0],))
+        _, device, count = example1[0]
+        start = datetime.fromisoformat(str(example2[0][0]))
+        end = datetime.fromisoformat(str(example3[0][0]))
+        result["text"] = f"Your {device} has sent {'{:,}'.format(count)} 'packets' of data in the last {(end - start).days} days. On average, that's once every {((end - start) / count).seconds}.{((end - start) / count).microseconds} seconds."
 
-#setter method for impacts
-def _update_impact(impacts, mac, ip, impact):
-    if mac in impacts:
-        if ip in impacts[mac]:
-            impacts[mac][ip] += impact
-        else:
-            impacts[mac][ip] = impact #impact did not exist
+    elif question == "B3":
+        example = DB_MANAGER.execute("select name,c_name,ext from packets as p inner join devices as d on p.mac = d.mac inner join geodata as g on p.ext = g.ip order by time desc limit 1;", ())
+        result["text"] = f"For example, your {example[0][0]} just received a packet from {example[0][1]} which has an IP address of {example[0][2]}."
+
     else:
-        impacts[mac] = dict()
-        impacts[mac][ip] = impact #impact did not exist
+        result = False
 
-
-def packet_to_impact(impacts, packet):
-    global geos
-    #determine if the src or dst is the external ip address
-    pkt_id, pkt_time, pkt_src, pkt_dst, pkt_mac, pkt_len, pkt_proto, pkt_burst = packet["id"], packet.get('time'), packet["src"], packet["dst"], packet["mac"], packet["len"], packet.get("proto"), packet.get("burst")
-    
-    local_ip_mask = rutils.make_localip_mask() #so we can filter for local ip addresses
-    ip_src = local_ip_mask.match(pkt_src) is not None
-    ip_dst = local_ip_mask.match(pkt_dst) is not None
-    ext_ip = None
-    
-    if (ip_src and ip_dst) or (not ip_src and not ip_dst):
-        return #shouldn't happen, either 0 or 2 internal hosts
-    
-    #remember which ip address was external
-    elif ip_src:
-        ext_ip = pkt_dst
-    else:
-        ext_ip = pkt_src
-    
-    #make sure we have geo data, then update the impact
-    if ext_ip not in geos:
-        geos[ext_ip] = GetGeo(ext_ip)
-
-    _update_impact(impacts, pkt_mac, ext_ip, pkt_len)
-
-def CompileImpacts(impacts, packets):
-    # first run packet_to_impact
-    [packet_to_impact(impacts, packet) for packet in packets]
-
-    result = []
-    for mmac, ipimpacts in impacts.items():
-        for ip, impact in ipimpacts.items():
-            item = geos.get(ip, None)
-            if item is None:  # we might have just killed the key 
-                continue
-            item = item.copy() 
-            # note: geos[ip] should never be none because the invariant is that packet_to_impact has been
-            # called BEFORE this point, and that populates the geos. Yeah, ugly huh. I didn't write this
-            # code, don't blame me!
-            item['impact'] = impact
-            item['companyid'] = ip
-            item['appid'] = mmac
-            if item['impact'] > 0:
-                result.append(item)
-            pass
     return result
 
-def GetImpacts(n, units="MINUTES"):
-    global geos
-    #print("GetImpacts: ::", n, ' ', units)
-    #we can only keep the cache if we're looking at the same packets as the previous request
 
-    impacts = dict() # copy.deepcopy(_impact_cache) 
-    # get all packets from the database (if we have cached impacts from before, then only get new packets)
-    packetrows = DB_MANAGER.execute("SELECT * FROM packets WHERE time > (NOW() - INTERVAL %s)", ("'" + str(n) + " " + units + "'",)) 
-    packets = [dict(zip(['id', 'time', 'src', 'dst', 'mac', 'len', 'proto', 'burst'], packet)) for packet in packetrows]
-    #print("got ", len(packets), "packets")
+@app.before_first_request
+def init():
+    global DB_MANAGER
+    global CONFIG
 
-    result = CompileImpacts(impacts, packets)
-    return result #shipit
+    # open database connections
+    DB_MANAGER = databaseBursts.dbManager()
+    listenManager = databaseBursts.dbManager()
+    listenManager.listen('db_notifications', lambda payload:event_queue.append(payload))
 
-# Generate fake usage for devices (a hack so they show up in refine)
-def GenerateUsage():
-    usage = []
-    counter = 1
-    for mac in MacMan():
-        usage.append({"appid": mac, "mins": counter})
-        counter += 1
-    return usage
+    # load config from file
+    sys.stdout.write("Loading config...")
+    try:
+        CONFIG = configparser.ConfigParser()
+        CONFIG.read(CONFIG_PATH)
+        print("ok")
+    except Exception as e:
+        print("error")
 
-_events = []
+
+################
+# event stream #
+################
+event_queue = []
+
 
 def event_stream():
     import time
 
-    def packets_insert_to_impact(packets):        
-        impacts = CompileImpacts(dict(),packets)
-        #print("packets insert to pitt ", len(packets), " resulting impacts len ~ ", len(impacts))
-        return impacts
-    
     try:
         while True:
-            time.sleep(0.5)
-            insert_buf = []
-            geo_updates = []
-            device_updates = []
+            time.sleep(0.1)
+            packet_buf = []
+            geo_buf = []
+            device_buf = []
 
-            while len(_events) > 0:
-                event_str = _events.pop(0)
+            while len(event_queue) > 0:
+                event_str = event_queue.pop(0)
                 event = json.loads(event_str)
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'packets':
                     event['data']['len'] = int(event['data'].get('len'))
-                    insert_buf.append(event["data"])
+                    packet_buf.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'geodata':
-                    #print("Geodata update", event["data"])
-                    geo_updates.append(event["data"])
+                    geo_buf.append(event["data"])
                 if event["operation"] in ['UPDATE','INSERT'] and event["table"] == 'devices':
-                    #print("Device update", event["data"])                    
-                    device_updates.append(event["data"])
+                    device_buf.append(event["data"])
 
-            if len(insert_buf) > 0: 
-                yield "data: %s\n\n" % json.dumps({"type":'impact', "data": packets_insert_to_impact(insert_buf)})
-            if len(geo_updates) > 0:
-                #print("Got a geo updates for %s, must reset GEO cache." % [u["ip"] for u in geo_updates])
-                [geos.pop(u["ip"], None) for u in geo_updates]
-                yield "data: %s\n\n" % json.dumps({"type":'geodata'})
-            if len(device_updates) > 0: 
-                yield "data: %s\n\n" % json.dumps({"type":'device', "data": packets_insert_to_impact(insert_buf)})
+            if len(packet_buf) > 0: 
+                impacts = dict()
+            
+                for packet in packet_buf:
+                    mac = packet['mac']
+                    ip = packet['ext']
+                    impact = packet['len']
+
+                    if ip not in impacts:
+                        impacts[ip] = dict()
+                    if mac not in impacts[ip]:
+                        impacts[ip][mac] = 0
+                    impacts[ip][mac] += impact
+
+                yield "data: %s\n\n" % json.dumps({"type": "impact", "time": round(time.time()/60)-1, "data": impacts})
+
+            if len(geo_buf) > 0:
+                [geos.pop(geo["ip"], None) for geo in geo_buf]
+                for geo in geo_buf:
+                    yield "data: %s\n\n" % json.dumps({"type":"geodata", "data": geo})
+
+            if len(device_buf) > 0: 
+                for device in device_buf:
+                    yield "data: %s\n\n" % json.dumps({"type":'device', "data": device})
 
     except GeneratorExit:
-        return;
+        return
     except:
         print("Unexpected error:", sys.exc_info())
         traceback.print_exc()                
         return
 
-@app.before_first_request
-def init():
-    global DB_MANAGER
-    DB_MANAGER = databaseBursts.dbManager()
-    listenManager = databaseBursts.dbManager()
-    listenManager.listen('db_notifications', lambda payload:_events.append(payload))
-
-## This is run using Flask
-## export FLASK_APP=apy
-## export FLASK_DEBUG=1
-## export FLASK_PORT=X
-## flask run
+# This is run using Flask
+# export FLASK_APP=apy
+# export FLASK_DEBUG=1
+# export FLASK_PORT=X
+# flask run
 

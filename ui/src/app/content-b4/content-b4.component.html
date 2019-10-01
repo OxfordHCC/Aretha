@@ -1,0 +1,59 @@
+<h3>How can data be securely transferred over the Internet?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+    <h4>Recap:</h4>
+
+    <p>Devices connect to the internet either directly (through Wifi or LAN), or via smartphones and smart home hubs. The internet is not just a black box, but a network of networks in which devices can communicate with servers by exchanging "packets" of data. IP addresses are to route packets through the network.</p>
+	</div>
+	
+	<div *ngSwitchCase="2">
+    <p>Are there any devices you have that you think might be insecure? Why is this? (200 characters</p>
+
+    <mat-form-field>
+      <textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+      <mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+    </mat-form-field>
+	</div>
+
+	<div *ngSwitchCase="3">
+    <p>Originally, information on the internet was sent in clear text. Informaion sent like this can be tampered with or spoofed by attackers (hackers). Many modern devices and services combat this by protecting your information using encryption.</p>
+
+    <p><em>Encryption</em> - secure protocols like Secure Socket Layer (SSL) or Transport Layer Security (TLS) protect your information by making it unreadable to hackers, like a secure layer wrapped around your data. This is what is happening when you see the padlock icon in your browser when accessing https:// sites.</p>
+
+    <p><em>Authentication</em> - the same protocols can also verify that a server is what it says it is, making sure that the device is communicating with the correct server. With out this authentication, data might still be encrypted but you might unknowingly be sending data to a hacker.</p>
+
+    <iframe height="315" src="https://www.youtube.com/embed/kBXQZMmiA4s?start=281&end=365" width="560"></iframe>
+	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Not all of the data your devices are sending or receiving is encrypted. Encryption requires a lot of computational power, which can be slow on small devices, and adds complexity to communications. Not using encryption is fine when the information being sent isn't sensitive, but can cause major problems otherwise. For example, imagine a smart sports watch that sends data (hypothetically) to two different companies:</p>
+
+    <ol>
+      <li>Garmin to track your cycling routes</li>
+      <li>AccuWeather to request weather forecasts that the watch shows you before you leave for a bike ride</li>
+    </ol>
+
+    <p>The weather forecast is fine to send unencrypted or unauthenticated - there's little danger if anyone else is able to read or it, except maybe causing to be caught in the rain without an rain coat. But GPS data from the bike rides can reveal sensitive information about your current well-being, where you live and work, as well as the time of the day at which you tend to use your bike. This information could be interesting for insurance companies or even burglars.</p>
+  </div>
+
+	<div *ngSwitchCase="5">
+		<p>Take a look at the example to the right. Why do you think this device might be sending data unencrypted? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="6">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

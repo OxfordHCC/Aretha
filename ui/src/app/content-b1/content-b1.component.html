@@ -1,0 +1,41 @@
+<h3>Why do my devices communicate with different companies?</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		<p>What's the most interesting thing you've found out using the prototype so far? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+	
+	<div *ngSwitchCase="2">
+    <h4>Welcome!</h4>
+
+		<p>By now you probably have plugged in a number of different devices, and you've seen how the privacy assistant interface shows data flows from connected devices.</p>
+
+		<p>You can also click on company names in the time series to learn more about them, and the overview tab will let you see where the companies are located around the world.</p>
+
+    <img src="../../assets/aretha-annotated.png" width="1000">
+
+	</div>
+
+	<div *ngSwitchCase="3">
+    <p>It's probably become apparent that many devices are sending data to more than one company. Maybe you've been wondering why that is the case, and how the receiving companies might use that data.</p>
+
+    <p>Over the next few weeks, these sessions will show a little more about how smart home devices work, how data is collected and transferred, and how that data might be used.</p>
+	</div>
+
+  <div *ngSwitchCase="4">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

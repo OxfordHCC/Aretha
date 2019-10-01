@@ -1,0 +1,58 @@
+<h3>Data Breaches</h3>
+
+<div [ngSwitch]="stage">
+	
+	<div *ngSwitchCase="1">
+		<p>Have you ever had a strange or unpleasant experience with tracking and advertising online?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="preResponse"></textarea>
+		</mat-form-field>
+	</div>
+	
+	<p *ngSwitchCase="2">
+	Data breaches, where customer information is stolen from companies, frequently make the news. It might seem like negligence on their part, but perfect security is impossible to achieve in reality - there is a small chance that any company could be the victim of a data breach, no matter how good their security practices are. This data that is stolen most often includes email addresses and credit card numbers, but might also include other information you gave the company, or even information about you that has been collected by your devices.
+	</p>
+
+	<p *ngSwitchCase="3">
+	Hackers will often collect lists of email addresses, usernames, and passwords from data breaches and try these credentials on other sites. If you use the same password in several different places, then this makes it easy for them to take over multiple accounts as soon as one is compromised. If your email address is compromised, for example, then you might lose your way of recovering other accounts that you own (i.e. where the recovery process involves sending you an email).
+	</p>
+	
+	<p *ngSwitchCase="4">
+Services like "haveibeenpwned" collate information on data breaches and let you check if any of your account details have been disclosed as part of a data breach. This is what we use to check the services accessed by your devices (see sidebar). If you sign up with your email address, then haveibeenpwned will let you know whenever it appears in a breach in the future, giving you valuable time to change your passwords.
+	</p>
+	
+	<div *ngSwitchCase="5">
+		For more information, take a look at the following sources:
+
+		<p>HIBP Frequently Asked Questions | Haveibeenpwned</p>
+		
+		<p><small>What is a "breach" and where has the data come from? A "breach" is an incident where data is inadvertently exposed in a vulnerable system, usually due to insufficient access controls or security weaknesses in the software. HIBP aggregates breaches and enables people to assess where their personal data has been exposed...</small></p>
+
+		<p><small><em>Have I Been Pwned? (HIBP, with "Pwned" pronounced like "poned") is a website that allows internet users to check if their personal data has been compromised by data breaches. The service collects and analyzes hundreds of database dumps and pastes containing information about billions of leaked accounts, and allows users to search for their own information by entering their username or email address.</em></small></p>
+
+		<img src="../../assets/hibp.png" width=150/>
+
+		<p>Information for Individuals &amp; families | National Cyber Security Centre</p>
+
+		<p><small>Top tips for staying secure online: here's a list of the most important things you can do to help get you started...</small></p>
+
+		<p><small><em>The National Cyber Security Centre (NCSC) is an organisation of the United Kingdom Government that provides advice and support for the public and private sector in how to avoid computer security threats. Based in London, it became operational in October 2016, and its parent organisation is GCHQ.</em></small></p>
+		
+		<img src="../../assets/ncsc-tips.png" width=150/>
+	</div>
+
+	<div *ngSwitchCase="6">
+		<p>Do you think about online tracking and advertising any differently now?</p>
+
+		<mat-form-field>
+			<textarea matInput [(ngModel)]="postResponse"></textarea>
+		</mat-form-field>
+	</div>
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

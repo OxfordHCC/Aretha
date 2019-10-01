@@ -1,65 +1,58 @@
 
 import { Injectable, NgZone } from '@angular/core';
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Http, HttpModule} from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { mapValues, keys, mapKeys, values, trim, uniq, toPairs } from 'lodash';
+import { mapValues} from 'lodash';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import * as _ from 'lodash';
-import { Observable } from '../../node_modules/rxjs/Observable';
-import { AppImpact, AppDevice } from './refinebar/refinebar.component';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
-
-enum PI_TYPES { DEVICE_SOFT, USER_LOCATION, USER_LOCATION_COARSE, DEVICE_ID, USER_PERSONAL_DETAILS }
-
-// export const API_ENDPOINT = 'http://localhost:8118/api';
-export const API_ENDPOINT = 'https://negi.io/api';
-export const CB_SERVICE_ENDPOINT = 'http://localhost:3333';
-export const IOT_API_ENDPOINT='http://localhost:4201';
-
-export interface App2Hosts { [app: string]: string[] }
-export interface Host2PITypes { [host: string]: PI_TYPES[] }
-export interface String2String { [host: string]: string }
-
-export interface AppSubstitutions { [app: string]: string[] };
-
+export const IOTR_ENDPOINT='http://localhost:4201/api';
 let zone = new NgZone({ enableLongStackTrace: false });
 
-export class GeoIPInfo {
-  host?: string;
-  ip: string;
-  country_code?: string;
-  country_name?: string;
-  region_code?: string;
-  region_name?: string;
-  city?: string;
-  zip_code?: string;
-  time_zone?: string;
-  latitude?: number;
-  longitude?: number;
-  metro_code?: number;  
-};
+export interface DeviceImpact {
+	minute: number;
+	device: string;
+	company: string;
+  	impact: number;
+}
 
-export class PacketUpdateInfo {
-  id: string;
-  dst: string;
-  src: string;
-  burst?: string;
-  mac: string;
-  len: string;
+export interface AdHostMap {[host: string]: boolean};
+export interface AdIPHostMap {[ip: string]: string[]};
+
+export type ImpactSet = ({[mac:string] : {[dst:string]:number}});
+export type BucketedImpacts = ({ [min_t:string]: ImpactSet});
+
+export interface Device {
+	[mac : string]: string;
+	manufacturer: string;
+	name: string;
+}
+
+export interface GeoData {
+  ip: string;
+  company_name: string;
+  // country_name: string;
+  country_code: string;
+  latitude: string;
+  longitude: string;
+  domain: string;
 }
 
 export class DBUpdate {
   type: string;
   data: any;
-  // timestamp: string;
-  // operation: string;
-  // schema: string;
-  // table: string;
-  // data: PacketUpdateInfo
+}
+
+export interface Example {
+	impacts: any;
+	geodata: any;
+	devices: any;
+	text: string;
 }
 
 export let cache = (target: Object, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
-  // console.log('@cache:: ~~ ', target, propertyKey, descriptor);
   let retval: { [method: string]: any } = {},
     method = descriptor.value;
 
@@ -86,20 +79,37 @@ export let memoize = (f: (...args: any[]) => string) => {
       return retval[cache_key] = method.apply(this, args);
     };
   };
+};
+
+export class AdsDB { 
+  constructor(private _data: {[ip:string]:string}) {
+  }
+  get(ip):CompanyInfo | undefined { 
+    if (this._data[ip]) { 
+      const domain = this._data[ip], 
+        newinfo = new CompanyInfo(domain, domain, [domain], "advertising"); 
+      newinfo.type = ['advertising'];
+      return newinfo;
+    }
+    return;
+  }
 }
 
-// export class CachingSubscription<T> {
-//   private dataSubject: ReplaySubject<T> = new ReplaySubject<T>();
-//   data$: Observable<T> = this.dataSubject.asObservable();
-//   resolved = false;
-//   constructor(private obs: Observable<T>) {    
-//     this.obs.subscribe(result => {
-//       this.resolved = true;
-//       this.dataSubject.next(result);
-//     });    
-//   }
-//   getObservable() { return this.data$;  }
-// }
+export class CompanyInfo {
+  domains: string[];
+  type: string[];
+  jurisdiction_code ?: string;
+  parent ?: string;
+  parentInfo ?: CompanyInfo;
+  crunchbase_url ?: string | SafeResourceUrl;
+  equity ?: string;
+  size ?: string;
+  description ?: string;
+  constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
+    this.domains = domains;
+  }
+}
+
 
 export class CompanyDB {
   emoji_table = {
@@ -112,8 +122,14 @@ export class CompanyDB {
     DE: '&#x1F1E9;&#x1F1EA;'
   };
 
+  token_to_id:{ [token:string]: string } = {};
+
   constructor(private _data: { [id: string]: CompanyInfo }, private sanitiser: DomSanitizer) {
+
+    this._data = _.mapKeys(_data, (value,key) => key.toLowerCase());
+    
     mapValues(this._data, (s) => {
+      
       if (s && s.company && s.equity && s.equity.length) {
           let n = parseInt(s.equity, 10);
           if (n > 1e6) { s.equity = Math.round(n / 1.0e5) / 10.0 + 'm'; }
@@ -127,97 +143,64 @@ export class CompanyDB {
       }
       if (s.crunchbase_url) {
         s.crunchbase_url = this.sanitiser.bypassSecurityTrustResourceUrl(s.crunchbase_url);
-      }      
-      // http://www.google.com/search?btnI=I%27m+Feeling+Lucky&ie=UTF-8&oe=UTF-8&q=
+      }  
+      
+      // cache token to id
+      s.company.toLowerCase().trim().split(' ').map(t => { this.token_to_id[t] = s.id; });
     });
   }
   get(companyid: string): CompanyInfo | undefined {
-    return this._data[companyid];
+    return this._data[companyid.toLowerCase()];
   }
   add(info: CompanyInfo) {
-    this._data[info.id] = info;
+    this._data[info.id.toLowerCase().trim()] = info;
   }
-  getCompanyInfos(): CompanyInfo[] {
-    return values(this._data);
+  values():CompanyInfo[] {
+    return _.values(this._data);
   }
-  getIDs(): string[] {
-    return keys(this._data);
-  }
-}
 
-export class AppAlternative {
-  altAppTitle: string;
-  altToURL: string; // e.g. "http://alternativeto.net/software/pricealarm-net/",
-  gPlayURL: string;
-  gPlayID: string;
-  iconURL: string; // e.g. "d2.alternativeto.net/dist/icons/pricealarm-net_105112.png?width=128&height=128&mode=crop&upscale=false",
-  officialSiteURL: string; //  "http://www.PriceAlarm.net",
-  isScraped: boolean; 
-}
-
-export class CompanyInfo {
-    // readonly id: string;
-    // readonly company: string;
-    domains: string[];
-    founded ?: string;
-    acquired ?: string;
-    type: string[];
-    // readonly typetag ?: string;
-    jurisdiction ?: string;
-    jurisdiction_code ?: string;
-    parent ?: string;
-    parentInfo ?: CompanyInfo;
-    crunchbase_url ?: string | SafeResourceUrl;
-    lucky_url ?: string | SafeResourceUrl;
-    capita ?: string;
-    equity ?: string;
-    size ?: string;
-    data_source ?: string;
-    description ?: string;
-    constructor(readonly id: string, readonly company: string, domains: string[], readonly typetag: string) {
-      this.domains = domains;
+  @memoize(x => 'match-'+x)
+  matchNames(name:string):CompanyInfo | undefined {
+    // @TODO
+    let tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => x && ['ltd.', 'co.'].indexOf(x) < 0);
+    const matches = tgt_tokens.filter(x => this.token_to_id[x]);
+    matches.sort((x,y) => y.length - x.length);
+    // console.info('best match is ', matches[0]);
+    if (matches.length) {
+      return this.get(this.token_to_id[matches[0]]);
     }
+    return;
+  }
+
+  @memoize(x => 'match-'+x)
+  matchId(name:string):CompanyInfo | undefined {
+    // @TODO
+    const tgt_tokens = name.toLowerCase().trim().split(' ').filter(x => x).map(x => x.replace(/[^\w\.\s]|_/g, "")),
+      matches = tgt_tokens.filter(x => x && this.get(x));
+
+    matches.sort((x,y) => y.length - x.length);
+    if (matches.length) { return this.get(matches[0]); }
+    return;
+  }
 }
+
 
 export class IoTDataBundle {
-  usage: any;
   impacts: any;
-  manDev: any;
-  bursts: any;
+  geodata: any;
+  devices: any;
 }
 
 export class APIAppInfo {
     app: string;
     title: string;
-    summary: string;
-    description: string;
-    storeURL: string;
-    price: string;
-    free: boolean;
-    rating: string;
-    numReviews: number;
-    genre: string;
-    installs: { min: number, max: number};
-    developer: {
-      email: string[];
-      name: string;
-      site: string;
-      storeSite: string;
-    };
-    updated: string;
-    androidVer: string;
-    contentRating: string;
-    screenshots: string[];
+  description: string;
+  free: boolean;
+  installs: { min: number, max: number};
     video: string;
-    recentChanges: string[];
-    crawlDate: string; // date string    
     string: string; // what's this?
-    region: string; // us
-    ver: string; // date string 
-    screenFlags: number;
     hosts?: string[];
-    host_locations?: GeoIPInfo[];
-    storeinfo: { 
+    storeinfo: {
       title: string;
       summary: string;
       androidVer: string;
@@ -225,17 +208,9 @@ export class APIAppInfo {
       installs: { min: number, max: number };
       rating: number;
       updated: string;
-    }
-    icon: string;
-    emails: string[]; // author contact email
-    name: string; 
-    storeSite: string;
+    };
+    name: string;
     site: string;
-}
-
-export interface APIAppStub {
-  Title: string;
-  appid: string;
 }
 
 const host_blacklist = ['127.0.0.1','::1','localhost'];
@@ -243,222 +218,21 @@ const host_blacklist = ['127.0.0.1','::1','localhost'];
 @Injectable()
 export class LoaderService {
 
-  _host_blacklist : {[key:string]:boolean};n
-
+  _host_blacklist : {[key:string]:boolean};
   apps: { [id: string]: APIAppInfo } = {};
   updateObservable: Observable<DBUpdate>;
-
+  private readyContentSource = new Subject<string>();
+  contentChanged = this.readyContentSource.asObservable();
   
   constructor(private httpM: HttpModule, private http: Http, private sanitiser: DomSanitizer) { 
     this._host_blacklist = host_blacklist.reduce((obj, a) => obj[a]=true && obj, {});
   }
 
   @cache
-  getAppToHosts(): Promise<App2Hosts> {
-    return this.http.get('assets/data/host_by_app.json').toPromise().then(response => {
-      return mapValues(response.json(), ((hvobj) => keys(hvobj))) as { [app: string]: string[] };
-    });
-  }
-
-  @cache  
-  getHostToPITypes(): Promise<Host2PITypes> {
-    return this.http.get('assets/data/pi_by_host.json').toPromise().then(response => {
-      return response.json() as { [app: string]: string[] };
-    }).then((data: { [app: string]: string[] }) => {
-      return Promise.resolve(mapValues(data, 
-        (s: string[]): PI_TYPES[] => s.map(pis => {
-          if (PI_TYPES[pis] === undefined) { throw new Error(`undefined PI_TYPE ${pis}`);  }
-          return PI_TYPES[pis]
-        }))
-      );
-    });
-  }
-  getHostToCompany(): Promise<String2String> {
-    return this.http.get('assets/data/h2c.json').toPromise().then(response => {
-      return response.json() as String2String;
-    });
-  }
-  getHostToShort(): Promise<String2String> {
-    return this.http.get('assets/data/h2h_2ld.json').toPromise().then(response => {
-      return response.json() as String2String;
-    });
-  }
-  @cache
   getCompanyInfo(): Promise<CompanyDB> {
     return this.http.get('assets/data/company_details.json').toPromise().then(response => {
       return new CompanyDB(response.json() as {[name: string]: CompanyInfo}, this.sanitiser);
     });
-  }
-  getSubstitutions(): Promise<AppSubstitutions> {
-    return this.http.get('assets/data/app_substitutions.json').toPromise().then(response => {
-      return response.json() as AppSubstitutions;
-    });
-  }
-  makeIconPath(url: string): string {
-    if (url) {
-      return [API_ENDPOINT, 'icons', url.slice(1)].join('/');
-    }
-  }
-  _prepareAppInfo(appinfo: APIAppInfo, loadGeo=true, doCache=true):Promise<APIAppInfo> {
-    appinfo.icon = appinfo.icon && appinfo.icon !== null && appinfo.icon.trim() !== 'null' ? this.makeIconPath(appinfo.icon) : undefined;
-    // console.log('appinfo icon ', appinfo.app, ' - ', appinfo.icon, typeof appinfo.icon);
-
-    appinfo.hosts = uniq((appinfo.hosts || [])
-      .map((host: string): string => trim(host.trim(), '".%')))
-      .filter(host => host.length > 3 && host.indexOf('%s') < 0 && host.indexOf('.') >= 0 && host.indexOf('[') < 0 && !this._host_blacklist[host]);
-
-    if (appinfo.hosts && appinfo.hosts.length > 100) {
-      // console.error('WARNING: this app has too many hosts', appinfo.app);
-      appinfo.hosts = appinfo.hosts.slice(0, 100);
-    }
-
-    if (doCache) { this.apps[appinfo.app] = appinfo;  }    
-
-    return !loadGeo ? Promise.resolve(appinfo) : this.getHostsGeos(appinfo.hosts).then(geomap => {
-      return _.uniqBy(appinfo.hosts.map(host => {
-        var geo = geomap[host];
-        if (!geo) { 
-          // console.warn(' No geo for ', host, appinfo.app); 
-          return; 
-        }
-        return geo[0] && _.extend({}, geo[0], {host:host});
-      }).filter(x => x), (gip) => gip.ip)
-    }).then((hostgeos) => {
-      appinfo.host_locations = hostgeos || [];
-      return appinfo;
-    }).catch((e) => {
-      return appinfo;
-    });
-  } 
-  @memoize((hosts) => hosts.join('::'))
-  getHostsGeos(hosts: string[]): Promise<{[host: string]: GeoIPInfo[]}> {
-
-    const hostsParam = hosts.map(x => x.trim()).join(','),
-      urlSP = new URLSearchParams(); 
-
-    urlSP.set('hosts', hostsParam);
-
-    return this.http.get(API_ENDPOINT + `/hosts?${urlSP.toString()}`).toPromise()
-      .then(response => response.json() as ({[host:string]: GeoIPInfo[]}));
-  }
-
-
-  @memoize((company) => company.id)
-  getCrunchbaseURLs(company: CompanyInfo): Promise<SafeResourceUrl[]> {
-    if (!company) { throw new Error('no company'); }
-    console.log('getting crunchbase url for ', company);    
-    const urlSP = new URLSearchParams(); 
-    urlSP.set('q', company.company);
-    return this.http.get(CB_SERVICE_ENDPOINT + `/cbase?${urlSP.toString()}`).toPromise()
-      .then(response => response.json())
-      .then((results: string[]) => results.map(result => this.sanitiser.bypassSecurityTrustResourceUrl(result)));
-  }
-
-  // @memoize((company) => company.id)  
-  // findApps(query: string): Promise<APIAppInfo[]> {
-  //   // var headers = new Headers();
-  //   // headers.set('Accept', 'application/json');
-  //   query = query && query.trim();
-  //   if (!query) { return Promise.resolve([]); }
-  //   return this.http.get(API_ENDPOINT + `/apps?isFull=true&limit=120&startsWith=${query.trim()}`).toPromise()
-  //     .then(response => response.json() as APIAppInfo[])
-  //     .then((appinfos: APIAppInfo[]) => {
-  //       if (!appinfos) {
-  //         throw new Error('null returned from endpoint ' + query);
-  //       } 
-  //       return Promise.all(appinfos.map(appinfo => this._prepareAppInfo(appinfo, false, false)));
-  //     });
-  // }
-  
-  /**
-   * Parses JSON Object into a URL param options object and then Turns that to a
-   * string. 
-   * @param options JSON of param options that can be used to query the xray API.
-   */
-  private parseFetchAppParams(options: {
-      title?: string,
-      startsWith?: string, 
-      appID?: string, 
-      fullInfo?: boolean, 
-      onlyAnalyzed?: boolean, 
-      limit?: number
-    }): string {
-      // Initialising URL Parameters from passed in options.
-    let urlParams = new URLSearchParams();
-
-    if (options.title) {
-      urlParams.append('title', options.title);
-    }
-    if (options.startsWith) {
-      urlParams.append('startsWith', options.startsWith);
-    }
-    if (options.appID) {
-      urlParams.append('appID', options.appID);
-    }
-    if (options.fullInfo) {
-      urlParams.append('isFull',  options.fullInfo ? 'true' : 'false');
-    }
-    if (options.onlyAnalyzed) {
-      urlParams.append('onlyAnalyzed', options.onlyAnalyzed ? 'true' : 'false');
-    }
-    if (options.limit) {
-      urlParams.append('limit', options.limit.toString());
-    }
-    return urlParams.toString();
-  }
-
-  /**
-   * Issues a get request to the xray API using the param options provied as a
-   * json parameter. the JSON is passed to 'parseFetchAppParams' that acts as a 
-   * helper function to stringify the optins into a URL acceptable string.
-   * @param options JSON of param options that can be used to query the xray API.
-   */
-  @memoize((options) => { 
-    let key = toPairs(options).map(pair => {
-      return pair.map((x) => x.toString()).join(':');
-    }).join('--');
-    return key;
-  })
-  findApps(options: {
-      title?: string,
-      startsWith?: string, 
-      appID?: string, 
-      fullInfo?: boolean, 
-      onlyAnalyzed?: boolean, 
-      limit?: number
-    }, loadGeo=true, doCache=true): Promise<APIAppInfo[]> {
-    
-    let body = this.parseFetchAppParams(options);    
-    let appData: APIAppInfo[];
-
-    // // this makes me want to stab my eyes out -> 
-    // return new CachingSubscription(this.http.get('http://localhost:8118/api/apps?' + body).map((data) => {
-    //   const res = data.json() as APIAppInfo[];
-    //   return Observable.fromPromise(Promise.all(res.map((app: APIAppInfo) => {
-    //     if (!app) {
-    //       throw new Error('null returned from endpoint ' + body);
-    //     } 
-    //     return this._prepareAppInfo(app);
-    //    })));
-    // })).getObservable();
-
-    return this.http.get(API_ENDPOINT + '/apps?' + body).toPromise().then((data) => {
-      const result = (data.json() as APIAppInfo[]);
-      if (!result || result === null) {
-        return [];
-      }
-      return Promise.all(result.map(app => this._prepareAppInfo(app, loadGeo, doCache)));
-    });
-  }  
-
-  @memoize((appid: string): string => appid)
-  getAlternatives(appid: string): Promise<APIAppInfo[]> {
-    return this.http.get(API_ENDPOINT + `/alt/${appid}?nocache=true`).toPromise()
-      .then(response => {
-        if (response && response.text().toString().trim() === 'null') {  console.error('ERROR - got a null coming from the endpoint ~ ' + appid);    }
-        return response && response.text().toString().trim() !== 'null' ? response.json() as string[] : [];
-      }).then(appids => Promise.all(appids.map(id => this.getFullAppInfo(id))))
-      .then(appinfos => appinfos.filter(x => x));
   }
 
   getCachedAppInfo(appid: string): APIAppInfo | undefined {
@@ -466,140 +240,205 @@ export class LoaderService {
     return this.apps[appid];
   }
 
-  // connectToAsyncDBUpdates() : void {
-  //     this.updateObservable = Observable.create(observer => {
-  //       const eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
-  //       eventSource.onopen = thing => {
-  //         console.info('EventSource Open', thing);
-  //       };
-  //       eventSource.onmessage = score => {
-  //         // console.info("EventSource onMessage", score, score.data);
-  //         let incoming = <DBUpdate>JSON.parse(score.data);
-  //         zone.run(() => observer.next(incoming));
-  //       };
-  //       eventSource.onerror = error => {
-  //         // console.error("eventSource onerror", error);
-  //         zone.run(() => observer.error(error));
-  //       };
-  //       return () => eventSource.close();
-  //   });        
-  // }
-  connectToAsyncDBUpdates() : void {
-    let observers = [], eventSource; 
+	connectToAsyncDBUpdates() : void {
+      let observers = [], eventSource; 
+    	this.updateObservable = Observable.create(observer => {
+      		observers.push(observer);
+      		if (observers.length === 1 && eventSource === undefined) {       
+        		eventSource = new EventSource(IOTR_ENDPOINT + '/stream');                
+            eventSource.onopen = thing => {
+                console.info('EventSource Open', thing);
+            };
+            eventSource.onmessage = function (score) {
+                let incoming = <DBUpdate>JSON.parse(score.data);
+                zone.run(() => observers.map(obs => { 
+                  try { obs.next(incoming); } catch(e) { console.error(e); }
+                }));
+            };
+            eventSource.onerror = error => {
+                console.error("eventSource onerror", error);
+                zone.run(() => observers.map(obs => obs.error(error)));
+            };              
+          }
+          return () => { 
+            // unsubscribe this one, but do not close until all are dead
+            if (observers.indexOf(observer) >= 0) { 
+              observers.splice(observers.indexOf(observer), 1);
+            }
+            if (eventSource && observers.length === 0) { 
+              console.info('closing event source');
+              eventSource.close(); 
+              eventSource = undefined;
+            } 
+          };
+  		});        
+	}
 
-    this.updateObservable = Observable.create(observer => {
-      observers.push(observer);
-      if (observers.length === 1 && eventSource === undefined) {       
-        eventSource = new EventSource(IOT_API_ENDPOINT+`/stream`);
-        eventSource.onopen = thing => {
-          console.info('EventSource Open', thing);
-        };
-        eventSource.onmessage = score => {
-          // console.info("EventSource onMessage", score, score.data);
-          let incoming = <DBUpdate>JSON.parse(score.data);
-          zone.run(() => observers.map(obs => obs.next(incoming)))
-        };
-        eventSource.onerror = error => {
-          // console.error("eventSource onerror", error);
-          zone.run(() => observers.map(obs => obs.error(error)));
-        };              
-      }
-      return () => { if (eventSource) { eventSource.close(); } }
-  });        
-}
-
-
-  asyncAppImpactChanges(): Observable<AppImpact[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'impact') {
-            observer.next(<AppImpact[]>x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
-  asyncGeoUpdateChanges(): Observable<any[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'geodata') {
-            observer.next(x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
-  asyncDeviceChanges(): Observable<AppDevice[]> {
-    return Observable.create(observer => {
-      this.updateObservable.subscribe({
-        next(x) {           
-          if (x.type === 'device') {
-            observer.next(<AppDevice[]>x.data);
-            return true;
-          } 
-          return false;
-        },
-        error(e) { observer.error(e); }
-      });
-    });
-  }
-
-
-  // todo; move this out to loader
-  // @memoize(x => 'iotdata')
-  getIoTData(): Promise<IoTDataBundle> {
-    return this.http.get(IOT_API_ENDPOINT + '/api/refine/5').toPromise().then(response2 => {
-      let resp = response2.json(),
-        impacts = resp.impacts,
-        manDev = resp.manDev,
-        bursts = resp.bursts;
-
-      // impacts.forEach(function(impact){
-      //   if (manDev[impact.appid] !== "unknown") {
-      //     impact.appid = manDev[impact.appid];
-      //   }
-      // });
-      bursts.forEach(function(burst){
-        if (manDev[burst.device] !== "unknown") {
-          burst.device = manDev[burst.device];
-        }
-      });
-      return resp;
-    });
-  }
+	asyncDeviceImpactChanges(): Observable<ImpactSet> {
+    	return Observable.create(observer => {
+      		this.updateObservable.subscribe({
+        		next(x) {           
+                if (x.type === 'impact') {
+                  observer.next(<ImpactSet>x.data);
+                  return true;
+                } 
+                return false;
+              },
+              error(e) { observer.error(e); }
+          });
+    	});
+  	}
   
-  @memoize((appid: string): string => appid)
-  getFullAppInfo(appid: string): Promise<APIAppInfo|undefined> {
-    return this.http.get(API_ENDPOINT + `/apps?isFull=true&limit=10000&appId=${appid}`).toPromise()
-    .then(response => (response && response.json() as APIAppInfo[])[0] || undefined)
-    .then(appinfo => {
-      if (appinfo) { 
-        return this._prepareAppInfo(appinfo);
-      }
-      return undefined;
-    }).then(appinfo => {
-      if (appinfo) {
-        this.apps[appid] = appinfo;
-      } else {
-        console.warn('null appinfo');
-      }
-      // console.log(appinfo);
-      return appinfo;
+	asyncGeoUpdateChanges(): Observable<any[]> {
+    	return Observable.create(observer => {
+    		this.updateObservable.subscribe({
+        		next(x) {
+          			if (x.type === 'geodata') {
+            			observer.next(x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+  
+	asyncDeviceChanges(): Observable<Device[]> {
+    	return Observable.create(observer => {
+      		this.updateObservable.subscribe({
+        		next(x) {           
+          			if (x.type === 'device') {
+            			observer.next(<Device[]>x.data);
+            			return true;
+          			} 
+          			return false;
+        		},
+        		error(e) { observer.error(e); }
+      		});
+    	});
+  	}
+
+	getIoTData(start: Date, end: Date, delta: number): Promise<IoTDataBundle> {
+    const st_sec = Math.floor(start.getTime()/1000), 
+      end_sec = Math.round(end.getTime()/1000);
+		return this.http.get(IOTR_ENDPOINT + '/impacts/' + st_sec + '/' + end_sec + '/' + delta).toPromise().then(response2 => {
+      		return response2.json();
+    	});
+  	}
+	
+	getIoTDataAggregated(start: number, end: number): Promise<IoTDataBundle> {
+		return this.http.get(IOTR_ENDPOINT + '/impacts/' + start + '/' + end).toPromise().then(response2 => {
+      		return response2.json();
+    	});
+  	}
+
+	getExample(question: string): Promise<Example> {
+		return this.http.get(IOTR_ENDPOINT + '/example/' + question).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	getContent(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/content').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	setContent(name: string, pre: string, post: string): Promise<any> {
+		this.changeContent();
+		if (pre === "") {pre = "Blank";}
+		if (post === "") {post = "Blank";}
+		return this.http.get(IOTR_ENDPOINT + '/content/set/' + name + '/' + encodeURIComponent(pre) + '/' + encodeURIComponent(post)).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	getDevices(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/devices').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+	
+	setDevice(mac: string, name: string): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/devices/set/' + mac + '/' + name).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	getGeodata(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/geodata').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	getDescription(desc: string): Promise<any> {
+		return this.http.get('https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro&explaintext&redirects=1&origin=*&titles=' + desc).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	getRedact(): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/redact').toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	setRedact(company: string): Promise<any> {
+		return this.http.get(IOTR_ENDPOINT + '/redact/set/' + company).toPromise().then(response2 => {
+      		return response2.json();
+		});
+	}
+
+	getPid(): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/pid').toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  setAct(pid: string, type: string, action: string) {
+    this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action).toPromise().then(response2 => {
+		console.log("sent activity");
+	});
+  }
+
+  getRules(): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/list').toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  setRule(mac: string, company: string): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/enforce/' + company + '/' + mac).toPromise().then(response2 => {
+      return response2.json();
+    });
+  }
+
+  removeRule(mac: string, company: string): Promise<any> {
+    return this.http.get(IOTR_ENDPOINT + '/aretha/unenforce/' + company + '/' + mac).toPromise().then(response2 => {
+      return response2.json();
     });
   }
 
   @memoize(() => 'world')
   getWorldMesh(): Promise<any> {
-    // return this.http.get('assets/110m.json').toPromise().then((result) => result.json());
     return this.http.get('assets/110m-sans-antarctica.json').toPromise().then((result) => result.json());
   }
 
+	changeContent(): void {
+		this.readyContentSource.next("tick");
+  }
+
+  @cache
+  getAdsInfo():Promise<AdsDB> { 
+    // return this.http.get('assets/data/ads-to-ip.json').toPromise().then(hosts => {
+    return this.http.get('assets/data/peter-ads.json').toPromise().then(hosts => {
+      const h2ip = hosts.json();
+      return new AdsDB(Object.keys(h2ip).reduce((obj, host) => {
+        h2ip[host].map(ip => { obj[ip] = host; });
+        return obj;
+      }, {}));
+    });
+  }
+  
 }

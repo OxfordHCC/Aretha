@@ -1,0 +1,15 @@
+<div class="tscompmain">
+    <svg #graphel></svg>
+    <app-timeseries-legend 
+        [els]="legend_els" 
+        [categories]="legend_to_cat"
+        [title]='legendtitle'
+        [colours]='legend_colours'
+        [info]='legend_to_info'
+        [namemap]='legend_to_name'
+        [hovering]='hovering'        
+        (hovered)="legendHovered($event)"
+        (clicked)="legendClicked.emit($event)"
+        >
+    </app-timeseries-legend>
+</div>

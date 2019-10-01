@@ -1,16 +1,12 @@
-# IoT-refine
-Refine for the smart home
+# IoT Refine: X-ray vision for the smart home
+Have you ever wondered which companies your smart devices were talking to? Or how much data they send and how often?
 
-A video explaining some features of the UI is below, it is in better quality (mp4) in `/screenGrabs/`:
-
-![IoT Refine Showcase](screenGrabs/IoTRefineShowcase.gif?raw=true "IoT Refine Showcase")
-
-A static version of IoT Refine is hosted at: https://dkarandikar.github.io/StaticRefine/
+IoT Refine captures meta data about the network traffic of devices connected to it. Run IoT Refine on a device with a WiFi hotspot and connect your devices - you might be surprised about what you see.
 
 ## Install
 1. Install package dependcies: PostgreSQL, NodeJS, Node Package Manager (npm), Python3, Wireshark CLI (sometimes called tshark)
 
-2. Install python3 dependencies: `pip3 install psycopg2-binary pandas sklearn Pyshark flask gunicorn`
+2. Install python3 dependencies: `pip3 install -r requirements.txt`
 
 3. Install NodeJS dependency angular: `cd ui/ && npm install && npm install -g @angular/cli`
 
@@ -44,14 +40,24 @@ Run `scripts/reset-database.py`
 
 ## API Endpoints
 
-### /api/refine/\<n>
-Entry point for the refine web interface. Returns information on network flows to and from all devices in the last \<n> minutes.
+### /api/impacts/\<start>\<end>\<interval>
+\<start> and \<end> are Unix timestamps (minimim 0 maximum now)
+
+\<interval> is the interval in minutes that impacts will be grouped into (minimum 1)
+
+Returns the amount of traffic (impact) sent and received between device/ip pairs between \<start> and \<end>. These are aggregated into \<interval> minute intervals. Also returns data about known devices and companies (identical to the devices and geodata endpoints).
+
+### /api/stream
+Event stream of new data about companies, devices, and impacts. Companies and devices are sent on discovery, impacts are aggregated and sent every minute.
+
+### /api/geodata
+List the name, ip, country code, country name, latitude, and longitude of all companies that have sent or received traffic through IoT Refine.
 
 ### /api/devices
-List the names and MAC addresses of all local devices that have sent traffic through IoT-Refine.
+List the names, MAC addresses, and nicknames of all local devices that have sent traffic through IoT Refine.
 
-### /api/devices/set/\<mac>/\<name>
-Set the name of device with MAC address \<mac> to \<name>.
+### /api/devices/set/\<mac>/\<nickname>
+Set the nickname of device with MAC address \<mac> to \<nickname>.
 
 ### /api/aretha/counterexample/\<q>
 Provide a counter example to one of the standard Aretha questions (see Aretha project for more information).
@@ -61,6 +67,3 @@ Block network traffic from or to any IP addresses owned by \<company>. By defaul
 
 ### /api/aretha/unenforce/\<company>[/\<mac>]
 Unblock network traffic from or to any IP addresses owned by \<company>. By default, this applies to blocks placed on all traffic only. To unblock traffic from a single local device, supply the device's MAC address in the \<mac> field.
-
-### /stream
-Event stream of updates to the database. Used to refresh the refine web interface.

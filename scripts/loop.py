@@ -1,17 +1,32 @@
 #! /usr/bin/env python3
 
-import sys, time, os, signal, requests, re, argparse, json, configparser, random, socket, tld, tldextract, subprocess, urllib, asyncio, websockets, threading
+import argparse
+import configparser
+import dns.resolver, dns.reversename
+import json
+import os
+import random
+import requests
+import signal
+import socket
+import subprocess
+import sys
+import time
+from datetime import datetime
+import tldextract
+import urllib
+import ipaddress
+
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "categorisation"))
-import databaseBursts, rutils, predictions
+import databaseBursts
 
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = None
-LOCAL_IP_MASK = rutils.make_localip_mask() 
 DEBUG = False
 log = lambda *args: print(*args) if DEBUG else ''
-RAW_IPS = None
-_events = [] # async db events
+RAW_IPS = set()
+RAW_IPS_ID = 0
+_events = []  # async db events
 IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 CONFIG = None
@@ -23,132 +38,94 @@ BEACON_URL = None
 BEACON_ENDPOINT = None
 BEACON_INTERVAL = None
 BEACON_KEY = None
+BEACON_SSH = None
+LAST_VIEW_REFRESH = 0
 
-# TODO move to config
-modelDefaults = {"EchoFlowNumberCutoff":10,"burstNumberCutoffs":{"Echo":20,"Google Home":60,"Philips Hue Bridge":2,"Unknown":10},"burstTimeIntervals":{"Echo":1,"Google Home":1,"Philips Hue Bridge":1,"Unknown":1}}
 
-
-def packetBurstification(devices):
-    unBinned = DB_MANAGER.getNoBurst()
-
-    allBursts = []  # List of list of ids
-    allIds = set()  # Set of ids considered already
-    nextBurst = []  # Ids to go in next burst
-    burstPacketNoCutoff = 0
-
-    # Get ids of all the packets we want in bursts
-    for counter, row in enumerate(unBinned):
-        id = row[0]
-        mac = row[4]
-        burstTimeInterval = int(modelDefaults["burstTimeIntervals"]["Unknown"])
-        burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"]["Unknown"])
-        try:
-            burstTimeInterval = int(modelDefaults["burstTimeIntervals"][devices[mac]])
-        except KeyError:
-            pass
-        try:
-            burstPacketNoCutoff = int(modelDefaults["burstNumberCutoffs"][devices[mac]])
-        except KeyError:
-            pass
-        
-        if id not in allIds:
-            nextBurst = [id]
-            allIds.add(id)
-            currentTime = row[1]
-
-            try:
-                for otherRow in unBinned[counter+1:]:
-                    if otherRow[0] not in allIds:
-                        if otherRow[4] == mac and burstTimeInterval > (otherRow[1] - currentTime).total_seconds():
-                            # If less than TIME_INTERVAL away, add to this burst
-                            nextBurst.append(otherRow[0])
-                            # Don't need to look at this one again, it's in this potential burst
-                            allIds.add(otherRow[0])
-                            currentTime = otherRow[1]
-
-                        elif otherRow[4] == mac and burstTimeInterval < (otherRow[1] - currentTime).total_seconds():
-                            if len(nextBurst) > burstPacketNoCutoff:
-                                allBursts.append(nextBurst)
-                            # If same device, but too far away, we can stop, there won't be another burst here
-                            break
-                            # Can't add to considered, might be the start of the next burst
-
-                        elif otherRow[4] != mac:
-                            continue
-                            # If it's a different device, we can't say anything at this point
-            except IndexError:
-                continue     
-
-        else:
-            # If we've considered it we know it was within interval of another packet and so
-            # it's either a valid burst or part of one that is too short
-            continue
-    if len(nextBurst) > burstPacketNoCutoff:
-        allBursts.append(nextBurst)
-
-    # Add each new burst, and add all the packet rows to it
-    for burst in allBursts:
-        newBurstId = DB_MANAGER.insertNewBurst()
-        DB_MANAGER.updatePacketBurstBulk(burst, [newBurstId for _ in range(len(burst))])
-
-def burstPrediction(devices):
-    unCat = DB_MANAGER.getNoCat()
-    cutoffs = modelDefaults["burstNumberCutoffs"]
-    predictor = predictions.Predictor()
-
-    for burst in unCat:
-        rows = DB_MANAGER.getRowsWithBurst(burst[0])
-
-        if len(rows) == 0:
-            continue
-
-        device = devices[rows[0][4]]
-
-        if "Echo" in device and len(rows) > cutoffs["Echo"]:
-            category = predictor.predictEcho(rows)
-        elif "Google" in device:
-            category = predictor.predictGoogle(rows)
-        elif device == "Philips Hue Bridge" and len(rows) > cutoffs[device]:
-            category = predictor.predictHue(rows)
-        else:
-            category = predictor.predictOther(rows)
-
-        # Get the id of this category, and add if necessary
-        newCategoryId = DB_MANAGER.addOrGetCategoryNumber(category)
-
-        # Update the burst with the name of the new category, packets already have a reference to the burst
-        DB_MANAGER.updateBurstCategory(burst[0], newCategoryId)
-
+# gathers data about newly seen ip addresses
 def processGeos():
     global RAW_IPS
+    global RAW_IPS_ID
 
-    if not RAW_IPS:
-        log("Preloading RAW_IPS")
-        RAW_IPS = set( [r[0] for r in DB_MANAGER.execute("SELECT DISTINCT src FROM packets", ())]).union([r[0] for r in DB_MANAGER.execute("SELECT DISTINCT dst FROM packets", ())])
-        log(" Done ", len(RAW_IPS), " known ips ")
-        
+    # update the list of known ips from where we left off last time
+    # new id is gathered before other ops to ensure that no packets are missed
+    try:
+        new_id = DB_MANAGER.execute("select id from packets order by id desc limit 1", ())[0][0]
+    except:
+        new_id = 0
+    for r in DB_MANAGER.execute("select distinct src, id from packets where id > %s", (RAW_IPS_ID,)):
+        RAW_IPS.add(r[0])
+    for r in DB_MANAGER.execute("select distinct dst, id from packets where id > %s", (RAW_IPS_ID,)):
+        RAW_IPS.add(r[0])
+    RAW_IPS_ID = new_id
+    
+    # get a list of ip addresses we've already looked up
     raw_geos = DB_MANAGER.execute("SELECT ip FROM geodata", ())
     known_ips = []
-
     for row in raw_geos:
         known_ips.append(row[0])
 
+    # go through and enrich the rest
     for ip in RAW_IPS:
-        if LOCAL_IP_MASK.match(ip) is not None:
+        if ipaddress.ip_address(ip).is_private:
             # local ip, so skip
             continue
+        
         if ip not in known_ips:
-            data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
-            if data.status_code==200 and data.json()['latitude'] is not '':
-                data = data.json()
-                orgname = '*' + data['organisation'] if istracker(ip) else data['organisation']
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, data['latitude'], data['longitude'], data['country_code'] or data['continent_code'], orgname[:20] or 'unknown'))
-            else:
-                DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s)", (ip, "0", "0", "XX", "unknown"))
-            known_ips.append(ip)
+            lat = '00'
+            lon = '00'
+            country = 'XX'
+            orgname = 'unknown'
+            domain = 'unknown'
+            tracker = False
 
+            # get company info from ipdata
+            try:
+                data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
+                if data.status_code==200 and data.json()['latitude'] is not None:
+                    data = data.json()
+                    tracker = istracker(ip)
+                    orgname = data['organisation'] 
+                    lat = data['latitude']
+                    lon = data['longitude']
+                    country = data['country_code'] or data['continent_code']
+            except:
+                pass
+
+            # make reverse dns call to get the domain
+            res = dns.resolver.Resolver()
+            res.nameservers = ['8.8.8.8', '8.8.4.4']
+            # try:
+            #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+            #     raw_domain = str(dns_ans[0])
+            #     domain = tldextract.extract(raw_domain).registered_domain
+            # except:
+            #     pass
+
+            try:
+                dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
+                raw_domain = str(dns_ans[0])
+                domain = tldextract.extract(raw_domain).registered_domain
+            except:
+               print("Error resolving ip ", ip, " - ", sys.exc_info()[0])
+               pass
+
+
+            # commit the extra info to the database
+            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker))
+            
+            # if orgname and domain: 
+            #     DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
+            # else:
+            #     # TODO what to do here?
+            #     log("No orgname or domain", orgname, domain)
+
+            # bookkeeping
+            known_ips.append(ip)
             log("Adding to known IPs ", ip)
 
+
+# gets manufacturers of new devices and inserts into the database
 def processMacs():
     raw_macs = DB_MANAGER.execute("SELECT DISTINCT mac FROM packets", ())
     known_macs = DB_MANAGER.execute("SELECT mac FROM devices", ())
@@ -165,6 +142,8 @@ def processMacs():
             else:
                 DB_MANAGER.execute("INSERT INTO devices VALUES(%s, 'unknown', %s)", (mac[0], deviceName))
 
+
+# updates RAP_IPS (see processGeos)
 def processEvents():
     global _events
     log("processEvents has ", len(_events), " waiting in queue")
@@ -173,11 +152,18 @@ def processEvents():
     for evt in cur_events:
         evt = json.loads(evt)
         if RAW_IPS and evt["operation"] in ['UPDATE','INSERT'] and evt["table"] == 'packets':
-            RAW_IPS.add(evt["data"]["src"])
-            RAW_IPS.add(evt["data"]["dst"])
+            try:
+                RAW_IPS.add(evt["data"]["src"])
+            except:
+                pass
+            try:
+                RAW_IPS.add(evt["data"]["dst"])
+            except:
+                pass
         pass
     log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
 
+#uses the config tracker list to determine whether an ip address is from a tracker
 def istracker(ip):
     if TRACKERS is None:
         return False
@@ -189,11 +175,13 @@ def istracker(ip):
         return False
     return False
 
+
+# checks to see if any new iptables rules need to be made
 def process_firewall():
     fw = DB_MANAGER.execute("SELECT r.id, r.c_name, b.ip, r.device FROM rules as r LEFT JOIN blocked_ips as b ON r.id = b.rule", ())
     gd = DB_MANAGER.execute("SELECT c_name, ip FROM geodata", ())
 
-    #construct a dict of all ips blocked for each rule
+    # construct a dict of all ips blocked for each rule
     rule_company = dict()
     rule_device = dict()
     rule_ips = dict()
@@ -204,26 +192,29 @@ def process_firewall():
             rule_ips[rule[0]] = set()
         rule_ips[rule[0]].add(rule[2])
 
-    #construct a dict of all known company/ip matchings
+    # construct a dict of all known company/ip matchings
     geos = dict()
     for geo in gd:
         if geo[0] not in geos:
             geos[geo[0]] = set()
         geos[geo[0]].add(geo[1])
 
-    #compare the two
-    for rule, company in rule_company.items():
-        for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
-            DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
-            if sys.platform.startswith("linux"):
+    # compare the two
+    if sys.platform.startswith("linux"):
+        for rule, company in rule_company.items():
+            for ip in geos.get(company, set()) - rule_ips.get(rule, set()):
+                DB_MANAGER.execute("INSERT INTO blocked_ips(ip, rule) VALUES(%s, %s)", (ip, rule))
                 if rule_device[rule] is None:
-                    subprocess.run(["sudo", "iptables", "-A", "INPUT", "-s", ip, "-j", "DROP"])
-                    subprocess.run(["sudo", "iptables", "-A", "OUTPUT", "-d", ip, "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-I", "INPUT", "-s", ip, "-j", "DROP"])
+                    subprocess.run(["sudo", "iptables", "-I", "OUTPUT", "-d", ip, "-j", "DROP"])
                 else:
-                    subprocess.run(["sudo", "iptables", "-A", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
-            else:
-                print(f"ERROR: platform {sys.platform} is not linux - cannot add {ip} to rule {rule}")
+                    subprocess.run(["sudo", "iptables", "-I", "FORWARD", "-d", ip, "-m", "mac", "--mac-source", rule_device[rule], "-j", "DROP"])
+                subprocess.run(["sudo", "dpkg-reconfigure", "-p", "critical", "iptables-persistent"])
+    else:
+        pass
 
+
+# phone home and check for commands
 def beacon():
     global last_beacon
     content = ""
@@ -239,40 +230,43 @@ def beacon():
         except:
             print("Error contacting beacon server")
 
-        #command triggers
+        # command triggers
         if content == "CN":
-            print("remote: opening tunnel")
-            subprocess.run(["ssh", "-R", f"4203:{BEACON_URL}:22", f"wilmor@{BEACON_URL}"])
-        if content == "RB":
+            print("remote: opening secure connection")
+            try:
+                subprocess.run(["ssh", "-i", "~/.ssh/aretha.pem", "-fTN", "-R", f"2500:localhost:22", f"{BEACON_SSH}"], timeout=3600, check=True)
+            except:
+                print("error opening connection")
+        elif content == "RB":
             print("remote: reboot")
-            subprocess.run(["shutdown", "-r", "now"])
-        if content == "RS":
+            try:
+                subprocess.run(["shutdown", "-r", "now"], timeout=120, check=True)
+            except:
+                print("error opening connection")
+        elif content == "RS":
             print("remote: reset service")
-            subprocess.run(["systemctl", "restart", "iotrefine"])
-        if content.startswith("EX"):
-            content = content.strip("EX")
-            content = content.split(";")
-            key = content[0]
-            value = content[1]
-            print(f"remote: set {key} to {value}")
-            DB_MANAGER.execute("UPDATE experiment SET value = %s WHERE name = %s", (key, value))
+            try:
+                subprocess.run(["systemctl", "restart", "iotrefine"], timeout=300, check=True)
+            except:
+                print("error opening connection")
 
-#============
-#loop control
+def refreshView():
+    global LAST_VIEW_REFRESH
+    if LAST_VIEW_REFRESH != datetime.utcnow().minute:
+        DB_MANAGER.execute("refresh materialized view impacts with data", ());
+        LAST_VIEW_REFRESH = datetime.utcnow().minute
+
+
+################
+# loop control #
+################
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s " % CONFIG_PATH)    
     parser.add_argument('--interval', dest="interval", type=float, help="Specify loop interval in sec (can be fractions)")
-    parser.add_argument('--burstify', dest='burst', action="store_true", help='Do packet burstification (Default off)')
-    parser.add_argument('--predict', dest='predict', action="store_true", help='Do burst prediction (Default off)')
     parser.add_argument('--debug', dest='debug', action="store_true", help='Turn debug output on (Default off)')
     args = parser.parse_args()
-
-    # if args.localip is not None:
-    #     localipmask = '^(192\.168|10\.|255\.255\.255\.255|%s).*' % args.localip.replace('.','\.')
-    #     print("Using local IP mask %s" % localipmask)    
-    #     LOCAL_IP_MASK = re.compile(localipmask) #so we can filter for local ip addresses
 
     DEBUG = args.debug    
     CONFIG_PATH = args.config if args.config else CONFIG_PATH
@@ -282,8 +276,6 @@ if __name__ == '__main__':
     CONFIG.read(CONFIG_PATH)
     DB_MANAGER = databaseBursts.dbManager()
     INTERVAL = None
-    ISBURST = None
-    ISPREDICT = None
     ISBEACON = False
     
     if args.interval is not None:
@@ -295,30 +287,41 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(-1)
     
-    if args.burst is not None:
-        ISBURST = args.burst
-    elif "loop" in CONFIG and "burstify" in CONFIG['loop']:
-        ISBURST = CONFIG['loop']['burstify']
-    else:
-        print("Error with [loop]/burstify parameter.")         
-        parser.print_help()
-        sys.exit(-1)
-    
-    if args.predict is not None:
-        ISPREDICT = args.predict
-    elif "loop" in CONFIG and "predict" in CONFIG['loop']:
-        ISPREDICT = CONFIG['loop']['predict']
-    else:
-        print('Error with [loop]/predict parameter')
-        parser.print_help()
-        sys.exit(-1)
-
     if "loop" in CONFIG and "beacon" in CONFIG['loop']:
-        ISBEACON = CONFIG['loop']['beacon']
+        ISBEACON = CONFIG['loop']['beacon'].lower()=='true'
+    else:
+        ISBEACON = False
+
+    if ISBEACON:
+        if not "beacon" in CONFIG: 
+            print("BEACON config section missing")
+            parser.print_help()
+            sys.exit(-1)
+
         if "url" in CONFIG['beacon']:
             BEACON_URL = CONFIG['beacon']['url']
+        else:
+            print('config.BEACON missing URL')
+            sys.exit(-1)
+
+        if 'endpoint' in CONFIG['beacon']:
             BEACON_ENDPOINT = CONFIG['beacon']['endpoint']
+        else:
+            print('config.BEACON missing endpoint')
+            sys.exit(-1)
+
+        if 'key' in CONFIG['beacon']:
             BEACON_KEY = CONFIG['beacon']['key']
+        else:
+            print("config.BEACON missing key")
+            sys.exit(-1)
+        
+        if 'ssh' in CONFIG['beacon']:
+            BEACON_SSH = CONFIG['beacon']['ssh']
+        else:
+            print("config.BEACON missing ssh")
+            sys.exit(-1)
+        
         if "interval" in CONFIG['beacon']:
             BEACON_INTERVAL = int(CONFIG['beacon']['interval'])
         else:
@@ -339,12 +342,9 @@ if __name__ == '__main__':
 
     running = [True]
 
-    # note that this creates a *second* datbaseconnection
+    # note that this creates a *second* datbase connection
     listener_thread_stopper = databaseBursts.dbManager().listen('db_notifications', lambda payload:_events.append(payload))
     
-    # Thread unsafe: 
-    # listener_thread_stopper = DB_MANAGER.listen('db_notifications', lambda payload:_events.append(payload))
-
     sys.stdout.write("Loading trackers file...")
     try:
         with open(IOTR_BASE + CONFIG['loop']['trackers']) as trackers_file:
@@ -362,26 +362,21 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, shutdown)
     signal.signal(signal.SIGTERM, shutdown)
 
-    #loop through categorisation tasks
+    # loop through categorisation tasks
     while(running[0]):
         log("Awake!");
-        processEvents()
-        if running[0]:             
+        if running[0]:
+            processEvents()
+        if running[0]:
+            refreshView()
+        if running[0]:
             processGeos()
-        if running[0]:             
-            processMacs()        
-        if running[0] and ISBURST:
-            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
-            print("Doing burstification")
-            packetBurstification(devices)
-        if running[0] and ISPREDICT:
-            devices = requests.get(url=DEVICES_API_URL).json()["manDev"]
-            print("Doing prediction")
-            burstPrediction(devices)
+        if running[0]:
+            processMacs()
         if running[0]:
             process_firewall()
-        if running[0] and ISBEACON:
+        if ISBEACON == True and running[0]:
             beacon()
-        if running[0]:             
+        if running[0]:
             log("sleeping zzzz ", INTERVAL);
             time.sleep(INTERVAL)

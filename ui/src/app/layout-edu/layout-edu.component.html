@@ -1,0 +1,27 @@
+<div class="root">
+	<div [ngSwitch]="content" class="gridleft">
+    	<app-content-s1 *ngSwitchCase="'S1'" [stage]="stage"></app-content-s1>
+    	<app-content-s2 *ngSwitchCase="'S2'" [stage]="stage"></app-content-s2>
+    	<app-content-s3 *ngSwitchCase="'S3'" [stage]="stage"></app-content-s3>
+    	<app-content-b1 *ngSwitchCase="'B1'" [stage]="stage"></app-content-b1>
+    	<app-content-b2 *ngSwitchCase="'B2'" [stage]="stage"></app-content-b2>
+    	<app-content-b3 *ngSwitchCase="'B3'" [stage]="stage"></app-content-b3>
+    	<app-content-b4 *ngSwitchCase="'B4'" [stage]="stage"></app-content-b4>
+    	<app-content-d1 *ngSwitchCase="'D1'" [stage]="stage"></app-content-d1>
+    	<app-content-d2 *ngSwitchCase="'D2'" [stage]="stage"></app-content-d2>
+    	<app-content-d3 *ngSwitchCase="'D3'" [stage]="stage"></app-content-d3>
+    	<app-content-d4 *ngSwitchCase="'D4'" [stage]="stage"></app-content-d4>
+    	<app-content-sd1 *ngSwitchCase="'SD1'" [stage]="stage"></app-content-sd1>
+    	<p *ngSwitchDefault>
+        	You're all up to date! Check back soon for more content.
+    	</p>
+	</div>
+	<div class="gridright">
+		<app-geomap *ngIf="content === 'B4'
+			|| content === 'D2' 
+			|| content === 'D3' 
+			|| content === 'D4'
+			" [impacts]="impacts" [geodata]="geodata" [showLegend]='false'></app-geomap>
+		<app-example [text]="text"></app-example>
+	</div>
+</div>

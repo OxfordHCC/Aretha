@@ -1,4 +1,4 @@
-<div class="main">
+<div class="refinebar main">
     <div class="mode-options" [hidden]='!showModes'>
         <!-- <a [ngClass]="{active: timeSpan=='d'}" (click)='timeSpan="d"'> Yesterday </a>
         <a [ngClass]="{active: timeSpan=='w'}" (click)='timeSpan="w"'> Last Week </a>
@@ -6,4 +6,9 @@
         <span *ngIf="_companyHovering"> {{ _companyHovering.id }} </span>
     </div>
     <svg #thing></svg>
+</div>
+<div>
+	(+{{this.popCount}})
+	<button mat-button (click)="popCompany()">&#60;-</button>
+	<button mat-button (click)="pushCompany()">-&#62;</button>
 </div>

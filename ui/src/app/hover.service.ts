@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { APIAppInfo, CompanyInfo } from 'app/loader.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
 import { ActivityLogService } from "app/activity-log.service";
 
 export type HoverTarget = string;
@@ -15,7 +13,7 @@ export class HoverService {
   }
 
   hoverChanged(target: HoverTarget) {
-    //this.actlog.log('hover-app', target && target.app || 'unhover');    
+    this.actlog.log('hover-app', target || 'unhover');
     this.HoverChangedSource.next(target);
   }
   clearState() {

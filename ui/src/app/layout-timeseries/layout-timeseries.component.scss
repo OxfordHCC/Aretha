@@ -1,0 +1,101 @@
+.root {
+    position: absolute;
+    // border:5px solid green;
+    left:0px; right:0px; bottom: 0px; top: 55px;
+    // padding: 20px 20px 20px 20px; 
+    // big left to accommodate infobox - no infobox anymore, so small
+    display:flex;
+    flex-direction:row;
+    align-items:stretch;
+    .gridleft {
+        flex-grow: 1;
+        flex-basis: 70%;
+		flex-shrink: 0;
+        // padding: 10px 10px 10px 10px;
+        padding:0px;
+        border-right:1px solid #eee;
+        
+        display:flex;
+        flex-direction:column;
+        align-items:stretch;
+        // app-timeseries, /deep/ div.tscompmain { 
+        app-timeseries {
+            flex-grow:1;
+            flex-basis:70%;
+            &.overview {
+                flex-grow:0;
+                flex-basis:30%;
+            }            
+            // border:1px solid yellow;
+            margin:0px 0px 5px 0px; 
+            padding:0px;
+
+        }
+        .date-select-bar{
+            display:flex;
+            flex-direction:row;
+            padding:10px 20px;
+            // border:1px solid #aef;
+            font-size:14pt;
+            .enders {
+                flex-grow:1;
+            }
+            button {
+                border:none;
+                flex-grow:0;
+                font-size:18pt;
+            }
+            .datetext {
+                padding:10px 0px;
+                flex-grow:0;
+                min-width:500px;
+                text-align:center;
+            }
+        }
+    }
+    .gridright {
+        display:none;
+        flex-direction:column;    
+        height: 100%;
+        flex-grow: 0;
+        align-items: stretch;
+        // padding: 20px 20px 20px 10px;
+        padding: 30px;
+    }
+    .loading {
+        position:absolute;
+        left:0px; right:0px;
+        top:200px;
+        bottom:200px;
+    }
+}
+
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    background-color: #aef;
+  
+    margin: 100px auto;
+    -webkit-animation: sk-rotateplane 1.2s infinite ease-in-out;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+  }
+  
+  @-webkit-keyframes sk-rotateplane {
+    0% { -webkit-transform: perspective(120px) }
+    50% { -webkit-transform: perspective(120px) rotateY(180deg) }
+    100% { -webkit-transform: perspective(120px) rotateY(180deg)  rotateX(180deg) }
+  }
+  
+  @keyframes sk-rotateplane {
+    0% { 
+      transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+      -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg) 
+    } 50% { 
+      transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+      -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg) 
+    } 100% { 
+      transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+      -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    }
+  }

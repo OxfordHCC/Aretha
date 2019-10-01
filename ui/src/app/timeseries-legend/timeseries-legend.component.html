@@ -1,0 +1,9 @@
+<div class="htmllegend">
+  <div class="title">{{ title }}</div>
+  <div class="categories">
+    <div *ngFor="let cat of allcats" [ngClass]="catstyles[cat]">
+      <div *ngIf="cat" class="cat_title">{{cat}}</div>
+      <div *ngFor="let el of by_cat[cat]" [ngClass]="{'el':true, 'hovering':hovering && el==hovering, 'hoveringnot':hovering && el!==hovering}" (mouseenter)="mouseEnter(el)" (mouseleave)="mouseLeave(el)" (click)="mouseClicked(el)"><div class="square" [style.background-color]="colours[el]"></div> {{ namemap ? namemap[el] : el }}</div>
+    </div>
+  </div>
+</div>

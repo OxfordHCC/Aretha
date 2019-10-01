@@ -1,0 +1,43 @@
+<div class="root">
+	<div class="gridleft">
+		<div class="loading" *ngIf="isLoading">
+			<div class='spinner'></div>
+		</div>		
+		<div class="date-select-bar">
+				<div class="enders"></div>
+				<button (click)="setEndDateOffset(-overviewSpanDays)">&lt;</button>
+				<div class='datetext'>{{ startDateStr }}  - {{ endDateStr }}</div>
+				<button [disabled]='endDateToday' (click)="setEndDateOffset(+overviewSpanDays)">&gt;</button>
+				<div class="enders"></div>			
+		</div>					
+		<app-timeseries 
+			class='overview' 
+			[showLegend]='true' 
+			[impacts]="impacts" 
+			[geodata]="geodata" 
+			[impactChanges]="impactChanges" 
+			[devices]='devices' 
+			[showtimeselector]="true" 
+			(selectedTimeChanged)="timeSelected($event)"
+			legendtitle='Devices'
+			(legendClicked)="selectDevice($event)"></app-timeseries>
+		<app-timeseries 
+			class='zoomed' 
+			[byDestination]='true' 
+			[showLegend]="true" 
+			[impacts]="zoomed_impacts" 
+			[impactChanges]="impactChanges" 
+			[geodata]="geodata" 
+		[companydb]="companydb"
+			[adsdb]='adsdb'
+			[devices]='devices' 
+			[showtimeselector]="false"
+			[detailedTicks]="true"
+			legendtitle='Data Controllers'
+			(legendClicked)="selectCompany($event)"></app-timeseries>
+	</div>
+	<div class="gridright">
+		<app-name-device></app-name-device>
+	</div>
+	<app-company-info-dialog *ngIf="showCompanyInfo" [company]='showCompanyInfo' (close)='closeCompanyInfo()'></app-company-info-dialog>
+</div>

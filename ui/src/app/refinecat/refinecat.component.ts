@@ -1,13 +1,11 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
-import { AppUsage } from '../usagetable/usagetable.component';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
-import { HoverService, HoverTarget } from "app/hover.service";
+import { HoverService} from "app/hover.service";
 import * as moment from 'moment';
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
+import { Http, HttpModule} from '@angular/http';
 
 interface AppImpactCat {
   appid: string;
@@ -36,13 +34,8 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
 
   private data: BurstData[];
   private init: Promise<any>;
-  lastMax = 0;
-  _byTime = 'yes';
-  normaliseImpacts = false;
 
   apps: string[]; // keeps app ordering between renders
-
-  // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
 
   // incoming attribute
   // @Input('appusage') usage_in: AppUsage[];
@@ -53,8 +46,6 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
   @Input() showXAxis = true;
 
   @Input() scale = false;
-  vbox = { width: 700, height: 1024 };
-  highlightColour = '#FF066A';
 
   _companyHovering: CompanyInfo;
   _hoveringApp: string;
@@ -68,7 +59,6 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
     private http: Http, 
     private el: ElementRef,
     private loader: LoaderService,
-    private hostutils: HostUtilsService,
     private focus: FocusService,
     private hover: HoverService) {
     this.init = Promise.all([
@@ -109,8 +99,8 @@ export class RefinecatComponent implements AfterViewInit, OnChanges {
   }
 
 getIoTData(): void {
-    this.loader.getIoTData().then( bundle => {
-        this.data = bundle.bursts;
+    this.loader.getIoTData(new Date(0),new Date(),0).then( bundle => {
+		//this.data = bundle.bursts;
         console.log('refinecat.component data is ', this.data);
         this.render('','timeseries'.toString(),this.data,false);
     });

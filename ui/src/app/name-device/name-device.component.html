@@ -1,0 +1,14 @@
+<h3>Rename Devices</h3>
+
+<mat-form-field>
+  <mat-label>Current Device Name</mat-label>
+  <mat-select [(ngModel)]="chosen">
+    <mat-option *ngFor="let device of this.devices" [value]="device.mac">
+      {{device.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<textarea matInput placeholder="New Name" [(ngModel)]="newName"></textarea>
+  
+<button mat-button (click)="rename()">Rename</button>

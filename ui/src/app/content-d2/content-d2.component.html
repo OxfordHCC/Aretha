@@ -1,0 +1,47 @@
+<h3>How does online advertising work?</h3>
+
+<div [ngSwitch]="stage">
+
+  <div *ngSwitchCase="1">
+    <h4>Recap:</h4>
+
+    <p>Remember the different uses of data. One of them was advertising, and you probably have experienced some situations in which adverts felt awkwardly related to something you had searched for before. This session will explain how that might work in a little more detail.</p>
+  </div>
+
+  <div *ngSwitchCase="2">
+    <p>Have you ever noticed that you were being tracked online (e.g. shopping ads following you around the web)? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="preResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+	
+	<div *ngSwitchCase="3">
+		<p>Imagine you watched Toy Story with your kids on Amazon Prime, and the next day you see adverts for kids toys on your Amazon account. Or maybe you were given a smart outlet for christmas that connects to your existing Amazon Alexa, after which Amazon started offering you deals on smart light bulbs. </p>
+
+		<p>Advertising is the main business model financing media production on the open web, and the drive to increase revenue by targeting ads to selected users has led to the creation of a plethora of companies dedicated to monitoring our clicks, searches, and reading habits as we move around the Internet. These small amounts of information seem worthless on their own, but companies use them to build models about you that can infer your gender, ethnicity, religion, sexual preferences, and health. In many cases, these models are also used to predict when you’re going through major life events, such as graduation or pregnancy, as these are when you’re most vulnerable to the creation of new shopping habits.</p>
+
+		<iframe height="315" src="https://www.youtube.com/embed/6EHSlhnE6Ck" width="560"></iframe>
+	</div>
+
+	<div *ngSwitchCase="4">
+		<p>Was anything here new to you? (200 characters)</p>
+
+		<mat-form-field>
+			<textarea matInput maxlength="200" #input [(ngModel)]="postResponse"></textarea>
+			<mat-hint align="end">{{input.value?.length || 0}}/200</mat-hint>
+		</mat-form-field>
+	</div>
+
+  <div *ngSwitchCase="5">
+    <p>Great, all done! Check back soon for more.</p>
+  </div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

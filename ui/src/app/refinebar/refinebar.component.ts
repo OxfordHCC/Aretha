@@ -1,30 +1,14 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, ViewChild, ElementRef, AfterViewInit, ViewEncapsulation, EventEmitter, Output, HostListener, NgZone } from '@angular/core';
-import { LoaderService, App2Hosts, String2String, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
-import { AppUsage } from '../usagetable/usagetable.component';
+import { Component, Input, OnChanges, SimpleChanges, ElementRef, AfterViewInit, ViewEncapsulation, HostListener, NgZone } from '@angular/core';
+import { LoaderService, CompanyInfo, CompanyDB, APIAppInfo } from '../loader.service';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import { HostUtilsService } from 'app/host-utils.service';
 import { FocusService } from 'app/focus.service';
-import { HoverService, HoverTarget } from "app/hover.service";
-import { Http, HttpModule, Headers, URLSearchParams } from '@angular/http';
-import { Observable } from '../../../node_modules/rxjs/Observable';
-import { Observer } from '../../../node_modules/rxjs/Observer';
-import { Subscription } from '../../../node_modules/rxjs/Subscription';
-
-const LOCAL_IP_MASK_16 = "192.168.";
-const LOCAL_IP_MASK_24 = "10.";
-
-export interface AppImpact {
-  appid: string;
-  companyid: string;
-  impact: number;
-  companyName: string;
-};
-export interface AppDevice {
-  mac : string;
-  manufacturer: string;
-  name: string;
-}
+import { HoverService} from "app/hover.service";
+import { Http, HttpModule} from '@angular/http';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
+import { DeviceImpact, GeoData, Device } from '../loader.service';
+import {CompanyInfoService} from "../company-info.service";
 
 @Component({
   selector: 'app-refinebar',
@@ -32,339 +16,339 @@ export interface AppDevice {
   styleUrls: ['./refinebar.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
+
 export class RefinebarComponent implements AfterViewInit, OnChanges {
-  // refactor to get rid of -- 
-  // app2hosts: App2Hosts;
-  // host2companyid: String2String;
-  // host2short: String2String;
+  	// still in use!
+  	companyid2info: CompanyDB;
 
-  // still in use!
-  companyid2info: CompanyDB;
-
-  @Input() impacts: AppImpact[];
-  @Input() impactChanges : Observable<any>;
-  // private impacts: AppImpact[];
+	@Input() impacts: DeviceImpact[];
+	@Input() geodata: GeoData[];
+	@Input() impactChanges : Observable<any>;
+  	@Input('devices') devices_in :Device[];
+  	_devices: Device[];
   
-  private init: Promise<any>;
-  lastMax = 0;
-  // _timeSpan = 'd';
-  // _byTime = 'yes';
-  normaliseImpacts = false;
+  	private init: Promise<any>;
+  	lastMax = 0;
 
-  apps: string[]; // keeps app ordering between renders
+    // incoming attribute
+  	@Input() showModes = true;
+  	@Input() highlightApp: APIAppInfo;
+  	@Input() showLegend = true;
+  	@Input() showTypesLegend = false;
+  	@Input() showXAxis = true;
+  	@Input() scale = false;
+	@Input() maxCompanies = 20;
+	popCount = 0;
 
-  // @ViewChild('thing') svg: ElementRef; // this gets a direct el reference to the svg element
+  	vbox = { width: 700, height: 1024 };
+  	_hoveringType: string;
+  	_companyHovering: CompanyInfo;
+  	_hoveringApp: string;
+  	_ignoredApps: string[];
+  	_impact_listener : Subscription;
 
-  // incoming attribute
-  // @Input('appusage') usage_in: AppUsage[];
-  @Input() showModes = true;
-  @Input() highlightApp: APIAppInfo;
-  @Input() showLegend = true;
-  @Input() showTypesLegend = false;
-  @Input() showXAxis = true;
-  @Input('devices') devices_in :({[mac: string]: string});
-  _devices: ({[mac: string]: string}) = {};
+	constructor(private httpM: HttpModule, 
+    	private http: Http, 
+    	private el: ElementRef,
+    	private loader: LoaderService,
+    	private focus: FocusService,
+    	private hover: HoverService,
+		private info: CompanyInfoService,
+    	private zone:NgZone) {
   
+    	this.init = Promise.all([
+      		this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
+    	]);
 
-  @Input() scale = false;
-  linear = false;
-  vbox = { width: 700, height: 1024 };
-  highlightColour = '#FF066A';
+    	hover.HoverChanged$.subscribe((target) => {
+      		if (target !== this._hoveringApp) {
+        		this._hoveringApp = target ? target as string : undefined;
+        		this.render();
+      		}
+		});
 
-  _hoveringType: string;
-  _companyHovering: CompanyInfo;
-  _hoveringApp: string;
-  _ignoredApps: string[];
-  _impact_listener : Subscription;
+    	this._ignoredApps = [];
 
+    	focus.focusChanged$.subscribe((target) => {
+      		if (target !== this._ignoredApps) {
+        		this._ignoredApps = target ? target as string[] : [];
+        		this.render();
+      		}
+    	});
 
-  
+    	this.loader.asyncDeviceChanges().subscribe(devices => {
+        	console.info(` ~ device name update ${devices.length} devices`);                
+        	devices.map( d => { 
+          		console.info(`adding mac::name binding ${d.mac} -> ${d.nickname}`);
+          		this._devices[d.mac] = d.name; 
+        	});
+        	this.render();
+    	});  
+  	}
+	
+	getSVGElement() {
+    	const nE: HTMLElement = this.el.nativeElement;
+    	return Array.from(nE.getElementsByTagName('svg'))[0];
+  	}
 
-  constructor(private httpM: HttpModule, 
-    private http: Http, 
-    private el: ElementRef,
-    private loader: LoaderService,
-    private hostutils: HostUtilsService,
-    private focus: FocusService,
-    private hover: HoverService,
-    private zone:NgZone) {
-  
-    this.init = Promise.all([
-      this.loader.getCompanyInfo().then((ci) => this.companyid2info = ci),
-    ]);
+  	addOrRemove(newClick: string): string[] {
+    	// console.log(this._ignoredApps);
+    	if (this._ignoredApps.indexOf(newClick) > -1) {
+      		this._ignoredApps = this._ignoredApps.filter(obj => obj !== newClick);
+    	} else {
+      		this._ignoredApps.push(newClick);
+    	}
+    	this.render();
+    	return this._ignoredApps
+  	}
 
-    hover.HoverChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._hoveringApp) {
-        this._hoveringApp = target ? target as string : undefined;
-        this.render();
-      }
-    });
+  	wrap(text, width) {
+    	text.each(function() {
+      		var text = d3.select(this),
+          		words = text.text().split(/\s+/).reverse(),
+          		word,
+          		line = [],
+          		lineNumber = 0,
+          		lineHeight = 1.1, // ems
+          		y = text.attr("y"),
+          		dy = parseFloat(text.attr("dy")),
+          		tspan = text.text(null).append("tspan")
+          		.style('text-anchor', 'end').attr("x", 0).attr("y", y).attr("dy", dy + "em");
+      		while (word = words.pop()) {
+        		line.push(word);
+        		tspan.text(line.join(" "));
+        		if (tspan.node().getComputedTextLength() > width) {
+          			line.pop();
+          			tspan.text(line.join(" "));
+          			line = [word];
+          			tspan = text.append("tspan")
+          			.style('text-anchor', 'end').attr("x", -20).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+        		}
+      		}
+    	});
+  	}
+	
+  	// this gets called when this.usage_in changes
+  	ngOnChanges(changes: SimpleChanges): void {
+		var this_ = this;
+    	if (this.impactChanges && this._impact_listener === undefined) { 
+      		this._impact_listener = this.impactChanges.subscribe(() => {
+        		this.zone.run(() => this_.render());
+      		});	
+			if (this.impacts) {
+        		this_.render();
+      		}
+    	}
+    	if (this.devices_in) { this._devices = Object.assign({}, this.devices_in);}	
+		this.init.then(() => { this.render(); });
+  	}
 
-    this._ignoredApps = new Array();
+  	ngAfterViewInit(): void { this.init.then(() => this.render()); }
 
-    focus.focusChanged$.subscribe((target) => {
-      // console.log('hover changed > ', target);
-      if (target !== this._ignoredApps) {
-        this._ignoredApps = target ? target as string[] : [];
-        this.render();
-      }
-    });
-
-    this.loader.asyncDeviceChanges().subscribe(devices => {
-        console.info(` ~ device name update ${devices.length} devices`);                
-        devices.map( d => { 
-          console.info(`adding mac::name binding ${d.mac} -> ${d.name}`);
-          this._devices[d.mac] = d.name; 
-        });
-        this.render();
-    });  
-    
-    // (<any>window)._rb = this;
-  }
-  getSVGElement() {
-    const nE: HTMLElement = this.el.nativeElement;
-    return Array.from(nE.getElementsByTagName('svg'))[0];
-  }
-
-  addOrRemove(newClick: string): string[] {
-    // console.log(this._ignoredApps);
-    if (this._ignoredApps.indexOf(newClick) > -1) {
-      this._ignoredApps = this._ignoredApps.filter(obj => obj !== newClick);
-    } else {
-      this._ignoredApps.push(newClick);
-    }
-    // console.log(this._ignoredApps);
-    this.render()
-    return this._ignoredApps
-  }
-
-  wrap(text, width) {
-    text.each(function() {
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan")
-          .style('text-anchor', 'end').attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while (word = words.pop()) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan")
-          .style('text-anchor', 'end').attr("x", -20).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-        }
-      }
-    });
-  }
-  // TODO 
-  // this gets called when this.usage_in changes
-  ngOnChanges(changes: SimpleChanges): void {
-    // console.info("refinebar - ngOnChanges ", this.impacts, this.impactChanges); 
-    var this_ = this;
-    if (this.impactChanges && this._impact_listener === undefined) { 
-      this._impact_listener = this.impactChanges.subscribe(target => {
-        // console.info("Got notification of impact changes! re-rendering");
-        this.zone.run(() => this_.render());
-      });
-      if (this.impacts) {
-        this_.render();
+  	setHoveringTypeHighlight(ctype: string) {
+    	let svg = this.getSVGElement();
+    	this._hoveringType = ctype;
+    	d3.select(svg).selectAll('rect.back').classed('reveal', false);
+    	d3.select(svg).selectAll('.ctypelegend g').classed('selected', false);
+    	if (ctype) {
+      		d3.select(svg).selectAll('rect.back.' + ctype).classed('reveal', true);
+      		d3.select(svg).selectAll('.ctypelegend g.' + ctype).classed('selected', true)
       }
     }
-    if (this.devices_in) { 
-      this._devices = Object.assign({}, this.devices_in);
-    }
-    // this.render();
-    this.init.then(() => { this.render(); });
-  }
-
-  ngAfterViewInit(): void { this.init.then(() => this.render()); }
-
-  private _getApp(appid: string): Promise<APIAppInfo> {
-    return this.loader.getCachedAppInfo(appid) && Promise.resolve(this.loader.getCachedAppInfo(appid))
-      || this.loader.getFullAppInfo(appid);
-  }
-
-  nonLinearity(v):number {
-    return this.linear ? v : Math.max(0, 5000*Math.log(v) + 10);
-  }
-
-  setHoveringTypeHighlight(ctype: string) {
-    let svg = this.getSVGElement();
-    this._hoveringType = ctype;
-    d3.select(svg).selectAll('rect.back').classed('reveal', false);
-    d3.select(svg).selectAll('.ctypelegend g').classed('selected', false)
-    if (ctype) {
-      d3.select(svg).selectAll('rect.back.' + ctype).classed('reveal', true);
-      d3.select(svg).selectAll('.ctypelegend g.' + ctype).classed('selected', true)
-    };
-  }
-  // this is for displaying what company you're hovering on based 
-  // on back rects
-  _companyHover(company: CompanyInfo, hovering: boolean) {
-    this._companyHovering = hovering ? company : undefined;
-  }
 
   @HostListener('mouseenter')
-  mouseEnter() {
-    // this.actlog.log('mouseenter', 'refinebar');
-  }
+  	mouseEnter() { /*this.actlog.log('mouseenter', 'refinebar'); */ }
 
-  @HostListener('mouseleave')
-  mouseLv() {
-    // this.actlog.log('mouseleave', 'refinebar');
-  }  
+	@HostListener('mouseleave')
+	mouseLv() { /*this.actlog.log('mouseleave', 'refinebar');*/ }  
 
-  setHoveringApp(s: string) {
-    if (this._hoveringApp !== s) {
-      this._hoveringApp = s;
-      this.render();
-    }
-  }
-  // 
-  render() {
-    // console.log(':: render usage:', this.usage && this.usage.length);
+	setHoveringApp(s: string) {
+    	if (this._hoveringApp !== s) {
+      		this._hoveringApp = s;
+      		this.render();
+    	}
+  	}
+
+	// used by the graph controls to pop companies off the end of the graph
+	popCompany() {
+		this.popCount++;
+		this.render();
+	}
+
+	// ...and then return them later
+	pushCompany() {
+		this.popCount = Math.max(0, this.popCount - 1);
+		this.render();
+	}
+	
+  	render() {
+
+		const svgel = this.getSVGElement();
+    	if (!svgel || this.impacts === undefined ) { 
+      		console.info('refinebar: impacts undefined, chilling');
+      		return; 
+    	}
+
+    	let rect = svgel.getBoundingClientRect(),
+      		width_svgel = Math.round(rect.width - 5),
+      		height_svgel = Math.round(rect.height - 5),
+      		svg = d3.select(svgel);
+
+    	if (!this.scale) {
+      		svg.attr('width', width_svgel)
+        	.attr('height', height_svgel);
+    	} else {
+      		svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
+        		.attr('virtualWidth', this.vbox.width)
+        		.attr('virtualHeight', this.vbox.height)
+        		.attr('preserveAspectRatio', 'none'); //  "xMinYMin meet")
+      		width_svgel = this.vbox.width;
+      		height_svgel = this.vbox.height;
+    	}
+
+    	svg.selectAll('*').remove();
+
+      	let devices = _.uniq(this.impacts.map((dev) => dev.device));
+		let companies = _.uniq(this.geodata.map((com) => com.company_name));
+		let compiled_impacts = [];
+
+		// compile impacts for device/ip pairs into device/company pairs
+		companies.forEach((comp) => {
+    		let addresses = this.geodata.filter((c) => comp === c.company_name);
+			let impacts = this.impacts.filter((i) => addresses.map((a) => a.ip).indexOf(i.company) !== -1);
+			devices.forEach((dev) => {
+				let total = impacts.filter((i) => i.device === dev).reduce(function(i, j) {
+				  return i + j.impact
+        		}, 0);
+				if (total > 0) {
+					compiled_impacts.push({
+						"company": comp,
+						"device": dev,
+						"impact": total
+					});
+				}
+			});
+		});
+
+		// compile the above per company (with a total and per device impact) for stacked bars
+		let impacts = compiled_impacts.filter(obj => this._ignoredApps.indexOf(obj.device) === -1 ),
+      		get_impact = (company, device) => {
+        		const t = compiled_impacts.filter((imp) => imp.company === company && imp.device === device);
+        		const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
+        		return t !== undefined ? t.reduce(reducer, 0) : 0;
+      		},
+      		by_company = companies.map((c) => ({
+        		company: c,
+        		total: devices.reduce((total, dev) => total += get_impact(c, dev), 0),
+        		..._.fromPairs(devices.map((dev) => [dev, get_impact(c, dev)]))
+      		}));
+
+		devices.sort();
+    	by_company.sort((c1, c2) => c2.total - c1.total);
+
+		// fold smaller companies into an "other" category to avoid cluttering the graph
+		if (by_company.length > this.maxCompanies) {
+			let cutoffIndex = Math.min(by_company.length - 1, this.maxCompanies + this.popCount - 1);
+			let cutoff = by_company[cutoffIndex].total;
+			let companyFolded = [];
+			let otherTotal = 0;
+			let popedCount = 0;
+			by_company.forEach((impact) => {
+				// we need to pop more companies
+				// console.log("count is " + this.popCount)
+				if (popedCount < this.popCount) {
+					popedCount++;
+					// console.log("skipping " + impact.company);
+				} else {
+					if (impact.total >= cutoff) {
+				  		companyFolded.push(impact);
+					} else {
+						  otherTotal += impact.total; 
+						//   console.log("OPUSG");
+					}
+				}
+			});
+			companyFolded.push({"company": "Other", "total": otherTotal});
+			by_company = companyFolded;
+		}
+
+		// update companies to reflect the reduced company list
+		companies = by_company.map((com) => com.company);
+
+    	const stack = d3.stack(),
+      	out = stack.keys(devices)(by_company),
+      	margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
+      	width = width_svgel - margin.left - margin.right, 
+      	height = height_svgel - margin.top - margin.bottom;
+
+    	if (height < 0 || width < 0) {
+      		console.error('height ', height, 'width ', width, 'exiting ');
+      		// return
+    	}
     
-    const svgel = this.getSVGElement();
+    	let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
+			x = d3.scaleBand()
+        		.rangeRound([0, width]).paddingInner(0.05).align(0.1)
+        		.domain(companies),
+      		d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
+      		ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
+      		this_ = this;
 
-    if (!svgel || this.impacts === undefined ) { 
-      console.info('render(): impacts undefined, chilling');
-      return; 
-    }
-    // console.info("render :: ", this.impacts);
+    	if (d3maxx < 0.7 * ymaxx) {
+      		ymaxx = 1.1 * d3maxx;
+    	}
 
-    let rect = svgel.getBoundingClientRect(),
-      width_svgel = Math.round(rect.width - 5),
-      height_svgel = Math.round(rect.height - 5),
-      svg = d3.select(svgel);
+		let y = d3.scaleLinear()
+     		.rangeRound([height, 0])
+      		.domain([1, ymaxx]).nice(),
+      	z = d3.scaleOrdinal(d3.schemeCategory10)
+        	.domain(devices);
 
-    if (!this.scale) {
-      svg.attr('width', width_svgel)
-        .attr('height', height_svgel);
-    } else {
-      svg.attr('viewBox', `0 0 ${this.vbox.width} ${this.vbox.height}`)
-        .attr('virtualWidth', this.vbox.width)
-        .attr('virtualHeight', this.vbox.height)
-        .attr('preserveAspectRatio', 'none') //  "xMinYMin meet")
-      width_svgel = this.vbox.width;
-      height_svgel = this.vbox.height;
-    }
-
-    svg.selectAll('*').remove();
-
-    let impacts = this.impacts.filter(obj => this._ignoredApps.indexOf(obj.appid) === -1 ),
-      apps = _.uniq(impacts.map((x) => x.appid)),
-      companies = _.uniq(impacts.map((x) => x.companyName)),
-      get_impact = (cid, aid) => {
-        const t = impacts.filter((imp) => imp.companyName === cid && imp.appid === aid);
-        const reducer = (accumulator, currentValue) => accumulator + currentValue.impact;
-        return t !== undefined ? t.reduce(reducer, 0) : 0;
-      },
-      by_company = companies.map((c) => ({
-        company: c,
-        total: apps.reduce((total, aid) => total += get_impact(c, aid), 0),
-        ..._.fromPairs(apps.map((aid) => [aid, get_impact(c, aid)]))
-      }));
-
-    apps.sort();
-    // if (this.apps === undefined) {
-    //   // sort apps
-    //   apps.sort((a, b) => _.filter(usage, { appid: b })[0].mins - _.filter(usage, { appid: a })[0].mins);
-    //   this.apps = apps;
-    // } else {
-    //   apps = this.apps;
-    // }
-
-    by_company.sort((c1, c2) => c2.total - c1.total); // apps.reduce((total, app) => total += c2[app], 0) - apps.reduce((total, app) => total += c1[app], 0));
-
-    // re-order companies
-    companies = by_company.map((bc) => bc.company);
-
-    const stack = d3.stack(),
-      out = stack.keys(apps)(by_company),
-      margin = { top: 20, right: 20, bottom: this.showXAxis ? 160 : 0, left: 50 },
-      width = width_svgel - margin.left - margin.right, // +svg.attr('width') - margin.left - margin.right,
-      height = height_svgel - margin.top - margin.bottom; // +svg.attr('height') - margin.top - margin.bottom,
-
-    if (height < 0 || width < 0) {
-      console.error('height ', height, 'width ', width, 'exiting ');
-      // return
-    }
-    
-    let g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')'),
-      x = d3.scaleBand()
-        .rangeRound([0, width]).paddingInner(0.05).align(0.1)
-        .domain(companies),
-      d3maxx = d3.max(by_company, function (d) { return d.total; }) || 0,
-      ymaxx = this.lastMax = Math.max(this.lastMax, d3maxx),
-      this_ = this;
-
-    if (d3maxx < 0.7 * ymaxx) {
-      ymaxx = 1.1 * d3maxx;
-    }
-
-    let y = d3.scaleLinear()
-      .rangeRound([height, 0])
-      .domain([0, ymaxx]).nice(),
-      z = d3.scaleOrdinal(d3.schemeCategory20)
-        .domain(apps);
-
-    var self = this;
+    	var self = this;
 
     g.selectAll('rect.back')
       .data(companies)
       .enter().append('rect')
-      .attr('class', (company) => 'back ' + company) // + this.companyid2info.get(company).typetag)
+      .attr('class', (company) => 'back ' + company) 
       .attr('x', (company) => x(company))
       .attr('y', 0)
       .attr('height', height)
-      .attr('width', x.bandwidth())
-      .on('click', (d) => this.focus.focusChanged(d)) // this.focus.focusChanged(this.companyid2info.get(d)))
-      .on('mouseenter', (d) => self.setHoveringApp(undefined)) // this._companyHover(this.companyid2info.get(d), true))
-      .on("mouseleave", (d) => {return}); // this._companyHover(this.companyid2info.get(d), false));
+	  .attr('width', x.bandwidth())
+      .on('click', (d) => this.focus.focusChanged(d)) 
+      .on('mouseenter', () => self.setHoveringApp(undefined))
+      .on("mouseleave", () => {return});
 
     // main rects
-
     var self = this;
-    
-    const f = (selection, first, last) => {
+  
+	// bad things happen if we try and compute y(0), which is actually ~log(0)
+    const f = (selection) => {
       return selection.selectAll('rect')
         .data((d) => d)
         .enter().append('rect')
         .attr('class', 'bar')
-        .attr('x', (d) => x(d.data.company))
-        .attr('y', (d) => Number.isNaN(y(d[1])) ? 0 : y(d[1]))
-        .attr('height', function (d) { return Number.isNaN(y(d[0]) - y(d[1])) ? 0 : y(d[0]) - y(d[1]); })
-        .attr('width', x.bandwidth())
-        // .on('click', (d) => this.focus.focusChanged(this.companyid2info.get(d.data.company)))
-        .on('click', function (d) {
-          self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
+		.attr('x', (d) => x(d.data.company))
+		.attr('y', (d) => y(Math.max(1,d[1])))
+		.attr('height', (d) => y(Math.max(1,d[0])) - y(Math.max(1,d[1])))
+		.attr('width', x.bandwidth())
+        .on('click', function () {
+			self.focus.focusChanged(self.addOrRemove(this.parentElement.__data__.key))
         })
-        .on('mouseleave', function (d) {
-          // console.log("Leave" + d );
-          // self.setHoveringApp(undefined)
+        .on('mouseleave', function () {
           this_.hover.hoverChanged(undefined);
         })
-        .on('mouseenter', function (d) {
+        .on('mouseenter', function () {
           if (this.parentElement && this.parentElement.__data__) {
-            // unsure why this is dying
-            // console.log("Enter" + this.parentElement.__data__.key );
-            // self.setHoveringApp(this.parentElement.__data__.key);
             this_.hover.hoverChanged(this.parentElement.__data__.key);
           } 
         });
     };
 
+	const sstack = d3.stack().keys(devices).value((d,key) => d[key] || 0)(by_company);
+	
     g.append('g')
       .selectAll('g')
-      .data(d3.stack().keys(apps)(by_company))
+      .data(sstack)
       .enter().append('g')
       .attr('fill', (d) => {
         // highlightApp comes in from @Input() attribute, set using compare
@@ -381,7 +365,7 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
     g.append('g')
       .attr('class', 'axis x')
       .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x))
+	  .call(d3.axisBottom(x))
       .selectAll('text')
       .style('text-anchor', 'end')
       .attr('y', 1)
@@ -397,59 +381,36 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       svg.selectAll('g.axis.x g.tick')
         .filter(function (d) { return d; })
         .attr('class', (d) => d.typetag)
-        .on('click', (d) => this.focus.focusChanged(d));
+        .on('click', (d) => {
+          this.focus.focusChanged(d);
+          this.info.getDesc(d);
+        });
     }
 
     g.append('g')
       .attr('class', 'axis y')
       .call(d3.axisLeft(y).ticks(null, 's'))
       .append('text')
-      .attr('x', 20)
+			.attr('x', 20)
       .attr('y', y(y.ticks().pop()) - 12)
       .attr('dy', '0.22em')
-      .text('Impact (mB)');
+      .text('Traffic (bytes)');
 
     // legend
     const leading = 26;
-    /*
-    if (this.showTypesLegend) {
-      const ctypes = ['advertising', 'analytics', 'app', 'other'],
-        ctypeslegend = g.append('g')
-          .attr('class', 'ctypelegend')
-          .attr('transform', 'translate(0,10)')
-          .selectAll('g')
-          .data(ctypes)
-          .enter().append('g')
-          .attr('class', (d) => d)
-          .on('mouseenter', (d) => this.setHoveringTypeHighlight(d))
-          .on("mouseleave", (d) => this.setHoveringTypeHighlight(undefined))
-          .attr('transform', (d, i) => 'translate(0,' + i * leading + ')');
-
-      ctypeslegend.append('rect')
-        .attr('x', width - 19)
-        .attr('width', 19)
-        .attr('height', 19)
-        .attr('class', (d) => 'legend ' + d);
-      ctypeslegend.append('text')
-        .attr('x', width - 24)
-        .attr('y', 9.5)
-        .attr('dy', '0.32em')
-        .text((d) => d);
-    } */
     if (this.showLegend) {
       const legend = g.append('g')
         .attr('class', 'legend')
         .attr('transform', 'translate(0,10)')
         .selectAll('g')
-        .data(apps.slice().reverse())
+        .data(devices.slice().reverse())
         .enter()
         .append('g')
         .attr('transform', function (d, i) { return 'translate(0,' + i * leading + ')'; })
         .on('mouseenter', (d) => {
-          // console.log(d);
           this.hover.hoverChanged(d)
         })
-        .on('mouseout', (d) => this.hover.hoverChanged(undefined))
+        .on('mouseout', () => this.hover.hoverChanged(undefined))
         .on('click', (d) => this.focus.focusChanged(this.addOrRemove(d)));
 
       legend.append('rect')
@@ -465,14 +426,11 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
           return 1.0;
         });
 
-      // console.info("raw impacts ", this.impacts);
-      // console.info("devices list is now > ", this.apps && this.apps.slice(), apps.slice().reverse(), " and devices ", this._devices);
-
       legend.append('text')
         .attr('x', this.showTypesLegend ? width - 140 - 24 : width - 24)
         .attr('y', 9.5)
         .attr('dy', '0.32em')
-        .text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d] || d : "Removed: " + d)
+		.text((d) => this._ignoredApps.indexOf(d) === -1 ? this._devices[d].name || d : "Removed: " + d)
         .style("fill", d => this._ignoredApps.indexOf(d) === -1 ? 'rgba(0,0,0,1)' : 'rgba(200,0,0,1)')
         .attr('opacity', (d) => {
           let highApp = this.highlightApp || this._hoveringApp;
@@ -488,41 +446,10 @@ export class RefinebarComponent implements AfterViewInit, OnChanges {
       this.setHoveringTypeHighlight(this._hoveringType)
     }
   }
-  @HostListener('window:resize')
-  onResize() {
-    // call our matchHeight function here
-    this.render();
-  }
+
+	@HostListener('window:resize')
+  	onResize() {
+    	this.render();
+  	}
 }
 
-
-/* 
-dead ponies
-    const satBand = (name, domain, h, l, slow, shigh) => {
-      return (appkey) => {
-        let ki = domain.indexOf(appkey),
-          bandwidth = (shigh - slow) / domain.length,
-          starget = slow + ki * bandwidth,
-          targetc = d3.hsl(h, starget, starget);
-        // console.log(`satBand [${name}]:${appkey} - ki:${ki}, bw:${bandwidth}, slow:${slow}, shigh:${shigh}, ${starget}`, targetc);
-        return targetc;
-      };
-    },
-      catcolours = { // .interpolate(d3.interpolateHsl).
-        'advertising': satBand('adv', apps, 0.2, 0.6, 0.2, 1),
-        'app': satBand('app', apps, 80, 0.6, 0.2, 1),
-        'analytics': satBand('analytics', apps, 30, 0.4, 0.2, 1),
-        'usage': satBand('usage', apps, 30, 0.6, 0.2, 1),
-        'other': satBand('other', apps, 0.5, 0.6, 0.2, 1)
-      },
-      getColor = (app: string, company: string): string => {
-        if (app === undefined) {
-          app = apps[0]; // apps.length - 1];
-        }
-        let companyInfo = this.companyid2info.get(company);
-        if (companyInfo && companyInfo.typetag && catcolours[companyInfo.typetag]) {
-          return catcolours[companyInfo.typetag](app);
-        }
-        return catcolours.other(app);
-      };
-      */

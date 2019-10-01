@@ -34,6 +34,7 @@
     .gridleft {
         flex-grow: 0.4;
         flex-basis: 30%;
+		flex-shrink: 0;
     }
     .gridright {
         display:flex;

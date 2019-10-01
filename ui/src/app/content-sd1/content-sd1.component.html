@@ -1,0 +1,15 @@
+<h3>Awesome, all done</h3>
+
+<div [ngSwitch]="stage">
+
+	<div *ngSwitchCase="1">
+		<p>You've completed all of the content for the study. Please don't forget to continue checking the prototype to see what your devices are doing, as well as to add and remove firewall rules.</p>
+	</div>
+
+</div>
+
+<div class="progress">
+	<button mat-raised-button class="buttonleft" (click)="prev()">Previous</button>
+	{{stage}} / {{max}}
+	<button mat-raised-button class="buttonright" (click)="next()">Next</button>
+</div>

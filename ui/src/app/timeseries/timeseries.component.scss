@@ -1,0 +1,72 @@
+div.tscompmain {
+    position:relative;
+    width:100%;
+    height:100%;
+    // border:1px solid blue;
+    margin:0px; padding:0px;
+    svg {
+        z-index:100;
+        // border:1px solid #eee;
+        padding:0px; margin:0px;
+        /deep/ g.dragwindow rect {
+            stroke:#000;
+            fill:none;
+            stroke-width:2px;
+            pointer-events:visible;
+        }
+        /deep/ g.dragwindow line {
+            stroke:red;
+            fill:none;
+            stroke-width:1px;
+        }    
+        /deep/ .legel rect.main {
+            // fill:rgba(255,255,255,0.8);
+            // stroke:1px solid #222;
+        }
+        /deep/ .hovering {
+            opacity:0.2;
+            stroke-width:3px;
+            stroke:pink;
+        }
+        /deep/ path.domain {
+            stroke:#888 !important;
+        }
+
+        /deep/ .axis.x line {
+            stroke:#aaa;
+            stroke-width:1px;
+        }
+        /deep/ .axis.x text {
+            font: bold 14px sans-serif;
+            fill:#aaa;
+        }
+        /deep/ .axis.xlight line {
+            stroke:#eee;
+            stroke-width:1px;
+        }
+        /deep/ .axis.xlight text {
+            font: bold 14px sans-serif;
+            fill:#eee;
+        }
+
+
+    }
+}
+
+.debug {
+    width:100%;
+    border:1px solid #eee;
+    margin: 5px 0px;
+}
+.debug .macs {
+    margin:5px 0px;
+    font-weight:bold;
+}
+.debug .ips {
+    padding-left:10px;
+    display:inline-block;
+    /* border:1px solid #eee; */
+    background:#eee;
+    margin:2px; padding:3px 2px;
+    font-weight:normal;
+}

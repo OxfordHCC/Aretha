@@ -1,29 +1,14 @@
---categories table matches readable descriptions to bursts of traffic ("this burst is a weather info request")
-drop table if exists categories cascade;
-create table categories (
-	id SERIAL primary key,
-	name varchar(40) not null -- e.g. "Alexa-time" or "Alexa-joke"
-);
-
---collates bursts of traffic and optionally assigns them a category
-drop table if exists bursts cascade;
-create table bursts (
-	id SERIAL primary key,
-	category integer references categories --primary key assumed when no column given
-);
-
 --store core packet info, and optionally which burst it is part ofi, and which company it represents
 drop table if exists packets cascade;
 create table packets (
 	id SERIAL primary key,
-	time timestamp not null,
-	src varchar(15) not null, --ip address of sending host
-	dst varchar(15) not null, --ip address of receiving host
+	time timestamp with time zone not null,
+	src varchar(45) not null, --ip address of sending host
+	dst varchar(45) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
 	len integer not null, --packet length in bytes
 	proto varchar(10) not null, --protocol if known, otherwise port number
-	burst integer references bursts --optional,
-	--company integer references companies --optional, assumes table of companies (stolen from refine)
+	ext varchar(45) not null --external ip address (either src or dst)
 );
 
 -- create two indexes on src and dst to speed up lookups by these cols by loop.py
@@ -40,11 +25,13 @@ create table devices(
 
 drop table if exists geodata cascade;
 create table geodata(
-	ip varchar(15) primary key,
+	ip varchar(45) primary key,
 	lat real not null,
 	lon real not null,
 	c_code varchar(2) not null,
-	c_name varchar(20) not null
+	c_name varchar(25) not null,
+	domain varchar(30) not null,
+	tracker boolean default false
 );
 
 --firewall rules created by aretha
@@ -52,14 +39,14 @@ drop table if exists rules cascade;
 create table rules(
 	id SERIAL primary key,
 	device varchar(17), --optional device to block traffic from (otherwise all devices)
-	c_name varchar(20) not null --so that other matching ips can be blocked in future
+	c_name varchar(25) not null --so that other matching ips can be blocked in future
 );
 
 --ip addresses blocked by aretha
 drop table if exists blocked_ips cascade;
 create table blocked_ips(
 	id SERIAL primary key,
-	ip varchar(15) not null,
+	ip varchar(45) not null,
 	rule integer not null references rules on delete cascade
 );
 
@@ -71,34 +58,60 @@ create table beacon(
 	packets integer not null,
 	geodata integer not null,
 	firewall integer not null,
-	time timestamp default current_timestamp
+	time timestamp default timezone('utc', now())
 );
 
 --questions to ask during studies
-drop table if exists questions;
-create table questions(
-	id SERIAL primary key,
-	concept varchar(200) not null,
-	explanation varchar(500) not null,
-	question varchar(200) not null,
-	answer varchar(500),
-	correct boolean,
-	time timestamp default current_timestamp
+drop table if exists content;
+create table content(
+	name varchar(20) primary key,
+	live timestamp with time zone not null,
+	complete boolean default false,
+	pre varchar(500),
+	post varchar(500)
 );
 
 --load questions
-insert into questions(id, concept, explanation, question) values(
-	1, 'Internet Trackers', 'A description', 'A question' --sample for now
+insert into content(name, live) values
+--phase 1
+('S1', '2019-01-01T00:00:00'),
+('S2', '2019-01-01T00:00:00'),
+--phase 2
+('B1', '2019-01-15T00:00:00'),
+('B2', '2019-01-17T00:00:00'),
+('B3', '2019-01-19T00:00:00'),
+('B4', '2019-01-21T00:00:00'),
+('D1', '2019-01-21T00:00:00'),
+('D2', '2019-01-23T00:00:00'),
+('D3', '2019-01-25T00:00:00'),
+('D4', '2019-01-27T00:00:00'),
+--phase 3
+('S3', '2019-01-29T00:00:00'),
+('SD1', '2019-01-31T00:00:00');
+
+drop table if exists activity;
+create table activity(
+	id SERIAL primary key,
+	time timestamp with time zone default timezone('utc', now()),
+	pid varchar(5) not null,
+	category varchar(50) not null,
+	description varchar(50) not null
 );
 
-drop table if exists experiment;
-create table experiment(
-	name varchar(10) primary key,
-	value varchar(100) not null
-);
+drop materialized view if exists impacts;
+create materialized view impacts as
+	select mac, ext, round(extract(epoch from time at time zone 'utc')/60) as mins, sum(len) as impact
+	from packets
+	group by mac, ext, mins
+	order by mins
+with data;
 
---load initial values
-insert into experiment(name, value) values('stage', 1);
+drop materialized view if exists impacts_aggregated;
+create materialized view impacts_aggregated as
+	select mac, ext, sum(len) as impact
+	from packets
+	group by mac, ext
+with data;
 
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
@@ -129,7 +142,7 @@ BEGIN
 
   -- Build the payload
   payload := json_build_object(
-    'timestamp',CURRENT_TIMESTAMP,
+    'timestamp',timezone('utc', now()),
     'operation',TG_OP,
     'schema',TG_TABLE_SCHEMA,
     'table',TG_TABLE_NAME,
@@ -144,15 +157,13 @@ END;
 $trigger$ LANGUAGE plpgsql;
 
 drop trigger if exists packets_notify on packets;
-CREATE TRIGGER packets_notify AFTER INSERT OR UPDATE OR DELETE ON packets
-FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
-  'id',
+create trigger packets_notify after insert or update or delete on packets
+for each row execute procedure notify_trigger(
   'mac',
-  'src',
-  'dst',
-  'len',
-  'burst'
+  'ext',
+  'len'
 );
+
 
 drop trigger if exists device_notify on devices;
 CREATE TRIGGER device_notify AFTER INSERT OR UPDATE OR DELETE ON devices
@@ -171,3 +182,4 @@ FOR EACH ROW EXECUTE PROCEDURE notify_trigger(
   'c_code',
   'c_name'
 );
+

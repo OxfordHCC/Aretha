@@ -3,7 +3,7 @@ Description=IoT Refine
 
 [Service]
 Type=simple
-User=roo
+User=root
 WorkingDirectory=insert_path_to_iotrefine
 ExecStart=insert_path_to_daemon
 Restart=on-failure
