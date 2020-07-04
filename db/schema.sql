@@ -28,9 +28,9 @@ create table geodata(
 	ip varchar(45) primary key,
 	lat real not null,
 	lon real not null,
-	c_code varchar(2) not null,
-	c_name varchar(25) not null,
-	domain varchar(30) not null,
+	c_code varchar(2) not null, -- country code
+	c_name varchar(256) not null, -- company name
+	domain varchar(256) not null, -- domain
 	tracker boolean default false
 );
 

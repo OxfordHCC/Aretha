@@ -95,27 +95,58 @@ def processGeos():
             tracker = False
 
             # get company info from ipdata
-            try:
-                ipdurl = 'https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key']
-                log.debug(' Querying IPData for [%s] ' % ip)
-                data = requests.get(ipdurl)                
-                if data.status_code==200 and data.json()['latitude'] is not None:
-                    data = data.json()
-                    log.info(data)
-                    tracker = istracker(ip)
-                    if data.get('asn'):
-                        if data['asn'].get('name'):
-                            orgname = data['asn']['name']
-                        if data['asn'].get('domain'):
-                            domain = data['asn']['domain']
-                    # orgname = data['organisation'] 
-                    lat = data.get('latitude')
-                    lon = data.get('longitude')
-                    country = data.get('country_code') or data.get('continent_code')
+            if CONFIG['geoapi']['provider'] == 'ipdata':
+                try:
+                    if not CONFIG['geoapi'].get('key'):
+                        raise Exception("Key is required for ipdata.co and not found in config.cfg")
+
+                    ipdurl = 'https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['geoapi']['key']
+                    log.debug(' Querying IPData for [%s] ' % ip)
+                    data = requests.get(ipdurl)                
+                    if data.status_code==200 and data.json()['latitude'] is not None:
+                        data = data.json()
+                        log.info(data)
+                        tracker = istracker(ip)
+                        if data.get('asn'):
+                            if data['asn'].get('name'):
+                                orgname = data['asn']['name']
+                            if data['asn'].get('domain'):
+                                domain = data['asn']['domain']
+                        # orgname = data['organisation'] 
+                        lat = data.get('latitude')
+                        lon = data.get('longitude')
+                        country = data.get('country_code') or data.get('continent_code')
+                    pass
+                except Exception as e:
+                    log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
+                    pass
                 pass
-            except Exception as e:
-                log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
+            elif CONFIG['geoapi']['provider'] == 'ip-api':
+                try:
+                    # http://ip-api.com/json/104.103.245.129?fields=status,message,continentCode,country,countryCode,city,lat,lon,timezone,isp,org,as,reverse
+                    query_fields="status,message,continentCode,country,countryCode,city,lat,lon,timezone,isp,org,as,reverse"
+                    url = 'http://ip-api.com/json/' + ip + "?fields=%s" % query_fields 
+                    log.debug(' Querying IP-API for [%s] ' % ip)
+                    data = requests.get(url)                
+                    if data.status_code == 200:
+                        d = data.json()
+                        log.info(d)
+                        tracker = istracker(ip)
+                        orgname = d.get('org') or d.get('as')
+                        lat = d.get('lat')
+                        lon = d.get('lon')
+                        if d.get('reverse'):
+                            domain = d.get('reverse')
+                        country = d.get('countryCode') or d.get('continentCode')
+                    elif data.status_code == 429:
+                        log.info("We have hit our IP-API.com rate limit - 429 received. Returning and coming back another day")
+                        return
+                        # 
+                except Exception as e:
+                    log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
+                    pass
                 pass
+            pass
 
             if domain == 'unknown':
                 # make reverse dns call to get the domain
@@ -140,8 +171,8 @@ def processGeos():
                     pass
 
             # commit the extra info to the database
-            log.info('inserting geodata entry %s', str((ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker)))
-            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker))
+            log.info('inserting geodata entry %s', str((ip, lat, lon, country, orgname or "", domain or "", tracker)))
+            DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:256] or "", domain[:256] or "", tracker))
             
             # if orgname and domain: 
             #     DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname[:20], domain[:30]))
