@@ -116,6 +116,34 @@ def processGeos():
                         lat = data.get('latitude')
                         lon = data.get('longitude')
                         country = data.get('country_code') or data.get('continent_code')
+                    
+                    if domain == 'unknown':
+                        # make reverse dns call to get the domain
+                        res = dns.resolver.Resolver()
+                        res.nameservers = ['8.8.8.8', '8.8.4.4']
+
+                        # try:
+                        #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+                        #     raw_domain = str(dns_ans[0])
+                        #     domain = tldextract.extract(raw_domain).registered_domain
+                        # except:
+                        #     pass
+
+                        try:
+                            log.info('Attempting reverse DNS resolving [%s]' % ip)
+                            dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
+                            raw_domain = str(dns_ans[0])
+                            domain = tldextract.extract(raw_domain).registered_domain
+                            log.info('Success rdns [%s->%s]' % (ip, domain))
+                        except Exception as e:
+                            log.error("Error resolving ip %s " % ip, exc_info=e)
+                            pass
+
+                            
+                        except Exception as e:
+                            log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
+                            pass
+                        pass
                     pass
                 except Exception as e:
                     log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
@@ -141,34 +169,41 @@ def processGeos():
                     elif data.status_code == 429:
                         log.info("We have hit our IP-API.com rate limit - 429 received. Returning and coming back another day")
                         return
-                        # 
+
+                    if domain == 'unknown':
+                        # make reverse dns call to get the domain
+                        res = dns.resolver.Resolver()
+                        res.nameservers = ['8.8.8.8', '8.8.4.4']
+
+                        # try:
+                        #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+                        #     raw_domain = str(dns_ans[0])
+                        #     domain = tldextract.extract(raw_domain).registered_domain
+                        # except:
+                        #     pass
+
+                        try:
+                            log.info('Attempting reverse DNS resolving [%s]' % ip)
+                            dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
+                            raw_domain = str(dns_ans[0])
+                            domain = tldextract.extract(raw_domain).registered_domain
+                            log.info('Success rdns [%s->%s]' % (ip, domain))
+                        except Exception as e:
+                            log.error("Error resolving ip %s " % ip, exc_info=e)
+                            pass
+
+                            
+                        except Exception as e:
+                            log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
+                            pass
+                        pass
+                    pass
+
                 except Exception as e:
                     log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
                     pass
                 pass
             pass
-
-            if domain == 'unknown':
-                # make reverse dns call to get the domain
-                res = dns.resolver.Resolver()
-                res.nameservers = ['8.8.8.8', '8.8.4.4']
-
-                # try:
-                #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
-                #     raw_domain = str(dns_ans[0])
-                #     domain = tldextract.extract(raw_domain).registered_domain
-                # except:
-                #     pass
-
-                try:
-                    log.info('Attempting reverse DNS resolving [%s]' % ip)
-                    dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
-                    raw_domain = str(dns_ans[0])
-                    domain = tldextract.extract(raw_domain).registered_domain
-                    log.info('Success rdns [%s->%s]' % (ip, domain))
-                except Exception as e:
-                    log.error("Error resolving ip %s " % ip, exc_info=e)
-                    pass
 
             # commit the extra info to the database
             log.info('inserting geodata entry %s', str((ip, lat, lon, country, orgname or "", domain or "", tracker)))

@@ -16,6 +16,25 @@ create index on packets (src);
 create index on packets (dst);
 create index on packets (time);
 
+
+create table exposures ( -- exposure is the new impacts
+	id SERIAL primary key,
+	start_time timestamp with time zone not null,
+	end_time timestamp with time zone not null
+);
+
+create table transmission ( --
+	id SERIAL primary key,
+	exposure integer references exposures not null,
+	src varchar(255) not null, --ip address of sending host
+	dst varchar(255) not null, --ip address of receiving host
+	mac varchar(17) not null, --mac address of internal host
+	bytes integer not null, --total bytes 
+	packets, integer not null, -- number of pakcets
+	proto varchar(10) not null, --protocol if known, otherwise port number
+	ext varchar(255) not null --external ip address (either src or dst)	
+);
+
 drop table if exists devices cascade;
 create table devices(
 	mac varchar(17) primary key,
