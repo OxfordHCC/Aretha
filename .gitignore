@@ -19,3 +19,5 @@ service/daemon.sh
 service/iotrefine.service
 
 .idea/
+
+log/

@@ -16,19 +16,34 @@ from datetime import datetime
 import tldextract
 import urllib
 import ipaddress
+import logging
 
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
 import databaseBursts
 
+MODULENAME = 'loop'
 FILE_PATH = os.path.dirname(os.path.abspath(__file__))
 DB_MANAGER = None
 DEBUG = False
-log = lambda *args: print(*args) if DEBUG else ''
+# log = lambda *args: print(*args) if DEBUG else ''
 RAW_IPS = set()
 RAW_IPS_ID = 0
 _events = []  # async db events
-IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
-CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
+
+ARETHA_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = os.path.sep.join((ARETHA_BASE, "config", "config.cfg"))
+LOG_PATH = os.path.sep.join((ARETHA_BASE, 'log'))
+
+logFormatter = logging.Formatter("%(asctime)s {}::%(levelname)s %(message)s".format(MODULENAME))
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
+fileHandler = logging.FileHandler(os.path.sep.join((LOG_PATH, '%s.log' % MODULENAME)))
+fileHandler.setFormatter(logFormatter)
+log.addHandler(fileHandler)
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+log.addHandler(consoleHandler)
+
 CONFIG = None
 CONFIG_ID = None
 FRUITS = ["Apple", "Orange", "Banana", "Cherry", "Apricot", "Avocado", "Blueberry", "Cherry", "Cranberry", "Grape", "Kiwi", "Lime", "Lemon", "Mango", "Nectarine", "Peach", "Pineapple", "Raspberry", "Strawberry"]
@@ -81,37 +96,51 @@ def processGeos():
 
             # get company info from ipdata
             try:
-                data = requests.get('https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key'])
+                ipdurl = 'https://api.ipdata.co/' + ip + '?api-key=' + CONFIG['ipdata']['key']
+                log.debug(' Querying IPData for [%s] ' % ip)
+                data = requests.get(ipdurl)                
                 if data.status_code==200 and data.json()['latitude'] is not None:
                     data = data.json()
+                    log.info(data)
                     tracker = istracker(ip)
-                    orgname = data['organisation'] 
-                    lat = data['latitude']
-                    lon = data['longitude']
-                    country = data['country_code'] or data['continent_code']
-            except:
+                    if data.get('asn'):
+                        if data['asn'].get('name'):
+                            orgname = data['asn']['name']
+                        if data['asn'].get('domain'):
+                            domain = data['asn']['domain']
+                    # orgname = data['organisation'] 
+                    lat = data.get('latitude')
+                    lon = data.get('longitude')
+                    country = data.get('country_code') or data.get('continent_code')
+                pass
+            except Exception as e:
+                log.error(' Failure querying IPData for [%s]' % ip, exc_info=e)
                 pass
 
-            # make reverse dns call to get the domain
-            res = dns.resolver.Resolver()
-            res.nameservers = ['8.8.8.8', '8.8.4.4']
-            # try:
-            #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
-            #     raw_domain = str(dns_ans[0])
-            #     domain = tldextract.extract(raw_domain).registered_domain
-            # except:
-            #     pass
+            if domain == 'unknown':
+                # make reverse dns call to get the domain
+                res = dns.resolver.Resolver()
+                res.nameservers = ['8.8.8.8', '8.8.4.4']
 
-            try:
-                dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
-                raw_domain = str(dns_ans[0])
-                domain = tldextract.extract(raw_domain).registered_domain
-            except:
-               print("Error resolving ip ", ip, " - ", sys.exc_info()[0])
-               pass
+                # try:
+                #     dns_ans = res.query(ip + ".in-addr.arpa", "PTR")
+                #     raw_domain = str(dns_ans[0])
+                #     domain = tldextract.extract(raw_domain).registered_domain
+                # except:
+                #     pass
 
+                try:
+                    log.info('Attempting reverse DNS resolving [%s]' % ip)
+                    dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
+                    raw_domain = str(dns_ans[0])
+                    domain = tldextract.extract(raw_domain).registered_domain
+                    log.info('Success rdns [%s->%s]' % (ip, domain))
+                except Exception as e:
+                    log.error("Error resolving ip %s " % ip, exc_info=e)
+                    pass
 
             # commit the extra info to the database
+            log.info('inserting geodata entry %s', str((ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker)))
             DB_MANAGER.execute("INSERT INTO geodata VALUES(%s, %s, %s, %s, %s, %s, %s)", (ip, lat, lon, country, orgname and orgname[:25] or "", domain and domain[:30] or "", tracker))
             
             # if orgname and domain: 
@@ -122,7 +151,7 @@ def processGeos():
 
             # bookkeeping
             known_ips.append(ip)
-            log("Adding to known IPs ", ip)
+            log.info("Adding to known IPs %s " % ip)
 
 
 # gets manufacturers of new devices and inserts into the database
@@ -146,7 +175,7 @@ def processMacs():
 # updates RAP_IPS (see processGeos)
 def processEvents():
     global _events
-    log("processEvents has ", len(_events), " waiting in queue")
+    log.debug("processEvents has %s waiting in queue " % len(_events))
     cur_events = _events.copy()
     _events.clear()
     for evt in cur_events:
@@ -161,7 +190,7 @@ def processEvents():
             except:
                 pass
         pass
-    log("RAW IPS now has ", len(RAW_IPS) if RAW_IPS else 'none')
+    log.debug("RAW IPS now has %s " % len(RAW_IPS) if RAW_IPS else 'none')
 
 #uses the config tracker list to determine whether an ip address is from a tracker
 def istracker(ip):
@@ -271,7 +300,7 @@ if __name__ == '__main__':
     DEBUG = args.debug    
     CONFIG_PATH = args.config if args.config else CONFIG_PATH
         
-    log("Loading config from .... ", CONFIG_PATH)
+    log.info("Loading config from .... %s " % CONFIG_PATH)
     CONFIG = configparser.ConfigParser()
     CONFIG.read(CONFIG_PATH)
     DB_MANAGER = databaseBursts.dbManager()
@@ -338,7 +367,7 @@ if __name__ == '__main__':
         CONFIG_ID = CONFIG['general']['id']
 
     DEVICES_API_URL = CONFIG['api']['url'] + '/devices'
-    log("Devices API URL set to %s" % DEVICES_API_URL)
+    log.info("Devices API URL set to %s" % DEVICES_API_URL)
 
     running = [True]
 
@@ -347,7 +376,7 @@ if __name__ == '__main__':
     
     sys.stdout.write("Loading trackers file...")
     try:
-        with open(IOTR_BASE + CONFIG['loop']['trackers']) as trackers_file:
+        with open(ARETHA_BASE + CONFIG['loop']['trackers']) as trackers_file:
             TRACKERS = []
             for line in trackers_file.readlines():
                 TRACKERS.append(line.strip('\n'))
@@ -364,7 +393,7 @@ if __name__ == '__main__':
 
     # loop through categorisation tasks
     while(running[0]):
-        log("Awake!");
+        log.debug("Awake!");
         if running[0]:
             processEvents()
         if running[0]:
@@ -378,5 +407,5 @@ if __name__ == '__main__':
         if ISBEACON == True and running[0]:
             beacon()
         if running[0]:
-            log("sleeping zzzz ", INTERVAL);
+            log.debug("sleeping zzzz %s " % INTERVAL);
             time.sleep(INTERVAL)
