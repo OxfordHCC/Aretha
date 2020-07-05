@@ -9,7 +9,12 @@ import pyshark
 import sys
 import traceback
 import ipaddress
+import math
+
 import peewee
+from playhouse.postgres_ext import PostgresqlExtDatabase
+from playhouse.reflection import generate_models, print_model, print_table_sql
+
 import logging
 
 # constants
@@ -29,9 +34,9 @@ consoleHandler.setFormatter(logFormatter)
 log.addHandler(consoleHandler)
 
 # initialise vars
-timestamp = 0
+time_since_last_commit = 0
 queue = []
-COMMIT_INTERVAL = None
+COMMIT_INTERVAL_SECS = None
 CONFIG = None
 
 def fix_sniff_tz(sniff_dt):
@@ -41,17 +46,25 @@ def fix_sniff_tz(sniff_dt):
     # then we need to create a new datetime with the actual timezone... cast back into UTC.
     return datetime.combine(sniff_dt.date(),sniff_dt.time(),local_tz).astimezone(timezone.utc)
 
-def DatabaseInsert(packets):
-    global timestamp
 
+def connect():
     # open db connection
     database = CONFIG['postgresql']['database']
-    username = CONFIG['postgresql']['username']
-    password = CONFIG['postgresql']['password']
-    conn = psycopg2.connect(f"dbname={database} user={username} password={password}")
-    cur = conn.cursor()
+    username = CONFIG['postgresql'].get('username') or ''
+    password = CONFIG['postgresql'].get('password') or ''
+    host = CONFIG['postgresql'].get('host') or 'localhost'
+    return PostgresqlExtDatabase(database, host=host, user=username, password=password, port=5432)
 
-    insert = "INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES "
+def compute_ends(time):
+    start = COMMIT_INTERVAL_SECS * math.floor(time.timestamp() / COMMIT_INTERVAL_SECS)
+    return (datetime.fromtimestamp(start), datetime.fromtimestamp(start+COMMIT_INTERVAL_SECS))
+
+def DatabaseInsert(packets):
+    global time_since_last_commit
+    db = connect()
+    models = generate_models(db)
+    exposures, transmissions = models['exposures'], models['transmissions']
+
     for packet in packets:
         # clean up packet info before entry
         mac = ''
@@ -64,13 +77,13 @@ def DatabaseInsert(packets):
             continue
 
         try:
-            src = packet.ip.src
-            dst = packet.ip.dst
+            src, dst = packet.ip.src, packet.ip.dst
         except AttributeError as ke:
             log.error("AttributeError determining src/dst", exc_info=ke)
             continue
 
         if ipaddress.ip_address(src).is_multicast or ipaddress.ip_address(dst).is_multicast or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
+            # broadcast, multicast, so skip
             continue
 
         srcLocal = ipaddress.ip_address(src).is_private
@@ -90,45 +103,87 @@ def DatabaseInsert(packets):
         else:
             proto = packet.highest_layer
 
-        # insert packets into table
-        try:
-            # print("packet sniff time ", packet.sniff_time, type(packet.sniff_time), fix_sniff_tz(packet.sniff_time), src, dst)
-            insert += f"('{fix_sniff_tz(packet.sniff_time)}', '{src}', '{dst}', '{mac}', '{packet.length}', '{proto}', '{ext}'), "
-        except Exception as e:
-            log.error("Unexpected error on insert:", exc_info = e)
-            sys.exit(-1)
+        dst_port = packet[packet.transport_layer].dstport
 
-    if insert != "INSERT INTO packets (time, src, dst, mac, len, proto, ext) VALUES ":
-        insert = insert[:-2]
-        insert += ";"
-        cur.execute(insert)
+        pkt_time = fix_sniff_tz(packet.sniff_time)
+        segstart,segend  = compute_ends(pkt_time)
+        
+        exps = exposures.select().where(exposures.start_time==segstart, exposures.end_time==segend)
 
-    # commit the new records and close db connection
-    conn.commit()
-    cur.close()
-    conn.close()    
+        if exps:
+            log.info(f"updating previous exposure {exps[-1].id} [{exps[-1].start_time}]")
+            exp = exps[-1] # get laste one
+        else:
+            log.info(f"creating new exposure {segstart}-{segend}")
+            exp = exposures.create(start_time=segstart, end_time=segend)
+
+        xmissions = transmissions.select().where(
+            transmissions.exposure == exp,
+            transmissions.src == src,
+            transmissions.dst == dst,
+            transmissions.proto == proto,
+            transmissions.mac == mac,
+            transmissions.dstport == dst_port,
+            transmissions.ext == ext
+        );
+
+        if xmissions:
+            log.info(f"updating existing transmission { xmissions[-1].id }")            
+            xmission = xmissions[-1]
+        else:
+            log.info(f"creating new transmission")                        
+            xmission = transmissions.create(
+                exposure = exp,
+                src = src,
+                dst = dst,
+                proto = proto,
+                mac = mac,
+                dstport=dst_port,
+                ext=ext,
+                bytes=0,
+                bytevar=0,
+                packets=0
+            )
+            log.info(f"new transmission id {xmission.id}")                        
+        
+        transmissions.update(
+            bytes=xmission.bytes + int(packet.length),
+            packets=xmission.packets + 1,
+            bytevar=0,  ## todo
+        ).where(transmissions.id==xmission.id).execute()
+
+
+    pass
+
+    ## cur.close()
+    ## conn.close()    
     log.info(f"Captured {str(len(packets))} packets this tick")
+    db.commit()
+    db.close()
 
 
 def QueuedCommit(packet):
-    # commit packets to the database in COMMIT_INTERVAL second intervals
+    # commit packets to the database in COMMIT_INTERVAL_SECS second intervals
 
     now = datetime.utcnow()
-    global timestamp
+    global time_since_last_commit
     global queue
 
     # first packet in new queue
-    if timestamp == 0:
-        timestamp = now
+    if time_since_last_commit == 0:
+        time_since_last_commit = now
 
     queue.append(packet)
 
     # time to commit to db
-    if (now - timestamp).total_seconds() > COMMIT_INTERVAL:
+    if (now - time_since_last_commit).total_seconds() > COMMIT_INTERVAL_SECS:
         if len(queue) > 0:
-            DatabaseInsert(queue)
+            try: 
+                DatabaseInsert(queue)
+            except Exception as e:
+                log.error('Error in DB Insert >>>> ', exc_info=e)
         queue = []
-        timestamp = 0
+        time_since_last_commit = 0
 
 
 
@@ -160,15 +215,14 @@ if __name__ == '__main__':
         sys.exit(-1)
 
     if args.interval is not None:
-        COMMIT_INTERVAL = args.interval
+        COMMIT_INTERVAL_SECS = args.interval
     elif "capture" in CONFIG and "interval" in CONFIG['capture']:
-        COMMIT_INTERVAL = float(CONFIG['capture']['interval'])
+        COMMIT_INTERVAL_SECS = int(CONFIG['capture']['interval'])
     else:
         log.error(parser.print_help())
         sys.exit(-1)    
 
-
-    log.info(f"Setting capture interval {COMMIT_INTERVAL} ")
+    log.info(f"Setting capture interval {COMMIT_INTERVAL_SECS} ")
     log.info(f"Setting up to capture from {INTERFACE}")
     capture = pyshark.LiveCapture(interface=INTERFACE, bpf_filter='udp or tcp')
 

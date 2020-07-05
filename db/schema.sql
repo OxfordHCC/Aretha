@@ -23,15 +23,17 @@ create table exposures ( -- exposure is the new impacts
 	end_time timestamp with time zone not null
 );
 
-create table transmission ( --
+create table transmissions ( --
 	id SERIAL primary key,
-	exposure integer references exposures not null,
+	exposure integer references exposures on delete cascade not null,
 	src varchar(255) not null, --ip address of sending host
 	dst varchar(255) not null, --ip address of receiving host
 	mac varchar(17) not null, --mac address of internal host
 	bytes integer not null, --total bytes 
-	packets, integer not null, -- number of pakcets
-	proto varchar(10) not null, --protocol if known, otherwise port number
+	packets integer not null, -- number of pakcets
+	bytevar float not null, -- variance in packet size	
+	proto varchar(10) not null, --protocol if known
+	dstport varchar(10) not null, -- dest port number
 	ext varchar(255) not null --external ip address (either src or dst)	
 );
 
