@@ -27,13 +27,14 @@ create table transmissions ( --
 	id SERIAL primary key,
 	exposure integer references exposures on delete cascade not null,
 	src varchar(255) not null, --ip address of sending host
+	srcport varchar(10) not null, -- src port
 	dst varchar(255) not null, --ip address of receiving host
+	dstport varchar(10) not null, -- dest port 
 	mac varchar(17) not null, --mac address of internal host
 	bytes integer not null, --total bytes 
 	packets integer not null, -- number of pakcets
 	bytevar float not null, -- variance in packet size	
-	proto varchar(10) not null, --protocol if known
-	dstport varchar(10) not null, -- dest port number
+	proto varchar(10) not null, --protocol if known	
 	ext varchar(255) not null --external ip address (either src or dst)	
 );
 

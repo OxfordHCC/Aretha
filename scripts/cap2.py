@@ -18,7 +18,7 @@ from playhouse.reflection import generate_models, print_model, print_table_sql
 import logging
 
 # constants
-DEBUG_LEVEL = logging.DEBUG
+DEBUG_LEVEL = logging.INFO
 ARETHA_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = os.path.sep.join((ARETHA_BASE, "config", "config.cfg"))
 LOG_PATH = os.path.sep.join((ARETHA_BASE, 'log'))
@@ -59,101 +59,103 @@ def compute_ends(time):
     start = COMMIT_INTERVAL_SECS * math.floor(time.timestamp() / COMMIT_INTERVAL_SECS)
     return (datetime.fromtimestamp(start), datetime.fromtimestamp(start+COMMIT_INTERVAL_SECS))
 
+def to_trans_tuple(transmission):
+    return (transmission.src, transmission.srcport, transmission.dst, transmission.dstport, transmission.mac, transmission.proto,  transmission.ext)
+def mk_trans_tuple(src, srcport, dst, dstport, mac, proto, ext):
+    return (src, srcport, dst, dstport, mac, proto, ext)
+
 def DatabaseInsert(packets):
     global time_since_last_commit
     db = connect()
     models = generate_models(db)
     exposures, transmissions = models['exposures'], models['transmissions']
 
+    # cached mode
+    times = set([compute_ends(fix_sniff_tz(packet.sniff_time)) for packet in packets])
+
+    # build trans cache, via excache
+    transcache = {}
+    transdirty = set()
+
+    for t in times:
+        segstart, segend = t
+        exps = exposures.select().where(exposures.start_time == segstart, exposures.end_time == segend)
+        if exps:    
+            log.debug(f"updating previous exposure {exps[-1].id} [{exps[-1].start_time}]")
+            exp = exps[-1] # get last one
+        else:
+            log.debug(f"creating new exposure {segstart}-{segend}")
+            exp = exposures.create(start_time=segstart, end_time=segend)        
+
+        # build_trans_cache
+        transmissions.select().where(transmissions.exposure == exp)
+        [transcache.update(dict([(to_trans_tuple(t), t)])) for t in transmissions]
+
     for packet in packets:
-        # clean up packet info before entry
-        mac = ''
-        src = ''
-        dst = ''
-        proto = ''
-        ext = ''
-
-        if 'ip' not in packet:
-            continue
-
         try:
+            # non ip packet blast away
+            if 'ip' not in packet:
+                continue
+
             src, dst = packet.ip.src, packet.ip.dst
-        except AttributeError as ke:
-            log.error("AttributeError determining src/dst", exc_info=ke)
+            if ipaddress.ip_address(src).is_multicast or ipaddress.ip_address(dst).is_multicast or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
+                continue
+
+            # check locality
+            srcLocal, dstLocal = ipaddress.ip_address(src).is_private, ipaddress.ip_address(dst).is_private
+
+            if srcLocal == dstLocal:
+                continue  # internal packet that we don't care about, or no local host (should never happen)
+            elif not dstLocal:
+                mac = packet['eth'].src
+                ext = packet.ip.dst
+            else:
+                mac = packet['eth'].dst
+                ext = packet.ip.src
+
+            if len(packet.highest_layer) > 10:
+                proto = packet.highest_layer[:10]
+            else:
+                proto = packet.highest_layer
+
+            srcport = packet[packet.transport_layer].srcport
+            dstport = packet[packet.transport_layer].dstport
+
+            transtup = mk_trans_tuple(src, srcport, dst,  dstport, mac, proto, ext)
+            trans = transcache.get(transtup)
+            if not trans:
+                # log.debug(f"creating new transmission")                        
+                trans = transmissions.create(
+                    exposure=exp,
+                    src=src,
+                    srcport=srcport,
+                    dst=dst,
+                    dstport=dstport,
+                    proto=proto,
+                    mac=mac,
+                    ext=ext,
+                    bytes=0,
+                    bytevar=0,
+                    packets=0
+                )
+                log.debug(f"created new transmission id {trans.id}")
+                transcache.update([(transtup, trans)])
+                
+            # update
+            trans.bytes = trans.bytes + int(packet.length)
+            trans.packets = trans.packets + 1
+            trans.bytevar = 0
+            transdirty.add(transtup)
+
+        except Exception as a:
+            log.error("Exception parsing out packet", exc_info=a)
             continue
-
-        if ipaddress.ip_address(src).is_multicast or ipaddress.ip_address(dst).is_multicast or packet['eth'].src == 'ff:ff:ff:ff:ff:ff' or  packet['eth'].dst == 'ff:ff:ff:ff:ff:ff':
-            # broadcast, multicast, so skip
-            continue
-
-        srcLocal = ipaddress.ip_address(src).is_private
-        dstLocal = ipaddress.ip_address(dst).is_private
-
-        if srcLocal == dstLocal:
-            continue  # internal packet that we don't care about, or no local host (should never happen)
-        elif not dstLocal:
-            mac = packet['eth'].src
-            ext = packet.ip.dst
-        else:
-            mac = packet['eth'].dst
-            ext = packet.ip.src
-
-        if len(packet.highest_layer) > 10:
-            proto = packet.highest_layer[:10]
-        else:
-            proto = packet.highest_layer
-
-        dst_port = packet[packet.transport_layer].dstport
-
-        pkt_time = fix_sniff_tz(packet.sniff_time)
-        segstart,segend  = compute_ends(pkt_time)
-        
-        exps = exposures.select().where(exposures.start_time==segstart, exposures.end_time==segend)
-
-        if exps:
-            log.info(f"updating previous exposure {exps[-1].id} [{exps[-1].start_time}]")
-            exp = exps[-1] # get laste one
-        else:
-            log.info(f"creating new exposure {segstart}-{segend}")
-            exp = exposures.create(start_time=segstart, end_time=segend)
-
-        xmissions = transmissions.select().where(
-            transmissions.exposure == exp,
-            transmissions.src == src,
-            transmissions.dst == dst,
-            transmissions.proto == proto,
-            transmissions.mac == mac,
-            transmissions.dstport == dst_port,
-            transmissions.ext == ext
-        );
-
-        if xmissions:
-            log.info(f"updating existing transmission { xmissions[-1].id }")            
-            xmission = xmissions[-1]
-        else:
-            log.info(f"creating new transmission")                        
-            xmission = transmissions.create(
-                exposure = exp,
-                src = src,
-                dst = dst,
-                proto = proto,
-                mac = mac,
-                dstport=dst_port,
-                ext=ext,
-                bytes=0,
-                bytevar=0,
-                packets=0
-            )
-            log.info(f"new transmission id {xmission.id}")                        
-        
-        transmissions.update(
-            bytes=xmission.bytes + int(packet.length),
-            packets=xmission.packets + 1,
-            bytevar=0,  ## todo
-        ).where(transmissions.id==xmission.id).execute()
-
-
-    pass
+        pass
+    
+    # commit our transdirties
+    # print(transdirty)
+    log.info(f"saving {len(transdirty)} transmissions to db")
+    [transcache[td].save() for td in transdirty]
 
     ## cur.close()
     ## conn.close()    
