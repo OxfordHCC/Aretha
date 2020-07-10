@@ -10,14 +10,13 @@ import sys
 import traceback
 import ipaddress
 import math
-
-import peewee
-from playhouse.postgres_ext import PostgresqlExtDatabase
-from playhouse.reflection import generate_models, print_model, print_table_sql
+import db.databaseBursts as db
+import cProfile
 
 import logging
 
 # constants
+DB = None
 DEBUG_LEVEL = logging.INFO
 ARETHA_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
 CONFIG_PATH = os.path.sep.join((ARETHA_BASE, "config", "config.cfg"))
@@ -39,6 +38,11 @@ queue = []
 COMMIT_INTERVAL_SECS = None
 CONFIG = None
 
+DOPROFILE = True
+__PROFILER_CT = 0
+__PROFILER = None
+__PROFILE_LIMIT = 30
+
 def fix_sniff_tz(sniff_dt):
     # pyshark doesn't return an aware datetime, so we misinterpret things to being non local
     # what we need to do is figure out what timezone we captured in
@@ -46,50 +50,81 @@ def fix_sniff_tz(sniff_dt):
     # then we need to create a new datetime with the actual timezone... cast back into UTC.
     return datetime.combine(sniff_dt.date(),sniff_dt.time(),local_tz).astimezone(timezone.utc)
 
-
-def connect():
-    # open db connection
-    database = CONFIG['postgresql']['database']
-    username = CONFIG['postgresql'].get('username') or ''
-    password = CONFIG['postgresql'].get('password') or ''
-    host = CONFIG['postgresql'].get('host') or 'localhost'
-    return PostgresqlExtDatabase(database, host=host, user=username, password=password, port=5432)
-
 def compute_ends(time):
     start = COMMIT_INTERVAL_SECS * math.floor(time.timestamp() / COMMIT_INTERVAL_SECS)
     return (datetime.fromtimestamp(start), datetime.fromtimestamp(start+COMMIT_INTERVAL_SECS))
 
-def to_trans_tuple(transmission):
-    return (transmission.src, transmission.srcport, transmission.dst, transmission.dstport, transmission.mac, transmission.proto,  transmission.ext)
-def mk_trans_tuple(src, srcport, dst, dstport, mac, proto, ext):
-    return (src, srcport, dst, dstport, mac, proto, ext)
 
-def DatabaseInsert(packets):
-    global time_since_last_commit
-    db = connect()
-    models = generate_models(db)
-    exposures, transmissions = models['exposures'], models['transmissions']
 
-    # cached mode
-    times = set([compute_ends(fix_sniff_tz(packet.sniff_time)) for packet in packets])
+# def to_trans_tuple(transmission):
+#     return (transmission.src, transmission.srcport, transmission.dst, transmission.dstport, transmission.mac, transmission.proto, transmission.ext)
+    
+def mk_trans_tuple(expid, src, srcport, dst, dstport, mac, proto, ext):
+    return (expid, src, srcport, dst, dstport, mac, proto, ext)
 
-    # build trans cache, via excache
-    transcache = {}
-    transdirty = set()
+_transcache = {}
+_expcache = {}
 
-    for t in times:
-        segstart, segend = t
+def get_exposure(segstart, segend):
+    exposures, transmissions = DB.Exposures, DB.Transmissions    
+    if not _expcache.get((segstart,segend)): 
         exps = exposures.select().where(exposures.start_time == segstart, exposures.end_time == segend)
         if exps:    
             log.debug(f"updating previous exposure {exps[-1].id} [{exps[-1].start_time}]")
             exp = exps[-1] # get last one
         else:
             log.debug(f"creating new exposure {segstart}-{segend}")
-            exp = exposures.create(start_time=segstart, end_time=segend)        
+            exp = exposures.create(start_time=segstart, end_time=segend)
+        _expcache[(segstart, segend)] = exp
+    return _expcache[(segstart,segend)]
+    
+def get_trans(packet_time, src, srcport, dst, dstport, mac, proto, ext):
+    exposures, transmissions = DB.Exposures, DB.Transmissions        
+    segstart, segend = compute_ends(packet_time)
+    exp = get_exposure(segstart, segend)
+    transtup = mk_trans_tuple(exp.id, src, srcport, dst, dstport, mac, proto, ext)
+    if not _transcache.get(transtup):
+        trans = transmissions.create(
+                    exposure=exp,
+                    src=src,
+                    srcport=srcport,
+                    dst=dst,
+                    dstport=dstport,
+                    proto=proto,
+                    mac=mac,
+                    ext=ext,
+                    bytes=0,
+                    bytevar=0,
+                    packets=0
+                )
+        log.debug(f"created new transmission id {trans.id}")
+        _transcache[transtup] = trans
+    return _transcache[transtup]
 
-        # build_trans_cache
-        transmissions.select().where(transmissions.exposure == exp)
-        [transcache.update(dict([(to_trans_tuple(t), t)])) for t in transmissions]
+def DatabaseInsert(packets):
+    global time_since_last_commit
+    exposures, transmissions = DB.Exposures, DB.Transmissions
+
+    # # cached mode
+    # times = set([compute_ends(fix_sniff_tz(packet.sniff_time)) for packet in packets])
+
+    # # build trans cache, via excache
+    # transcache = {}
+    transdirty = set()
+
+    # for t in times:
+    #     segstart, segend = t
+    #     exps = exposures.select().where(exposures.start_time == segstart, exposures.end_time == segend)
+    #     if exps:    
+    #         log.debug(f"updating previous exposure {exps[-1].id} [{exps[-1].start_time}]")
+    #         exp = exps[-1] # get last one
+    #     else:
+    #         log.debug(f"creating new exposure {segstart}-{segend}")
+    #         exp = exposures.create(start_time=segstart, end_time=segend)        
+
+    #     # build_trans_cache
+    #     transmissions.select().where(transmissions.exposure == exp)
+    #     [transcache.update(dict([(to_trans_tuple(t), t)])) for t in transmissions]
 
     for packet in packets:
         try:
@@ -121,31 +156,13 @@ def DatabaseInsert(packets):
             srcport = packet[packet.transport_layer].srcport
             dstport = packet[packet.transport_layer].dstport
 
-            transtup = mk_trans_tuple(src, srcport, dst,  dstport, mac, proto, ext)
-            trans = transcache.get(transtup)
-            if not trans:
-                # log.debug(f"creating new transmission")                        
-                trans = transmissions.create(
-                    exposure=exp,
-                    src=src,
-                    srcport=srcport,
-                    dst=dst,
-                    dstport=dstport,
-                    proto=proto,
-                    mac=mac,
-                    ext=ext,
-                    bytes=0,
-                    bytevar=0,
-                    packets=0
-                )
-                log.debug(f"created new transmission id {trans.id}")
-                transcache.update([(transtup, trans)])
-                
+            trans = get_trans(fix_sniff_tz(packet.sniff_time), src, srcport, dst, dstport, mac, proto, ext)
+
             # update
             trans.bytes = trans.bytes + int(packet.length)
             trans.packets = trans.packets + 1
             trans.bytevar = 0
-            transdirty.add(transtup)
+            transdirty.add(trans)
 
         except Exception as a:
             log.error("Exception parsing out packet", exc_info=a)
@@ -155,14 +172,13 @@ def DatabaseInsert(packets):
     # commit our transdirties
     # print(transdirty)
     log.info(f"saving {len(transdirty)} transmissions to db")
-    [transcache[td].save() for td in transdirty]
+    [trans.save() for trans in transdirty]
 
     ## cur.close()
     ## conn.close()    
     log.info(f"Captured {str(len(packets))} packets this tick")
-    db.commit()
-    db.close()
-
+    DB.peewee.commit()
+    # DB.peewee.close()
 
 def QueuedCommit(packet):
     # commit packets to the database in COMMIT_INTERVAL_SECS second intervals
@@ -170,6 +186,9 @@ def QueuedCommit(packet):
     now = datetime.utcnow()
     global time_since_last_commit
     global queue
+    global __PROFILER_CT
+    global __PROFILER
+
 
     # first packet in new queue
     if time_since_last_commit == 0:
@@ -180,12 +199,23 @@ def QueuedCommit(packet):
     # time to commit to db
     if (now - time_since_last_commit).total_seconds() > COMMIT_INTERVAL_SECS:
         if len(queue) > 0:
-            try: 
+            try:
+                if DOPROFILE:
+                    if __PROFILER == None and __PROFILER_CT == 0:
+                        __PROFILER = cProfile.Profile()
+                        __PROFILER.enable()
+                    elif __PROFILER_CT == __PROFILE_LIMIT and __PROFILER:
+                        __PROFILER.disable()
+                        __PROFILER.print_stats()
+                        __PROFILER = None
+                    __PROFILER_CT += 1                        
                 DatabaseInsert(queue)
             except Exception as e:
                 log.error('Error in DB Insert >>>> ', exc_info=e)
         queue = []
         time_since_last_commit = 0
+
+    
 
 
 
@@ -222,7 +252,9 @@ if __name__ == '__main__':
         COMMIT_INTERVAL_SECS = int(CONFIG['capture']['interval'])
     else:
         log.error(parser.print_help())
-        sys.exit(-1)    
+        sys.exit(-1)
+        
+    DB = db.dbManager()
 
     log.info(f"Setting capture interval {COMMIT_INTERVAL_SECS} ")
     log.info(f"Setting up to capture from {INTERFACE}")

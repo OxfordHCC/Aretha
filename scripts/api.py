@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import json
+import functools
 import os
 import re
 import subprocess
@@ -9,11 +10,13 @@ import traceback
 import urllib
 import configparser
 import socket
+import logging
 from datetime import datetime
 from flask import Flask, jsonify, make_response, Response
+from db.databaseBursts import TransEpoch
 
-sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
-import databaseBursts
+# sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
+import db.databaseBursts as databaseBursts
 
 ####################
 # global variables #
@@ -21,11 +24,24 @@ import databaseBursts
 
 DB_MANAGER = None  # for running database queries
 app = Flask(__name__)  # WSGI entry point
+app.config.DEBUG = True
+app.config.TESTING = True
 geos = dict()  # for building and caching geo data
-IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
-CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 CONFIG = None
-
+DEBUG_LEVEL = logging.DEBUG
+ARETHA_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
+CONFIG_PATH = os.path.sep.join((ARETHA_BASE, "config", "config.cfg"))
+LOG_PATH = os.path.sep.join((ARETHA_BASE, 'log'))
+MODULENAME = 'api'
+logFormatter = logging.Formatter("%(asctime)s {}::%(levelname)s %(message)s".format(MODULENAME))
+log = logging.getLogger()
+log.setLevel(DEBUG_LEVEL)
+fileHandler = logging.FileHandler(os.path.sep.join((LOG_PATH, '%s.log' % MODULENAME)))
+fileHandler.setFormatter(logFormatter)
+log.addHandler(fileHandler)
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+log.addHandler(consoleHandler)
 
 #################
 # api endpoints #
@@ -85,6 +101,33 @@ def impacts(start, end, delta):
 
 # return aggregated impacts from <start> to <end>
 # <start>/<end> as unix timestamps
+@app.route('/api/impacts2/<start>/<end>')
+def impacts2(start, end):
+    try:
+
+        start, end = datetime.fromtimestamp(int(start)), datetime.fromtimestamp(int(end))
+        ex, tr = DB_MANAGER.Exposures, DB_MANAGER.Transmissions
+
+        matches = tr.select().join(ex).where(ex.start_time >= start, ex.end_time <= end)
+
+        result = []
+        if len(matches) > 0:
+            te = functools.reduce(lambda tres, t: tres.merge(t), matches[1:], TransEpoch(matches[0]))
+            for (mac, tm) in te.by_mac.items():
+                for (ext, extp) in tm.by_ext.items():
+                    result.append(extp.to_dict().update({"company": ext, "impact": extp.bytes, "device": mac}))
+
+        # add geo and device data
+        geos = get_geodata()
+        devices = get_device_info()
+
+        response = make_response(jsonify({"impacts": result, "geodata": geos, "devices": devices}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    except Exception as ae:
+        log.error('Exception in impacts2', exc_info=ae)
+        return jsonify({"message": "There was an error processing the request"})
+
 @app.route('/api/impacts/<start>/<end>')
 def impacts_aggregated(start, end):
     global DB_MANAGER
