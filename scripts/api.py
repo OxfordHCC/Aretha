@@ -115,7 +115,9 @@ def impacts2(start, end):
             te = functools.reduce(lambda tres, t: tres.merge(t), matches[1:], TransEpoch(matches[0]))
             for (mac, tm) in te.by_mac.items():
                 for (ext, extp) in tm.by_ext.items():
-                    result.append(extp.to_dict().update({"company": ext, "impact": extp.bytes, "device": mac}))
+                    d = extp.to_dict()
+                    d.update({"company": ext, "impact": extp.bytes, "device": mac})
+                    result.append(d)
 
         # add geo and device data
         geos = get_geodata()

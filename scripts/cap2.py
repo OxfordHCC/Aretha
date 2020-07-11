@@ -36,6 +36,7 @@ log.addHandler(consoleHandler)
 time_since_last_commit = 0
 queue = []
 COMMIT_INTERVAL_SECS = None
+RESOLUTION_SECS = None
 CONFIG = None
 
 DOPROFILE = True
@@ -51,10 +52,8 @@ def fix_sniff_tz(sniff_dt):
     return datetime.combine(sniff_dt.date(),sniff_dt.time(),local_tz).astimezone(timezone.utc)
 
 def compute_ends(time):
-    start = COMMIT_INTERVAL_SECS * math.floor(time.timestamp() / COMMIT_INTERVAL_SECS)
-    return (datetime.fromtimestamp(start), datetime.fromtimestamp(start+COMMIT_INTERVAL_SECS))
-
-
+    start = RESOLUTION_SECS * math.floor(time.timestamp() / RESOLUTION_SECS)
+    return (datetime.fromtimestamp(start), datetime.fromtimestamp(start+RESOLUTION_SECS))
 
 # def to_trans_tuple(transmission):
 #     return (transmission.src, transmission.srcport, transmission.dst, transmission.dstport, transmission.mac, transmission.proto, transmission.ext)
@@ -84,7 +83,7 @@ def get_trans(packet_time, src, srcport, dst, dstport, mac, proto, ext):
     exp = get_exposure(segstart, segend)
     transtup = mk_trans_tuple(exp.id, src, srcport, dst, dstport, mac, proto, ext)
     if not _transcache.get(transtup):
-        trans = transmissions.create(
+        trans = transmissions(
                     exposure=exp,
                     src=src,
                     srcport=srcport,
@@ -188,6 +187,8 @@ def QueuedCommit(packet):
     global queue
     global __PROFILER_CT
     global __PROFILER
+    global _transcache
+    global _expcache
 
 
     # first packet in new queue
@@ -215,6 +216,18 @@ def QueuedCommit(packet):
         queue = []
         time_since_last_commit = 0
 
+        if len(_transcache) > 1000:
+            log.info(f"clearing {len(_transcache)} transcache")
+            _transcache = {}
+        if len(_expcache) > 1000:
+            log.info(f"clearing {len(_expcache)} expcache")            
+            _expcache = {}
+    else:
+        pass
+        # print(".", end="")
+
+    
+
     
 
 
@@ -224,7 +237,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', dest="config", type=str, help="Path to config file, default is %s" % CONFIG_PATH)
     parser.add_argument('--interface', dest="interface", type=str, help="Interface to listen to")
-    parser.add_argument('--interval', dest="interval", type=float, help="Commit interval in seconds")
+    parser.add_argument('--interval', dest="interval", type=int, help="Commit interval in seconds")
+    parser.add_argument('--resolution', dest="resolution", type=int, help="Commit resolution in seconds")    
     parser.add_argument('--debug', dest='debug', action='store_true')
     args = parser.parse_args()
 
@@ -251,12 +265,21 @@ if __name__ == '__main__':
     elif "capture" in CONFIG and "interval" in CONFIG['capture']:
         COMMIT_INTERVAL_SECS = int(CONFIG['capture']['interval'])
     else:
+        COMMIT_INTERVAL_SECS = 30
+
+    if args.resolution is not None:
+        RESOLUTION_SECS = args.resolution
+    elif "capture" in CONFIG and "resolution" in CONFIG['capture']:
+        RESOLUTION_SECS = int(CONFIG['capture']['resolution'])
+    else:
+        RESOLUTION_SECS = 5
         log.error(parser.print_help())
         sys.exit(-1)
         
     DB = db.dbManager()
 
     log.info(f"Setting capture interval {COMMIT_INTERVAL_SECS} ")
+    log.info(f"Setting resolution {RESOLUTION_SECS} ")
     log.info(f"Setting up to capture from {INTERFACE}")
     capture = pyshark.LiveCapture(interface=INTERFACE, bpf_filter='udp or tcp')
 
