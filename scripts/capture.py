@@ -158,6 +158,7 @@ if __name__ == '__main__':
 
     log("Setting capture interval ", COMMIT_INTERVAL)
     print(f"Setting up to capture from {INTERFACE}")
+    # capture = pyshark.LiveCapture(interface=INTERFACE, bpf_filter='udp or tcp')
     capture = pyshark.LiveCapture(interface=INTERFACE, bpf_filter='udp or tcp')
 
     if DEBUG:

@@ -11,6 +11,7 @@ import traceback
 import ipaddress
 import math
 import db.databaseBursts as db
+from db.databaseBursts import updateVar
 import cProfile
 
 import logging
@@ -158,9 +159,11 @@ def DatabaseInsert(packets):
             trans = get_trans(fix_sniff_tz(packet.sniff_time), src, srcport, dst, dstport, mac, proto, ext)
 
             # update
-            trans.bytes = trans.bytes + int(packet.length)
-            trans.packets = trans.packets + 1
-            trans.bytevar = 0
+            packet_length = int(packet.length)
+            (_, _, trans.bytevar) = updateVar(trans.packets, trans.bytes/trans.packets if trans.packets > 0 else 0, trans.bytevar, packet_length)
+            trans.bytes += packet_length
+            trans.packets += 1
+            
             transdirty.add(trans)
 
         except Exception as a:

@@ -1,18 +1,9 @@
 #! /usr/bin/env python3
 
-import json
-import functools
-import os
-import re
-import subprocess
-import sys
-import traceback
-import urllib
-import configparser
-import socket
-import logging
+import re, os, functools, json, subprocess, math, sys, traceback, urllib, configparser, socket, logging
 from datetime import datetime
 from flask import Flask, jsonify, make_response, Response
+import db
 from db.databaseBursts import TransEpoch
 
 # sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "db"))
@@ -98,11 +89,42 @@ def impacts(start, end, delta):
     except:
         return jsonify({"message": "There was an error processing the request"})
 
+@app.route('/api/impacts2/<start>/<end>/<delta>')
+def impacts2(start, end, delta):
+    try:
+        start, end = datetime.fromtimestamp(int(start)), datetime.fromtimestamp(int(end))
+        ex, tr = DB_MANAGER.Exposures, DB_MANAGER.Transmissions
+
+        tr1 = tr.select().limit(1).order_by(tr.id.desc())
+        if len(tr1):
+            interval = math.floor(tr.end_date - tr.start_date).total_seconds()                
+            if interval > 0 and delta % interval > 0:
+                return make_response(jsonify({"error": f"delta must be multiple of resolution {interval} seconds"}), 422)
+            
+            matches = tr.select().join(ex).where(ex.start_time >= start, ex.end_time <= end)
+            tMerger = databaseBursts.TransmissionMerger(mins=delta)
+
+            impacts = {}
+            if len(matches) > 0:
+                [tMerger.merge(t) for t in matches]
+                impacts = tMerger.to_dict()
+
+        # add geo and device data
+        geos = get_geodata()
+        devices = get_device_info()
+
+        response = make_response(jsonify({"impacts": impacts, "geodata": geos, "devices": devices}))
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+    except Exception as ae:
+        log.error('Exception in impacts2', exc_info=ae)
+        return jsonify({"message": "There was an error processing the request"})
+
 
 # return aggregated impacts from <start> to <end>
 # <start>/<end> as unix timestamps
 @app.route('/api/impacts2/<start>/<end>')
-def impacts2(start, end):
+def impacts2_aggregated(start, end):
     try:
 
         start, end = datetime.fromtimestamp(int(start)), datetime.fromtimestamp(int(end))

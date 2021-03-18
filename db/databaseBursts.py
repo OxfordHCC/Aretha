@@ -1,5 +1,4 @@
 import psycopg2, psycopg2.extensions, select, threading, sys, configparser, os, datetime, math
-
 import peewee
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from playhouse.reflection import generate_models, print_model, print_table_sql
@@ -149,17 +148,50 @@ class TransmissionMerger:
 
     def compute_epoch(self, dt):
         # computes the relevant epoch of dt
-        return math.floor(dt.timestamp() / self.mins*60)
+        return math.floor(dt.timestamp() / (self.mins*60))
 
-    def update(self, transmission):
+    def merge(self, transmission):
         # transmission has to be a peeweemodel joined
         assert transmission.exposure and transmission.exposure.id, "Model must be joined with Exposures"
         epoch = self.compute_epoch(transmission.exposure.start_date)
         if self.by_epoch.get(epoch):
             self.by_epoch[epoch].merge(transmission)
         else:
-            self.by_epoch[epoch] = TransDict(transmission)
+            self.by_epoch[epoch] = TransEpoch(transmission)
+
+    def iter_by_epoch(self):
+        return [x for x in sorted(self.by_epoch.items())]
 
     def to_dict(self):
         return dict([(epoch, macset.to_dict()) for (epoch, macset) in self.by_epoch.items()])
         
+# For a new value newValue, compute the new count, new mean, the new M2.
+# mean accumulates the mean of the entire dataset
+# M2 aggregates the squared distance from the mean
+# count aggregates the number of samples seen so far
+def updateVar(count, mean, M2, newValue):
+    count += 1
+    delta = newValue - mean
+    mean += delta / count
+    delta2 = newValue - mean
+    M2 += delta * delta2
+    return (count, mean, M2)
+
+def M2toVar(count, mean, M2):
+    if count < 2:
+        return float('nan')
+    return M2 / count
+    
+def M2toSampleVar(count, mean, M2):
+    if count < 2:
+        return float('nan')
+    return M2 / (count - 1)
+
+# # Retrieve the mean, variance and sample variance from an aggregate
+# def finalize(existingAggregate):
+#     (count, mean, M2) = existingAggregate
+#     if count < 2:
+#         return float('nan')
+#     else:
+#        (mean, variance, sampleVariance) = (mean, M2 / count, M2 / (count - 1))
+#        return (mean, variance, sampleVariance)
