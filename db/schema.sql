@@ -16,14 +16,17 @@ create index on packets (src);
 create index on packets (dst);
 create index on packets (time);
 
-
 create table exposures ( -- exposure is the new impacts
 	id SERIAL primary key,
 	start_time timestamp with time zone not null,
 	end_time timestamp with time zone not null
 );
 
-create table transmissions ( --
+create index on exposures(start_time);
+create index on exposures(end_time);
+
+-- transmissions is the new packets. New fields:
+create table transmissions (
 	id SERIAL primary key,
 	exposure integer references exposures on delete cascade not null,
 	src varchar(255) not null, --ip address of sending host
@@ -37,6 +40,9 @@ create table transmissions ( --
 	proto varchar(10) not null, --protocol if known	
 	ext varchar(255) not null --external ip address (either src or dst)	
 );
+
+create index on transmissions (src);
+create index on transmissions (dst);
 
 drop table if exists devices cascade;
 create table devices(

@@ -3,17 +3,11 @@ import peewee
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from playhouse.reflection import generate_models, print_model, print_table_sql
 from playhouse.shortcuts import model_to_dict
+from config import config as CONFIG
 
-IOTR_BASE = os.path.split(os.path.dirname(os.path.abspath(__file__)))[0]
-CONFIG_PATH = IOTR_BASE + "/config/config.cfg"
 
-class dbManager():
-    
+class DbManager():
     def __init__(self, dbname=None, username=None, password=None, host=None, port=None):
-        
-        CONFIG = configparser.ConfigParser()
-        CONFIG.read(CONFIG_PATH)
-
         if dbname is None:
             dbname = CONFIG['postgresql']['database']
         if username is None:
@@ -27,8 +21,21 @@ class dbManager():
 
         try:
             sys.stdout.write("Connecting to database...")
-            self.connection = psycopg2.connect(dbname=dbname, user=username, password=password, port=port, host=host) # "dbname=%(dbname)s user=%(username)s password=%(password)s" % {'dbname': dbname, 'username': username, 'password': password})
-            self.peewee = PostgresqlExtDatabase(dbname, user=username, password=password, host=host, port=port)
+
+            self.connection = psycopg2.connect(
+                dbname=dbname,
+                user=username,
+                password=password,
+                port=port,
+                host=host)
+            
+            self.peewee = PostgresqlExtDatabase(
+                dbname,
+                user=username,
+                password=password,
+                host=host,
+                port=port)
+            
             self._get_models()
             print("ok")
         except:
@@ -40,14 +47,20 @@ class dbManager():
 
     def listen(self, channel, cb=None):
         try:
+            # get connection
             conn = self.connection
             conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+
+            # get cursor
             curs = conn.cursor()
             curs.execute("LISTEN %s ;" % channel)
+
+            # stop flag
             stop = [False]
             def stopme(): 
                 stop[0] = True
-            def subp(): 
+
+            def subp():
                 while not stop[0]: # kill me with a sharp stick. 
                     if select.select([conn],[],[],5) == ([],[],[]):
                         # print("Timeout")
@@ -59,6 +72,7 @@ class dbManager():
                             # print("Got NOTIFY:", notify.pid, notify.channel, notify.payload)
                             if cb is not None:
                                 cb(notify.payload)
+                                
             thread = threading.Thread(target=subp)
             thread.start()                
             return stopme
@@ -74,14 +88,14 @@ class dbManager():
         """
         cur = self.connection.cursor()
         cur.execute(query, data)
-        #colnames = [desc[0] for desc in cur.description]
+        
         try:
             if all:
                 output = cur.fetchall()
             else:
                 output = cur.fetchone()
         except:
-            output = ""
+            output = []
         
         self.connection.commit()
         cur.close()
@@ -130,11 +144,20 @@ class TransMac:
 
 class TransEpoch:
     # transepoch has by_mac -> ext
-    def __init__(self, transmission):
-        self.by_mac = {} 
+    def __init__(self, transmission=None):
+        self.by_mac = {}
+        if not transmission is None:
+            self.merge(transmission)
         
-    def merge(self, tnew):
-        self.by_mac[tnew.mac] = self.by_mac.get(tnew.mac) and self.by_mac.get(tnew.mac).merge(tnew) or TransMac(tnew)
+    def merge(self, transmission):
+        tx_mac = self.by_mac.get(transmission.mac)
+        if tx_mac is None:
+            tx_mac = TransMac(transmission)
+        else:
+            tx_mac = tx_mac.merge(transmission)
+
+        self.by_mac[transmission.mac] = tx_mac
+        
         return self
 
     def to_dict(self):
