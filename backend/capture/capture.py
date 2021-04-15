@@ -150,12 +150,10 @@ def database_insert(Transmissions, Exposures, packets, resolution_seconds):
     # readable/efficient than save() + atomic()
     with db.atomic() as txn:
         # commit our transdirties
-        db.connect()
         log.info(f"saving {len(transdirty)} transmissions to database.")
 
         [trans.save() for trans in transdirty]
 
-        db.close()
         log.info(f"Aggregated {str(len(packets_of_interest))} packets this tick.")
         
     if len(_transcache) > 1000:
