@@ -3,27 +3,80 @@ Have you ever wondered which companies your smart devices were talking to? Or ho
 
 Aretha captures meta data about the network traffic of devices connected to it. Run Aretha on a device with a WiFi hotspot and connect your devices - you might be surprised about what you see.
 
-## Install
-1. Install package dependcies: PostgreSQL, NodeJS, Node Package Manager (npm), Python3, Wireshark CLI (sometimes called tshark)
 
-2. Install python3 dependencies: `pip3 install -r requirements.txt`
+# Database
+You can either start a database using docker, or manually using a Postgres install.
 
-3. Install NodeJS dependency angular: `cd ui/ && npm install && npm install -g @angular/cli`
+## Using Docker
+1. Modify docker-compose.yaml with preferred db settings
+You can also leave them as is.
 
-4. Copy `config-sample.cfg` to `config.cfg` and add values for at least [ipdata][key], [postgres][database], [postgres[username], and [postgres][password]
+2. run docker-compose up in the root directory
+```
+$> docker-compose up
+```
+A postgres db will be started in a container using the config.
 
-5. Configure the database from the schema: `/scripts/reset-database.py`
+## Postgres
+1. Install PostgreSQL and start server
+2. Create a database and an admin user for the database
+3. Init db with sql file in ./db/schema.sql
 
-6. If you are using iptables-based functionality (`/api/aretha/enforce`), ensure that iptables rules will persist across reboots (e.g. by installing the iptables-persistent package on debian), and that the user running Aretha is able to run iptables as root without a password
+TODO: more detailed instructions for how to do this
 
-## Run (manually)
-1. In `/ui` run `ng serve`
+# Backend
+0. Copy `config-sample.cfg` to `config.cfg` and add values for at least [ipdata][key], [postgres][database], [postgres[username], and [postgres][password]
 
-2. In `/scripts` run `capture.py`, `loop.py` and `gunicorn --bind 127.0.0.1:4201 -w2 -t4 --timeout 300 api:app`
+The postgres config must match the info used when starting the postgres database.
 
-3. The web front end will be available at `localhost:4200`, and the API at `localhost:4201`
+1. Install tshark (wireshark cli), python3 and pipenv
 
-## Run (systemd service)
+2. Install packages
+```
+$> cd backend
+$> pipenv install
+```
+
+3. Start shell inside virtual env
+```
+$> pipenv shell
+```
+
+4. Start processing loop
+```
+$> python -m loop
+```
+
+5. Start packet capture loop
+```
+$> python -m capture
+```
+
+6. Start http server for API
+```
+$> gunicorn --bind 127.0.0.1:4201 -w2 -t4 --tiemout 3000 api:app
+```
+
+# User Interface
+1. Install Node and npm.
+2. Install npm packages
+```
+$> cd ui
+$> npm install
+```
+
+3. Start http server using angular cli
+```
+$> npx ng serve
+```
+
+4. Go to localhost:4200 in your browser
+
+
+# Legacy instructions
+
+##  Run as systemd service
+If you are using iptables-based functionality (`/api/aretha/enforce`), ensure that iptables rules will persist across reboots (e.g. by installing the iptables-persistent package on debian), and that the user running Aretha is able to run iptables as root without a password
 
 1. Copy `service/iotrefine-sample.service` to `/etc/systemd/system/iotrefine.service` and edit in the marked fields
 
@@ -35,10 +88,10 @@ Aretha captures meta data about the network traffic of devices connected to it. 
 
 4. To have chromium point at Aretha on login, copy and fill out logintask-sample.desktop and move it to ~/.config/autostart/
 
-## Reset the Database
+##  Reset the Database
 Run `scripts/reset-database.py`
 
-## API Endpoints
+# API Endpoints
 
 ### /api/impacts/\<start>\<end>\<interval>
 \<start> and \<end> are Unix timestamps (minimim 0 maximum now)
