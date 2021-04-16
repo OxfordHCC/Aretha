@@ -54,7 +54,7 @@ $> python -m capture
 
 6. Start http server for API
 ```
-$> gunicorn --bind 127.0.0.1:4201 -w2 -t4 --tiemout 3000 api:app
+$> python -m api
 ```
 
 # User Interface

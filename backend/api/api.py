@@ -15,6 +15,7 @@ from api import questions
 CONFIG.read(CONFIG_PATH)
 
 models = init_models(config=CONFIG['postgresql'])
+
 Transmissions = models['transmissions']
 Exposures = models['exposures']
 Geodata = models['geodata']
