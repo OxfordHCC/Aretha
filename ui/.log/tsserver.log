@@ -1,0 +1,142 @@
+Info 0    [12:09:30.735] Starting TS Server
+Info 1    [12:09:30.738] Version: 4.2.4
+Info 2    [12:09:30.738] Arguments: /Users/alexzugravu/.nvm/versions/node/v14.16.1/bin/node /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/bin/tsserver --logFile /Users/alexzugravu/workspace/oxford/Aretha/ui/.log/tsserver.log --logVerbosity info --cancellationPipeName /private/var/folders/2n/sn_pqycs277bm9w1bjj76ll40000gn/T/9d25e8e1bafff5ad060495b7956cd2b4/tscancellation*
+Info 3    [12:09:30.738] Platform: darwin NodeVersion: 14 CaseSensitive: false
+Info 4    [12:09:30.738] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [12:09:30.760] Search path: /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app
+Info 6    [12:09:30.761] For info: /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/loader.service.ts :: Config file name: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json
+Info 7    [12:09:30.762] Opened configuration file /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json
+Info 8    [12:09:30.822] Config: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json : {
+ "rootNames": [
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/e2e/app.e2e-spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/e2e/app.po.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/main.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/polyfills.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/test.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/typings.d.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/activity-log.service.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/activity-log.service.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/app.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/app.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/app.module.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/company-info.service.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/company-info.service.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/focus.service.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/focus.service.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/hover.service.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/hover.service.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/loader.service.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/loader.service.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/utils.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/appinfo/appinfo.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/appinfo/appinfo.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/company-info-dialog/company-info-dialog.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/company-info-dialog/company-info-dialog.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b1/content-b1.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b1/content-b1.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b2/content-b2.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b2/content-b2.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b3/content-b3.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b3/content-b3.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b4/content-b4.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-b4/content-b4.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-breach/content-breach.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-breach/content-breach.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d1/content-d1.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d1/content-d1.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d2/content-d2.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d2/content-d2.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d3/content-d3.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d3/content-d3.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d4/content-d4.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-d4/content-d4.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s1/content-s1.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s1/content-s1.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s2/content-s2.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s2/content-s2.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s3/content-s3.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-s3/content-s3.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-sd1/content-sd1.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/content-sd1/content-sd1.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/error/error.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/error/error.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/example/example.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/example/example.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/firewall/firewall.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/firewall/firewall.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/focus-infobox/focus-infobox.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/focus-infobox/focus-infobox.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/geobar/geobar.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/geobar/geobar.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/geomap/geomap.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/geomap/geomap.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/layout-edu/layout-edu.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/layout-edu/layout-edu.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/layout-timeseries/layout-timeseries.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/layout-timeseries/layout-timeseries.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/name-device/name-device.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/name-device/name-device.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/redaction/redaction.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/redaction/redaction.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/refinebar/refinebar.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/refinebar/refinebar.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/refinecat/refinecat.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/refinecat/refinecat.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/tiled-all/tiled-all.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/tiled-all/tiled-all.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/timeseries/timeseries.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/timeseries/timeseries.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/timeseries-legend/timeseries-legend.component.spec.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/timeseries-legend/timeseries-legend.component.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/environments/environment.prod.ts",
+  "/Users/alexzugravu/workspace/oxford/Aretha/ui/src/environments/environment.ts"
+ ],
+ "options": {
+  "importHelpers": true,
+  "outDir": "/Users/alexzugravu/workspace/oxford/Aretha/ui/dist/out-tsc",
+  "baseUrl": "/Users/alexzugravu/workspace/oxford/Aretha/ui/src",
+  "sourceMap": true,
+  "declaration": false,
+  "moduleResolution": 2,
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true,
+  "target": 2,
+  "typeRoots": [
+   "/Users/alexzugravu/workspace/oxford/Aretha/ui/node_modules/@types"
+  ],
+  "lib": [
+   "lib.es2016.d.ts",
+   "lib.dom.d.ts"
+  ],
+  "module": 5,
+  "configFilePath": "/Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json"
+ }
+}
+Info 9    [12:09:30.875] Starting updateGraphWorker: Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json
+Info 10   [12:09:36.478] Finishing updateGraphWorker: Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json Version: 1 structureChanged: true Elapsed: 5602.8516010046005ms
+Info 11   [12:09:36.478] Project '/Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json' (Configured)
+Info 12   [12:09:36.478] 	Files (1223)
+
+Info 13   [12:09:36.478] -----------------------------------------------
+Info 14   [12:09:36.520] Starting updateGraphWorker: Project: /dev/null/autoImportProviderProject1*
+Info 15   [12:09:37.805] Finishing updateGraphWorker: Project: /dev/null/autoImportProviderProject1* Version: 1 structureChanged: true Elapsed: 1284.9511719942093ms
+Info 16   [12:09:37.805] Project '/dev/null/autoImportProviderProject1*' (AutoImportProvider)
+Info 17   [12:09:37.805] 	Files (592)
+
+Info 18   [12:09:37.805] -----------------------------------------------
+Info 19   [12:09:37.829] DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 20   [12:09:37.829] Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json Detected file add/remove of non supported extension: /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log
+Info 21   [12:09:37.829] Elapsed:: 0.4450400173664093ms DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 22   [12:09:37.829] DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 23   [12:09:37.829] Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json Detected file add/remove of non supported extension: /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log
+Info 24   [12:09:37.829] Elapsed:: 0.06225302815437317ms DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/.log/ti-29236.log :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 25   [12:09:47.485] Starting updateGraphWorker: Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json
+Info 26   [12:09:47.604] Finishing updateGraphWorker: Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json Version: 2 structureChanged: false Elapsed: 118.7972030043602ms
+Info 27   [12:09:47.604] Different program with same set of files:: structureIsReused:: 2
+Info 28   [12:09:56.428] DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 29   [12:09:56.431] Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json Detected ignored path: /users/alexzugravu/workspace/oxford/aretha/ui/src/app/.#loader.service.ts
+Info 30   [12:09:56.431] Elapsed:: 1.0338660180568695ms DirectoryWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/ui 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Wild card directory
+Info 31   [12:09:56.431] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/ui/src 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Failed Lookup Locations
+Info 32   [12:09:56.432] Elapsed:: 0.6196440160274506ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/ui/src 1 undefined Project: /Users/alexzugravu/workspace/oxford/Aretha/ui/tsconfig.json WatchType: Failed Lookup Locations
+Info 33   [12:09:56.432] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/ui/src 1 undefined Project: /dev/null/autoImportProviderProject1* WatchType: Failed Lookup Locations
+Info 34   [12:09:56.432] Elapsed:: 0.06334999203681946ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/ui/src/app/.#loader.service.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/ui/src 1 undefined Project: /dev/null/autoImportProviderProject1* WatchType: Failed Lookup Locations

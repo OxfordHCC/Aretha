@@ -3,22 +3,10 @@ import peewee
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from playhouse.reflection import generate_models, print_model, print_table_sql
 from playhouse.shortcuts import model_to_dict
-from config import config as CONFIG
 
 
 class DbManager():
-    def __init__(self, dbname=None, username=None, password=None, host=None, port=None):
-        if dbname is None:
-            dbname = CONFIG['postgresql']['database']
-        if username is None:
-            username = CONFIG['postgresql']['username']
-        if password is None:
-            password = CONFIG['postgresql']['password']
-        if host is None:
-            host = CONFIG['postgresql'].get('host') or 'localhost'
-        if port is None:
-            port = CONFIG['postgresql'].get('port') or 5432
-
+    def __init__(self, database=None, username=None, password=None, host=None, port=5432):
         try:
             sys.stdout.write("Connecting to database...")
 
@@ -29,21 +17,9 @@ class DbManager():
                 port=port,
                 host=host)
             
-            self.peewee = PostgresqlExtDatabase(
-                dbname,
-                user=username,
-                password=password,
-                host=host,
-                port=port)
-            
-            self._get_models()
             print("ok")
         except:
             print("error")
-
-    def _get_models(self):
-        models = generate_models(self.peewee)
-        self.Exposures, self.Transmissions = models['exposures'], models['transmissions']
 
     def listen(self, channel, cb=None):
         try:

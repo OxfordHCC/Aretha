@@ -1,0 +1,19 @@
+[12:09:30.944] Global cache location '/Users/alexzugravu/Library/Caches/typescript/4.2', safe file path '/users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typingsafelist.json', types map path /users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/typesmap.json
+[12:09:30.946] Processing cache location '/Users/alexzugravu/Library/Caches/typescript/4.2'
+[12:09:30.946] Trying to find '/Users/alexzugravu/Library/Caches/typescript/4.2/package.json'...
+[12:09:30.947] Loaded content of '/Users/alexzugravu/Library/Caches/typescript/4.2/package.json': {"private":true,"dependencies":{"types-registry":"^0.1.537"}}
+[12:09:30.947] Loaded content of '/Users/alexzugravu/Library/Caches/typescript/4.2/package-lock.json'
+[12:09:30.947] Finished processing cache location '/Users/alexzugravu/Library/Caches/typescript/4.2'
+[12:09:30.948] Process id: 29237
+[12:09:30.948] NPM location: /Users/alexzugravu/.nvm/versions/node/v14.16.1/bin/npm (explicit '--npmLocation' not  provided)
+[12:09:30.948] validateDefaultNpmLocation: false
+[12:09:30.948] Npm config file: /Users/alexzugravu/Library/Caches/typescript/4.2/package.json
+[12:09:30.948] Updating types-registry npm package...
+[12:09:30.948] Exec: /Users/alexzugravu/.nvm/versions/node/v14.16.1/bin/npm install --ignore-scripts types-registry@latest
+[12:09:33.013]     Succeeded. stdout:
+    + types-registry@0.1.537
+    updated 1 package and audited 1 package in 1.242s
+found 0 vulnerabilities
+
+
+[12:09:33.014] Updated types-registry npm package
