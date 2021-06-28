@@ -5,7 +5,7 @@ import json, sys, traceback
 from flask import Flask, jsonify, make_response, Response, g
 
 from logger import getArethaLogger
-from api.modules import impacts, firewall, devices, content, redact, geodata, activity
+from api.routes import impacts, firewall, devices, content, redact, geodata, activity
 from api.api_exceptions import ArethaAPIException
 
 # Important API changes:
@@ -25,7 +25,6 @@ event_queue = []
 
 # for building and caching geo data 
 geos = dict()
-
 
 def handle_api_error(e):
     response = {
@@ -55,6 +54,7 @@ def after_request(db, api_version):
             "apiVersion": api_version,
             "data": data
         }
+        
         response.data = json.dumps(new_res_data)
 
         # add headers

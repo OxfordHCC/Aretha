@@ -1,5 +1,16 @@
 version: "3" # docker-compose version
 services:
+  aretha_test_db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=aretha
+      - POSTGRES_PASSWORD=aretha
+      - POSTGRES_DB=aretha
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/init.sql
+      
   aretha_db:
     image: postgres
     environment:
@@ -10,5 +21,3 @@ services:
       - "5432:5432"
     volumes:
       - ./db/schema.sql:/docker-entrypoint-initdb.d/init.sql
-volumes:
-  aretha_volume:
