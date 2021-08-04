@@ -34,7 +34,7 @@ The postgres config must match the info used when starting the postgres database
 2. Install packages
 ```
 $> cd backend
-$> pipenv install
+$> pipenv sync
 ```
 
 3. Start shell inside virtual env
