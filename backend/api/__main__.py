@@ -1,7 +1,8 @@
+import sys
 import argparse
 from gunicorn.app.base import BaseApplication
 from api import create_app
-from config import default_config
+from config import config
 from project_variables import CONFIG_PATH
 from models import db, init_models
 
@@ -23,6 +24,13 @@ class StandaloneApplication(BaseApplication):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--config',
+        type=str,
+        dest="config",
+        default=CONFIG_PATH,
+        help="Path to config file, default is %s" % CONFIG_PATH)
     
     parser.add_argument(
         '--host',
@@ -51,26 +59,27 @@ if __name__ == "__main__":
     parser.add_argument(
         '--debug',
         dest='debug',
-        type=bool,
         action='store_true')
 
     args = parser.parse_args()
+
+    config.read(args.config)
     
     try:
-        api_config = default_config['api']
+        api_config = config['api']
         host = args.host or api_config['host']
         port = args.port or api_config['port']
         timeout = args.timeout or api_config['timeout']
         workers = args.workers or api_config['workers']
-        debug = args.debug or api_config['debug']
+        debug = args.debug or False
     except KeyError as ke:
         tb = sys.exc_info()[2]
         raise Exception("Missing config variables...").with_traceback(tb)
-        
-    pid = default_config.get('general',{}).get('pid')
+
+    pid = config['general']['id']
     models = init_models(config=config['postgresql'])
 
-    app = create_app(debug=debug, db, models, pid)
+    app = create_app(debug, db, models, pid)
 
     server_options = {
         'bind': f"{host}:{port}",

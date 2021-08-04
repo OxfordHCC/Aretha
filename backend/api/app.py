@@ -82,7 +82,7 @@ def create_app(debug, db, models, pid):
     
     app.register_error_handler(ArethaAPIException, handle_api_error)
     app.before_request(before_request(db))
-    app.after_request(after_request(db))
+    app.after_request(after_request(db, after_request))
 
     # TODO reduce code duplication 
     # impacts

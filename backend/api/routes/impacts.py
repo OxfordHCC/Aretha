@@ -1,9 +1,9 @@
 from flask import Blueprint
 
 def create_blueprint(Transmissions, Exposures):
-    impacts = Blueprint("impacts", __name__)
+    blueprint = Blueprint("impacts", __name__)
 
-    @impacts.route('/<start>/<end>/<delta>')
+    @blueprint.route('/<start>/<end>/<delta>')
     def impacts(start, end, delta):
         try:
             start = datetime.fromtimestamp(int(start))
@@ -44,7 +44,7 @@ def create_blueprint(Transmissions, Exposures):
 
     # return aggregated impacts from <start> to <end>
     # <start>/<end> as unix timestamps
-    @impacts.route('/<start>/<end>')
+    @blueprint.route('/<start>/<end>')
     def impacts_aggregated(start, end):
         try:
             start, end = datetime.fromtimestamp(int(start)), datetime.fromtimestamp(int(end))
@@ -75,5 +75,4 @@ def create_blueprint(Transmissions, Exposures):
             raise ArethaAPIException(internal=ae)
 
 
-    return impacts
-
+    return blueprint

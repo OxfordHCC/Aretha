@@ -47,9 +47,8 @@ def main(args=None):
         help='Turn debug output on (Default off)')
     
     args = parser.parse_args()
-
-    log.info("Loading config from .... %s " % args.config)
-
+    
+    log.info("LOAD_CONFIG %s " % args.config)
     config.read(args.config)
     
     loop_cfg = config['loop'] or {}

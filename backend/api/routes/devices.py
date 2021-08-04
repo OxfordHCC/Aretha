@@ -2,9 +2,9 @@ from flask import Blueprint
 
 def create_blueprint(Devices):
     # get the mac address, manufacturer, and custom name of every device
-    devices = Blueprint("devices", __name__)
+    blueprint = Blueprint("devices", __name__)
     
-    @devices.route('/')
+    @blueprint.route('/')
     def devices():
         devices = dict()
         raw_devices = Devices.select().tuples()
@@ -21,7 +21,7 @@ def create_blueprint(Devices):
 
     # set the custom name of a device with a given mac
     # TODO this should be a POST request
-    @devices.route('/set/<mac>/<name>')
+    @blueprint.route('/set/<mac>/<name>')
     def set_device(mac, name):
         mac_format = re.compile('^(([a-fA-F0-9]){2}:){5}[a-fA-F0-9]{2}$')
         if mac_format.match(mac) is None:
@@ -33,5 +33,5 @@ def create_blueprint(Devices):
             "message": "Device with mac " + mac + " now has name " + name
         }
 
-    return devices
+    return blueprint
 

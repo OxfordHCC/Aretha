@@ -6,9 +6,9 @@ def create_blueprint(Activity):
     @blueprint.route('/<pid>/<category>/<action>')
     def activity(pid, category, action):
         Activity.insert(
-            Activity.pid=pid,
-            Activity.category=category,
-            Activity.action=action
+            pid=pid,
+            category=category,
+            action=action
         ).execute()
 
         return {"message": "activity logged"}
