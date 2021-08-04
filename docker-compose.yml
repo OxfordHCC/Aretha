@@ -1,5 +1,5 @@
 version: "3" # docker-compose version
-services:
+services:    
   database:
     image: postgres
     environment:
