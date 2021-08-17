@@ -391,13 +391,14 @@ export class LoaderService {
 	}
 
 	getPid(): Promise<any> {
-    return this.http.get(IOTR_ENDPOINT + '/pid').toPromise().then(response2 => {
-      return response2.json();
+		return this.http.get(IOTR_ENDPOINT + '/pid').toPromise().then(response2 => {
+			
+			return response2.json()['data'];
     });
   }
 
   setAct(pid: string, type: string, action: string) {
-    this.http.get(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action).toPromise().then(response2 => {
+    this.http.post(IOTR_ENDPOINT + '/activity/' + pid + '/' + type + '/' + action).toPromise().then(response2 => {
 		console.log("sent activity");
 	});
   }

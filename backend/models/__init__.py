@@ -20,6 +20,6 @@ def init_models(database=None, username=None, password=None,
     # Transmissions = models['transmissions']
     # Transmissions.create()
     models = generate_models(db)
-
+    
     db.close()
     return models

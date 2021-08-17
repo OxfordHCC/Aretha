@@ -54,7 +54,7 @@ def after_request(db, api_version):
             "apiVersion": api_version,
             "data": data
         }
-        
+
         response.data = json.dumps(new_res_data)
 
         # add headers
@@ -82,11 +82,11 @@ def create_app(debug, db, models, pid):
     
     app.register_error_handler(ArethaAPIException, handle_api_error)
     app.before_request(before_request(db))
-    app.after_request(after_request(db, after_request))
+    app.after_request(after_request(db, api_version))
 
     # TODO reduce code duplication 
     # impacts
-    impacts_blueprint = impacts.create_blueprint(Transmissions, Exposures)
+    impacts_blueprint = impacts.create_blueprint(Transmissions, Exposures, Geodata, Devices)
     app.register_blueprint(impacts_blueprint, url_prefix='/api/impacts')
 
     # firewall
@@ -124,7 +124,7 @@ def create_app(debug, db, models, pid):
     # returns "id" of aretha
     @app.route('/api/pid')
     def get_pid():
-        pid = "unknown"
+        pid = "5"
         
         return {"pid": pid}
 

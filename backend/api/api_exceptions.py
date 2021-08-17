@@ -1,3 +1,6 @@
+from logger import getArethaLogger
+
+log = getArethaLogger("api")
 
 class ArethaAPIException(Exception):
     default_message = "There was an error processsing this request"

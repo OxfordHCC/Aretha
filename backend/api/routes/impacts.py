@@ -1,31 +1,51 @@
+import math
+from datetime import datetime
 from flask import Blueprint
+from api.api_exceptions import ArethaAPIException
+from models import geodata_util
+from models.exposure_util import TransmissionMerger, TransEpoch
 
-def create_blueprint(Transmissions, Exposures):
+
+# TODO this will be named exposures at some point
+
+def create_blueprint(Transmissions, Exposures, Geodata, Devices):
     blueprint = Blueprint("impacts", __name__)
 
-    @blueprint.route('/<start>/<end>/<delta>')
-    def impacts(start, end, delta):
-        try:
-            start = datetime.fromtimestamp(int(start))
-            end = datetime.fromtimestamp(int(end))
+    # return a dictionary of mac addresses to manufacturers and names
+    def get_device_info():
+        devices = {}
+        raw_devices = Devices.select().dicts()
+        for device in iter(raw_devices):
+            mac, manufacturer, name = device
+            devices[mac] = {"manufacturer": manufacturer, "name": name}
+        return devices
 
-            tr1 = (Transmisisons
+    def get_geodata():
+        return [geodata_util.expand_field_names(geo_dict)
+                for geo_dict in Geodata.select().dicts()]
+
+    @blueprint.route('/<start_timestamp>/<end_timestamp>/<delta>')
+    def impacts_range(start_timestamp, end_timestamp, delta):
+        try:
+            start = datetime.fromtimestamp(int(start_timestamp))
+            end = datetime.fromtimestamp(int(end_timestamp))
+
+            impacts = {}
+
+            tr1 = (Transmissions
                    .select()
                    .limit(1)
                    .order_by(Transmissions.id.desc()))
 
-            if len(tr1):
-                interval = math.floor(tr1.end_date - tr1.start_date).total_seconds()                
-                if interval > 0 and delta % interval > 0:
-                    raise ArethaAPIException(f"Delta must be multiple of resolution {interval} seconds", 422)
 
-                matches = (Transmisisons
+            if (len(tr1)):
+                matches = (Transmissisons
                            .select()
                            .join(Exposures)
                            .where(Exposures.start_time >= start, Exposures.end_time <= end))
 
                 tMerger = TransmissionMerger(mins=delta)
-                impacts = {}
+
                 if len(matches) > 0:
                     [tMerger.merge(t) for t in matches]
                     impacts = tMerger.to_dict()

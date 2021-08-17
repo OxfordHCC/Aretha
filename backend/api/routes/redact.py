@@ -7,8 +7,9 @@ def create_blueprint(Transmissions, Geodata):
     # return records for the redaction interface
     @redact.route('/')
     def getRedact():
-        geodata = Geodata.select(Geodata.c_name).distinct().tuples()
-        return geodata
+        geodata = list(Geodata.select(Geodata.c_name).distinct().tuples())
+        
+        return {"geodata": geodata}
     
     # remove records for the redaction interface
     @redact.route('/set/<company>')

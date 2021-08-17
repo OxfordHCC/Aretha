@@ -10,7 +10,7 @@ def create_blueprint(Rules, Content, Devices):
     @firewall.route('/list')
     def list_rules():
         [(fw_on)] = Content.select(Content.complete).where(Content.name=="S3").tuples()
-        rules = (Rules
+        rules = list(Rules
                  .select(Rules.id, Rules.device, Devices.name, Rules.c_name)
                  .join(Devices, on=(Rules.device == Devices.mac))
                  .tuples())
@@ -21,7 +21,7 @@ def create_blueprint(Rules, Content, Devices):
         }
 
     # add a firewall rule as dictated by aretha
-    @firewall.route('/enforce/<destination>')
+    @firewall.route('/enforce/<destination>', methods=["POST"])
     def enforce_dest(destination):
         inserted = Rules.create({
             Rules.c_name: destination
@@ -34,7 +34,7 @@ def create_blueprint(Rules, Content, Devices):
 
 
     # add a firewall rule as dictated by aretha
-    @firewall.route('/enforce/<destination>/<device>')
+    @firewall.route('/enforce/<destination>/<device>', methods=["POST"])
     def enforce_dest_dev(destination, device):
         inserted = Rules.create({
             Rules.device: device,
@@ -48,7 +48,7 @@ def create_blueprint(Rules, Content, Devices):
 
 
     # remove a firewall rule as dictated by aretha
-    @firewall.route('/unenforce/<destination>')
+    @firewall.route('/unenforce/<destination>', methods=["POST"])
     def unenforce_dest(destination):
         blocked_ips = DB_MANAGER.execute("""
         SELECT r.c_name, r.device, b.ip 
@@ -72,7 +72,7 @@ def create_blueprint(Rules, Content, Devices):
         return {"message": f"rule removed for {destination}", "success": True}
 
     # remove a firewall rule as dictated by aretha
-    @firewall.route('/unenforce/<destination>/<device>')
+    @firewall.route('/unenforce/<destination>/<device>', methods=["POST"])
     def unenforce_dest_dev(destination, device):
         blocked_ips = DB_MANAGER.execute("""
         SELECT r.c_name, r.device, b.ip 
