@@ -1,6 +1,15 @@
 version: "3" # docker-compose version
-services:    
+services:
+  backend:
+    containe-name: aretha-backend
+    build:
+      context: ./backend
+    ports:
+      - "4201:4201"
+    environment:
+      ARETHA_DB_HOST: aretha-database
   database:
+    container-name: aretha-databse
     image: postgres
     environment:
       - POSTGRES_USER=aretha

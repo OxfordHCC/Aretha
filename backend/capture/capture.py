@@ -17,7 +17,6 @@ from capture.shark_utils import (
 MODULE_NAME = 'capture'
 
 # globals
-log = None
 _transcache = {}
 _expcache = {}
 
@@ -43,7 +42,7 @@ def to_trans_tuple(transmission):
 def mk_trans_tuple(expid, src, srcport, dst, dstport, mac, proto, ext):
     return (expid, src, srcport, dst, dstport, mac, proto, ext)
 
-def get_exposure(Exposures, segstart, segend):
+def get_exposure(Exposures, segstart, segend, log):
     if not _expcache.get((segstart,segend)): 
         exps = Exposures.select().where(Exposures.start_time == segstart,
                                         Exposures.end_time == segend)
@@ -61,7 +60,7 @@ def get_exposure(Exposures, segstart, segend):
 
 # TODO replace unreadable arguments with named tuple
 # get transmission
-def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport, mac, proto, ext, resolution_seconds):
+def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport, mac, proto, ext, resolution_seconds, log):
     
     segstart, segend = get_time_segment(packet_time, resolution_seconds)
     exp = get_exposure(Exposures, segstart, segend)
@@ -90,7 +89,7 @@ def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport,
 
 
 # TODO should we filter packets of interest on capture?
-def database_insert(Transmissions, Exposures, packets, resolution_seconds):
+def database_insert(Transmissions, Exposures, packets, resolution_seconds, log):
     global _transcache
     global _expcache
     transdirty = set()
@@ -124,7 +123,8 @@ def database_insert(Transmissions, Exposures, packets, resolution_seconds):
                 mac,
                 proto,
                 ext,
-                resolution_seconds)
+                resolution_seconds,
+                log)
 
             packet_length = int(packet.length)
 
@@ -168,7 +168,7 @@ def database_insert(Transmissions, Exposures, packets, resolution_seconds):
 # TODO test that database_insert is called every n seconds
 # test error handling
 # commit packets to the database in commit_interval_seconds second intervals
-def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resolution_seconds):
+def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resolution_seconds, log):
     queue = []
     last_commit = 0
 
@@ -179,13 +179,14 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
     __PROFILE_LIMIT = 30
 
     def queued_commit(packet):
-        now = datetime.utcnow()
-
         nonlocal queue
         nonlocal last_commit
         nonlocal __PROFILER
         nonlocal __PROFILER_CT
-        
+
+        log.debug(packet)
+
+        now = datetime.utcnow()
 
         # first packet in new queue
         if last_commit == 0:
@@ -209,7 +210,7 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
                     __PROFILER = None
                     __PROFILER_CT += 1
 
-            database_insert(Transmissions, Exposures, queue, resolution_seconds)
+            database_insert(Transmissions, Exposures, queue, resolution_seconds, log)
             queue = []
             last_commit = 0
 
@@ -220,14 +221,13 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
     return queued_commit
 
 
-def startCapture(models, interface, commit_interval_seconds, resolution_seconds, debug=False):
-    global log
+def startCapture(interface, commit_interval_seconds, resolution_seconds, Transmissions, Exposures, debug=False,):
     log = getArethaLogger(MODULE_NAME, debug=debug)
 
     # Start capture
     log.info(f"Setting capture interval {commit_interval_seconds} ")
     log.info(f"Setting resolution {resolution_seconds} ")
-    log.info(f"Setting up to capture from {interface}")
+    log.info(f"Interface {interface}")
 
     capture = pyshark.LiveCapture(interface=interface, bpf_filter='udp or tcp')
 
@@ -237,10 +237,11 @@ def startCapture(models, interface, commit_interval_seconds, resolution_seconds,
     log.info("Starting packet capture")
     
     packet_callback = get_packet_callback(
-        models['transmissions'],
-        models['exposures'],
+        Transmissions,
+        Exposures,
         commit_interval_seconds,
-        resolution_seconds
+        resolution_seconds,
+        log
     )
     
     # will run indefinitely
