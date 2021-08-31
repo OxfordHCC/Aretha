@@ -4,7 +4,7 @@ import json, sys, traceback
 
 from flask import Flask, jsonify, make_response, Response, g
 
-from logger import getArethaLogger
+from util.logger import get_aretha_logger
 from api.routes import impacts, firewall, devices, content, redact, geodata, activity
 from api.api_exceptions import ArethaAPIException
 
@@ -16,7 +16,7 @@ from api.api_exceptions import ArethaAPIException
 # error = { message }
 # message = 
 
-log = getArethaLogger("api")
+log = get_aretha_logger("api")
 api_version = 2.0
 
 

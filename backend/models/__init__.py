@@ -8,7 +8,7 @@ db = PostgresqlExtDatabase(None)
 # (string, string, string, string, string) -> (db, [Model])
 def init_models(database, username, password, host, port):
     
-    db.init(database, username, password, host, port)
+    db.init(database, user=username, password=password, host=host, port=port)
 
     # this generates peewee Model objects in a dict keyed by table names
     # e.g.

@@ -1,9 +1,8 @@
 #! /usr/bin/env python3
 import sys
 import logging
-from collections import namedtuple
-
 import argparse
+from collections import namedtuple
 
 from util.project_variables import CONFIG_PATH
 from util.config import config, read_configuration
@@ -51,7 +50,7 @@ def main(args=None):
         action='store_true')
     
     args = parser.parse_args()
-    log.info("Loading config from {config_path}")
+    log.info(f"Loading config from {args.config}")
     config.read(args.config)
 
     dict_args = vars(args)

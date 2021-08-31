@@ -1,26 +1,26 @@
-from gunicorn.app.base import BaseApplication
+import sys
 
-from api import create_app
-from util.config import parse_params
-from util.logger import get_aretha_logger
+from util.config import parse_cfg, parse_params
 from util.project_variables import CONFIG_PATH
-from models import db, init_models
 
-class StandaloneApplication(BaseApplication):
-    def __init__(self, app, options=None):
-        self.options = options or {}
-        self.application = app
-        super().__init__()
-
-    def load_config(self):
-        config = {key: value for key, value in self.options.items()
-                  if key in self.cfg.settings and value is not None}
-        for key, value in config.items():
-            self.cfg.set(key.lower(), value)
-
-    def load(self):
-        return self.application
-
+test_dict = {
+    "c_int": 1,
+    "b": {
+        "b_int": 1,
+        "b_str": "test",
+    },
+    "a": {
+        "ab": {
+            "abc": {
+                "abc_int": 42,
+                "abcd": {
+                    "abcd_int": 13,
+                    "abcd_str": "some string"
+                }
+            }
+        }
+    }
+}
 
 configuration_options = [
     {
@@ -97,35 +97,17 @@ configuration_options = [
     }
 ]
 
-if __name__ == "__main__":
-    params = parse_params(configuration_options)
-    log = get_aretha_logger("api")
+def test_parse_cfg():
+    assert parse_cfg("b/b_int", test_dict) == 1
+    assert parse_cfg("a/ab/abc/abcd/abcd_str", test_dict) == "some string"
+    assert parse_cfg("c_int", test_dict) == 1
 
-    # general params
-    aretha_id = params['aretha_id']
-    debug = params['debug']
-    
-    # api params
-    host = params['host']
-    port = params['port']
-    timeout = params['timeout']
-    workers = params['workers']
-    
-    # db params
-    db_name = params['db-name']
-    db_host = params['db-host']
-    db_port = params['db-port']
-    db_user = params['db-user']
-    db_pass = params['db-pass']
+def test_parse_cfg_missing():
+    assert parse_cfg("b/c", test_dict) == None
+    assert parse_cfg("c/a/b", test_dict) == None
+    assert parse_cfg("d", test_dict) == None
 
-    models = init_models(db_name, db_user, db_pass, db_host, db_port)
-    app = create_app(debug, db, models, aretha_id)
-
-    server_options = {
-        'bind': f"{host}:{port}",
-        'timeout': timeout,
-        'workers': workers,
-    }
-    
-    StandaloneApplication(app, server_options).run()
-
+def test_parse_params():
+    params = parse_params(configuration_options, sys.argv[2:])
+    assert params['host'] is not None
+    return

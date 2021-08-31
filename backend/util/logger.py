@@ -2,7 +2,7 @@ import logging
 import os
 from collections import namedtuple
 
-from project_variables import LOG_PATH
+from util.project_variables import LOG_PATH
 
 # TODO rename file to log_util
 # TODO rename to snake_case

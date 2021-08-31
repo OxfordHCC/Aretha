@@ -5,7 +5,7 @@ import cProfile
 from datetime import datetime, timezone
 from scripts.databaseBursts import updateVar
 from models import db
-from logger import getArethaLogger
+from util.logger import get_aretha_logger
 from capture.shark_utils import (
     fix_sniff_tz,
     get_internal_mac,
