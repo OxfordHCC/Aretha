@@ -4,7 +4,7 @@
 #./reset-wifi.sh
 
 #start capturing packets
-sudo python -m capture &
+python -m capture &
 PID1=$!
 >&2 echo Started capture with PID $PID1
 

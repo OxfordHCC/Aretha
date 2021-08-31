@@ -6,7 +6,7 @@ from project_variables import LOG_PATH
 
 # TODO rename file to log_util
 # TODO rename to snake_case
-def getArethaLogger(module_name, stdout_logs=True, fs_logs=False, debug=False):        
+def get_aretha_logger(module_name, stdout_logs=True, fs_logs=False, debug=False):        
     logger = logging.getLogger(module_name);
 
     log_level = logging.INFO

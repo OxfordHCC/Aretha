@@ -1,38 +1,20 @@
 #! /usr/bin/env python3
 import sys
 import logging
-import argparse
 from collections import namedtuple
 
-from configparser import ConfigParser
-from . import startCapture
-from project_variables import CONFIG_PATH
-from config import config
-from models import init_models
+import argparse
 
+from util.project_variables import CONFIG_PATH
+from util.config import config, read_configuration
+from models import init_models
+from . import startCapture
 
 capture_default_configuration = {
     "interface": None,
     "interval": 30,
     "resolution": 5,
 }
-
-# order of precdence: args > environ > config > defaults
-def read_configuration(config_name, env_name, args={}, env={}, config={}, defaults={}, default=None):
-
-    if(config_name in args):
-        return args[config_name]
-
-    if(env_name in env):
-        return env[config_name]
-
-    if(config_name in config):
-        return config[config_name]
-
-    if(config_name in default):
-        return defaults[config_name]
-    
-    return default
 
 def main(args=None):
     parser = argparse.ArgumentParser()
@@ -69,7 +51,6 @@ def main(args=None):
         action='store_true')
     
     args = parser.parse_args()
-
     log.info("Loading config from {config_path}")
     config.read(args.config)
 
@@ -101,7 +82,7 @@ def main(args=None):
 
     if interface is None:
         log.error("Cannot find interface in config or argument.")
-        sys.exit(1)
+        return 1
         
     # open long-running database connection and returns peewee
     # abstractions (Models)

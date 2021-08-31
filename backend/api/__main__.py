@@ -62,21 +62,41 @@ if __name__ == "__main__":
         action='store_true')
 
     args = parser.parse_args()
-
     config.read(args.config)
-    
-    try:
-        api_config = config['api']
-        host = args.host or api_config['host']
-        port = args.port or api_config['port']
-        timeout = args.timeout or api_config['timeout']
-        workers = args.workers or api_config['workers']
-        debug = args.debug or False
-    except KeyError as ke:
-        tb = sys.exc_info()[2]
-        raise Exception("Missing config variables...").with_traceback(tb)
 
-    pid = config['general']['id']
+    dict_args = var(args)
+    api_config = config.get('api', None)
+    general_config = config.get('general', None)
+    postgres_config = config.get('postgresql', None)
+
+    api_default_cfgs = {
+        "debug": False
+    }
+
+    def read_conf(name, env_name, cfg):
+        return read_configuration(
+            name=name,
+            env_name=env_name,
+            args=dict_args,
+            environ=os.environ,
+            config=cfg,
+            defaults=api_default_cfgs
+        )
+
+    host = read_conf("host", "ARETHA_API_HOST", api_config)
+    port = read_conf("port", "ARETHA_API_PORT", api_port)
+    timeout = read_conf("timeout", "ARETHA_API_TIMEOUT", api_config)
+    workers = read_conf("workers", "ARETHA_API_WORKERS", api_config)
+    debug = read_conf("debug", "ARETHA_DEBUG", api_config)
+    aretha_id= read_conf("id", "ARETHA_ID", dict_args, general_config)
+
+    # read db config
+    db_name = read_conf("name", "ARETHA_DB_NAME", postgres_config)
+    db_host = read_conf("host", "ARETHA_DB_HOST", postgres_config)
+    db_user = read_conf("user", "ARETHA_DB_USER", postgres_config)
+    db_pass = read_conf("pass", "ARETHA_DB_PASS", postgres_config)
+    db_port = read_conf("port", "ARETHA_DB_PORT", postgres_config)
+
     models = init_models(config=config['postgresql'])
 
     app = create_app(debug, db, models, pid)
