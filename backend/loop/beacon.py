@@ -2,7 +2,7 @@ import subprocess
 import urllib
 import time
 from peewee import fn
-from config import config
+from util.config import config
 
 # command constants
 CONNECT = 'CN'

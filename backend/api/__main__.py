@@ -27,7 +27,6 @@ configuration_options = [
         "name": "config_path",
         "arg_name": '--config',
         "default": CONFIG_PATH,
-        "type": str,
         "help": "Path to config file"
     },
     {

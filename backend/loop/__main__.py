@@ -1,84 +1,115 @@
 import argparse
 import sys
-from config import config
-from project_variables import CONFIG_PATH
 from loop import startLoop
-from logger import getArethaLogger
+from util.logger import get_aretha_logger
 from models import init_models
+from util.config import parse_params
+from util.project_variables import CONFIG_PATH
+
+parameters = [
+    {
+        "name": "config_path",
+        "arg_name": "--config",
+        "default": CONFIG_PATH,
+        "help": "Path to config file"
+    },
+    {
+        "name": "interval",
+        "type": float,
+        "help": "Specify loop interval in sec (can be fractions)",
+        "cfg_path": "loop/interval"
+    },
+    {
+        "name": "debug",
+        "action": "store_true",
+        "type": bool,
+        "cfg_path": "general/debug"
+    },
+    {
+        "name": "geoapi_provider",
+        "arg_name": "--geoapi",
+        "default": "ip-api",
+        "cfg_path": "geoapi/provider"
+    },
+    {
+        "name": "beacon",
+        "action": "store_true",
+        "type": bool,
+        "help": "loop will call c&c server",
+        "cfg_path": "loop/beacon"
+    },
+    {
+        "name": "autogen_device_names",
+        "type": bool,
+        "action": "store_true",
+        "help": "give random names to discovered, unnamed devices",
+        "cfg_path": "loop/autogen-device-names"
+    },
+        {
+        "name": 'db-name',
+        "env_name": "ARETHA_DB_NAME",
+        "cfg_path": "postgresql/name",
+    },
+    {
+        "name":'db-host',
+        "env_name": "ARETHA_DB_HOST",
+        "cfg_path": "postgresql/host"
+    },
+    {
+        "name":'db-port',
+        "env_name": "ARETHA_DB_PORT",
+        "type": int,
+        "cfg_path": "postgresql/port"
+    },
+    {
+        "name": "db-user",
+        "env_name": "ARETHA_DB_USER",
+        "cfg_path": "postgresql/user"
+    },
+    {
+        "name": "db-pass",
+        "env_name": "ARETHA_DB_PASS",
+        "cfg_path": "postgresql/pass"
+    }
+]
+
 
 # We use a separate main function so we can point to it using a
-# setuptools setup.py entrypoint declaration
+# setuptools setup.py entrypoint declaration.
 # 
 # Note that main's "args=None" declaration may be needed according to
 # some poorly written, but popular blog post about setuptools
 def main(args=None):
-    log = getArethaLogger("loop")
-    
-    # loop will call c&c server
-    is_beacon = False
+    log = get_aretha_logger("loop")
+    params = parse_params(parameters)
 
-    # time between loop executions
-    interval = None
+    # loop params
+    interval = params['interval']
+    beacon = params['beacon']
+    autogen_device_names = params['autogen_device_names']
+    geoapi_provider = params['geoapi_provider']
 
-    # give random names to discovered, unnamed devices
-    autogen_device_names = False
+    # general params
+    debug = params['debug']
 
-    # service to use for geo-related queries
-    geoapi_provider = "ip-api"
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--config',
-        dest="config",
-        type=str,
-        default=CONFIG_PATH,
-        help="Path to config file, default is %s " % CONFIG_PATH)
-    
-    parser.add_argument(
-        '--interval',
-        dest="interval",
-        type=float,
-        help="Specify loop interval in sec (can be fractions)")
-    
-    parser.add_argument(
-        '--debug',
-        dest='debug',
-        action="store_true",
-        help='Turn debug output on (Default off)')
-    
-    args = parser.parse_args()
-    
-    log.info("LOAD_CONFIG %s " % args.config)
-    config.read(args.config)
-    
-    loop_cfg = config['loop'] or {}
-
-    if "autogen-device-names" in loop_cfg:
-        autogen_device_names = loop_cfg.getboolean('autogen-device-names')
-
-    if "beacon" in loop_cfg:
-        is_beacon = loop_cfg.getboolean('beacon')
-        
-    if "interval" in loop_cfg:
-        interval = loop_cfg.getfloat('interval')
-
-    # (interval) argument overwrites config value
-    if args.interval is not None:
-        interval = args.interval
+    # db params
+    db_name = params['db-name']
+    db_user = params['db-user']
+    db_pass = params['db-pass']
+    db_host = params['db-host']
+    db_port = params['db-port']
 
     if interval is None:
         log.error("No interval value passed in config or arguments.")
         parser.print_help()
         return 1
     
-    # will throw KeyError if doesn't exist TODO print more helpful
-    # message explaining what's missing from config
-    geoapi_provider = config['geoapi']['provider']
+    log.enable_debugging(debug)
+    log.debug(f"params: {params}")
+    
+    models = init_models(db_name, db_user, db_pass, db_host, db_port)
 
-    log.enable_debugging(args.debug)
-    models = init_models(config=config['postgresql'])
-
-    startLoop(models, interval, is_beacon, autogen_device_names, geoapi_provider, log)
+    startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, beacon, autogen_device_names, geoapi_provider, log)
 
     # exit with code 0
     return 0

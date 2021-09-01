@@ -11,15 +11,15 @@ class DbManager():
             sys.stdout.write("Connecting to database...")
 
             self.connection = psycopg2.connect(
-                dbname=dbname,
+                dbname=database,
                 user=username,
                 password=password,
                 port=port,
                 host=host)
             
             print("ok")
-        except:
-            print("error")
+        except Exception as e:
+            print(e)
 
     def listen(self, channel, cb=None):
         try:

@@ -269,7 +269,7 @@ def open_db():
 def close_db():
     db.close()
     
-def startLoop(models, interval, is_beacon, autogen_device_names, geoapi_provider, logger):
+def startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, is_beacon, autogen_device_names, geoapi_provider, logger):
     global _events
     global log
     log = logger
@@ -285,9 +285,16 @@ def startLoop(models, interval, is_beacon, autogen_device_names, geoapi_provider
     # listen for db changes and append to _events
     # note that this creates a *second* datbase connection
     # TODO see how we can convert this to peewee
-    listener_thread_stopper = DbManager().listen(
+    listener_thread_stopper = DbManager(
+        database=db_name,
+        username=db_user,
+        password=db_pass,
+        host=db_host,
+        port=db_port
+    ).listen(
         'db_notifications',
-        lambda payload:_events.append(payload))
+        lambda payload:_events.append(payload)
+    )
 
     
     # create infinite eval loop

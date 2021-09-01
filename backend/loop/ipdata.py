@@ -1,7 +1,7 @@
 import logging
 from loop.trackers import is_tracker
 from loop.dns_utils import reverse_dns
-from config import config
+from util.config import config
 
 log = logging.getLogger('ipdata')
 log.setLevel(logging.DEBUG)

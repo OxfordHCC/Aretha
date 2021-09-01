@@ -1,7 +1,7 @@
 import os
 import socket
 import tldextract
-from config import config
+from util.config import config
 
 TRACKERS = []
 initialised = False

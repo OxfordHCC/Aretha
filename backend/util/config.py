@@ -46,14 +46,12 @@ def read_cfg(option, cfg):
     return parse_cfg(cfg_path, cfg)
 
 def read_arg(option, args):
-    if 'arg_name' not in option:
-        return None
-        
-    arg_name = option.get('name', None)
-    if arg_name not in args:
-        return None
+    if "arg_name" in option:
+        arg_name = option.get('arg_name', None)
+    else:
+        arg_name = option.get('name', None)
 
-    return args[arg_name]
+    return args.get(arg_name, None)
 
 def read_env(option, env):
     if 'env_name' not in option:
@@ -73,6 +71,9 @@ def parse_param(option, args, env, cfg):
     )
 
     param_type = option.get('type', str)
+    if param_type is bool:
+        param_type = lambda x: x == "True" or x == True
+
     return param_type(val)
 
 def parse_params(options, args=None, env=os.environ):
