@@ -4,10 +4,11 @@ import logging
 import argparse
 from collections import namedtuple
 
+from capture import log
+from capture.capture import startCapture
 from util.project_variables import CONFIG_PATH
-from util.config import config, read_configuration
+from util.config import parse_params
 from models import init_models
-from . import startCapture
 
 capture_default_configuration = {
     "interface": None,
@@ -15,70 +16,82 @@ capture_default_configuration = {
     "resolution": 5,
 }
 
+parameters = [
+    {
+        "name": "config_path",
+        "arg_name": '--config',
+        "default": CONFIG_PATH,
+        "help": "Path to config file"
+    },
+    {
+        "name":"interface",
+        "cfg_path": "capture/interface",
+        "type": str,
+        "help": "Interface to listen to"
+    },
+    {
+        "name":"interval",
+        "cfg_path": "capture/interval", 
+        "type": int,
+        "help": "Commit interval in seconds"
+    },
+    
+    {
+        "name":"resolution",
+        "type": int,
+        "cfg_path": "capture/resolution",
+        "help": "Commit resolution in seconds"
+    },
+    {
+        "name":"debug",
+        "action": 'store_true'},
+    {
+        "name": 'db-name',
+        "env_name": "ARETHA_DB_NAME",
+        "cfg_path": "postgresql/name",
+    },
+    {
+        "name":'db-host',
+        "env_name": "ARETHA_DB_HOST",
+        "cfg_path": "postgresql/host"
+    },
+    {
+        "name":'db-port',
+        "env_name": "ARETHA_DB_PORT",
+        "cfg_path": "postgresql/port"
+    },
+    {
+        "name": "db-user",
+        "env_name": "ARETHA_DB_USER",
+        "cfg_path": "postgresql/user"
+    },
+    {
+        "name": "db-pass",
+        "env_name": "ARETHA_DB_PASS",
+        "cfg_path": "postgresql/pass"
+    }
+]
+
 def main(args=None):
-    parser = argparse.ArgumentParser()
-    log = logging.getLogger(__name__)
+    params = parse_params(parameters)
 
-    parser.add_argument(
-        '--config',
-        dest="config",
-        default=CONFIG_PATH,
-        type=str,
-        help="Path to config file, default is %s" % CONFIG_PATH)
+    # general config
+    debug = params['debug']
+    log.enable_debugging(debug)
     
-    parser.add_argument(
-        '--interface',
-        dest="interface",
-        type=str,
-        help="Interface to listen to")
-    
-    parser.add_argument(
-        '--interval',
-        dest="interval",
-        type=int,
-        help="Commit interval in seconds")
-    
-    parser.add_argument(
-        '--resolution',
-        dest="resolution",
-        type=int,
-        help="Commit resolution in seconds")
-    
-    parser.add_argument(
-        '--debug',
-        dest='debug',
-        action='store_true')
-    
-    args = parser.parse_args()
-    log.info(f"Loading config from {args.config}")
-    config.read(args.config)
-
-    dict_args = vars(args)
-    capture_config = config.get('capture', None)
-    postgres_config = config.get('postgresql', None)
-
-    def read_conf(name, env_name, sub_config):
-        return read_configuration(
-            name=name,
-            env_name=env_name,
-            args=dict_args,
-            environ=os.environ,
-            config=sub_config,
-            defaults=capture_default_configuration
-        )
-
     # read capture config
-    interface = read_conf("interface", "ARETHA_CAPTURE_INTERFACE", capture_config)
-    interval = read_conf("interval", "ARETHA_CAPTURE_INTERVAL", capture_config)
-    resolution = read_conf("resolution", "ARETHA_CAPTURE_RESOLUTION", capture_config)
+    interface = params['interface']
+    interval = params['interval']
+    resolution = params['resolution']
 
-    # read db config
-    db_name = read_conf("name", "ARETHA_DB_NAME", postgres_config)
-    db_host = read_conf("host", "ARETHA_DB_HOST", postgres_config)
-    db_user = read_conf("user", "ARETHA_DB_USER", postgres_config)
-    db_pass = read_conf("pass", "ARETHA_DB_PASS", postgres_config)
-    db_port = read_conf("port", "ARETHA_DB_PORT", postgres_config)
+    # db params
+    db_name = params['db-name']
+    db_host = params['db-host']
+    db_port = params['db-port']
+    db_user = params['db-user']
+    db_pass = params['db-pass']
 
+    # TODO add "required" parameter to parameter dict and handle in parse_params function
     if interface is None:
         log.error("Cannot find interface in config or argument.")
         return 1
@@ -93,7 +106,7 @@ def main(args=None):
     Transmissions = models['transmissions']
     Exposures = models['exposures']
     
-    startCapture(interface, interval, resolution, Transmissions, Exposures, args.debug)
+    startCapture(interface, interval, resolution, Transmissions, Exposures, debug)
 
     # will probably never reach...
     # TODO handle sigint gracefully (will require packet capture on separate thread)

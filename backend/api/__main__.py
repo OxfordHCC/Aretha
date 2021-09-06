@@ -1,8 +1,7 @@
 from gunicorn.app.base import BaseApplication
 
-from api import create_app
+from api import create_app, log
 from util.config import parse_params
-from util.logger import get_aretha_logger
 from util.project_variables import CONFIG_PATH
 from models import db, init_models
 
@@ -60,6 +59,7 @@ configuration_options = [
     },
     {
         "name": 'debug',
+        "type": bool,
         "env_name": "ARETHA_DEBUG",
         "cfg_path": "general/debug",
         "action": "store_true"
@@ -98,7 +98,6 @@ configuration_options = [
 
 if __name__ == "__main__":
     params = parse_params(configuration_options)
-    log = get_aretha_logger("api")
 
     # general params
     aretha_id = params['aretha_id']
@@ -117,8 +116,11 @@ if __name__ == "__main__":
     db_user = params['db-user']
     db_pass = params['db-pass']
 
+    log.enable_debugging(debug)
+    log.debug(params)
+
     models = init_models(db_name, db_user, db_pass, db_host, db_port)
-    app = create_app(debug, db, models, aretha_id)
+    app = create_app(debug, db, models, aretha_id, log)
 
     server_options = {
         'bind': f"{host}:{port}",

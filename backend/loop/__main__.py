@@ -22,6 +22,7 @@ parameters = [
     {
         "name": "debug",
         "action": "store_true",
+        "env_name": "ARETHA_DEBUG",
         "type": bool,
         "cfg_path": "general/debug"
     },

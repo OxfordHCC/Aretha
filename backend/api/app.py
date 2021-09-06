@@ -4,7 +4,6 @@ import json, sys, traceback
 
 from flask import Flask, jsonify, make_response, Response, g
 
-from util.logger import get_aretha_logger
 from api.routes import impacts, firewall, devices, content, redact, geodata, activity
 from api.api_exceptions import ArethaAPIException
 
@@ -16,9 +15,7 @@ from api.api_exceptions import ArethaAPIException
 # error = { message }
 # message = 
 
-log = get_aretha_logger("api")
 api_version = 2.0
-
 
 # used by event stream
 event_queue = []
@@ -66,10 +63,9 @@ def after_request(db, api_version):
     return do_after_request
 
 
-def create_app(debug, db, models, pid):
+def create_app(debug, db, models, pid, log):
     app = Flask('aretha_api')
     app.config.DEBUG = debug # TODO can we pass this as argument to Flask constructor?
-    log.enable_debugging(debug)
 
     # models
     Transmissions = models['transmissions']

@@ -2,6 +2,7 @@
 import pyshark
 import math
 import cProfile
+from capture import log
 from datetime import datetime, timezone
 from scripts.databaseBursts import updateVar
 from models import db
@@ -12,6 +13,7 @@ from capture.shark_utils import (
     get_external_ip,
     is_packet_of_interest,
 )
+
 
 # constants
 MODULE_NAME = 'capture'
@@ -222,7 +224,6 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
 
 
 def startCapture(interface, commit_interval_seconds, resolution_seconds, Transmissions, Exposures, debug=False,):
-    log = getArethaLogger(MODULE_NAME, debug=debug)
 
     # Start capture
     log.info(f"Setting capture interval {commit_interval_seconds} ")
