@@ -23,7 +23,8 @@ RUN pipenv install --deploy
 FROM base AS runtime
 
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y tshark
+RUN apt-get update \
+	&& apt-get install -y tshark iptables iptables-persistent
 
 # Copy virtual env from python-deps stage
 COPY --from=python-deps /.venv /.venv

@@ -2,7 +2,7 @@ import subprocess
 
 def drop_outbound_ip(ip):
     subprocess.run([
-        "sudo", "iptables",
+        "iptables",
         "-I", "OUTPUT",
         "-d", ip,
         "-j", "DROP",
@@ -10,14 +10,14 @@ def drop_outbound_ip(ip):
     
 def drop_inbound_ip(ip):
     subprocess.run([
-        "sudo", "iptables",
+        "iptables",
         "-I", "INPUT",
         "-s", ip,
         "-j", "DROP"
     ])
 def drop_ip_for_mac(ip, mac):
     subprocess.run([
-        "sudo", "iptables",
+        "iptables",
         "-I", "FORWARD",
         "-d", ip,
         "-m", "mac",
@@ -27,6 +27,6 @@ def drop_ip_for_mac(ip, mac):
 
 def persist():
     subprocess.run([
-        "sudo", "dpkg-reconfigure",
+        "dpkg-reconfigure",
         "-p", "critical",
         "iptables-persistent"])
