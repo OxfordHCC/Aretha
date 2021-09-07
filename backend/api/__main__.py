@@ -81,6 +81,7 @@ configuration_options = [
     },
     {
         "name":'db-port',
+        "type": int,
         "env_name": "ARETHA_DB_PORT",
         "cfg_path": "postgresql/port"
     },

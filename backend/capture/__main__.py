@@ -44,6 +44,7 @@ parameters = [
     },
     {
         "name":"debug",
+        "type": bool,
         "action": 'store_true'},
     {
         "name": 'db-name',
@@ -58,6 +59,7 @@ parameters = [
     {
         "name":'db-port',
         "env_name": "ARETHA_DB_PORT",
+        "type": int,
         "cfg_path": "postgresql/port"
     },
     {
@@ -90,6 +92,8 @@ def main(args=None):
     db_port = params['db-port']
     db_user = params['db-user']
     db_pass = params['db-pass']
+
+    log.debug(params)
 
     # TODO add "required" parameter to parameter dict and handle in parse_params function
     if interface is None:
