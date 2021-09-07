@@ -221,7 +221,7 @@ def process_firewall(Rules, BlockedIPs, Geodata):
 
     firewall_rules = (Rules
                       .select(Rules.id, Rules.c_name, Rules.device, BlockedIPs.ip)
-                      .join(BlockedIPs, "LEFT", on=(Rules.id == BlockedIPs.rule)))
+                      .join(BlockedIPs, "LEFT JOIN", on=(Rules.id == BlockedIPs.rule)))
 
     geodata = Geodata.select(Geodata.c_name, Geodata.ip)
 
