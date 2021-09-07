@@ -44,7 +44,7 @@ def to_trans_tuple(transmission):
 def mk_trans_tuple(expid, src, srcport, dst, dstport, mac, proto, ext):
     return (expid, src, srcport, dst, dstport, mac, proto, ext)
 
-def get_exposure(Exposures, segstart, segend, log):
+def get_exposure(Exposures, segstart, segend):
     if not _expcache.get((segstart,segend)): 
         exps = Exposures.select().where(Exposures.start_time == segstart,
                                         Exposures.end_time == segend)
@@ -62,7 +62,7 @@ def get_exposure(Exposures, segstart, segend, log):
 
 # TODO replace unreadable arguments with named tuple
 # get transmission
-def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport, mac, proto, ext, resolution_seconds, log):
+def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport, mac, proto, ext, resolution_seconds):
     
     segstart, segend = get_time_segment(packet_time, resolution_seconds)
     exp = get_exposure(Exposures, segstart, segend)
@@ -91,7 +91,7 @@ def get_trans(Transmissions, Exposures, packet_time, src, srcport, dst, dstport,
 
 
 # TODO should we filter packets of interest on capture?
-def database_insert(Transmissions, Exposures, packets, resolution_seconds, log):
+def database_insert(Transmissions, Exposures, packets, resolution_seconds):
     global _transcache
     global _expcache
     transdirty = set()
@@ -125,8 +125,7 @@ def database_insert(Transmissions, Exposures, packets, resolution_seconds, log):
                 mac,
                 proto,
                 ext,
-                resolution_seconds,
-                log)
+                resolution_seconds)
 
             packet_length = int(packet.length)
 
@@ -170,7 +169,7 @@ def database_insert(Transmissions, Exposures, packets, resolution_seconds, log):
 # TODO test that database_insert is called every n seconds
 # test error handling
 # commit packets to the database in commit_interval_seconds second intervals
-def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resolution_seconds, log):
+def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resolution_seconds):
     queue = []
     last_commit = 0
 
@@ -212,7 +211,7 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
                     __PROFILER = None
                     __PROFILER_CT += 1
 
-            database_insert(Transmissions, Exposures, queue, resolution_seconds, log)
+            database_insert(Transmissions, Exposures, queue, resolution_seconds)
             queue = []
             last_commit = 0
 
@@ -223,7 +222,7 @@ def get_packet_callback(Transmissions, Exposures, commit_interval_seconds, resol
     return queued_commit
 
 
-def startCapture(interface, commit_interval_seconds, resolution_seconds, Transmissions, Exposures, debug=False,):
+def startCapture(interface, commit_interval_seconds, resolution_seconds, Transmissions, Exposures, debug):
 
     # Start capture
     log.info(f"Setting capture interval {commit_interval_seconds} ")
@@ -242,7 +241,6 @@ def startCapture(interface, commit_interval_seconds, resolution_seconds, Transmi
         Exposures,
         commit_interval_seconds,
         resolution_seconds,
-        log
     )
     
     # will run indefinitely
