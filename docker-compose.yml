@@ -1,6 +1,9 @@
 version: "3" # docker-compose version
 services:
   backend:
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
     container_name: aretha-backend
     build:
       context: ./backend
@@ -9,7 +12,7 @@ services:
     environment:
       ARETHA_DB_HOST: aretha-database
   database:
-    container_name: aretha-databse
+    container_name: aretha-database
     image: postgres
     environment:
       - POSTGRES_USER=aretha

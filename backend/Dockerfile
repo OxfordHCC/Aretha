@@ -5,13 +5,15 @@ ENV LC_ALL C.UTF-8
 ENV PYTHONDONTWRITEBYTECODE 1s
 ENV PYTHONFAULTHANDLER 1
 
+
 FROM base AS python-deps
 
 ENV PIPENV_VENV_IN_PROJECT 1
 
 # Install pipenv and compilation dependencies
 RUN pip install pipenv
-RUN apt-get update && apt-get install -y --no-install-recommends gcc
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends gcc 
 
 # Install python dependencies in /.venv
 COPY Pipfile .
@@ -19,6 +21,9 @@ COPY Pipfile.lock .
 RUN pipenv install --deploy
 
 FROM base AS runtime
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y tshark
 
 # Copy virtual env from python-deps stage
 COPY --from=python-deps /.venv /.venv
