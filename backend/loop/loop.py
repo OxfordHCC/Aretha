@@ -223,7 +223,7 @@ def process_firewall(Rules, BlockedIPs, Geodata):
                       .select(Rules.id, Rules.c_name, Rules.device, BlockedIPs.ip)
                       .join(BlockedIPs, "LEFT JOIN", on=(Rules.id == BlockedIPs.rule)))
     
-    geodata = Geodata.select(Geodata.c_name, Geodata.ip)
+    geodata = Geodata.select(Geodata.c_name, Geodata.ip).tuples()
 
     # construct a dict of all ips blocked for each rule
     rule_company = dict()
