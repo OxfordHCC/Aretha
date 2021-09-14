@@ -1,9 +1,7 @@
-import dns
+import dns.resolver
 import tldextract
-import logging
+from loop import log
 
-log = logging.getLogger('dns_utils')
-log.setLevel(logging.DEBUG)
 
 def reverse_dns(ip):
     domain = None
@@ -13,11 +11,11 @@ def reverse_dns(ip):
     resolver.nameservers = ['8.8.8.8', '8.8.4.4']
 
     try:
-        log.info('Attempting reverse DNS resolving [%s]' % ip)
-        dns_ans = dns.resolver.query(dns.reversename.from_address(ip),'PTR')
+        log.debug(f"Attempting reverse DNS resolving {ip}")
+        dns_ans = resolver.query(dns.reversename.from_address(ip),'PTR')
         raw_domain = str(dns_ans[0])
         domain = tldextract.extract(raw_domain).registered_domain
-        log.info('Success rdns [%s->%s]' % (ip, domain))
+        log.debug('Success reverse dns [%s->%s]' % (ip, domain))
     except Exception as e:
         log.error("Error resolving ip %s " % ip, exc_info=e)
     finally:

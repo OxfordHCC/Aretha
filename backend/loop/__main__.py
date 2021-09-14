@@ -1,10 +1,11 @@
 import argparse
 import sys
-from loop import startLoop
-from util.logger import get_aretha_logger
+from loop import log
+from loop.loop import startLoop
 from models import init_models
 from util.config import parse_params
 from util.project_variables import CONFIG_PATH
+from loop.trackers import init_trackers
 
 parameters = [
     {
@@ -71,6 +72,10 @@ parameters = [
         "name": "db-pass",
         "env_name": "ARETHA_DB_PASS",
         "cfg_path": "postgresql/pass"
+    },
+    {
+        "name": "trackers",
+        "cfg_path": "loop/trackers"
     }
 ]
 
@@ -81,7 +86,6 @@ parameters = [
 # Note that main's "args=None" declaration may be needed according to
 # some poorly written, but popular blog post about setuptools
 def main(args=None):
-    log = get_aretha_logger("loop")
     params = parse_params(parameters)
 
     # loop params
@@ -89,6 +93,7 @@ def main(args=None):
     beacon = params['beacon']
     autogen_device_names = params['autogen_device_names']
     geoapi_provider = params['geoapi_provider']
+    trackers_path = params['trackers']
 
     # general params
     debug = params['debug']
@@ -99,7 +104,7 @@ def main(args=None):
     db_pass = params['db-pass']
     db_host = params['db-host']
     db_port = params['db-port']
-
+    
     if interval is None:
         log.error("No interval value passed in config or arguments.")
         parser.print_help()
@@ -110,7 +115,11 @@ def main(args=None):
     
     models = init_models(db_name, db_user, db_pass, db_host, db_port)
 
-    startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, beacon, autogen_device_names, geoapi_provider, log)
+    # init trackers
+    init_trackers(trackers_path)
+
+    # start loop
+    startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, beacon, autogen_device_names, geoapi_provider)
 
     # exit with code 0
     return 0

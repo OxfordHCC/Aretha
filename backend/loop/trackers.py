@@ -1,30 +1,36 @@
-import os
+from os.path import join, normpath, isabs
 import socket
 import tldextract
-from util.config import config
+from loop import log
+from util.project_variables import ARETHA_BASE
 
 TRACKERS = []
 initialised = False
 
 # again, we defer any use of config until after reading config file in
 # main function
-def init():
+def init_trackers(trackers_path):
     global initialised
+
+    resolve_path = trackers_path
+    if(not isabs(trackers_path)):
+        resolved_path = normpath(join(ARETHA_BASE, trackers_path))
+
     try:
-        trackers_path = os.path.join(ARETHA_BASE, config['loop']['trackers'])
-        with open(trackers_path) as trackers_file:
+        log.debug(f"Trying to init trackers file {resolved_path}")
+        with open(resolved_path) as trackers_file:
             for line in trackers_file.readlines():
                 TRACKERS.append(line.strip('\n'))
-        print("ok")
         initialised = True
-    except:
-        print("error while reading trackers from file...")
+        log.debug(f"Initialized tracker file {resolved_path}.")
+    except Exception as e:
+        log.debug("Error while reading trackers from file.", exc_info=e)
     
     
 def is_tracker(ip):
     if not initialised:
-        init()
-        
+        log.warn("Trackers lib not initialized. You may want to call trackers.init_trackers before calling is_tracker.")
+
     if len(TRACKERS) == 0:
         return False
     

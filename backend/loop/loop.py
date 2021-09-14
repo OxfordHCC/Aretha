@@ -8,14 +8,12 @@ from datetime import datetime
 import requests
 import ipaddress
 
-from loop import ipdata, ipapi
+from loop import ipdata, ipapi, log
 from loop.beacon import get_beacon_handler
 from loop.firewall import get_firewall
 from loop.eval_loop import EvalLoop
 from scripts.databaseBursts import DbManager
 from models import db
-
-log = None
 
 # TODO see what RAW_IPS does. Don't we need to empty it? It currently
 # only accumulates
@@ -37,18 +35,19 @@ def get_company_info(ip, geoapi_provider):
     if geoapi_provider == 'ipdata':
         try:
             geodata = ipdata.get_company_info(ip)
+            return geodata
         except Exception as e:
             log.error(' Failure querying ipdata for [%s]' % ip, exc_info=e)
-        finally:
-            return geodata
+            return []
+
 
     if geoapi_provider == 'ip-api':
         try:
             geodata = ipapi.get_company_info(ip)
+            return geodata
         except Exception as e:
             log.error(' Failure querying ip-api for [%s]' % ip, exc_info=e)
-        finally:
-            return geodata
+            return []
 
     raise Exception("Unknown geoapi provider.")
     
@@ -69,6 +68,8 @@ def process_geos(Transmissions, Geodata, geoapi_provider):
     except:
         new_id = 0
 
+    log.debug(f"process_geos starting from id: {new_id}")
+
     # TODO can we do this better in a single pass over Transmissions?
     # add unseed src ips from transmissions
     raw_txs_src = (Transmissions
@@ -76,9 +77,9 @@ def process_geos(Transmissions, Geodata, geoapi_provider):
                .distinct()
                .where(Transmissions.id > RAW_IPS_ID)
                .dicts())
-
+    
     for row in raw_txs_src:
-        RAW_IPS.add(row['id'])
+        RAW_IPS.add(row['src'])
 
         
     # add unseen dst ips from transmissions
@@ -89,7 +90,7 @@ def process_geos(Transmissions, Geodata, geoapi_provider):
                .dicts())
 
     for row in raw_txs_dst:
-        RAW_IPS.add(row['id'])
+        RAW_IPS.add(row['dst'])
 
     # update last seen id
     RAW_IPS_ID = new_id
@@ -101,32 +102,28 @@ def process_geos(Transmissions, Geodata, geoapi_provider):
     # go through and enrich the rest
 
     # TODO it seems like this always goes through every ip_address in
-    # raw_ips -- otherwise put, raw_ips never graduate to "cooked_ips"
+    # raw_ips -- otherwise put, raw_ips never graduates to "cooked_ips"
     for ip in RAW_IPS:
         if ipaddress.ip_address(ip).is_private:
             # local ip, so skip
             continue
 
-        # Well, actually it seems like "cooked_ips" get pruned of here
-        # (see comment above)
         if ip not in known_ips:
             geodata = get_company_info(ip, geoapi_provider)
-            
-            # commit the extra info to the database
-            log.info('inserting geodata entry %s' % json.dumps(geodata))
 
+            
             Geodata.insert({
                 Geodata.ip: ip,
-                Geodata.lat: geodata.get('lat', "00"),
-                Geodata.lon: geodata.get('lon', '00'),
-                Geodata.country: geodata.get('country', 'XX'),
-                Geodata.orgname: geodata.get('orgname', 'unknown')[:256],
-                Geodata.domain: geodata.get('domain', 'unknown')[:256],
-                Geodata.tracker: geodata.get('tracker', False)
+                Geodata.lat: geodata.get('lat') or "00",
+                Geodata.lon: geodata.get('lon') or '00',
+                Geodata.c_code: geodata.get('country') or 'XX',
+                Geodata.c_name: (geodata.get('orgname') or 'unknown')[:256],
+                Geodata.domain: (geodata.get('domain') or 'unknown')[:256],
+                Geodata.tracker: geodata.get('tracker') or False
             }).execute()
             
             # bookkeeping
-            log.info("Adding to known IPs %s " % ip)
+            log.debug("add to known ip list - %s " % ip)
             known_ips.append(ip)
 
 
@@ -186,7 +183,7 @@ def ip_from_event(json_event):
 # updates RAW_IPS (see process_geos)
 def process_events():
     global _events
-    log.debug("process_events has %s waiting in queue " % len(_events))
+    log.debug("Processing %s events..." % len(_events))
 
     curr_events = _events.copy()
     _events.clear()
@@ -211,18 +208,21 @@ def process_events():
 
 # checks to see if any new iptables rules need to be made
 def process_firewall(Rules, BlockedIPs, Geodata):
+    log.debug("Processing firewall.")
+    log.debug("Getting firewall module...")
     # TODO should not even queue process_firewall function if platform
     # is not supported
     # get firewall supported by this system, if any
     firewall = get_firewall()
     if firewall is None:
-        log.info("no firewall handling implemented for this system yet.")
+        log.info("No firewall module implemented for this system yet.")
         return
 
+    
     firewall_rules = (Rules
                       .select(Rules.id, Rules.c_name, Rules.device, BlockedIPs.ip)
                       .join(BlockedIPs, "LEFT JOIN", on=(Rules.id == BlockedIPs.rule)))
-
+    
     geodata = Geodata.select(Geodata.c_name, Geodata.ip)
 
     # construct a dict of all ips blocked for each rule
@@ -262,17 +262,14 @@ def process_firewall(Rules, BlockedIPs, Geodata):
     # some systems require explicit saving 
     firewall.persist()
 
-
 def open_db():
     db.connect()
 
 def close_db():
     db.close()
     
-def startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, is_beacon, autogen_device_names, geoapi_provider, logger):
+def startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, is_beacon, autogen_device_names, geoapi_provider):
     global _events
-    global log
-    log = logger
 
     running = [True]
 
@@ -285,6 +282,10 @@ def startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, is_
     # listen for db changes and append to _events
     # note that this creates a *second* datbase connection
     # TODO see how we can convert this to peewee
+    def append_event_payload(payload):
+        log.debug(f"append_event_payload: {payload}")
+        _events.append(payload)
+    
     listener_thread_stopper = DbManager(
         database=db_name,
         username=db_user,
@@ -293,10 +294,9 @@ def startLoop(models, db_name, db_user, db_pass, db_host, db_port, interval, is_
         port=db_port
     ).listen(
         'db_notifications',
-        lambda payload:_events.append(payload)
+        append_event_payload
     )
 
-    
     # create infinite eval loop
     loop = EvalLoop(
         interval,

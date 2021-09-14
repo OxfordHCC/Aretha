@@ -1,16 +1,16 @@
 version: "3" # docker-compose version
 services:
   backend:
+    network_mode: "host"
     cap_add:
       - NET_ADMIN
       - NET_RAW
     container_name: aretha-backend
     build:
       context: ./backend
-    ports:
-      - "4201:4201"
     environment:
-      ARETHA_DB_HOST: aretha-database
+      ARETHA_DEBUG: "True"
+      ARETHA_DB_HOST: localhost
   database:
     container_name: aretha-database
     image: postgres
