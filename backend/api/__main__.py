@@ -32,7 +32,7 @@ configuration_options = [
         "name": "host",
         "env_name": "ARETHA_API_HOST",
         "cfg_path": 'api/host',
-        "default": "localhost",
+        "default": "0.0.0.0",
         "type": str,
         "help":"Host for server to bind to",
     },

@@ -18,7 +18,6 @@ PID_LOOP=$!
 python -m api &
 PID_API=$!
 
-
 wait $PID_CAPTURE
 wait $PID_LOOP
 wait $PID_API
