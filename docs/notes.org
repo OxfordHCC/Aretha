@@ -1,208 +1,204 @@
-* Aretha red-teaming assistant
-** Aretha Model
-   TODO
-   Discussion about how to implement the data model.
-   Requirements include: store, retrieve, query, events
+* Aretha Model
+  TODO
+  Discussion about how to implement the data model.
+  Requirements include: store, retrieve, query, events
 
-   The data model represents all the data known by Aretha. Since
-   Aretha is composed of independent apps/modules, the data model also
-   acts as the primary inter-module comms protocol.
+  The data model represents all the data known by Aretha. Since
+  Aretha is composed of independent apps/modules, the data model also
+  acts as the primary inter-module comms protocol.
 
-** Aretha "apps"
-   Apps are (mostly) autonomous agents performing various
-   netsec-related tasks. The interaction between agents and humans is
-   what makes Aretha intelligent.
+* Aretha "apps"
+  Apps are (mostly) autonomous agents performing various
+  netsec-related tasks. The interaction between agents and humans is
+  what makes Aretha intelligent.
    
-   Below we describe a few examples of apps together with a discussion
-   about their requirements. This stringing of ideas should then allow
-   us to normalize agent behaviour, scheduling, permissions and let
-   issues emerge.
+  Below we describe a few examples of apps together with a discussion
+  about their requirements. This stringing of ideas should then allow
+  us to normalize agent behaviour, scheduling, permissions and let
+  issues emerge.
    
-*** Intruder detector
+** Intruder detector
 
-	Monitors devices on the network and issues warnings when new
-	devices are detected.
+   Monitors devices on the network and issues warnings when new
+   devices are detected.
 
-**** Mode of operation:
+   Every x minutes, the intrudor detector does a host discovery scan
+   using nmap. The resulting output is compared with the list of
+   known devices in the model (what does "known devices" mean?).
+   New devices are then added to the model.
 
-	Every x minutes, the intrudor detector does a host discovery scan
-	using nmap. The resulting output is compared with the list of
-	known devices in the model (what does "known devices" mean?).
-	New devices are then added to the model.
+   What does known devices mean? Devices acknowledged by aretha's
+   owner? Devices previously discovered by aretha? Do we make the
+   distinction between devices acknowledged by humans and those that
+   are not? Since the end-goal of Aretha is to be useful to humans,
+   we think yes.
 
-	What does known devices mean? Devices acknowledged by aretha's
-	owner? Devices previously discovered by aretha? Do we make the
-	distinction between devices acknowledged by humans and those that
-	are not? Since the end-goal of Aretha is to be useful to humans,
-	we think yes.
+   What does it mean for a device to be acknowledged by a human?
+   In a pure graph-based storage solution like a triple store this
+   would mean the presence of an assertion like "HumanA acknowledges
+   DeviceA"*. 
 
-	What does it mean for a device to be acknowledged by a human?
-	In a pure graph-based storage solution like a triple store this
-	would mean the presence of an assertion like "HumanA acknowledges
-	DeviceA"*. 
+   * We automatically see that this paradigm of "acknowledging" may
+     be generalized to other things in aretha's model. 
 
-	* We automatically see that this paradigm of "acknowledging" may
-      be generalized to other things in aretha's model. 
+*** Input
+	Online hosts on the network.
+*** Output
+	Warnings/new devices
+*** Scheduling
+	Periodically, every x minutes?
+*** Permissions
+	Read model
 
-**** Input
-	 Online hosts on the network.
-**** Output
-	 Warnings/new devices
-**** Scheduling
-	 Periodically, every x minutes?
-**** Permissions
-	 Read model
-
-*** Traffic snitch (original aretha)
-	This is essentially the original functionality of Aretha.  Monitor
-	traffic from internal hosts to external hosts, 
+** Traffic snitch (original aretha)
+   This is essentially the original functionality of Aretha.  Monitor
+   traffic from internal hosts to external hosts, 
 	
-**** Input
-	 N/A
-**** Output
-	 transmissions/exposures from devices to external hosts
-**** Permissions
-	 access to network interface device (tshark monitoring).
-**** Scheduling
-	 At system startup (run continuously). Restart on failure.
+*** Input
+	N/A
+*** Output
+	transmissions/exposures from devices to external hosts
+*** Permissions
+	access to network interface device (tshark monitoring).
+*** Scheduling
+	At system startup (run continuously). Restart on failure.
 
-*** App detector
-	This matches the xray dataset against traffic analysed by other
-	modules (e.g. by "traffic snitch") to find possible apps running
-	on mobile devices. These app candidates can then be used to check
-	for vulnerabilities.
+** App detector
+   This matches the xray dataset against traffic analysed by other
+   modules (e.g. by "traffic snitch") to find possible apps running
+   on mobile devices. These app candidates can then be used to check
+   for vulnerabilities.
 
-	How do we deal with false positives? Do we get a human to
-	acknowledge these apps again?
+   How do we deal with false positives? Do we get a human to
+   acknowledge these apps again?
 
-	This app highlights the privacy issues of Aretha. Some inhabitants
-	in the house may have apps installed, but they may not want to
-	publicly disclose this in front of other members of the family.
+   This app highlights the privacy issues of Aretha. Some inhabitants
+   in the house may have apps installed, but they may not want to
+   publicly disclose this in front of other members of the family.
 
-	A potential solution would be to separate the user model into
-	multiple models (one for each human in the house) and implement
-	some sort of transitive access management system.
+   A potential solution would be to separate the user model into
+   multiple models (one for each human in the house) and implement
+   some sort of transitive access management system.
 
-	Is there any chance that this sort of privacy measure will impact
-	other users of the house? If aretha does not disclose information
-	about a service running on a device due to privacy implications,
-	is there any chance that other humans may be exposed to harm?
-	Is privacy in the home a zero-sum game?
+   Is there any chance that this sort of privacy measure will impact
+   other users of the house? If aretha does not disclose information
+   about a service running on a device due to privacy implications,
+   is there any chance that other humans may be exposed to harm?
+   Is privacy in the home a zero-sum game?
 
-	Examples: Human A runs malware on their computer in the form of a
-	pirated video game. Human A does not want to disclose this as they
-	don't want other humans in the home know that they're playing
-	video games. From here, there are multiple scenarios possible:
+   Examples: Human A runs malware on their computer in the form of a
+   pirated video game. Human A does not want to disclose this as they
+   don't want other humans in the home know that they're playing
+   video games. From here, there are multiple scenarios possible:
 
-	1. The malware spreads to other devices on the network hurting
-       other humans. In this case, it may be argued that once the
-       malware infects other devices, aretha will disclose the traffic
-       to activity to other humans and thus increase the chances that
-       someone spots the malware. 
+   1. The malware spreads to other devices on the network hurting
+      other humans. In this case, it may be argued that once the
+      malware infects other devices, aretha will disclose the traffic
+      to activity to other humans and thus increase the chances that
+      someone spots the malware. 
 
-	2. Human B uses Human A's device to do some online shopping and
-       the malware collects their banking credentials, thus hurting
-       Human B. It can be argued that once a device is used by
-       multiple people, the device is no longer personal, but shared
-       and therefore would not be subject to the same access policy,
-       but it is idealistic to believe that this classification is
-       done properly (i.e. that personal computers are not shared).
+   2. Human B uses Human A's device to do some online shopping and
+      the malware collects their banking credentials, thus hurting
+      Human B. It can be argued that once a device is used by
+      multiple people, the device is no longer personal, but shared
+      and therefore would not be subject to the same access policy,
+      but it is idealistic to believe that this classification is
+      done properly (i.e. that personal computers are not shared).
 
-	3. The malware discloses personal information (e.g. microphone
-       recordings) relating to other people in the home; again,
-       hurting Human B.
+   3. The malware discloses personal information (e.g. microphone
+      recordings) relating to other people in the home; again,
+      hurting Human B.
 
-**** Input
-	 traffic from internal to external hosts
+*** Input
+	traffic from internal to external hosts
 	
-**** Output
-	 Potential apps running on devices. These apps should be confirmed
-	 or infirmed by humans in the house.
-
+*** Output
+	Potential apps running on devices. These apps should be confirmed
+	or infirmed by humans in the house.
 	
-**** Scheduling
-	 Once every day?
+*** Scheduling
+	Once every day?
 	 
-*** Nmap service detector
-	Run nmap to discover services on the network.
-**** Input
-	 N/A - no input is needed.
+** Nmap service detector
+   Run nmap to discover services on the network.
+*** Input
+	N/A - no input is needed.
 	 
-**** Output
-	 Devices and services on the network
+*** Output
+	Devices and services on the network
 	 
-**** Schedule
-	 Once every day?
+*** Schedule
+	Once every day?
 
-**** Permissions
-	 Network interface access
-*** Automated vulnerability scanner
-	Check vulnerability databases against devices on the network as
-	well as services running on them. 
-**** Schedule
-	 Run once a day?
-**** Input
-	 Devices and services on the network (output of "traffic sniffer"
-	 and "xray app detector")
-**** Output
-	 Potential vulnerabilities on the system
+*** Permissions
+	Network interface access
+** Automated vulnerability scanner
+   Check vulnerability databases against devices on the network as
+   well as services running on them. 
+*** Schedule
+	Run once a day?
+*** Input
+	Devices and services on the network (output of "traffic sniffer"
+	and "xray app detector")
+*** Output
+	Potential vulnerabilities on the system
 
-*** DDOS simulator
-	A particular instance of the larger class of simulators. The DDOS
-	simulator takes devices offline by cutting them off from the
-	internet.
+** DDOS simulator
+   A particular instance of the larger class of simulators. The DDOS
+   simulator takes devices offline by cutting them off from the
+   internet.
 	
-	Once every week, get devices on the netork and if any of them was
-	first discovered after the last DDOS simulation, run the
-	simulation again with these devices as targets.
+   Once every week, get devices on the netork and if any of them was
+   first discovered after the last DDOS simulation, run the
+   simulation again with these devices as targets.
 
-	Simulations are only run if approved by a human. They can also be
-	rejected, postponed.
+   Simulations are only run if approved by a human. They can also be
+   rejected, postponed.
 
-	If rejected, aretha will never try to run DDOS simulations on the
-	specified targets. If postponed, Aretha will try again
-	some other time with the same devices.
+   If rejected, aretha will never try to run DDOS simulations on the
+   specified targets. If postponed, Aretha will try again
+   some other time with the same devices.
 	
-	Users can abort the simulation by asserting so in the model
-	(e.g. ""Human A aborted simulation Sx"). Thus, models need to be
-	able to subscribe to chamges of the model.
+   Users can abort the simulation by asserting so in the model
+   (e.g. ""Human A aborted simulation Sx"). Thus, models need to be
+   able to subscribe to chamges of the model.
 		
-**** Schedule
-	 Once every week, if new devices are detected
-**** Input
-	 Approvals of simulation in response to requests
-	 Devices on the network and the time of their first detection. 
-	 Model changes involving cancellation of simulation (event)
-**** Output
-	 Request to run simulation
-	 Simulation result
-*** Weak password checker
-	Check endpoints on the network for default/weak credentials.
-**** Schedule
-	 Once every day
-**** Input
-	 Devices and services on the network
-**** Output
-	 Vulnerable devices ("Device1 :hasDefaultPassword True")
-**** Permissions
-	 Need to download lists of default/common passwords.
-*** OSINT scanner
-	! Pending research of available tools.
+*** Schedule
+	Once every week, if new devices are detected
+*** Input
+	Approvals of simulation in response to requests
+	Devices on the network and the time of their first detection. 
+	Model changes involving cancellation of simulation (event)
+*** Output
+	Request to run simulation
+	Simulation result
+** Weak password checker
+   Check endpoints on the network for default/weak credentials.
+*** Schedule
+	Once every day
+*** Input
+	Devices and services on the network
+*** Output
+	Vulnerable devices ("Device1 :hasDefaultPassword True")
+*** Permissions
+	Need to download lists of default/common passwords.
+** OSINT scanner
+   ! Pending research of available tools.
 	
-	Gather data about humans in the house.
+   Gather data about humans in the house.
 
-*** Personal info password checker
-	Attempt to generate passwords based on OSINT data collected about
-	humans in the house.
+** Personal info password checker
+   Attempt to generate passwords based on OSINT data collected about
+   humans in the house.
 
-** User interface
-   At the very least, Aretha presents itself to its owners in the form
-   of a graphical user interface. The information displayed is based
-   on the data model. We need to find a visual language that is
-   powerful enough to express this model.
+* User interface
+  At the very least, Aretha presents itself to its owners in the form
+  of a graphical user interface. The information displayed is based
+  on the data model. We need to find a visual language that is
+  powerful enough to express this model.
 
-   Like the data model, this will emerge by discussing potential
-   aretha apps, what they each need to present to the user, what they
-   need to get from the user and how to arrange it all on screen.
+  Like the data model, this will emerge by discussing potential
+  aretha apps, what they each need to present to the user, what they
+  need to get from the user and how to arrange it all on screen.
 
 
