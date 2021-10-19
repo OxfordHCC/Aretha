@@ -22,7 +22,7 @@
    Monitors devices on the network and issues warnings when new
    devices are detected.
 
-   Every x minutes, the intrudor detector does a host discovery scan
+   Every x minutes, the intruder detector does a host discovery scan
    using nmap. The resulting output is compared with the list of
    known devices in the model (what does "known devices" mean?).
    New devices are then added to the model.
@@ -100,7 +100,7 @@
    2. Human B uses Human A's device to do some online shopping and
       the malware collects their banking credentials, thus hurting
       Human B. It can be argued that once a device is used by
-      multiple people, the device is no longer personal, but shared
+      multiple people, the device is no longer personal, but shared,
       and therefore would not be subject to the same access policy,
       but it is idealistic to believe that this classification is
       done properly (i.e. that personal computers are not shared).
