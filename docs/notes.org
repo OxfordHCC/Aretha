@@ -114,7 +114,7 @@
 	
 *** Output
 	Potential apps running on devices. These apps should be confirmed
-	or infirmed by humans in the house.
+	or denied by humans in the house.
 	
 *** Scheduling
 	Once every day?
@@ -166,12 +166,12 @@
 *** Schedule
 	Once every week, if new devices are detected
 *** Input
-	Approvals of simulation in response to requests
-	Devices on the network and the time of their first detection. 
-	Model changes involving cancellation of simulation (event)
+	- Approvals of simulation in response to requests
+	- Devices on the network and the time of their first detection. 
+	- Model changes involving cancellation of simulation (event)
 *** Output
-	Request to run simulation
-	Simulation result
+	- Request to run simulation
+	- Simulation result
 ** Weak password checker
    Check endpoints on the network for default/weak credentials.
 *** Schedule
