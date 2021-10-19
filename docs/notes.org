@@ -118,7 +118,7 @@
 	
 *** Scheduling
 	Once every day?
-	 
+
 ** Nmap service detector
    Run nmap to discover services on the network.
 *** Input
@@ -190,6 +190,11 @@
 ** Personal info password checker
    Attempt to generate passwords based on OSINT data collected about
    humans in the house.
+
+** IOT Sentinel
+   The [[https://github.com/andypitcher/IoT_Sentinel][IoT Sentinel]] is a research project for automatically detecting
+   device types based on network traffic fingerprints for a small
+   number of popular IoT devices.
 
 * User interface
   At the very least, Aretha presents itself to its owners in the form

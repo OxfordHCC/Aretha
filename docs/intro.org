@@ -1,0 +1,36 @@
+
+* Introduction: ARETHA-RT: Red Team Extensions to Aretha
+
+Your _adversarial_ respectful personal assistant
+
+** Introduction: 
+
+ARETHA is the artificial respectful technological home assistant
+that aims to help people with their privacy and security needs.
+Thus far ARETHA has focused on transparency and education: making
+data disclosures visible and to teach people key aspects of data
+protection and privacy.
+
+ARETHA-RT extends  ARETHA with  Red Teaming capabilities,  which means
+that it can take _proactive actions_ as a cybersecurity team would to
+test and improve home resilience to privacy and security threats.
+
+There are many tools that human red teams use to do their work, some
+are listed on this page:
+
+- [[https://securitytrails.com/blog/red-team-tools][Red Team Tools]]
+
+The problem with such tools is that they're not designed for
+non-expert users; moreover, they take lots of person time and energy
+to use effectively.
+
+ARETHA-RT is an experiment to see if essential benefits of red teaming
+could be achieved through automation, namely as a kind of 'skill' for
+a next-generation personal digital assistant.
+
+Building on the ARETHA concept, we imagine that Red Teaming as a skill
+would involve actually many specific behaviours, all of which
+constitute taking an adversarial approach to test resilience and
+vulnerability.
+
+
