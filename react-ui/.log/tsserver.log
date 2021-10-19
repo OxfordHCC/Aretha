@@ -1,0 +1,1531 @@
+Info 0    [13:47:21.710] Starting TS Server
+Info 1    [13:47:21.723] Version: 4.3.5
+Info 2    [13:47:21.723] Arguments: /Users/alexzugravu/.nvm/versions/node/v14.16.1/bin/node /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/bin/tsserver --logFile /Users/alexzugravu/workspace/oxford/Aretha/react-ui/.log/tsserver.log --logVerbosity info --cancellationPipeName /private/var/folders/2n/sn_pqycs277bm9w1bjj76ll40000gn/T/706b9d0a0935fdefb9045be4e307ffe5/tscancellation*
+Info 3    [13:47:21.723] Platform: darwin NodeVersion: 14 CaseSensitive: false
+Info 4    [13:47:21.723] ServerMode: undefined syntaxOnly: false hasUnknownServerMode: undefined
+Info 5    [13:47:21.741] Search path: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src
+Info 6    [13:47:21.742] For info: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx :: No config files found.
+Info 7    [13:47:21.746] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 8    [13:47:23.033] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 1 structureChanged: true Elapsed: 1286.567151069641ms
+Info 9    [13:47:23.033] Project '/dev/null/inferredProject1*' (Inferred)
+Info 10   [13:47:23.033] 	Files (19)
+
+Info 11   [13:47:23.033] -----------------------------------------------
+Info 12   [13:47:41.778] FileWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 1:: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 250 undefined WatchType: package.json file for import suggestions
+Info 13   [13:47:41.784] Elapsed:: 1.8121976852416992ms FileWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 1:: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 250 undefined WatchType: package.json file for import suggestions
+Info 14   [13:49:04.819] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 15   [13:49:04.828] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 2 structureChanged: false Elapsed: 8.692601203918457ms
+Info 16   [13:49:04.828] Different program with same set of files:: structureIsReused:: 2
+Info 17   [13:49:05.897] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 18   [13:49:05.906] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 3 structureChanged: false Elapsed: 9.251080989837646ms
+Info 19   [13:49:05.906] Different program with same set of files:: structureIsReused:: 2
+Info 20   [13:49:07.586] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 21   [13:49:07.601] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 4 structureChanged: false Elapsed: 14.839707374572754ms
+Info 22   [13:49:07.601] Different program with same set of files:: structureIsReused:: 2
+Info 23   [13:49:08.013] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 24   [13:49:08.020] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 5 structureChanged: false Elapsed: 7.482615947723389ms
+Info 25   [13:49:08.020] Different program with same set of files:: structureIsReused:: 2
+Info 26   [13:49:08.246] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 27   [13:49:08.252] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 6 structureChanged: false Elapsed: 5.618439197540283ms
+Info 28   [13:49:08.252] Different program with same set of files:: structureIsReused:: 2
+Info 29   [13:49:10.142] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 30   [13:49:10.148] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 7 structureChanged: false Elapsed: 5.96950626373291ms
+Info 31   [13:49:10.148] Different program with same set of files:: structureIsReused:: 2
+Info 32   [13:49:11.500] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 33   [13:49:11.508] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 8 structureChanged: false Elapsed: 6.997559070587158ms
+Info 34   [13:49:11.508] Different program with same set of files:: structureIsReused:: 2
+Info 35   [13:49:12.947] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 36   [13:49:12.982] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 9 structureChanged: true Elapsed: 34.84105730056763ms
+Info 37   [13:49:12.982] Different program with same set of files:: structureIsReused:: 1
+Info 38   [13:49:13.252] getCompletionData: Get current token: 0.009294986724853516
+Info 39   [13:49:13.252] getCompletionData: Is inside comment: 0.028987884521484375
+Info 40   [13:49:13.253] getCompletionData: Get previous token 1: 0.020467758178710938
+Info 41   [13:49:13.253] getCompletionsAtPosition: isCompletionListBlocker: 0.4038219451904297
+Info 42   [13:49:13.258] collectAutoImports: starting, not resolving module specifiers
+Info 43   [13:49:13.259] collectAutoImports: module specifier cache size: 0
+Info 44   [13:49:13.259] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 45   [13:49:13.259] getSymbolToExportInfoMap: caching results
+Info 46   [13:49:13.259] getSymbolToExportInfoMap: done in 0.8097338676452637 ms
+Info 47   [13:49:13.260] collectAutoImports: done in 1.32704496383667 ms
+Info 48   [13:49:13.260] getCompletionData: Semantic work: 6.503438949584961
+Info 49   [13:49:13.290] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 29.08223533630371
+Err 50    [13:49:13.373] Exception on executing command {"command":"getCodeFixes","seq":90,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":1,"startOffset":31,"endLine":1,"endOffset":31,"errorCodes":[6133,7016]}}:
+
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 51   [13:49:13.631] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 52   [13:49:13.635] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 10 structureChanged: false Elapsed: 4.259972095489502ms
+Info 53   [13:49:13.635] Different program with same set of files:: structureIsReused:: 2
+Info 54   [13:49:13.638] getCompletionData: Get current token: 0.06272602081298828
+Info 55   [13:49:13.639] getCompletionData: Is inside comment: 0.026558876037597656
+Info 56   [13:49:13.639] getCompletionData: Get previous token 1: 0.041192054748535156
+Info 57   [13:49:13.639] getCompletionsAtPosition: isCompletionListBlocker: 0.033270835876464844
+Info 58   [13:49:13.646] collectAutoImports: starting, not resolving module specifiers
+Info 59   [13:49:13.646] collectAutoImports: module specifier cache size: 0
+Info 60   [13:49:13.646] getSymbolToExportInfoMap: cache hit
+Info 61   [13:49:13.647] collectAutoImports: done in 0.4844508171081543 ms
+Info 62   [13:49:13.647] getCompletionData: Semantic work: 7.781336784362793
+Info 63   [13:49:13.670] getCompletionData: Get current token: 0.020049095153808594
+Info 64   [13:49:13.670] getCompletionData: Is inside comment: 0.008491992950439453
+Info 65   [13:49:13.670] getCompletionData: Get previous token 1: 0.024065017700195312
+Info 66   [13:49:13.670] getCompletionsAtPosition: isCompletionListBlocker: 0.029827117919921875
+Info 67   [13:49:13.676] collectAutoImports: starting, not resolving module specifiers
+Info 68   [13:49:13.676] collectAutoImports: module specifier cache size: 0
+Info 69   [13:49:13.676] getSymbolToExportInfoMap: cache hit
+Info 70   [13:49:13.676] collectAutoImports: done in 0.4729580879211426 ms
+Info 71   [13:49:13.676] getCompletionData: Semantic work: 6.397632122039795
+Info 72   [13:49:15.642] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 73   [13:49:15.647] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 11 structureChanged: false Elapsed: 5.647618770599365ms
+Info 74   [13:49:15.647] Different program with same set of files:: structureIsReused:: 2
+Info 75   [13:49:15.904] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 76   [13:49:15.910] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 12 structureChanged: false Elapsed: 5.371799945831299ms
+Info 77   [13:49:15.910] Different program with same set of files:: structureIsReused:: 2
+Info 78   [13:49:16.729] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 79   [13:49:16.735] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 13 structureChanged: false Elapsed: 5.8318681716918945ms
+Info 80   [13:49:16.735] Different program with same set of files:: structureIsReused:: 2
+Info 81   [13:50:49.825] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 82   [13:50:49.833] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 14 structureChanged: false Elapsed: 6.427626132965088ms
+Info 83   [13:50:49.833] Different program with same set of files:: structureIsReused:: 2
+Err 84    [13:50:50.133] Exception on executing command {"command":"getCodeFixes","seq":129,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":1,"startOffset":32,"endLine":1,"endOffset":32,"errorCodes":[6133,7016]}}:
+
+    BADCLIENT: Bad error code, 7016 not found in range 31..31 (found: 6133, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 7016 not found in range 31..31 (found: 6133, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 85   [13:50:50.399] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 86   [13:50:50.403] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 15 structureChanged: false Elapsed: 3.7738680839538574ms
+Info 87   [13:50:50.403] Different program with same set of files:: structureIsReused:: 2
+Err 88    [13:50:50.995] Exception on executing command {"command":"getCodeFixes","seq":135,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":1,"startOffset":32,"endLine":1,"endOffset":32,"errorCodes":[6133,7016]}}:
+
+    BADCLIENT: Bad error code, 7016 not found in range 31..31 (found: 6133, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 7016 not found in range 31..31 (found: 6133, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 89   [13:51:20.651] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 90   [13:51:20.660] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 16 structureChanged: false Elapsed: 8.233790874481201ms
+Info 91   [13:51:20.660] Different program with same set of files:: structureIsReused:: 2
+Info 92   [13:51:20.682] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 93   [13:51:20.687] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 17 structureChanged: false Elapsed: 4.685038089752197ms
+Info 94   [13:51:20.687] Different program with same set of files:: structureIsReused:: 2
+Info 95   [13:51:21.081] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 96   [13:51:21.089] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 18 structureChanged: false Elapsed: 7.617549419403076ms
+Info 97   [13:51:21.089] Different program with same set of files:: structureIsReused:: 2
+Info 98   [13:51:21.480] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 99   [13:51:21.487] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 19 structureChanged: false Elapsed: 7.137159824371338ms
+Info 100  [13:51:21.487] Different program with same set of files:: structureIsReused:: 2
+Info 101  [13:51:21.892] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 102  [13:51:21.899] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 20 structureChanged: false Elapsed: 7.180260181427002ms
+Info 103  [13:51:21.899] Different program with same set of files:: structureIsReused:: 2
+Info 104  [13:51:22.066] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 105  [13:51:22.076] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 21 structureChanged: false Elapsed: 9.878870964050293ms
+Info 106  [13:51:22.077] Different program with same set of files:: structureIsReused:: 2
+Info 107  [13:51:22.212] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 108  [13:51:22.217] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 22 structureChanged: false Elapsed: 4.07497501373291ms
+Info 109  [13:51:22.217] Different program with same set of files:: structureIsReused:: 2
+Info 110  [13:51:23.431] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 111  [13:51:23.440] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 23 structureChanged: false Elapsed: 8.41374397277832ms
+Info 112  [13:51:23.440] Different program with same set of files:: structureIsReused:: 2
+Info 113  [13:51:24.092] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 114  [13:51:24.098] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 24 structureChanged: false Elapsed: 6.2442498207092285ms
+Info 115  [13:51:24.098] Different program with same set of files:: structureIsReused:: 2
+Info 116  [13:51:24.394] getCompletionData: Get current token: 0.033492088317871094
+Info 117  [13:51:24.394] getCompletionData: Is inside comment: 0.013873100280761719
+Info 118  [13:51:24.394] getCompletionData: Get previous token 1: 0.12589120864868164
+Info 119  [13:51:24.395] getCompletionsAtPosition: isCompletionListBlocker: 0.05883598327636719
+Info 120  [13:51:24.401] collectAutoImports: starting, not resolving module specifiers
+Info 121  [13:51:24.401] collectAutoImports: module specifier cache size: 0
+Info 122  [13:51:24.401] getSymbolToExportInfoMap: cache hit
+Info 123  [13:51:24.401] collectAutoImports: done in 0.49990129470825195 ms
+Info 124  [13:51:24.401] getCompletionData: Semantic work: 6.52164888381958
+Info 125  [13:51:24.423] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 20.401182174682617
+Err 126   [13:51:26.211] Exception on executing command {"command":"getCodeFixes","seq":212,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":45,"endLine":3,"endOffset":45,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 77..77 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 77..77 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 127  [13:51:26.909] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 128  [13:51:26.915] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 25 structureChanged: false Elapsed: 5.661858081817627ms
+Info 129  [13:51:26.915] Different program with same set of files:: structureIsReused:: 2
+Info 130  [13:51:27.180] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 131  [13:51:27.186] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 26 structureChanged: false Elapsed: 5.861790180206299ms
+Info 132  [13:51:27.186] Different program with same set of files:: structureIsReused:: 2
+Info 133  [13:51:27.768] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 134  [13:51:27.773] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 27 structureChanged: false Elapsed: 4.452925682067871ms
+Info 135  [13:51:27.773] Different program with same set of files:: structureIsReused:: 2
+Info 136  [13:51:28.848] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 137  [13:51:28.854] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 28 structureChanged: false Elapsed: 5.619704246520996ms
+Info 138  [13:51:28.854] Different program with same set of files:: structureIsReused:: 2
+Info 139  [13:51:29.149] getCompletionData: Get current token: 0.009124755859375
+Info 140  [13:51:29.149] getCompletionData: Is inside comment: 0.047152042388916016
+Info 141  [13:51:29.149] getCompletionData: Get previous token 1: 0.028171062469482422
+Info 142  [13:51:29.149] getCompletionsAtPosition: isCompletionListBlocker: 0.011905670166015625
+Info 143  [13:51:29.154] getCompletionData: Semantic work: 4.424883842468262
+Info 144  [13:51:29.158] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 4.2994489669799805
+Info 145  [13:51:29.555] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 146  [13:51:29.563] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 29 structureChanged: false Elapsed: 8.093035221099854ms
+Info 147  [13:51:29.563] Different program with same set of files:: structureIsReused:: 2
+Info 148  [13:51:29.805] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 149  [13:51:29.809] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 30 structureChanged: false Elapsed: 3.526754856109619ms
+Info 150  [13:51:29.809] Different program with same set of files:: structureIsReused:: 2
+Info 151  [13:51:30.787] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 152  [13:51:30.790] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 31 structureChanged: false Elapsed: 3.459916114807129ms
+Info 153  [13:51:30.790] Different program with same set of files:: structureIsReused:: 2
+Info 154  [13:51:31.172] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 155  [13:51:31.176] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 32 structureChanged: false Elapsed: 4.677382946014404ms
+Info 156  [13:51:31.177] Different program with same set of files:: structureIsReused:: 2
+Info 157  [13:51:31.987] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 158  [13:51:32.011] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 33 structureChanged: false Elapsed: 23.743982315063477ms
+Info 159  [13:51:32.021] Different program with same set of files:: structureIsReused:: 2
+Info 160  [13:51:32.352] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 161  [13:51:32.362] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 34 structureChanged: false Elapsed: 8.180712223052979ms
+Info 162  [13:51:32.362] Different program with same set of files:: structureIsReused:: 2
+Info 163  [13:51:32.801] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 164  [13:51:32.808] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 35 structureChanged: false Elapsed: 6.822993278503418ms
+Info 165  [13:51:32.808] Different program with same set of files:: structureIsReused:: 2
+Err 166   [13:51:33.689] Exception on executing command {"command":"getCodeFixes","seq":260,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 167  [13:54:08.605] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 168  [13:54:08.623] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 36 structureChanged: false Elapsed: 17.448266983032227ms
+Info 169  [13:54:08.623] Different program with same set of files:: structureIsReused:: 2
+Err 170   [13:54:08.890] Exception on executing command {"command":"getCodeFixes","seq":273,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 171  [13:54:09.306] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 172  [13:54:09.312] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 37 structureChanged: false Elapsed: 5.819068908691406ms
+Info 173  [13:54:09.312] Different program with same set of files:: structureIsReused:: 2
+Err 174   [13:54:09.862] Exception on executing command {"command":"getCodeFixes","seq":279,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 175  [13:54:10.948] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 176  [13:54:10.956] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 38 structureChanged: false Elapsed: 8.529521942138672ms
+Info 177  [13:54:10.956] Different program with same set of files:: structureIsReused:: 2
+Info 178  [13:54:11.250] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 179  [13:54:11.256] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 39 structureChanged: false Elapsed: 6.444468975067139ms
+Info 180  [13:54:11.256] Different program with same set of files:: structureIsReused:: 2
+Info 181  [13:54:11.474] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 182  [13:54:11.480] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 40 structureChanged: false Elapsed: 5.9544758796691895ms
+Info 183  [13:54:11.480] Different program with same set of files:: structureIsReused:: 2
+Info 184  [13:54:16.366] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 185  [13:54:16.374] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 41 structureChanged: false Elapsed: 7.410530090332031ms
+Info 186  [13:54:16.374] Different program with same set of files:: structureIsReused:: 2
+Err 187   [13:54:16.673] Exception on executing command {"command":"getCodeFixes","seq":293,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 188  [13:54:17.195] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 189  [13:54:17.203] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 42 structureChanged: false Elapsed: 7.532227039337158ms
+Info 190  [13:54:17.203] Different program with same set of files:: structureIsReused:: 2
+Info 191  [13:54:17.203] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 192  [13:54:17.209] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 43 structureChanged: false Elapsed: 5.835021018981934ms
+Info 193  [13:54:17.209] Different program with same set of files:: structureIsReused:: 2
+Info 194  [13:54:18.481] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 195  [13:54:18.489] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 44 structureChanged: false Elapsed: 7.936119079589844ms
+Info 196  [13:54:18.489] Different program with same set of files:: structureIsReused:: 2
+Info 197  [13:54:18.868] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 198  [13:54:18.875] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 45 structureChanged: false Elapsed: 7.492255210876465ms
+Info 199  [13:54:18.876] Different program with same set of files:: structureIsReused:: 2
+Info 200  [13:54:19.810] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 201  [13:54:19.819] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 46 structureChanged: false Elapsed: 6.267360210418701ms
+Info 202  [13:54:19.819] Different program with same set of files:: structureIsReused:: 2
+Err 203   [13:54:20.473] Exception on executing command {"command":"getCodeFixes","seq":313,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 204  [13:54:20.797] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 205  [13:54:20.802] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 47 structureChanged: false Elapsed: 4.590174198150635ms
+Info 206  [13:54:20.802] Different program with same set of files:: structureIsReused:: 2
+Info 207  [13:54:25.496] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 208  [13:54:25.502] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 48 structureChanged: false Elapsed: 6.026532173156738ms
+Info 209  [13:54:25.502] Different program with same set of files:: structureIsReused:: 2
+Info 210  [13:54:26.275] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 211  [13:54:26.279] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 49 structureChanged: false Elapsed: 3.438124179840088ms
+Info 212  [13:54:26.279] Different program with same set of files:: structureIsReused:: 2
+Info 213  [13:54:26.867] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 214  [13:54:26.871] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 50 structureChanged: false Elapsed: 4.355810642242432ms
+Info 215  [13:54:26.871] Different program with same set of files:: structureIsReused:: 2
+Info 216  [13:54:58.745] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 217  [13:54:58.750] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 51 structureChanged: false Elapsed: 5.016144752502441ms
+Info 218  [13:54:58.750] Different program with same set of files:: structureIsReused:: 2
+Info 219  [13:54:59.066] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 220  [13:54:59.073] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 52 structureChanged: false Elapsed: 6.25484561920166ms
+Info 221  [13:54:59.073] Different program with same set of files:: structureIsReused:: 2
+Info 222  [13:54:59.424] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 223  [13:54:59.431] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 53 structureChanged: false Elapsed: 6.92571496963501ms
+Info 224  [13:54:59.431] Different program with same set of files:: structureIsReused:: 2
+Info 225  [13:54:59.431] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 226  [13:54:59.434] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 54 structureChanged: false Elapsed: 3.1457300186157227ms
+Info 227  [13:54:59.434] Different program with same set of files:: structureIsReused:: 2
+Info 228  [13:54:59.807] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 229  [13:54:59.817] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 55 structureChanged: false Elapsed: 9.430157661437988ms
+Info 230  [13:54:59.817] Different program with same set of files:: structureIsReused:: 2
+Info 231  [13:55:00.214] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 232  [13:55:00.220] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 56 structureChanged: false Elapsed: 5.83978796005249ms
+Info 233  [13:55:00.220] Different program with same set of files:: structureIsReused:: 2
+Info 234  [13:55:01.352] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 235  [13:55:01.361] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 57 structureChanged: false Elapsed: 9.62974500656128ms
+Info 236  [13:55:01.362] Different program with same set of files:: structureIsReused:: 2
+Info 237  [13:55:02.068] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 238  [13:55:02.079] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 58 structureChanged: false Elapsed: 10.962679862976074ms
+Info 239  [13:55:02.079] Different program with same set of files:: structureIsReused:: 2
+Info 240  [13:55:02.701] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 241  [13:55:02.708] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 59 structureChanged: false Elapsed: 7.130763053894043ms
+Info 242  [13:55:02.708] Different program with same set of files:: structureIsReused:: 2
+Info 243  [13:55:03.330] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 244  [13:55:03.333] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 60 structureChanged: false Elapsed: 2.6434249877929688ms
+Info 245  [13:55:03.333] Different program with same set of files:: structureIsReused:: 2
+Err 246   [13:55:03.642] Exception on executing command {"command":"getCodeFixes","seq":360,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Err 247   [13:55:04.287] Exception on executing command {"command":"getCodeFixes","seq":362,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 248  [13:55:12.142] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 249  [13:55:12.148] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 61 structureChanged: false Elapsed: 6.303715229034424ms
+Info 250  [13:55:12.148] Different program with same set of files:: structureIsReused:: 2
+Info 251  [13:55:12.526] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 252  [13:55:12.532] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 62 structureChanged: false Elapsed: 5.594759941101074ms
+Info 253  [13:55:12.532] Different program with same set of files:: structureIsReused:: 2
+Info 254  [13:55:13.240] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 255  [13:55:13.250] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 63 structureChanged: false Elapsed: 9.208695888519287ms
+Info 256  [13:55:13.250] Different program with same set of files:: structureIsReused:: 2
+Info 257  [13:55:13.937] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 258  [13:55:13.943] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 64 structureChanged: false Elapsed: 6.387303829193115ms
+Info 259  [13:55:13.943] Different program with same set of files:: structureIsReused:: 2
+Info 260  [13:55:14.327] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 261  [13:55:14.335] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 65 structureChanged: false Elapsed: 6.591853618621826ms
+Info 262  [13:55:14.335] Different program with same set of files:: structureIsReused:: 2
+Err 263   [13:55:14.631] Exception on executing command {"command":"getCodeFixes","seq":379,"type":"request","arguments":{"file":"/Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx","startLine":3,"startOffset":46,"endLine":3,"endOffset":46,"errorCodes":[6133]}}:
+
+    BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+
+    Error: BADCLIENT: Bad error code, 6133 not found in range 78..78 (found: false, false, false); could have caused this error:
+    Debug Failure. False expression: should not delete whole source file
+        at tryDeleteDeclarationWorker (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144397:26)
+        at tryDeleteDeclaration (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144379:13)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144244:32
+        at Function.ChangeTracker.with (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:138267:17)
+        at Object.getCodeActions (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:144243:69)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:77
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:139452:23)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153679:35
+        at Object.flatMap (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:515:25)
+        at Object.getCodeFixesAtPosition (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:153677:23)
+        at IOSession.Session.getCodeFixes (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:164897:64)
+        at Session.handlers.ts.Map.ts.getEntries._a.<computed> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:163549:61)
+        at /Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:88
+        at IOSession.Session.executeWithRequestId (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165201:28)
+        at IOSession.Session.executeCommand (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165210:33)
+        at IOSession.Session.onMessage (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:165236:35)
+        at Interface.<anonymous> (/Users/alexzugravu/.emacs.d/.cache/lsp/npm/typescript/lib/node_modules/typescript/lib/tsserver.js:167833:31)
+        at Interface.emit (events.js:315:20)
+        at Interface._onLine (readline.js:337:10)
+        at Interface._normalWrite (readline.js:482:12)
+        at Socket.ondata (readline.js:194:10)
+        at Socket.emit (events.js:315:20)
+        at addChunk (internal/streams/readable.js:309:12)
+        at readableAddChunk (internal/streams/readable.js:284:9)
+        at Socket.Readable.push (internal/streams/readable.js:223:10)
+        at Pipe.onStreamRead (internal/stream_base_commons.js:188:23)
+Info 264  [13:55:17.234] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 265  [13:55:17.239] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 66 structureChanged: false Elapsed: 4.807950973510742ms
+Info 266  [13:55:17.239] Different program with same set of files:: structureIsReused:: 2
+Info 267  [13:55:20.930] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 268  [13:55:20.940] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 67 structureChanged: false Elapsed: 8.147504806518555ms
+Info 269  [13:55:20.940] Different program with same set of files:: structureIsReused:: 2
+Info 270  [13:55:21.231] getCompletionData: Get current token: 0.037706851959228516
+Info 271  [13:55:21.232] getCompletionData: Is inside comment: 0.05444192886352539
+Info 272  [13:55:21.232] getCompletionData: Get previous token 1: 0.024353981018066406
+Info 273  [13:55:21.232] getCompletionData: Get previous token 2: 0.03509998321533203
+Info 274  [13:55:21.233] getCompletionsAtPosition: isCompletionListBlocker: 0.23757076263427734
+Info 275  [13:55:21.233] Returning an empty list because completion was requested in an invalid position.
+Info 276  [13:55:21.236] getCompletionData: Get current token: 0.011085987091064453
+Info 277  [13:55:21.236] getCompletionData: Is inside comment: 0.02993488311767578
+Info 278  [13:55:21.236] getCompletionData: Get previous token 1: 0.018034934997558594
+Info 279  [13:55:21.236] getCompletionData: Get previous token 2: 0.018413066864013672
+Info 280  [13:55:21.236] getCompletionsAtPosition: isCompletionListBlocker: 0.0033979415893554688
+Info 281  [13:55:21.236] Returning an empty list because completion was requested in an invalid position.
+Info 282  [13:55:21.239] getCompletionData: Get current token: 0.009496688842773438
+Info 283  [13:55:21.239] getCompletionData: Is inside comment: 0.03062725067138672
+Info 284  [13:55:21.239] getCompletionData: Get previous token 1: 0.018231868743896484
+Info 285  [13:55:21.239] getCompletionData: Get previous token 2: 0.018702983856201172
+Info 286  [13:55:21.239] getCompletionsAtPosition: isCompletionListBlocker: 0.0030770301818847656
+Info 287  [13:55:21.239] Returning an empty list because completion was requested in an invalid position.
+Info 288  [13:55:21.602] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 289  [13:55:21.610] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 68 structureChanged: false Elapsed: 7.922740936279297ms
+Info 290  [13:55:21.610] Different program with same set of files:: structureIsReused:: 2
+Info 291  [13:55:22.090] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 292  [13:55:22.096] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 69 structureChanged: false Elapsed: 5.828843593597412ms
+Info 293  [13:55:22.096] Different program with same set of files:: structureIsReused:: 2
+Info 294  [13:55:24.156] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 295  [13:55:24.186] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 70 structureChanged: true Elapsed: 29.56651735305786ms
+Info 296  [13:55:24.186] Different program with same set of files:: structureIsReused:: 1
+Info 297  [13:55:24.188] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 298  [13:55:24.192] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 71 structureChanged: false Elapsed: 3.4776129722595215ms
+Info 299  [13:55:24.192] Different program with same set of files:: structureIsReused:: 2
+Info 300  [13:55:24.580] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 301  [13:55:24.587] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 72 structureChanged: false Elapsed: 6.925472259521484ms
+Info 302  [13:55:24.587] Different program with same set of files:: structureIsReused:: 2
+Info 303  [13:55:25.372] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 304  [13:55:25.382] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 73 structureChanged: true Elapsed: 10.170478820800781ms
+Info 305  [13:55:25.382] Different program with same set of files:: structureIsReused:: 1
+Info 306  [13:55:26.275] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 307  [13:55:26.281] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 74 structureChanged: false Elapsed: 5.870754718780518ms
+Info 308  [13:55:26.281] Different program with same set of files:: structureIsReused:: 2
+Info 309  [13:55:26.670] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 310  [13:55:26.675] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 75 structureChanged: false Elapsed: 5.398044109344482ms
+Info 311  [13:55:26.676] Different program with same set of files:: structureIsReused:: 2
+Info 312  [13:55:27.441] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 313  [13:55:27.443] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 76 structureChanged: false Elapsed: 2.0705223083496094ms
+Info 314  [13:55:27.443] Different program with same set of files:: structureIsReused:: 2
+Info 315  [13:55:30.793] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 316  [13:55:30.804] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 77 structureChanged: true Elapsed: 10.77370834350586ms
+Info 317  [13:55:30.804] Different program with same set of files:: structureIsReused:: 1
+Info 318  [13:55:31.776] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 319  [13:55:31.795] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 78 structureChanged: true Elapsed: 18.871145248413086ms
+Info 320  [13:55:31.795] Different program with same set of files:: structureIsReused:: 1
+Info 321  [13:55:32.382] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 322  [13:55:32.385] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 79 structureChanged: false Elapsed: 2.682368278503418ms
+Info 323  [13:55:32.385] Different program with same set of files:: structureIsReused:: 2
+Info 324  [13:55:33.570] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 325  [13:55:33.576] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 80 structureChanged: false Elapsed: 5.820198059082031ms
+Info 326  [13:55:33.576] Different program with same set of files:: structureIsReused:: 2
+Info 327  [13:55:34.319] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 328  [13:55:34.324] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 81 structureChanged: false Elapsed: 5.317970275878906ms
+Info 329  [13:55:34.324] Different program with same set of files:: structureIsReused:: 2
+Info 330  [13:55:34.983] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 331  [13:55:34.989] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 82 structureChanged: false Elapsed: 5.9092302322387695ms
+Info 332  [13:55:34.989] Different program with same set of files:: structureIsReused:: 2
+Info 333  [13:55:35.660] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 334  [13:55:35.666] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 83 structureChanged: false Elapsed: 6.429749011993408ms
+Info 335  [13:55:35.666] Different program with same set of files:: structureIsReused:: 2
+Info 336  [13:55:35.887] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 337  [13:55:35.906] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 84 structureChanged: false Elapsed: 17.0373272895813ms
+Info 338  [13:55:35.906] Different program with same set of files:: structureIsReused:: 2
+Info 339  [13:55:37.824] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 340  [13:55:37.827] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 85 structureChanged: false Elapsed: 2.802945137023926ms
+Info 341  [13:55:37.827] Different program with same set of files:: structureIsReused:: 2
+Info 342  [13:55:38.131] getCompletionData: Get current token: 0.00954580307006836
+Info 343  [13:55:38.131] getCompletionData: Is inside comment: 0.035816192626953125
+Info 344  [13:55:38.131] getCompletionData: Get previous token 1: 0.023267745971679688
+Info 345  [13:55:38.131] getCompletionData: Get previous token 2: 0.09821557998657227
+Info 346  [13:55:38.133] getCompletionsAtPosition: isCompletionListBlocker: 0.8616228103637695
+Info 347  [13:55:38.138] collectAutoImports: starting, not resolving module specifiers
+Info 348  [13:55:38.138] collectAutoImports: module specifier cache size: 0
+Info 349  [13:55:38.140] getSymbolToExportInfoMap: cache hit
+Info 350  [13:55:38.140] collectAutoImports: done in 1.897125244140625 ms
+Info 351  [13:55:38.140] getCompletionData: Semantic work: 7.38194465637207
+Info 352  [13:55:38.158] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 17.215617179870605
+Info 353  [13:55:38.173] getCompletionData: Get current token: 0.005435943603515625
+Info 354  [13:55:38.173] getCompletionData: Is inside comment: 0.03525686264038086
+Info 355  [13:55:38.174] getCompletionData: Get previous token 1: 0.9156808853149414
+Info 356  [13:55:38.174] getCompletionData: Get previous token 2: 0.03361177444458008
+Info 357  [13:55:38.174] getCompletionsAtPosition: isCompletionListBlocker: 0.014362812042236328
+Info 358  [13:55:38.182] collectAutoImports: starting, not resolving module specifiers
+Info 359  [13:55:38.182] collectAutoImports: module specifier cache size: 0
+Info 360  [13:55:38.182] getSymbolToExportInfoMap: cache hit
+Info 361  [13:55:38.182] collectAutoImports: done in 0.41004228591918945 ms
+Info 362  [13:55:38.182] getCompletionData: Semantic work: 8.158016681671143
+Info 363  [13:55:38.210] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 27.53384780883789
+Info 364  [13:55:38.214] getCompletionData: Get current token: 0.005755901336669922
+Info 365  [13:55:38.214] getCompletionData: Is inside comment: 0.020639419555664062
+Info 366  [13:55:38.214] getCompletionData: Get previous token 1: 0.013584136962890625
+Info 367  [13:55:38.214] getCompletionData: Get previous token 2: 0.01974773406982422
+Info 368  [13:55:38.214] getCompletionsAtPosition: isCompletionListBlocker: 0.017354965209960938
+Info 369  [13:55:38.216] collectAutoImports: starting, not resolving module specifiers
+Info 370  [13:55:38.216] collectAutoImports: module specifier cache size: 0
+Info 371  [13:55:38.216] getSymbolToExportInfoMap: cache hit
+Info 372  [13:55:38.216] collectAutoImports: done in 0.36324119567871094 ms
+Info 373  [13:55:38.216] getCompletionData: Semantic work: 2.384714126586914
+Info 374  [13:55:38.244] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 27.225459098815918
+Info 375  [13:55:38.261] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 376  [13:55:38.264] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 86 structureChanged: false Elapsed: 2.718280792236328ms
+Info 377  [13:55:38.264] Different program with same set of files:: structureIsReused:: 2
+Info 378  [13:55:38.622] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 379  [13:55:38.625] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 87 structureChanged: false Elapsed: 3.621927261352539ms
+Info 380  [13:55:38.625] Different program with same set of files:: structureIsReused:: 2
+Info 381  [13:55:38.922] getCompletionData: Get current token: 0.013604164123535156
+Info 382  [13:55:38.922] getCompletionData: Is inside comment: 0.052976131439208984
+Info 383  [13:55:38.923] getCompletionData: Get previous token 1: 0.035246849060058594
+Info 384  [13:55:38.923] getCompletionData: Get previous token 2: 0.12817001342773438
+Info 385  [13:55:38.923] getCompletionsAtPosition: isCompletionListBlocker: 0.03127002716064453
+Info 386  [13:55:38.927] collectAutoImports: starting, not resolving module specifiers
+Info 387  [13:55:38.927] collectAutoImports: module specifier cache size: 0
+Info 388  [13:55:38.927] getSymbolToExportInfoMap: cache hit
+Info 389  [13:55:38.928] collectAutoImports: done in 0.7042827606201172 ms
+Info 390  [13:55:38.928] getCompletionData: Semantic work: 4.624299049377441
+Info 391  [13:55:38.943] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 12.868002891540527
+Info 392  [13:55:39.357] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 393  [13:55:39.361] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 88 structureChanged: false Elapsed: 3.4022388458251953ms
+Info 394  [13:55:39.361] Different program with same set of files:: structureIsReused:: 2
+Info 395  [13:55:39.361] getCompletionData: Get current token: 0.007458209991455078
+Info 396  [13:55:39.361] getCompletionData: Is inside comment: 0.026830196380615234
+Info 397  [13:55:39.361] getCompletionData: Get previous token 1: 0.019075393676757812
+Info 398  [13:55:39.361] getCompletionData: Get previous token 2: 0.041253089904785156
+Info 399  [13:55:39.361] getCompletionsAtPosition: isCompletionListBlocker: 0.01470327377319336
+Info 400  [13:55:39.364] collectAutoImports: starting, not resolving module specifiers
+Info 401  [13:55:39.364] collectAutoImports: module specifier cache size: 0
+Info 402  [13:55:39.364] getSymbolToExportInfoMap: cache hit
+Info 403  [13:55:39.364] collectAutoImports: done in 0.3509979248046875 ms
+Info 404  [13:55:39.364] getCompletionData: Semantic work: 2.7660088539123535
+Info 405  [13:55:39.376] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 11.684624195098877
+Info 406  [13:55:39.500] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 407  [13:55:39.503] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 89 structureChanged: false Elapsed: 2.4943408966064453ms
+Info 408  [13:55:39.503] Different program with same set of files:: structureIsReused:: 2
+Info 409  [13:55:39.503] getCompletionData: Get current token: 0.0053310394287109375
+Info 410  [13:55:39.503] getCompletionData: Is inside comment: 0.02359914779663086
+Info 411  [13:55:39.503] getCompletionData: Get previous token 1: 0.014542102813720703
+Info 412  [13:55:39.503] getCompletionData: Get previous token 2: 0.03431892395019531
+Info 413  [13:55:39.503] getCompletionsAtPosition: isCompletionListBlocker: 0.016160964965820312
+Info 414  [13:55:39.505] collectAutoImports: starting, not resolving module specifiers
+Info 415  [13:55:39.505] collectAutoImports: module specifier cache size: 0
+Info 416  [13:55:39.506] getSymbolToExportInfoMap: cache hit
+Info 417  [13:55:39.506] collectAutoImports: done in 0.3949918746948242 ms
+Info 418  [13:55:39.506] getCompletionData: Semantic work: 2.6014480590820312
+Info 419  [13:55:39.514] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 6.966869354248047
+Info 420  [13:55:39.816] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 421  [13:55:39.821] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 90 structureChanged: false Elapsed: 5.518183708190918ms
+Info 422  [13:55:39.822] Different program with same set of files:: structureIsReused:: 2
+Info 423  [13:55:40.054] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 424  [13:55:40.060] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 91 structureChanged: false Elapsed: 5.566926956176758ms
+Info 425  [13:55:40.060] Different program with same set of files:: structureIsReused:: 2
+Info 426  [13:55:40.397] getCompletionData: Get current token: 0.014122962951660156
+Info 427  [13:55:40.397] getCompletionData: Is inside comment: 0.06047868728637695
+Info 428  [13:55:40.397] getCompletionData: Get previous token 1: 0.04395103454589844
+Info 429  [13:55:40.397] getCompletionsAtPosition: isCompletionListBlocker: 0.012982845306396484
+Info 430  [13:55:40.401] getCompletionData: Semantic work: 3.4927549362182617
+Info 431  [13:55:40.405] getCompletionData: Get current token: 0.0050411224365234375
+Info 432  [13:55:40.405] getCompletionData: Is inside comment: 0.023650169372558594
+Info 433  [13:55:40.405] getCompletionData: Get previous token 1: 0.034586429595947266
+Info 434  [13:55:40.405] getCompletionsAtPosition: isCompletionListBlocker: 0.00359344482421875
+Info 435  [13:55:40.405] getCompletionData: Semantic work: 0.12272930145263672
+Info 436  [13:55:40.407] getCompletionData: Get current token: 0.00551605224609375
+Info 437  [13:55:40.407] getCompletionData: Is inside comment: 0.03823375701904297
+Info 438  [13:55:40.407] getCompletionData: Get previous token 1: 0.03479623794555664
+Info 439  [13:55:40.408] getCompletionsAtPosition: isCompletionListBlocker: 0.00409698486328125
+Info 440  [13:55:40.408] getCompletionData: Semantic work: 0.10054159164428711
+Info 441  [13:55:41.285] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 442  [13:55:41.290] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 92 structureChanged: false Elapsed: 5.212483882904053ms
+Info 443  [13:55:41.290] Different program with same set of files:: structureIsReused:: 2
+Info 444  [13:55:41.583] getCompletionData: Get current token: 0.013625144958496094
+Info 445  [13:55:41.583] getCompletionData: Is inside comment: 0.05570793151855469
+Info 446  [13:55:41.583] getCompletionData: Get previous token 1: 0.04006767272949219
+Info 447  [13:55:41.583] getCompletionData: Get previous token 2: 0.06554698944091797
+Info 448  [13:55:41.583] getCompletionsAtPosition: isCompletionListBlocker: 0.01021718978881836
+Info 449  [13:55:41.584] getCompletionData: Semantic work: 0.7705626487731934
+Info 450  [13:55:41.590] getCompletionData: Get current token: 0.006771087646484375
+Info 451  [13:55:41.590] getCompletionData: Is inside comment: 0.04421567916870117
+Info 452  [13:55:41.591] getCompletionData: Get previous token 1: 0.020518779754638672
+Info 453  [13:55:41.591] getCompletionData: Get previous token 2: 0.0312647819519043
+Info 454  [13:55:41.591] getCompletionsAtPosition: isCompletionListBlocker: 0.006319999694824219
+Info 455  [13:55:41.591] getCompletionData: Semantic work: 0.10279417037963867
+Info 456  [13:55:41.592] getCompletionData: Get current token: 0.0055828094482421875
+Info 457  [13:55:41.593] getCompletionData: Is inside comment: 0.03567981719970703
+Info 458  [13:55:41.593] getCompletionData: Get previous token 1: 0.017302989959716797
+Info 459  [13:55:41.593] getCompletionData: Get previous token 2: 0.037586212158203125
+Info 460  [13:55:41.593] getCompletionsAtPosition: isCompletionListBlocker: 0.0038290023803710938
+Info 461  [13:55:41.593] getCompletionData: Semantic work: 0.0887608528137207
+Info 462  [13:55:42.274] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 463  [13:55:42.279] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 93 structureChanged: false Elapsed: 5.321125030517578ms
+Info 464  [13:55:42.279] Different program with same set of files:: structureIsReused:: 2
+Info 465  [13:55:42.718] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 466  [13:55:42.724] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 94 structureChanged: false Elapsed: 5.408156394958496ms
+Info 467  [13:55:42.724] Different program with same set of files:: structureIsReused:: 2
+Info 468  [13:55:43.021] getCompletionData: Get current token: 0.014148235321044922
+Info 469  [13:55:43.021] getCompletionData: Is inside comment: 0.07345819473266602
+Info 470  [13:55:43.021] getCompletionData: Get previous token 1: 0.04324054718017578
+Info 471  [13:55:43.021] getCompletionsAtPosition: isCompletionListBlocker: 0.007557868957519531
+Info 472  [13:55:43.022] getCompletionData: Semantic work: 0.6266040802001953
+Info 473  [13:55:43.028] getCompletionData: Get current token: 0.007084846496582031
+Info 474  [13:55:43.029] getCompletionData: Is inside comment: 0.03038930892944336
+Info 475  [13:55:43.029] getCompletionData: Get previous token 1: 0.05506420135498047
+Info 476  [13:55:43.029] getCompletionsAtPosition: isCompletionListBlocker: 0.0036687850952148438
+Info 477  [13:55:43.029] getCompletionData: Semantic work: 0.08278465270996094
+Info 478  [13:55:43.031] getCompletionData: Get current token: 0.005403995513916016
+Info 479  [13:55:43.031] getCompletionData: Is inside comment: 0.024656295776367188
+Info 480  [13:55:43.031] getCompletionData: Get previous token 1: 0.027559757232666016
+Info 481  [13:55:43.031] getCompletionsAtPosition: isCompletionListBlocker: 0.0037970542907714844
+Info 482  [13:55:43.031] getCompletionData: Semantic work: 0.08147096633911133
+Info 483  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 484  [13:56:25.615] Elapsed:: 0.3734617233276367ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 485  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 486  [13:56:25.615] Elapsed:: 0.043972015380859375ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 487  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 488  [13:56:25.615] Elapsed:: 0.01578998565673828ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 489  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 490  [13:56:25.615] Elapsed:: 0.01343679428100586ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 491  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 492  [13:56:25.615] Elapsed:: 0.026545047760009766ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 493  [13:56:25.615] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 494  [13:56:25.615] Elapsed:: 0.012156963348388672ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 495  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 496  [13:56:25.616] Elapsed:: 0.01152181625366211ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/LICENSE :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 497  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 498  [13:56:25.616] Elapsed:: 0.011560916900634766ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 499  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 500  [13:56:25.616] Elapsed:: 0.011446952819824219ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 501  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 502  [13:56:25.616] Elapsed:: 0.011157989501953125ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 503  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/experimental.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 504  [13:56:25.616] Elapsed:: 0.010996341705322266ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/experimental.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 505  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 506  [13:56:25.616] Elapsed:: 0.01110219955444336ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 507  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 508  [13:56:25.616] Elapsed:: 0.010824203491210938ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 509  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 510  [13:56:25.616] Elapsed:: 0.013869762420654297ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 511  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/experimental.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 512  [13:56:25.616] Elapsed:: 0.012826919555664062ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/experimental.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 513  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 514  [13:56:25.616] Elapsed:: 0.011545181274414062ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 515  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/node-stream :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 516  [13:56:25.616] Elapsed:: 0.010938167572021484ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/node-stream :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 517  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 518  [13:56:25.616] Elapsed:: 0.01135110855102539ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 519  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 520  [13:56:25.616] Elapsed:: 0.010942935943603516ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 521  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/next.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 522  [13:56:25.616] Elapsed:: 0.010890960693359375ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/next.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 523  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/global.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 524  [13:56:25.616] Elapsed:: 0.011610031127929688ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/global.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 525  [13:56:25.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/tracing.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 526  [13:56:25.617] Elapsed:: 0.012902259826660156ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a/tracing.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 527  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/node-stream/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 528  [13:56:25.617] Elapsed:: 0.01073598861694336ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/node-stream/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 529  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 530  [13:56:25.617] Elapsed:: 0.010441780090332031ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 531  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/server.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 532  [13:56:25.617] Elapsed:: 0.010658740997314453ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/server.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 533  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/test-utils :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 534  [13:56:25.617] Elapsed:: 0.010725021362304688ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/test-utils :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 535  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 536  [13:56:25.617] Elapsed:: 0.011717796325683594ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 537  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/jsx-dev-runtime.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 538  [13:56:25.617] Elapsed:: 0.010583877563476562ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/jsx-dev-runtime.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 539  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/next.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 540  [13:56:25.617] Elapsed:: 0.010467052459716797ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/next.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 541  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/test-utils/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 542  [13:56:25.617] Elapsed:: 0.01065206527709961ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379/test-utils/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 543  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/jsx-runtime.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 544  [13:56:25.617] Elapsed:: 0.010332107543945312ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/jsx-runtime.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 545  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 546  [13:56:25.617] Elapsed:: 0.010286808013916016ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 547  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/index.js.flow :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 548  [13:56:25.617] Elapsed:: 0.010874748229980469ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/index.js.flow :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 549  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 550  [13:56:25.617] Elapsed:: 0.010055065155029297ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 551  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 552  [13:56:25.617] Elapsed:: 0.010863780975341797ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/README.md :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 553  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 554  [13:56:25.617] Elapsed:: 0.01802825927734375ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac/index.d.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 555  [13:56:25.617] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 556  [13:56:25.618] Elapsed:: 0.30629539489746094ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 557  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 558  [13:56:25.618] Elapsed:: 0.015721797943115234ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/prop-types-59e50c1c :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 559  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 560  [13:56:25.618] Elapsed:: 0.04209184646606445ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 561  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 562  [13:56:25.618] Elapsed:: 0.012251853942871094ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/scheduler-e353431a :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 563  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 564  [13:56:25.618] Elapsed:: 0.03897714614868164ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 565  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 566  [13:56:25.618] Elapsed:: 0.011723995208740234ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/csstype-783d14ac :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 567  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 568  [13:56:25.618] Elapsed:: 0.03143882751464844ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 569  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 570  [13:56:25.618] Elapsed:: 0.011451244354248047ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-ce25429f :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 571  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 572  [13:56:25.618] Elapsed:: 0.03052520751953125ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 573  [13:56:25.618] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 574  [13:56:25.619] Elapsed:: 0.011357784271240234ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types/react-dom-3535d379 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 575  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 576  [13:56:25.619] Elapsed:: 0.029822826385498047ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 577  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json.1410863437 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 578  [13:56:25.619] Elapsed:: 0.02062511444091797ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json.1410863437 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 579  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json.250402854 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 580  [13:56:25.619] Elapsed:: 0.016798019409179688ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json.250402854 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 581  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json.3725832700 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 582  [13:56:25.619] Elapsed:: 0.016460895538330078ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json.3725832700 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 583  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json.1193113628 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 584  [13:56:25.619] Elapsed:: 0.016676902770996094ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json.1193113628 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 585  [13:56:25.619] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json.3782728327 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 586  [13:56:25.619] Elapsed:: 0.015603065490722656ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json.3782728327 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 587  [13:56:25.665] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json.3725832700 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 588  [13:56:25.665] Elapsed:: 0.0605778694152832ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json.3725832700 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 589  [13:56:25.665] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 590  [13:56:25.666] Elapsed:: 0.7761468887329102ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 591  [13:56:25.666] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 592  [13:56:25.666] Elapsed:: 0.10520219802856445ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 593  [13:56:25.666] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json.1410863437 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 594  [13:56:25.667] Elapsed:: 0.0340428352355957ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json.1410863437 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 595  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 596  [13:56:25.667] Elapsed:: 0.08310985565185547ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 597  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 598  [13:56:25.667] Elapsed:: 0.09180974960327148ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/react-dom/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 599  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json.1193113628 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 600  [13:56:25.667] Elapsed:: 0.02276897430419922ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json.1193113628 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 601  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 602  [13:56:25.667] Elapsed:: 0.05636024475097656ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 603  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 604  [13:56:25.667] Elapsed:: 0.05545186996459961ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/prop-types/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 605  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json.3782728327 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 606  [13:56:25.667] Elapsed:: 0.021290302276611328ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json.3782728327 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 607  [13:56:25.667] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 608  [13:56:25.667] Elapsed:: 0.05312919616699219ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 609  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 610  [13:56:25.668] Elapsed:: 0.05796337127685547ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/csstype/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 611  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json.250402854 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 612  [13:56:25.668] Elapsed:: 0.022489070892333984ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json.250402854 :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 613  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 614  [13:56:25.668] Elapsed:: 0.06350088119506836ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 615  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 616  [13:56:25.668] Elapsed:: 0.0605921745300293ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types/scheduler/package.json :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 617  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 618  [13:56:25.668] Elapsed:: 0.014288902282714844ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 619  [13:56:25.668] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 620  [13:56:25.668] Elapsed:: 0.03546905517578125ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/.staging :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules 1 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 621  [13:56:26.054] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types 1 undefined Project: /dev/null/inferredProject1* WatchType: Type roots
+Info 622  [13:56:26.055] Elapsed:: 0.30299901962280273ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/node_modules/@types 1 undefined Project: /dev/null/inferredProject1* WatchType: Type roots
+Info 623  [13:56:26.309] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 624  [13:56:26.791] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 95 structureChanged: true Elapsed: 482.34924030303955ms
+Info 625  [13:56:26.791] Project '/dev/null/inferredProject1*' (Inferred)
+Info 626  [13:56:26.792] 	Files (26)
+
+Info 627  [13:56:26.792] -----------------------------------------------
+Info 628  [13:56:26.857] FileWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 1:: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 250 undefined WatchType: package.json file for import suggestions
+Info 629  [13:56:26.858] Elapsed:: 0.6251931190490723ms FileWatcher:: Triggered with /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 1:: WatchInfo: /users/alexzugravu/workspace/oxford/aretha/react-ui/package.json 250 undefined WatchType: package.json file for import suggestions
+Info 630  [13:56:28.814] Before ensureProjectForOpenFiles:
+Info 631  [13:56:28.815] After ensureProjectForOpenFiles:
+Info 632  [13:56:28.816] got projects updated in background, updating diagnostics for /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx
+Info 633  [13:56:32.028] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 634  [13:56:32.032] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 96 structureChanged: false Elapsed: 4.0731706619262695ms
+Info 635  [13:56:32.032] Different program with same set of files:: structureIsReused:: 2
+Info 636  [13:56:33.091] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 637  [13:56:33.097] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 97 structureChanged: false Elapsed: 5.5951056480407715ms
+Info 638  [13:56:33.097] Different program with same set of files:: structureIsReused:: 2
+Info 639  [13:56:33.389] getCompletionData: Get current token: 0.014082908630371094
+Info 640  [13:56:33.390] getCompletionData: Is inside comment: 0.0572209358215332
+Info 641  [13:56:33.390] getCompletionData: Get previous token 1: 0.04064178466796875
+Info 642  [13:56:33.390] getCompletionsAtPosition: isCompletionListBlocker: 0.010311126708984375
+Info 643  [13:56:33.392] getCompletionData: Semantic work: 1.9069719314575195
+Info 644  [13:56:33.392] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 0.48624324798583984
+Info 645  [13:56:34.254] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 646  [13:56:34.261] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 98 structureChanged: false Elapsed: 6.561983108520508ms
+Info 647  [13:56:34.261] Different program with same set of files:: structureIsReused:: 2
+Info 648  [13:56:34.935] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 649  [13:56:34.940] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 99 structureChanged: false Elapsed: 4.619179725646973ms
+Info 650  [13:56:34.940] Different program with same set of files:: structureIsReused:: 2
+Info 651  [13:56:35.087] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 652  [13:56:35.093] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 100 structureChanged: false Elapsed: 5.292784214019775ms
+Info 653  [13:56:35.093] Different program with same set of files:: structureIsReused:: 2
+Info 654  [13:56:36.020] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 655  [13:56:36.028] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 101 structureChanged: false Elapsed: 8.05513620376587ms
+Info 656  [13:56:36.028] Different program with same set of files:: structureIsReused:: 2
+Info 657  [13:57:37.618] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 658  [13:57:37.624] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 102 structureChanged: false Elapsed: 5.322939395904541ms
+Info 659  [13:57:37.624] Different program with same set of files:: structureIsReused:: 2
+Info 660  [13:57:38.600] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 661  [13:57:38.609] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 103 structureChanged: false Elapsed: 9.36954402923584ms
+Info 662  [13:57:38.609] Different program with same set of files:: structureIsReused:: 2
+Info 663  [13:57:39.039] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 664  [13:57:39.049] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 104 structureChanged: false Elapsed: 9.517598152160645ms
+Info 665  [13:57:39.049] Different program with same set of files:: structureIsReused:: 2
+Info 666  [13:57:39.331] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 667  [13:57:39.338] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 105 structureChanged: false Elapsed: 7.01631498336792ms
+Info 668  [13:57:39.338] Different program with same set of files:: structureIsReused:: 2
+Info 669  [13:57:40.446] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 670  [13:57:40.454] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 106 structureChanged: false Elapsed: 7.212388038635254ms
+Info 671  [13:57:40.454] Different program with same set of files:: structureIsReused:: 2
+Info 672  [13:57:41.378] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 673  [13:57:41.404] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 107 structureChanged: true Elapsed: 25.57295799255371ms
+Info 674  [13:57:41.404] Different program with same set of files:: structureIsReused:: 1
+Info 675  [13:57:41.808] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 676  [13:57:41.828] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 108 structureChanged: true Elapsed: 20.070953369140625ms
+Info 677  [13:57:41.828] Different program with same set of files:: structureIsReused:: 1
+Info 678  [13:57:42.473] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 679  [13:57:42.489] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 109 structureChanged: true Elapsed: 15.71628999710083ms
+Info 680  [13:57:42.489] Different program with same set of files:: structureIsReused:: 1
+Info 681  [13:57:43.342] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 682  [13:57:43.349] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 110 structureChanged: false Elapsed: 6.786008834838867ms
+Info 683  [13:57:43.349] Different program with same set of files:: structureIsReused:: 2
+Info 684  [13:57:43.957] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 685  [13:57:43.977] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 111 structureChanged: true Elapsed: 20.18452501296997ms
+Info 686  [13:57:43.977] Different program with same set of files:: structureIsReused:: 1
+Info 687  [13:57:43.978] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 688  [13:57:43.992] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 112 structureChanged: true Elapsed: 13.619654655456543ms
+Info 689  [13:57:43.992] Different program with same set of files:: structureIsReused:: 1
+Info 690  [13:57:44.542] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 691  [13:57:44.555] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 113 structureChanged: true Elapsed: 12.691752910614014ms
+Info 692  [13:57:44.555] Different program with same set of files:: structureIsReused:: 1
+Info 693  [13:57:45.017] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 694  [13:57:45.023] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 114 structureChanged: false Elapsed: 5.641655921936035ms
+Info 695  [13:57:45.023] Different program with same set of files:: structureIsReused:: 2
+Info 696  [13:57:45.321] getCompletionData: Get current token: 0.03772115707397461
+Info 697  [13:57:45.321] getCompletionData: Is inside comment: 0.0999598503112793
+Info 698  [13:57:45.321] getCompletionData: Get previous token 1: 0.026189327239990234
+Info 699  [13:57:45.322] getCompletionsAtPosition: isCompletionListBlocker: 0.6544427871704102
+Info 700  [13:57:45.328] collectAutoImports: starting, not resolving module specifiers
+Info 701  [13:57:45.328] collectAutoImports: module specifier cache size: 0
+Info 702  [13:57:45.329] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 703  [13:57:45.332] getSymbolToExportInfoMap: caching results
+Info 704  [13:57:45.332] getSymbolToExportInfoMap: done in 4.0189619064331055 ms
+Info 705  [13:57:45.337] collectAutoImports: done in 9.075754165649414 ms
+Info 706  [13:57:45.337] getCompletionData: Semantic work: 14.833784103393555
+Info 707  [13:57:45.352] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.309769630432129
+Info 708  [13:57:45.379] getCompletionData: Get current token: 0.008148670196533203
+Info 709  [13:57:45.379] getCompletionData: Is inside comment: 0.019893169403076172
+Info 710  [13:57:45.379] getCompletionData: Get previous token 1: 0.014207839965820312
+Info 711  [13:57:45.379] getCompletionsAtPosition: isCompletionListBlocker: 0.01785421371459961
+Info 712  [13:57:45.381] collectAutoImports: starting, not resolving module specifiers
+Info 713  [13:57:45.381] collectAutoImports: module specifier cache size: 6
+Info 714  [13:57:45.381] getSymbolToExportInfoMap: cache hit
+Info 715  [13:57:45.382] collectAutoImports: done in 1.5906119346618652 ms
+Info 716  [13:57:45.382] getCompletionData: Semantic work: 3.4698328971862793
+Info 717  [13:57:45.396] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 13.821182250976562
+Info 718  [13:57:45.413] getCompletionData: Get current token: 0.00771331787109375
+Info 719  [13:57:45.416] getCompletionData: Is inside comment: 2.193117141723633
+Info 720  [13:57:45.416] getCompletionData: Get previous token 1: 0.26027393341064453
+Info 721  [13:57:45.416] getCompletionsAtPosition: isCompletionListBlocker: 0.023354053497314453
+Info 722  [13:57:45.419] collectAutoImports: starting, not resolving module specifiers
+Info 723  [13:57:45.419] collectAutoImports: module specifier cache size: 6
+Info 724  [13:57:45.419] getSymbolToExportInfoMap: cache hit
+Info 725  [13:57:45.420] collectAutoImports: done in 1.593069076538086 ms
+Info 726  [13:57:45.420] getCompletionData: Semantic work: 4.046130180358887
+Info 727  [13:57:45.464] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 40.66024112701416
+Info 728  [13:57:46.534] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 729  [13:57:46.542] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 115 structureChanged: false Elapsed: 7.686712741851807ms
+Info 730  [13:57:46.542] Different program with same set of files:: structureIsReused:: 2
+Info 731  [13:58:01.680] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 732  [13:58:01.696] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 116 structureChanged: true Elapsed: 14.607376098632812ms
+Info 733  [13:58:01.696] Different program with same set of files:: structureIsReused:: 1
+Info 734  [13:58:02.132] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 735  [13:58:02.138] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 117 structureChanged: false Elapsed: 5.802833080291748ms
+Info 736  [13:58:02.138] Different program with same set of files:: structureIsReused:: 2
+Info 737  [13:58:02.611] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 738  [13:58:02.618] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 118 structureChanged: false Elapsed: 6.6729278564453125ms
+Info 739  [13:58:02.618] Different program with same set of files:: structureIsReused:: 2
+Info 740  [13:58:02.852] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 741  [13:58:02.860] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 119 structureChanged: false Elapsed: 7.376524925231934ms
+Info 742  [13:58:02.860] Different program with same set of files:: structureIsReused:: 2
+Info 743  [13:58:03.564] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 744  [13:58:03.570] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 120 structureChanged: false Elapsed: 5.192552089691162ms
+Info 745  [13:58:03.570] Different program with same set of files:: structureIsReused:: 2
+Info 746  [13:58:08.741] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 747  [13:58:08.750] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 121 structureChanged: false Elapsed: 7.5528178215026855ms
+Info 748  [13:58:08.750] Different program with same set of files:: structureIsReused:: 2
+Info 749  [13:58:22.368] Search path: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src
+Info 750  [13:58:22.368] For info: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/index.ts :: No config files found.
+Info 751  [13:58:22.370] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 752  [13:58:22.398] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 122 structureChanged: true Elapsed: 27.51297092437744ms
+Info 753  [13:58:22.398] Project '/dev/null/inferredProject1*' (Inferred)
+Info 754  [13:58:22.398] 	Files (26)
+
+Info 755  [13:58:22.398] -----------------------------------------------
+Info 756  [13:58:25.306] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 757  [13:58:25.317] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 123 structureChanged: false Elapsed: 10.258034229278564ms
+Info 758  [13:58:25.317] Different program with same set of files:: structureIsReused:: 2
+Info 759  [13:58:27.017] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 760  [13:58:27.026] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 124 structureChanged: false Elapsed: 8.96217966079712ms
+Info 761  [13:58:27.026] Different program with same set of files:: structureIsReused:: 2
+Info 762  [13:58:27.509] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 763  [13:58:27.515] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 125 structureChanged: false Elapsed: 6.3620781898498535ms
+Info 764  [13:58:27.515] Different program with same set of files:: structureIsReused:: 2
+Info 765  [13:58:27.524] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 766  [13:58:27.528] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 126 structureChanged: false Elapsed: 3.8694539070129395ms
+Info 767  [13:58:27.528] Different program with same set of files:: structureIsReused:: 2
+Info 768  [13:58:28.023] getCompletionData: Get current token: 0.009613037109375
+Info 769  [13:58:28.023] getCompletionData: Is inside comment: 0.024946212768554688
+Info 770  [13:58:28.023] getCompletionData: Get previous token 1: 0.016191959381103516
+Info 771  [13:58:28.023] getCompletionsAtPosition: isCompletionListBlocker: 0.006426334381103516
+Info 772  [13:58:28.024] getCompletionData: Semantic work: 0.9546337127685547
+Info 773  [13:58:28.031] getCompletionData: Get current token: 0.008052825927734375
+Info 774  [13:58:28.031] getCompletionData: Is inside comment: 0.022748947143554688
+Info 775  [13:58:28.031] getCompletionData: Get previous token 1: 0.016119003295898438
+Info 776  [13:58:28.031] getCompletionsAtPosition: isCompletionListBlocker: 0.003670215606689453
+Info 777  [13:58:28.031] getCompletionData: Semantic work: 0.07357215881347656
+Info 778  [13:58:28.057] getCompletionData: Get current token: 0.007884025573730469
+Info 779  [13:58:28.057] getCompletionData: Is inside comment: 0.020617961883544922
+Info 780  [13:58:28.057] getCompletionData: Get previous token 1: 0.015389442443847656
+Info 781  [13:58:28.057] getCompletionsAtPosition: isCompletionListBlocker: 0.003536224365234375
+Info 782  [13:58:28.057] getCompletionData: Semantic work: 0.06038808822631836
+Info 783  [13:58:31.704] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 784  [13:58:31.711] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 127 structureChanged: false Elapsed: 6.640346050262451ms
+Info 785  [13:58:31.711] Different program with same set of files:: structureIsReused:: 2
+Info 786  [13:58:32.016] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 787  [13:58:32.024] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 128 structureChanged: false Elapsed: 7.740802764892578ms
+Info 788  [13:58:32.024] Different program with same set of files:: structureIsReused:: 2
+Info 789  [13:58:32.290] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 790  [13:58:32.302] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 129 structureChanged: false Elapsed: 12.346036911010742ms
+Info 791  [13:58:32.302] Different program with same set of files:: structureIsReused:: 2
+Info 792  [13:58:32.303] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 793  [13:58:32.309] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 130 structureChanged: false Elapsed: 6.016260147094727ms
+Info 794  [13:58:32.309] Different program with same set of files:: structureIsReused:: 2
+Info 795  [13:58:33.134] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 796  [13:58:33.140] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 131 structureChanged: false Elapsed: 6.062161922454834ms
+Info 797  [13:58:33.140] Different program with same set of files:: structureIsReused:: 2
+Info 798  [13:58:33.979] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 799  [13:58:33.986] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 132 structureChanged: false Elapsed: 6.132500171661377ms
+Info 800  [13:58:33.986] Different program with same set of files:: structureIsReused:: 2
+Info 801  [13:58:42.240] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 802  [13:58:42.248] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 133 structureChanged: false Elapsed: 6.83558988571167ms
+Info 803  [13:58:42.248] Different program with same set of files:: structureIsReused:: 2
+Info 804  [13:58:42.503] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 805  [13:58:42.511] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 134 structureChanged: false Elapsed: 8.10105037689209ms
+Info 806  [13:58:42.512] Different program with same set of files:: structureIsReused:: 2
+Info 807  [13:58:42.745] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 808  [13:58:42.752] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 135 structureChanged: false Elapsed: 7.47342586517334ms
+Info 809  [13:58:42.752] Different program with same set of files:: structureIsReused:: 2
+Info 810  [13:58:43.368] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 811  [13:58:43.377] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 136 structureChanged: false Elapsed: 8.438581943511963ms
+Info 812  [13:58:43.377] Different program with same set of files:: structureIsReused:: 2
+Info 813  [13:58:44.653] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 814  [13:58:44.665] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 137 structureChanged: false Elapsed: 11.265608310699463ms
+Info 815  [13:58:44.665] Different program with same set of files:: structureIsReused:: 2
+Info 816  [13:59:09.603] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 817  [13:59:09.638] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 138 structureChanged: true Elapsed: 33.62225532531738ms
+Info 818  [13:59:09.638] Different program with same set of files:: structureIsReused:: 1
+Info 819  [13:59:10.847] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 820  [13:59:10.872] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 139 structureChanged: true Elapsed: 25.619762897491455ms
+Info 821  [13:59:10.872] Different program with same set of files:: structureIsReused:: 1
+Info 822  [13:59:20.765] Search path: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src
+Info 823  [13:59:20.767] For info: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/App.tsx :: No config files found.
+Info 824  [13:59:20.772] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 825  [13:59:20.801] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 1 structureChanged: true Elapsed: 29.121307849884033ms
+Info 826  [13:59:20.801] Project '/dev/null/inferredProject2*' (Inferred)
+Info 827  [13:59:20.801] 	Files (26)
+
+Info 828  [13:59:20.801] -----------------------------------------------
+Info 829  [13:59:25.145] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 830  [13:59:25.167] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 2 structureChanged: true Elapsed: 22.31344509124756ms
+Info 831  [13:59:25.167] Different program with same set of files:: structureIsReused:: 1
+Info 832  [13:59:26.642] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 833  [13:59:26.650] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 3 structureChanged: false Elapsed: 7.345876693725586ms
+Info 834  [13:59:26.650] Different program with same set of files:: structureIsReused:: 2
+Info 835  [13:59:28.561] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 836  [13:59:28.569] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 4 structureChanged: false Elapsed: 7.717022895812988ms
+Info 837  [13:59:28.569] Different program with same set of files:: structureIsReused:: 2
+Info 838  [13:59:29.467] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 839  [13:59:29.470] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 5 structureChanged: false Elapsed: 3.3611202239990234ms
+Info 840  [13:59:29.470] Different program with same set of files:: structureIsReused:: 2
+Info 841  [13:59:30.005] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 842  [13:59:30.012] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 6 structureChanged: false Elapsed: 6.492880821228027ms
+Info 843  [13:59:30.012] Different program with same set of files:: structureIsReused:: 2
+Info 844  [13:59:30.346] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 845  [13:59:30.349] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 7 structureChanged: false Elapsed: 2.907491683959961ms
+Info 846  [13:59:30.349] Different program with same set of files:: structureIsReused:: 2
+Info 847  [13:59:30.704] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 848  [13:59:30.711] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 8 structureChanged: false Elapsed: 7.4735283851623535ms
+Info 849  [13:59:30.711] Different program with same set of files:: structureIsReused:: 2
+Info 850  [13:59:31.327] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 851  [13:59:31.332] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 9 structureChanged: false Elapsed: 5.663066864013672ms
+Info 852  [13:59:31.333] Different program with same set of files:: structureIsReused:: 2
+Info 853  [13:59:31.716] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 854  [13:59:31.720] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 10 structureChanged: false Elapsed: 3.442009925842285ms
+Info 855  [13:59:31.720] Different program with same set of files:: structureIsReused:: 2
+Info 856  [13:59:32.047] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 857  [13:59:32.054] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 11 structureChanged: false Elapsed: 6.521484375ms
+Info 858  [13:59:32.054] Different program with same set of files:: structureIsReused:: 2
+Info 859  [13:59:32.363] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 860  [13:59:32.373] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 12 structureChanged: false Elapsed: 9.980481147766113ms
+Info 861  [13:59:32.373] Different program with same set of files:: structureIsReused:: 2
+Info 862  [13:59:35.444] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 863  [13:59:35.453] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 13 structureChanged: false Elapsed: 8.887716293334961ms
+Info 864  [13:59:35.453] Different program with same set of files:: structureIsReused:: 2
+Info 865  [13:59:35.458] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 866  [13:59:35.461] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 14 structureChanged: false Elapsed: 2.7052903175354004ms
+Info 867  [13:59:35.461] Different program with same set of files:: structureIsReused:: 2
+Info 868  [13:59:35.783] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 869  [13:59:35.789] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 15 structureChanged: false Elapsed: 5.7773756980896ms
+Info 870  [13:59:35.789] Different program with same set of files:: structureIsReused:: 2
+Info 871  [13:59:36.290] getCompletionData: Get current token: 0.024775981903076172
+Info 872  [13:59:36.290] getCompletionData: Is inside comment: 0.0762338638305664
+Info 873  [13:59:36.290] getCompletionData: Get previous token 1: 0.02891826629638672
+Info 874  [13:59:36.291] getCompletionsAtPosition: isCompletionListBlocker: 0.29578304290771484
+Info 875  [13:59:36.298] collectAutoImports: starting, not resolving module specifiers
+Info 876  [13:59:36.298] collectAutoImports: module specifier cache size: 0
+Info 877  [13:59:36.299] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 878  [13:59:36.301] getSymbolToExportInfoMap: caching results
+Info 879  [13:59:36.301] getSymbolToExportInfoMap: done in 2.9062252044677734 ms
+Info 880  [13:59:36.306] collectAutoImports: done in 8.091773986816406 ms
+Info 881  [13:59:36.306] getCompletionData: Semantic work: 15.671425819396973
+Info 882  [13:59:36.320] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 12.859657287597656
+Info 883  [13:59:36.756] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 884  [13:59:36.764] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 16 structureChanged: false Elapsed: 7.841068267822266ms
+Info 885  [13:59:36.764] Different program with same set of files:: structureIsReused:: 2
+Info 886  [13:59:37.248] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 887  [13:59:37.259] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 17 structureChanged: false Elapsed: 10.387814998626709ms
+Info 888  [13:59:37.259] Different program with same set of files:: structureIsReused:: 2
+Info 889  [13:59:37.264] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 890  [13:59:37.267] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 18 structureChanged: false Elapsed: 2.9993200302124023ms
+Info 891  [13:59:37.268] Different program with same set of files:: structureIsReused:: 2
+Info 892  [13:59:37.557] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 893  [13:59:37.563] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 19 structureChanged: false Elapsed: 5.986897945404053ms
+Info 894  [13:59:37.563] Different program with same set of files:: structureIsReused:: 2
+Info 895  [13:59:37.639] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 896  [13:59:37.643] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 20 structureChanged: false Elapsed: 3.1365928649902344ms
+Info 897  [13:59:37.643] Different program with same set of files:: structureIsReused:: 2
+Info 898  [13:59:38.448] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 899  [13:59:38.454] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 21 structureChanged: false Elapsed: 6.711363792419434ms
+Info 900  [13:59:38.454] Different program with same set of files:: structureIsReused:: 2
+Info 901  [13:59:39.018] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 902  [13:59:39.025] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 22 structureChanged: false Elapsed: 7.400450229644775ms
+Info 903  [13:59:39.025] Different program with same set of files:: structureIsReused:: 2
+Info 904  [13:59:40.211] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 905  [13:59:40.217] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 23 structureChanged: false Elapsed: 5.899733543395996ms
+Info 906  [13:59:40.217] Different program with same set of files:: structureIsReused:: 2
+Info 907  [13:59:40.720] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 908  [13:59:40.726] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 24 structureChanged: false Elapsed: 5.761826992034912ms
+Info 909  [13:59:40.726] Different program with same set of files:: structureIsReused:: 2
+Info 910  [13:59:40.774] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 911  [13:59:40.778] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 25 structureChanged: false Elapsed: 3.5248098373413086ms
+Info 912  [13:59:40.778] Different program with same set of files:: structureIsReused:: 2
+Info 913  [13:59:41.184] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 914  [13:59:41.190] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 26 structureChanged: false Elapsed: 5.976443290710449ms
+Info 915  [13:59:41.190] Different program with same set of files:: structureIsReused:: 2
+Info 916  [13:59:41.483] getCompletionData: Get current token: 0.02472972869873047
+Info 917  [13:59:41.483] getCompletionData: Is inside comment: 0.07610511779785156
+Info 918  [13:59:41.483] getCompletionData: Get previous token 1: 0.05881309509277344
+Info 919  [13:59:41.484] getCompletionsAtPosition: isCompletionListBlocker: 0.3684706687927246
+Info 920  [13:59:41.485] getCompletionData: Semantic work: 0.9402189254760742
+Info 921  [13:59:41.550] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 922  [13:59:41.555] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 27 structureChanged: false Elapsed: 4.083102703094482ms
+Info 923  [13:59:41.555] Different program with same set of files:: structureIsReused:: 2
+Info 924  [13:59:41.555] getCompletionData: Get current token: 0.007946968078613281
+Info 925  [13:59:41.555] getCompletionData: Is inside comment: 0.024175167083740234
+Info 926  [13:59:41.555] getCompletionData: Get previous token 1: 0.018326282501220703
+Info 927  [13:59:41.555] getCompletionsAtPosition: isCompletionListBlocker: 0.05258941650390625
+Info 928  [13:59:41.558] collectAutoImports: starting, not resolving module specifiers
+Info 929  [13:59:41.558] collectAutoImports: module specifier cache size: 6
+Info 930  [13:59:41.558] getSymbolToExportInfoMap: cache hit
+Info 931  [13:59:41.560] collectAutoImports: done in 2.7742371559143066 ms
+Info 932  [13:59:41.560] getCompletionData: Semantic work: 5.3354105949401855
+Info 933  [13:59:41.575] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.408137798309326
+Info 934  [13:59:41.796] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 935  [13:59:41.799] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 28 structureChanged: false Elapsed: 2.716644763946533ms
+Info 936  [13:59:41.799] Different program with same set of files:: structureIsReused:: 2
+Info 937  [13:59:41.799] getCompletionData: Get current token: 0.007992744445800781
+Info 938  [13:59:41.799] getCompletionData: Is inside comment: 0.02852916717529297
+Info 939  [13:59:41.799] getCompletionData: Get previous token 1: 0.022834300994873047
+Info 940  [13:59:41.799] getCompletionsAtPosition: isCompletionListBlocker: 0.01438283920288086
+Info 941  [13:59:41.800] getCompletionData: Semantic work: 0.3113369941711426
+Info 942  [13:59:42.833] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 943  [13:59:42.841] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 29 structureChanged: false Elapsed: 5.993469715118408ms
+Info 944  [13:59:42.841] Different program with same set of files:: structureIsReused:: 2
+Info 945  [13:59:42.842] getCompletionData: Get current token: 0.04250001907348633
+Info 946  [13:59:42.842] getCompletionData: Is inside comment: 0.019683837890625
+Info 947  [13:59:42.842] getCompletionData: Get previous token 1: 0.13074398040771484
+Info 948  [13:59:42.842] getCompletionsAtPosition: isCompletionListBlocker: 0.027598857879638672
+Info 949  [13:59:42.843] getCompletionData: Semantic work: 0.515805721282959
+Info 950  [13:59:42.843] getCompletionData: Get current token: 0.014494895935058594
+Info 951  [13:59:42.843] getCompletionData: Is inside comment: 0.005992889404296875
+Info 952  [13:59:42.844] getCompletionData: Get previous token 1: 0.03882789611816406
+Info 953  [13:59:42.844] getCompletionsAtPosition: isCompletionListBlocker: 0.013039112091064453
+Info 954  [13:59:42.844] getCompletionData: Semantic work: 0.028222084045410156
+Info 955  [13:59:45.645] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 956  [13:59:45.660] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 30 structureChanged: false Elapsed: 14.8680419921875ms
+Info 957  [13:59:45.660] Different program with same set of files:: structureIsReused:: 2
+Info 958  [13:59:46.211] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 959  [13:59:46.220] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 31 structureChanged: false Elapsed: 8.773165225982666ms
+Info 960  [13:59:46.220] Different program with same set of files:: structureIsReused:: 2
+Info 961  [13:59:47.119] Starting updateGraphWorker: Project: /dev/null/inferredProject2*
+Info 962  [13:59:47.126] Finishing updateGraphWorker: Project: /dev/null/inferredProject2* Version: 32 structureChanged: false Elapsed: 7.147119998931885ms
+Info 963  [13:59:47.126] Different program with same set of files:: structureIsReused:: 2
+Info 964  [13:59:57.322] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 965  [13:59:57.357] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 140 structureChanged: true Elapsed: 34.95953607559204ms
+Info 966  [13:59:57.357] Different program with same set of files:: structureIsReused:: 1
+Info 967  [13:59:58.333] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 968  [13:59:58.353] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 141 structureChanged: true Elapsed: 19.75870990753174ms
+Info 969  [13:59:58.353] Different program with same set of files:: structureIsReused:: 1
+Info 970  [13:59:58.797] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 971  [13:59:58.813] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 142 structureChanged: true Elapsed: 16.211845874786377ms
+Info 972  [13:59:58.813] Different program with same set of files:: structureIsReused:: 1
+Info 973  [14:00:00.285] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 974  [14:00:00.309] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 143 structureChanged: true Elapsed: 23.320218086242676ms
+Info 975  [14:00:00.309] Different program with same set of files:: structureIsReused:: 1
+Info 976  [14:00:07.441] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 977  [14:00:07.441] Elapsed:: 0.34326839447021484ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 978  [14:00:08.019] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 979  [14:00:08.019] Elapsed:: 0.03746509552001953ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 980  [14:00:08.039] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 981  [14:00:08.053] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 144 structureChanged: true Elapsed: 13.991444110870361ms
+Info 982  [14:00:08.053] Project '/dev/null/inferredProject1*' (Inferred)
+Info 983  [14:00:08.053] 	Files (27)
+
+Info 984  [14:00:08.053] -----------------------------------------------
+Info 985  [14:00:12.677] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 986  [14:00:12.686] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 145 structureChanged: false Elapsed: 8.627233982086182ms
+Info 987  [14:00:12.686] Different program with same set of files:: structureIsReused:: 2
+Info 988  [14:00:12.708] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 989  [14:00:12.708] Elapsed:: 0.02524280548095703ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 990  [14:00:13.182] getCompletionData: Get current token: 0.020542144775390625
+Info 991  [14:00:13.182] getCompletionData: Is inside comment: 0.012753963470458984
+Info 992  [14:00:13.182] getCompletionData: Get previous token 1: 0.06836700439453125
+Info 993  [14:00:13.182] getCompletionsAtPosition: isCompletionListBlocker: 0.009938716888427734
+Info 994  [14:00:13.188] collectAutoImports: starting, not resolving module specifiers
+Info 995  [14:00:13.188] collectAutoImports: module specifier cache size: 6
+Info 996  [14:00:13.189] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 997  [14:00:13.192] getSymbolToExportInfoMap: caching results
+Info 998  [14:00:13.192] getSymbolToExportInfoMap: done in 3.155165672302246 ms
+Info 999  [14:00:13.195] collectAutoImports: done in 6.775341033935547 ms
+Info 1000 [14:00:13.195] getCompletionData: Semantic work: 12.741451263427734
+Info 1001 [14:00:13.226] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 29.15506887435913
+Info 1002 [14:00:13.306] getCompletionData: Get current token: 0.008884906768798828
+Info 1003 [14:00:13.306] getCompletionData: Is inside comment: 0.004722118377685547
+Info 1004 [14:00:13.306] getCompletionData: Get previous token 1: 0.03202486038208008
+Info 1005 [14:00:13.306] getCompletionsAtPosition: isCompletionListBlocker: 0.00789499282836914
+Info 1006 [14:00:13.313] collectAutoImports: starting, not resolving module specifiers
+Info 1007 [14:00:13.313] collectAutoImports: module specifier cache size: 7
+Info 1008 [14:00:13.313] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 1009 [14:00:13.314] getSymbolToExportInfoMap: caching results
+Info 1010 [14:00:13.314] getSymbolToExportInfoMap: done in 1.491703987121582 ms
+Info 1011 [14:00:13.316] collectAutoImports: done in 3.3319244384765625 ms
+Info 1012 [14:00:13.316] getCompletionData: Semantic work: 10.290014266967773
+Info 1013 [14:00:13.330] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.08733606338501
+Info 1014 [14:00:13.341] getCompletionData: Get current token: 0.008563995361328125
+Info 1015 [14:00:13.342] getCompletionData: Is inside comment: 0.004994392395019531
+Info 1016 [14:00:13.342] getCompletionData: Get previous token 1: 0.02687835693359375
+Info 1017 [14:00:13.342] getCompletionsAtPosition: isCompletionListBlocker: 0.004302978515625
+Info 1018 [14:00:13.344] collectAutoImports: starting, not resolving module specifiers
+Info 1019 [14:00:13.344] collectAutoImports: module specifier cache size: 7
+Info 1020 [14:00:13.344] getSymbolToExportInfoMap: cache miss or empty; calculating new results
+Info 1021 [14:00:13.345] getSymbolToExportInfoMap: caching results
+Info 1022 [14:00:13.345] getSymbolToExportInfoMap: done in 1.3970227241516113 ms
+Info 1023 [14:00:13.348] collectAutoImports: done in 3.776002883911133 ms
+Info 1024 [14:00:13.348] getCompletionData: Semantic work: 5.994431018829346
+Info 1025 [14:00:13.364] getCompletionsAtPosition: getCompletionEntriesFromSymbols: 14.695526123046875
+Info 1026 [14:00:13.376] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1027 [14:00:13.397] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 146 structureChanged: false Elapsed: 21.153563976287842ms
+Info 1028 [14:00:13.397] Different program with same set of files:: structureIsReused:: 2
+Info 1029 [14:00:13.449] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1030 [14:00:13.462] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 147 structureChanged: false Elapsed: 12.527999877929688ms
+Info 1031 [14:00:13.462] Different program with same set of files:: structureIsReused:: 2
+Info 1032 [14:00:13.627] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1033 [14:00:13.631] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 148 structureChanged: false Elapsed: 3.585570812225342ms
+Info 1034 [14:00:13.631] Different program with same set of files:: structureIsReused:: 2
+Info 1035 [14:00:13.982] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1036 [14:00:13.987] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 149 structureChanged: false Elapsed: 4.784516334533691ms
+Info 1037 [14:00:13.987] Different program with same set of files:: structureIsReused:: 2
+Info 1038 [14:00:14.143] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1039 [14:00:14.150] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 150 structureChanged: false Elapsed: 6.000992774963379ms
+Info 1040 [14:00:14.150] Different program with same set of files:: structureIsReused:: 2
+Info 1041 [14:00:14.523] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1042 [14:00:14.529] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 151 structureChanged: false Elapsed: 6.652490139007568ms
+Info 1043 [14:00:14.529] Different program with same set of files:: structureIsReused:: 2
+Info 1044 [14:00:14.961] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1045 [14:00:14.966] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 152 structureChanged: false Elapsed: 4.881731033325195ms
+Info 1046 [14:00:14.966] Different program with same set of files:: structureIsReused:: 2
+Info 1047 [14:00:15.089] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1048 [14:00:15.094] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 153 structureChanged: false Elapsed: 5.210955619812012ms
+Info 1049 [14:00:15.094] Different program with same set of files:: structureIsReused:: 2
+Info 1050 [14:00:15.165] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1051 [14:00:15.170] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 154 structureChanged: false Elapsed: 4.820003032684326ms
+Info 1052 [14:00:15.170] Different program with same set of files:: structureIsReused:: 2
+Info 1053 [14:00:15.454] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1054 [14:00:15.459] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 155 structureChanged: false Elapsed: 4.478806018829346ms
+Info 1055 [14:00:15.459] Different program with same set of files:: structureIsReused:: 2
+Info 1056 [14:00:15.551] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1057 [14:00:15.556] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 156 structureChanged: false Elapsed: 4.744403839111328ms
+Info 1058 [14:00:15.556] Different program with same set of files:: structureIsReused:: 2
+Info 1059 [14:00:15.677] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1060 [14:00:15.682] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 157 structureChanged: false Elapsed: 4.524613857269287ms
+Info 1061 [14:00:15.682] Different program with same set of files:: structureIsReused:: 2
+Info 1062 [14:00:15.717] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1063 [14:00:15.721] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 158 structureChanged: false Elapsed: 2.982996940612793ms
+Info 1064 [14:00:15.721] Different program with same set of files:: structureIsReused:: 2
+Info 1065 [14:00:16.018] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1066 [14:00:16.018] Elapsed:: 0.028162002563476562ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1067 [14:00:22.284] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1068 [14:00:22.284] Elapsed:: 0.03817176818847656ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1069 [14:00:22.478] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1070 [14:00:22.486] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 159 structureChanged: false Elapsed: 7.91222620010376ms
+Info 1071 [14:00:22.486] Different program with same set of files:: structureIsReused:: 2
+Info 1072 [14:00:23.478] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1073 [14:00:23.484] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 160 structureChanged: false Elapsed: 5.864670753479004ms
+Info 1074 [14:00:23.484] Different program with same set of files:: structureIsReused:: 2
+Info 1075 [14:00:23.781] getCompletionData: Get current token: 0.026369094848632812
+Info 1076 [14:00:23.781] getCompletionData: Is inside comment: 0.012212276458740234
+Info 1077 [14:00:23.781] getCompletionData: Get previous token 1: 0.07834291458129883
+Info 1078 [14:00:23.781] getCompletionsAtPosition: isCompletionListBlocker: 0.016499996185302734
+Info 1079 [14:00:23.781] Returning an empty list because completion was requested in an invalid position.
+Info 1080 [14:00:23.789] getCompletionData: Get current token: 0.00993204116821289
+Info 1081 [14:00:23.789] getCompletionData: Is inside comment: 0.005465030670166016
+Info 1082 [14:00:23.789] getCompletionData: Get previous token 1: 0.041138648986816406
+Info 1083 [14:00:23.789] getCompletionsAtPosition: isCompletionListBlocker: 0.006922721862792969
+Info 1084 [14:00:23.789] Returning an empty list because completion was requested in an invalid position.
+Info 1085 [14:00:23.791] getCompletionData: Get current token: 0.009709358215332031
+Info 1086 [14:00:23.791] getCompletionData: Is inside comment: 0.009505271911621094
+Info 1087 [14:00:23.791] getCompletionData: Get previous token 1: 0.03725624084472656
+Info 1088 [14:00:23.791] getCompletionsAtPosition: isCompletionListBlocker: 0.0070648193359375
+Info 1089 [14:00:23.791] Returning an empty list because completion was requested in an invalid position.
+Info 1090 [14:00:24.519] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1091 [14:00:24.523] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 161 structureChanged: false Elapsed: 3.6208972930908203ms
+Info 1092 [14:00:24.523] Different program with same set of files:: structureIsReused:: 2
+Info 1093 [14:00:24.687] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1094 [14:00:24.687] Elapsed:: 0.05679798126220703ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1095 [14:00:33.493] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1096 [14:00:33.494] Elapsed:: 0.061737060546875ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1097 [14:00:33.836] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1098 [14:00:33.844] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 162 structureChanged: false Elapsed: 7.377950668334961ms
+Info 1099 [14:00:33.844] Different program with same set of files:: structureIsReused:: 2
+Info 1100 [14:00:34.575] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1101 [14:00:34.581] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 163 structureChanged: false Elapsed: 5.870127201080322ms
+Info 1102 [14:00:34.581] Different program with same set of files:: structureIsReused:: 2
+Info 1103 [14:00:34.626] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1104 [14:00:34.626] Elapsed:: 0.07364463806152344ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1105 [14:00:35.616] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1106 [14:00:35.617] Elapsed:: 0.04270362854003906ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1107 [14:00:35.810] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1108 [14:00:35.817] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 164 structureChanged: false Elapsed: 6.800497055053711ms
+Info 1109 [14:00:35.817] Different program with same set of files:: structureIsReused:: 2
+Info 1110 [14:00:35.926] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1111 [14:00:35.926] Elapsed:: 0.05925178527832031ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1112 [14:01:37.107] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1113 [14:01:37.132] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 165 structureChanged: false Elapsed: 22.559146881103516ms
+Info 1114 [14:01:37.132] Different program with same set of files:: structureIsReused:: 2
+Info 1115 [14:01:37.260] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1116 [14:01:37.260] Elapsed:: 0.18462181091308594ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1117 [14:01:37.579] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1118 [14:01:37.589] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 166 structureChanged: false Elapsed: 10.015784740447998ms
+Info 1119 [14:01:37.589] Different program with same set of files:: structureIsReused:: 2
+Info 1120 [14:01:38.414] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1121 [14:01:38.414] Elapsed:: 0.035101890563964844ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1122 [14:01:38.419] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1123 [14:01:38.430] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 167 structureChanged: false Elapsed: 11.3405179977417ms
+Info 1124 [14:01:38.430] Different program with same set of files:: structureIsReused:: 2
+Info 1125 [14:12:54.819] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1126 [14:12:54.821] Elapsed:: 0.5862879753112793ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1127 [14:12:54.955] Starting updateGraphWorker: Project: /dev/null/inferredProject1*
+Info 1128 [14:12:54.993] Finishing updateGraphWorker: Project: /dev/null/inferredProject1* Version: 168 structureChanged: true Elapsed: 37.279727935791016ms
+Info 1129 [14:12:54.993] Different program with same set of files:: structureIsReused:: 1
+Info 1130 [14:12:55.676] DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations
+Info 1131 [14:12:55.676] Elapsed:: 0.041500091552734375ms DirectoryWatcher:: Triggered with /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src/.#index.ts :: WatchInfo: /Users/alexzugravu/workspace/oxford/Aretha/react-ui/src 0 undefined Project: /dev/null/inferredProject1* WatchType: Failed Lookup Locations

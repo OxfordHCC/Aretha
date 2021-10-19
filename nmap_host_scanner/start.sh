@@ -1,3 +1,2 @@
 #! /bin/bash
-
-python main.py
+exec python main.py

@@ -4,6 +4,7 @@ import subprocess
 import xml.etree.ElementTree as xml_et
 from collections import namedtuple
 
+
 PROCFS_ROUTE_GATEWAY_FLAG = 0x0002
 
 Either = namedtuple("Either", ["left", "right"])
