@@ -52,12 +52,13 @@
 
 ** Traffic snitch (original aretha)
    This is essentially the original functionality of Aretha.  Monitor
-   traffic from internal hosts to external hosts, 
+   traffic from internal hosts to external hosts.
 	
 *** Input
 	N/A
 *** Output
 	transmissions/exposures from devices to external hosts
+	
 *** Permissions
 	access to network interface device (tshark monitoring).
 *** Scheduling
@@ -205,5 +206,16 @@
   Like the data model, this will emerge by discussing potential
   aretha apps, what they each need to present to the user, what they
   need to get from the user and how to arrange it all on screen.
+
+
+
+  
+
+  
+
+  
+
+  
+  
 
 
