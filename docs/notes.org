@@ -16,6 +16,12 @@
   about their requirements. This stringing of ideas should then allow
   us to normalize agent behaviour, scheduling, permissions and let
   issues emerge.
+
+** Community Deviceopedia
+
+   "Install this app to anonymously share your network's traffic
+   metadata".
+   
    
 ** Intruder detector
 

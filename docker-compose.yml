@@ -1,13 +1,13 @@
 version: "3" # docker-compose version
 services:
-  backend:
+  traffic_snitch:
     network_mode: "host"
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    container_name: aretha-backend
+    container_name: aretha-traffic-snitch
     build:
-      context: ./backend
+      context: ./traffic_snitch
     environment:
       ARETHA_DEBUG: "True"
       ARETHA_DB_HOST: localhost
