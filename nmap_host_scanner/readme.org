@@ -1,0 +1,10 @@
+* Nmap Host Scanner
+
+  The purpose of this program is to scan the network for devices and
+  update the KS.
+
+  Output sample:
+  ("ff:ff:ff:ff", "2019.20.01T00:00:00")
+
+
+  

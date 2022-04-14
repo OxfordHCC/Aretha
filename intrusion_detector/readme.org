@@ -1,0 +1,4 @@
+The intruder detector alerts the user of any new devices on the
+network.
+
+When new a new device is added to the KG;

@@ -4,6 +4,13 @@ Have you ever wondered which companies your smart devices were talking to? Or ho
 Aretha captures meta data about the network traffic of devices connected to it. Run Aretha on a device with a WiFi hotspot and connect your devices - you might be surprised about what you see.
 
 
+Entities: Devices, Companies, Hostnames, Country, HostIP
+
+Hostname belongsTo Company
+Company locatedIn Country
+Hostname resolves to HostIP
+HostIP locatedIn Country
+
 # Database
 You can either start a database using docker, or manually using a Postgres install.
 
@@ -120,3 +127,4 @@ Block network traffic from or to any IP addresses owned by \<company>. By defaul
 
 ### /api/aretha/unenforce/\<company>[/\<mac>]
 Unblock network traffic from or to any IP addresses owned by \<company>. By default, this applies to blocks placed on all traffic only. To unblock traffic from a single local device, supply the device's MAC address in the \<mac> field.
+
