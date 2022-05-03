@@ -1,20 +1,4 @@
 --store core packet info, and optionally which burst it is part ofi, and which company it represents
-drop table if exists packets cascade;
-create table packets (
-	id SERIAL primary key,
-	time timestamp with time zone not null,
-	src varchar(45) not null, --ip address of sending host
-	dst varchar(45) not null, --ip address of receiving host
-	mac varchar(17) not null, --mac address of internal host
-	len integer not null, --packet length in bytes
-	proto varchar(10) not null, --protocol if known, otherwise port number
-	ext varchar(45) not null --external ip address (either src or dst)
-);
-
--- create two indexes on src and dst to speed up lookups by these cols by loop.py
-create index on packets (src);
-create index on packets (dst);
-create index on packets (time);
 
 create table exposures ( -- exposure is the new impacts
 	id SERIAL primary key,
@@ -126,21 +110,6 @@ create table activity(
 	description varchar(50) not null
 );
 
-drop materialized view if exists impacts;
-create materialized view impacts as
-	select mac, ext, round(extract(epoch from time at time zone 'utc')/60) as mins, sum(len) as impact
-	from packets
-	group by mac, ext, mins
-	order by mins
-with data;
-
-drop materialized view if exists impacts_aggregated;
-create materialized view impacts_aggregated as
-	select mac, ext, sum(len) as impact
-	from packets
-	group by mac, ext
-with data;
-
 drop function if exists notify_trigger();
 CREATE FUNCTION notify_trigger() RETURNS trigger AS $trigger$
 DECLARE
@@ -184,13 +153,6 @@ BEGIN
 END;
 $trigger$ LANGUAGE plpgsql;
 
-drop trigger if exists packets_notify on packets;
-create trigger packets_notify after insert or update or delete on packets
-for each row execute procedure notify_trigger(
-  'mac',
-  'ext',
-  'len'
-);
 
 
 drop trigger if exists device_notify on devices;
